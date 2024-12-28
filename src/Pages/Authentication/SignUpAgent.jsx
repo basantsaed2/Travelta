@@ -59,11 +59,7 @@ const SignUpAgent = () => {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-           const response = await axios.get('https://www.travelta.online/agent/signupLists', {
-                  headers: {
-                         Authorization: `Bearer ${auth.user.token}`,
-                  },
-           });
+           const response = await axios.get('https://www.travelta.online/agent/signupLists');
            if (response.status === 200) {
                   console.log(response.data)
                   setData(response.data)
