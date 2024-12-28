@@ -28,8 +28,11 @@ const Login = () => {
            auth.login(userData); // Call auth.login with the updated data
            setIsLoading(false);
 
-           if (userType === "agent") {
+           if (userType === "agent" && userData.plan_id !== null) {
                   navigate("/dashboard_agent", { replace: true });
+           }
+           else if (userType === "agent" && userData.plan_id === null) {
+                  navigate("/dashboard/plans", { replace: true });
            }
             else{
               navigate("/login", { replace: true });     
