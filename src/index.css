@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 .custom__control {
   /* border: 2px solid #0D47A1; Darker border */
   background-color: #edf2f7; /* Light gray background */

@@ -96,7 +96,7 @@ const CartPage = () => {
                         </div>
                     </td>
                     <td className="px-4 py-2 border-b border-gray-200 text-gray-800 font-semibold">
-                        ${item.price.toFixed(2)}
+                        {item.price.toFixed(2)} EGP
                     </td>
                     <td className="px-4 py-2 border-b border-gray-200 text-center">
                         <button
@@ -140,7 +140,7 @@ const CartPage = () => {
             <div className="border-t pt-4">
             <div className="flex justify-between">
                 <span className="text-lg font-semibold text-gray-700">Subtotal:</span>
-                <span className="text-lg font-bold text-gray-800">${calculateTotal().toFixed(2)}</span>
+                <span className="text-lg font-bold text-gray-800">{calculateTotal().toFixed(2)} EGP</span>
             </div>
             </div>
         </div>

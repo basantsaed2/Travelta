@@ -7,6 +7,9 @@ export { default as PlansLayout } from "./PlansLayout/PlanLayout";
 export { default as CartLayout } from "./CartLayout/CartLayout";
 //Checkout
 export { default as CheckoutLayout } from "./CheckoutLayout/CheckoutLayout";
+//Booking
+//Manual Booking
+export { default as ManualBookingLayout } from "./BookingLayout/ManualBookingLayout";
 
 // AgentLayouts
 // Users

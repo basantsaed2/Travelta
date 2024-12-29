@@ -101,12 +101,14 @@ useEffect(() => {
           <h1 className="text-xl font-semibold text-white">Hello, <span>{auth.user.name}</span></h1>
 
           <div className="relative">
-          <FaShoppingCart className='text-white' size={32} />
-          {cartCount > 0 && (
-          <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white text-xs font-bold">
-            {cartCount}
-          </span>
-          )}
+            <Link to="/dashboard/cart">
+              <FaShoppingCart className='text-white' size={32} />
+              {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white text-xs font-bold">
+                {cartCount}
+              </span>
+              )}
+            </Link>
           </div>
           </nav>
 

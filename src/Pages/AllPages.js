@@ -6,6 +6,10 @@ export { default as PlansPage } from "./Dashboard/Plans/PlanPage";
 export { default as CartPage } from "./Dashboard/Cart/CartPage";
 //Checkout
 export { default as CheckoutPage } from "./Dashboard/Checkout/CheckoutPage";
+//Booking
+//Manual Booking
+export { default as ManualBookingPage } from "./Dashboard/Booking/ManualBookingPage";
+
 
 // AgentDashboard
 // Users 

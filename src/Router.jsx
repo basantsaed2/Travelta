@@ -9,7 +9,7 @@ import SignUpAffilate from "./Pages/Authentication/SignUpAffilate"
 import Login from "./Pages/Authentication/Login";
 import AgentLayout from "./Layouts/AgentLayouts/AgentLayout";
 import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";  
-import {AddLeadLayout, AddSupplierLayout, CartLayout, CheckoutLayout, CustomersLayout , EditSupplierLayout, LeadLayout, PlansLayout, SupplierLayout} from "./Layouts/AllLayouts";
+import {AddLeadLayout, AddSupplierLayout, CartLayout, CheckoutLayout, CustomersLayout , EditSupplierLayout, LeadLayout, ManualBookingLayout, PlansLayout, SupplierLayout} from "./Layouts/AllLayouts";
 
 const AppLayoutAgent = () => (
     <>
@@ -27,6 +27,11 @@ const AppLeadLayout = () => (
   </>
 );
 const AppSupplierLayout = () => ( 
+  <>
+  <Outlet />
+  </>
+);
+const BookingLayout = () => (
   <>
   <Outlet />
   </>
@@ -115,6 +120,17 @@ export const router = createBrowserRouter([
                     ]
                   },
     
+                ]
+              },
+
+              {
+                path: 'booking',
+                element: <BookingLayout />,
+                children: [
+                  {
+                    path: 'manual_booking',
+                    element: <ManualBookingLayout />,
+                  },
                 ]
               },
             ]
