@@ -83,6 +83,7 @@ const ManualBooking = ({ refetch, setUpdate }) => {
     const [childPrice, setChildPrice] = useState('');
     const [busName, setBusName] = useState('');
     const [busNumber, setBusNumber] = useState('');
+    const [driverPhone, setDriverPhone] = useState('');
 
    useEffect(() => {
         refetchBookingList();
@@ -521,6 +522,8 @@ const ManualBooking = ({ refetch, setUpdate }) => {
                         <TextField
                         fullWidth
                         label="From"
+                        value={busFrom}
+                        onChange={(e) => setBusFrom(e.target.value)}
                         variant="outlined"
                         placeholder="Enter departure city"
                         className="w-full"
@@ -530,6 +533,8 @@ const ManualBooking = ({ refetch, setUpdate }) => {
                         <TextField
                         fullWidth
                         label="To"
+                        value={busTo}
+                        onChange={(e) => setBusTo(e.target.value)}
                         variant="outlined"
                         placeholder="Enter destination city"
                         className="w-full"
@@ -539,6 +544,8 @@ const ManualBooking = ({ refetch, setUpdate }) => {
                         <TextField
                         fullWidth
                         label="Departure Date & Time"
+                        value={departure}
+                        onChange={(e) => setDeparture(e.target.value)}
                         variant="outlined"
                         type="datetime-local"
                         InputLabelProps={{ shrink: true }}
@@ -549,6 +556,8 @@ const ManualBooking = ({ refetch, setUpdate }) => {
                         <TextField
                         fullWidth
                         label="Arrival Date & Time"
+                        value={arrival}
+                        onChange={(e) => setArrival(e.target.value)}
                         variant="outlined"
                         type="datetime-local"
                         InputLabelProps={{ shrink: true }}
@@ -559,6 +568,7 @@ const ManualBooking = ({ refetch, setUpdate }) => {
                         <TextField
                         fullWidth
                         label="Adults"
+                        value={busAdults}
                         variant="outlined"
                         type="number"
                         placeholder="Enter number of adults"

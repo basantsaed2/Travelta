@@ -216,12 +216,7 @@ const SignUpAgent = () => {
         const response = await axios.post(
             'https://travelta.online/agent/signupAgent',
             formData,
-            {
-                headers: {
-                    Authorization: `Bearer ${auth.user.token}`,
-                    'Content-Type': 'multipart/form-data',
-                },
-            }
+            { headers: { 'Content-Type': 'application/json' } }
         );
 
         if (response.status === 200) {
@@ -233,13 +228,31 @@ const SignUpAgent = () => {
         }
     } catch (error) {
         console.error('Error submitting form:', error);
-        if(error.response.data.errors.owner_phone.includes("The owner phone has already been taken.")){
-          toast.error('The owner phone has already been taken.');
-        }
-        else if (error.response.data.errors.phone.includes("The phone has already been taken.")){
-          toast.error('The phone has already been taken.');
-        }
-        else{
+        // if(error.response.data.errors.owner_phone.includes("The owner phone has already been taken.")){
+        //   toast.error('The owner phone has already been taken.');
+        // }
+        // else if (error.response.data.errors.phone.includes("The phone has already been taken.")){
+        //   toast.error('The phone has already been taken.');
+        // }
+        // else if (error.response.data.errors.owner_email.includes("he owner email has already been taken.")){
+        //   toast.error('he owner email has already been taken.');
+        // }
+        if (
+          error.response.data.errors.owner_phone &&
+          error.response.data.errors.owner_phone[0] === "The owner phone has already been taken."
+        ) {
+          toast.error("The owner phone has already been taken.");
+        } else if (
+          error.response.data.errors.phone &&
+          error.response.data.errors.phone[0] === "The phone has already been taken."
+        ) {
+          toast.error("The phone has already been taken.");
+        } else if (
+          error.response.data.errors.owner_email &&
+          error.response.data.errors.owner_email[0] === "The owner email has already been taken."
+        ) {
+          toast.error("The owner email has already been taken.");
+        } else {
           toast.error(error?.response?.data?.error || 'Network error');
         }
     } finally {
