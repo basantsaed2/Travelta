@@ -67,6 +67,20 @@
   padding: 8px 4px 8px 8px;
 }
 
+/* WebKit Scrollbar Styles */
+.scrollSection::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scrollSection::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.scrollSection::-webkit-scrollbar-thumb {
+  background-color: #cccaca;
+  border-radius: 10px;
+}
 
 
 /* :root {

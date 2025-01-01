@@ -10,6 +10,8 @@ export const useGet = ({ url }) => {
     const [loading, setLoading] = useState(true);
 
     const fetchData = useCallback(async () => {
+        console.log('response', auth.user);
+
         setLoading(true);
         try {
             const response = await axios.get(url, {
@@ -19,6 +21,7 @@ export const useGet = ({ url }) => {
                 },
             });
             if (response.status === 200) {
+                console.log('response', response.data);
                 setData(response.data);
             }
         } catch (error) {

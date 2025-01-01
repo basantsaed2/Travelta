@@ -10,6 +10,10 @@ export { default as CheckoutLayout } from "./CheckoutLayout/CheckoutLayout";
 //Booking
 //Manual Booking
 export { default as ManualBookingLayout } from "./BookingLayout/ManualBookingLayout";
+//Booking List
+export { default as CurrentBookingLayout } from "./BookingListLayout/CurrentBookingLayout";
+export { default as PastBookingLayout } from "./BookingListLayout/PastBookingLayout";
+export { default as UpcomingBookingLayout } from "./BookingListLayout/UpcomingBookingLayout";
 
 // AgentLayouts
 // Users

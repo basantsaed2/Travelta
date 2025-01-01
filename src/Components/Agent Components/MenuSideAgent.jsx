@@ -5,6 +5,7 @@ import { FaHome } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa";
 import { IoIosArrowForward } from 'react-icons/io';
 import { MdFlightTakeoff } from "react-icons/md";
+import { RiCheckDoubleLine } from "react-icons/ri";
 
 const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
 
@@ -34,6 +35,14 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
     const [isActiveBooking, setIsActiveBooking] = useState(stateLink.isActiveBooking ?? false);
     const [isActiveManualBooking, setIsActiveManualBooking] = useState(stateLink.isActiveManualBooking ?? false);
 
+    /* Booking List*/
+    const [isOpenBookingList, setIsOpenBookingList] = useState(stateLink.isOpenBookingList ?? false);
+    const [isActiveBookingListIcon, setIsActiveBookingListIcon] = useState(stateLink.isActiveBookingListIcon ?? false);
+    const [isActiveBookingList, setIsActiveBookingList] = useState(stateLink.isActiveBookingList ?? false);
+    const [isActiveUpcomingBookingList, setIsActiveUpcomingBookingList] = useState(stateLink.isActiveUpcomingBookingList ?? false);
+    const [isActiveCurrentBookingList, setIsActiveCurrentBookingList] = useState(stateLink.isActiveCurrentBookingList ?? false);
+    const [isActivePastBookingList, setIsActivePastBookingList] = useState(stateLink.isActivePastBookingList ?? false);
+
     // Helper function to save the current active links state
     const saveActiveLinksState = useCallback(() => {
         const activeLinks = {
@@ -51,6 +60,14 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
                isActiveBookingIcon,
                isActiveBooking,
                isActiveManualBooking,
+
+               isOpenBookingList,
+               isActiveBookingListIcon,
+               isActiveBookingList,
+               isActiveUpcomingBookingList,
+               isActiveCurrentBookingList,
+               isActivePastBookingList
+
         };
         auth.sidebar = JSON.stringify(activeLinks);
         }, [
@@ -68,6 +85,13 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
                 isActiveBookingIcon,
                 isActiveBooking,
                 isActiveManualBooking,
+
+                isOpenBookingList,
+                isActiveBookingListIcon,
+                isActiveBookingList,
+                isActiveUpcomingBookingList,
+                isActiveCurrentBookingList,
+                isActivePastBookingList
     ]);
 
       // Save state to sidebar at auth when any link state changes
@@ -88,6 +112,13 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
             isActiveBookingIcon,
             isActiveBooking,
             isActiveManualBooking,
+
+            isOpenBookingList,
+            isActiveBookingListIcon,
+            isActiveBookingList,
+            isActiveUpcomingBookingList,
+            isActiveCurrentBookingList,
+            isActivePastBookingList
     ]);
 
     // Handler functions to manage all state
@@ -106,6 +137,13 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
         setIsActiveBookingIcon(false);
         setIsActiveBooking(false);
         setIsActiveManualBooking(false);
+
+        setIsOpenBookingList(false);
+        setIsActiveBookingListIcon(false);
+        setIsActiveBookingList(false);
+        setIsActiveUpcomingBookingList(false);
+        setIsActiveCurrentBookingList(false);
+        setIsActivePastBookingList(false)
     }
 
     // Handler functions to manage navigation state
@@ -223,7 +261,6 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
      }, [pathName]);
 
       /* Manual Booking */
-
      const handleClickManualBooking = useCallback(() => {
       handleStateLinks()
 
@@ -239,6 +276,83 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
               handleClickManualBooking()
             }
       }, [location])
+
+      /* Booking List */
+     const handleClickBookingList = useCallback(() => {
+      handleStateLinks()
+
+      setIsOpenBookingList(true);
+      setIsActiveBookingListIcon(true);
+      setIsActiveBookingList(true);
+      setIsActiveCurrentBookingList(true);
+      setIsActivePastBookingList(true);
+      setIsActiveUpcomingBookingList(true)
+     }, []);
+     useEffect(() => {
+            const part = pathName.split('/');
+            const result = part.slice(0, 3).join('/');
+
+            // Only navigate if on `/dashboard/setting` but not already on any sub-route
+            if (
+                   result === "/dashboard_agent/booking_list" &&
+                   !["/dashboard_agent/booking_list/current_booking","/dashboard_agent/booking_list/past_booking","/dashboard_agent/booking_list/upcoming_booking"].some(path => pathName.startsWith(path))
+            ) {
+              setIsOpenBookingList();
+              navigate('/dashboard_agent/booking_list/upcoming_booking');
+            }
+            console.log('result', result);
+     }, [pathName]);
+
+      /* Current Booking */
+     const handleClickCurrentBooking = useCallback(() => {
+      handleStateLinks()
+
+      setIsOpenBookingList(true);
+      setIsActiveBookingListIcon(true);
+      setIsActiveBookingList(true);
+      setIsActiveCurrentBookingList(true);
+      }, []);
+      useEffect(() => {
+            const part = pathName.split('/');
+            const result = part.slice(0, 4).join('/');
+            if (result == "/dashboard_agent/booking_list/current_booking") {
+              handleClickCurrentBooking()
+            }
+      }, [location])
+
+      /* Upcoming Booking */
+      const handleClickUpcomingBooking = useCallback(() => {
+        handleStateLinks()
+  
+        setIsOpenBookingList(true);
+        setIsActiveBookingListIcon(true);
+        setIsActiveBookingList(true);
+        setIsActiveUpcomingBookingList(true);
+        }, []);
+        useEffect(() => {
+              const part = pathName.split('/');
+              const result = part.slice(0, 4).join('/');
+              if (result == "/dashboard_agent/booking_list/upcoming_booking") {
+                handleClickUpcomingBooking()
+              }
+        }, [location])
+
+        /* Past Booking */
+      const handleClickPastBooking = useCallback(() => {
+        handleStateLinks()
+  
+        setIsOpenBookingList(true);
+        setIsActiveBookingListIcon(true);
+        setIsActiveBookingList(true);
+        setIsActivePastBookingList(true);
+        }, []);
+        useEffect(() => {
+              const part = pathName.split('/');
+              const result = part.slice(0, 4).join('/');
+              if (result == "/dashboard_agent/booking_list/past_booking") {
+                handleClickPastBooking()
+              }
+        }, [location])
 
 
 
@@ -334,7 +448,7 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
                       className={`${isActiveBookingIcon || isActiveBooking ? 'text-mainColor' : 'text-white'}`}
                 />
                {!isSidebarCollapsed && (
-                  <span className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${isActiveBooking ? "text-mainColor" : "text-white"}`}>Booking</span>
+                  <span className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${isActiveBooking ? "text-mainColor" : "text-white"}`}>New Booking</span>
                 )}
         </div>
         {!isSidebarCollapsed && (
@@ -349,6 +463,60 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`
                                   }>
                                   Manual Booking
+                          </li>
+                    </Link>
+            </ul>
+
+      </div>
+
+
+       {/* Booking List */}
+       <Link to="booking_list"
+        onMouseMove={() => setIsActiveBookingListIcon(true)}
+        onMouseOut={() => setIsActiveBookingListIcon(false)}
+        onClick={() => { handleClickBookingList(); onLinkClick(); }}
+        className={`
+          ${isActiveBookingList ? 'active' : ''}
+         flex items-center 
+         ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
+        hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+      >
+        <div className="flex font-semibold text-xl items-center gap-x-2">
+                <RiCheckDoubleLine  
+                      className={`${isActiveBookingListIcon || isActiveBookingList ? 'text-mainColor' : 'text-white'}`}
+                />
+               {!isSidebarCollapsed && (
+                  <span className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${isActiveBookingList ? "text-mainColor" : "text-white"}`}>Booking List</span>
+                )}
+        </div>
+        {!isSidebarCollapsed && (
+                <IoIosArrowForward className={`${isActiveBookingList ? 'text-mainColor rotate-90' : 'text-white rotate-0'} text-xl transition-all duration-300 group-hover:text-mainColor`} />
+        )}
+      </Link>
+      <div className={`${isOpenBookingList && !isSidebarCollapsed ? "h-17" : "h-0 "} overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}>
+            <ul className='list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2'>
+                    <Link to={"booking_list/upcoming_booking"} onClick={handleClickUpcomingBooking}>
+                          <li
+                                  className={`${isActiveUpcomingBookingList ? 'rounded-xl bg-white text-mainColor' : 'text-white'}
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`
+                                  }>
+                                  UpComing
+                          </li>
+                    </Link>
+                    <Link to={"booking_list/current_booking"} onClick={handleClickCurrentBooking}>
+                          <li
+                                  className={`${isActiveCurrentBookingList ? 'rounded-xl bg-white text-mainColor' : 'text-white'}
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`
+                                  }>
+                                  Current
+                          </li>
+                    </Link>
+                    <Link to={"booking_list/past_booking"} onClick={handleClickPastBooking}>
+                          <li
+                                  className={`${isActivePastBookingList ? 'rounded-xl bg-white text-mainColor' : 'text-white'}
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`
+                                  }>
+                                  Past 
                           </li>
                     </Link>
             </ul>

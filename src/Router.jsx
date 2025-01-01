@@ -9,7 +9,7 @@ import SignUpAffilate from "./Pages/Authentication/SignUpAffilate"
 import Login from "./Pages/Authentication/Login";
 import AgentLayout from "./Layouts/AgentLayouts/AgentLayout";
 import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";  
-import {AddLeadLayout, AddSupplierLayout, CartLayout, CheckoutLayout, CustomersLayout , EditSupplierLayout, LeadLayout, ManualBookingLayout, PlansLayout, SupplierLayout} from "./Layouts/AllLayouts";
+import {AddLeadLayout, AddSupplierLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditSupplierLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, SupplierLayout, UpcomingBookingLayout} from "./Layouts/AllLayouts";
 
 const AppLayoutAgent = () => (
     <>
@@ -36,10 +36,15 @@ const BookingLayout = () => (
   <Outlet />
   </>
 );
+const BookingListLayout = () => (
+  <>
+  <Outlet />
+  </>
+);
 export const router = createBrowserRouter([
 
     {
-        path: "/",
+        path: "/sign_agent",
         element: <SignUpAgent />,
     },
     {
@@ -55,7 +60,7 @@ export const router = createBrowserRouter([
         element: <SignUpAffilate />,
     },
     {
-        path: "/login",
+        path: "/",
         element: <Login />,
     },
     {
@@ -130,6 +135,24 @@ export const router = createBrowserRouter([
                   {
                     path: 'manual_booking',
                     element: <ManualBookingLayout />,
+                  },
+                ]
+              },
+              {
+                path: 'booking_list',
+                element: <BookingListLayout />,
+                children: [
+                  {
+                    path: 'current_booking',
+                    element: <CurrentBookingLayout />,
+                  },
+                  {
+                    path: 'past_booking',
+                    element: <PastBookingLayout />,
+                  },
+                  {
+                    path: 'upcoming_booking',
+                    element: <UpcomingBookingLayout />,
                   },
                 ]
               },

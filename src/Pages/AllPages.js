@@ -9,7 +9,10 @@ export { default as CheckoutPage } from "./Dashboard/Checkout/CheckoutPage";
 //Booking
 //Manual Booking
 export { default as ManualBookingPage } from "./Dashboard/Booking/ManualBookingPage";
-
+//Booking List
+export { default as CurrentBookingPage } from "./Dashboard/BookingList/CurrentBookingPage";
+export { default as PastBookingPage } from "./Dashboard/BookingList/PastBookingPage";
+export { default as UpcomingBookingPage } from "./Dashboard/BookingList/UpcomingBookingPage";
 
 // AgentDashboard
 // Users 
