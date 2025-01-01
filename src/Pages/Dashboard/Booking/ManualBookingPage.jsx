@@ -22,7 +22,7 @@ const ManualBooking = ({ refetch, setUpdate }) => {
 
     const [selectedService, setSelectedService] = useState(''); // Selected service
     const { refetch: refetchCustomerServices, loading: loadingCustomerServices, data: customerServicesData } = useGet({
-        url: selectedService ? `https://travelta.online/agent/manual_booking/service_supplier?service_id=${selectedService}` : ''
+        url: selectedService ? `https://travelta.online/agent/manual_booking/service_supplier?service_id=${selectedService.id}` : ''
     });
         
     const [selectedCountry, setSelectedCountry] = useState(''); // Selected service
@@ -347,23 +347,17 @@ const ManualBooking = ({ refetch, setUpdate }) => {
       setPrice(calculatedPrice.toFixed(2));
       setTotalPrice(calculatedTotalPrice.toFixed(2));
     }, [cost, markupValue, selectedTaxId, isMarkupPercentage, taxes]);
-
-  //   useEffect(() => {
-  //     if (!loadingPost) {
-  //       console.log(response)
-
-  //         }
-  // }, [response])
     
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Create FormData object to append the form data
     const formData = new FormData();
+    // console.log('service:', selectedService);
 
     // Append form fields to FormData 
     formData.append('from_supplier_id', selectedFromSupplier);
-    formData.append('from_service_id', selectedService);
+    formData.append('from_service_id', selectedService.id);
     if(isMarkupPercentage === 1){
       formData.append('mark_up_type', 'precentage');
     }else{
@@ -386,89 +380,94 @@ const ManualBooking = ({ refetch, setUpdate }) => {
     } 
 
     // Append Hotal fields to FormData 
-    // formData.append('hotel_name', hotelName);
-    // formData.append('check_in', checkInDate);
-    // formData.append('check_out', checkOutDate)
-    // formData.append('nights', totalNights)
-    // formData.append('room_type', roomType)
-    // formData.append('room_quantity', roomQuantity)
-    // formData.append('adults', adults)
-    // formData.append('childreen', children)
-
+    if(selectedService.service_name === 'Hotel'){
+      formData.append('hotel_name', hotelName);
+      formData.append('check_in', checkInDate);
+      formData.append('check_out', checkOutDate)
+      formData.append('nights', totalNights)
+      formData.append('room_type', roomType)
+      formData.append('room_quantity', roomQuantity)
+      formData.append('adults', adults)
+      formData.append('childreen', children)
+    }
     // Append Bus fields to FormData 
-    // formData.append('from', busFrom);
-    // formData.append('to', busTo);
-    // formData.append('departure', departure);
-    // formData.append('arrival', arrival);
-    // formData.append('adults', busAdults);
-    // formData.append('childreen', busChildren);
-    // formData.append('child_price', childPrice);
-    // formData.append('adult_price', adultPrice);
-    // formData.append('bus', busName);
-    // formData.append('bus_number', busNumber);
-    // formData.append('driver_phone', driverPhone);
-
-     // Append Visa fields to FormData 
-    //  formData.append('country', visaCountry);
-    //  formData.append('travel_date', visaTravelDate);
-    //  formData.append('appointment_date', visaAppointmentDate);
-    //  formData.append('number', visaNumber);
-    //  formData.append("customers", JSON.stringify(visaCustomers)); // Serialize array to JSON
-    //  formData.append('notes', visaNotes);
-
+    else if(selectedService.service_name === 'Bus'){
+      formData.append('from', busFrom);
+      formData.append('to', busTo);
+      formData.append('departure', departure);
+      formData.append('arrival', arrival);
+      formData.append('adults', busAdults);
+      formData.append('childreen', busChildren);
+      formData.append('child_price', childPrice);
+      formData.append('adult_price', adultPrice);
+      formData.append('bus', busName);
+      formData.append('bus_number', busNumber);
+      formData.append('driver_phone', driverPhone);
+    }
+    // Append Visa fields to FormData 
+    else if(selectedService.service_name === 'Visa'){
+      formData.append('country', visaCountry);
+      formData.append('travel_date', visaTravelDate);
+      formData.append('appointment_date', visaAppointmentDate);
+      formData.append('number', visaNumber);
+      formData.append("customers", JSON.stringify(visaCustomers)); // Serialize array to JSON
+      formData.append('notes', visaNotes);
+    }
     // Append Flight fields to FormData 
-    // formData.append('type', selectedFlightType);
-    // formData.append('departure', flightDeparture);
-    // formData.append('direction', selectedFlightDirection);
-    // formData.append("customers", JSON.stringify(flightCustomers)); // Serialize array to JSON
-    // formData.append('childreen', flightChildren);
-    // formData.append('adults', flightAdults);
-    // formData.append('infants', flightInfants);
-    // formData.append('adult_price', flightAdultPrice);
-    // formData.append('child_price', flightChildPrice);
-    // formData.append('class', flightClass);
-    // formData.append('airline', flightAirline);
-    // formData.append('ticket_number', flightTicketNumber);
-    // formData.append('ref_pnr', flightRefPNR);
-    // if (selectedFlightDirection === 'round_trip' || selectedFlightDirection === 'multi_city') {
-    //   formData.append('arrival', flightArrival);
-    // }
-    // const formattedFlights = JSON.stringify(
-    //   multiCityFlights.map((flight) => ({
-    //     from: flight.from,
-    //     to: flight.to,
-    //   }))
-    // );  
-    // formData.append('from_to', formattedFlights);
-
+    else if(selectedService.service_name === 'Flight'){
+      formData.append('type', selectedFlightType);
+      formData.append('departure', flightDeparture);
+      formData.append('direction', selectedFlightDirection);
+      formData.append("customers", JSON.stringify(flightCustomers)); // Serialize array to JSON
+      formData.append('childreen', flightChildren);
+      formData.append('adults', flightAdults);
+      formData.append('infants', flightInfants);
+      formData.append('adult_price', flightAdultPrice);
+      formData.append('child_price', flightChildPrice);
+      formData.append('class', flightClass);
+      formData.append('airline', flightAirline);
+      formData.append('ticket_number', flightTicketNumber);
+      formData.append('ref_pnr', flightRefPNR);
+      if (selectedFlightDirection === 'round_trip' || selectedFlightDirection === 'multi_city') {
+        formData.append('arrival', flightArrival);
+      }
+      const formattedFlights = JSON.stringify(
+        multiCityFlights.map((flight) => ({
+          from: flight.from,
+          to: flight.to,
+        }))
+      );  
+      formData.append('from_to', formattedFlights);
+    }
     // Append Tour fields to FormData 
-    // formData.append('tour', tour);
-    // formData.append('type', selectedTourType);
-    // formData.append('adult_price', tourAdultPrice);
-    // formData.append('child_price', tourChildPrice);
-    // formData.append('adults', tourAdults);
-    // formData.append('childreen', tourChildren);
+    else if(selectedService.service_name === 'Tour'){
+      formData.append('tour', tour);
+      formData.append('type', selectedTourType);
+      formData.append('adult_price', tourAdultPrice);
+      formData.append('child_price', tourChildPrice);
+      formData.append('adults', tourAdults);
+      formData.append('childreen', tourChildren);
 
-    // const formattedBuses = JSON.stringify(
-    //   buses.map((bus) => ({
-    //     transportation: bus.transportation,
-    //     seats: bus.seats,
-    //   }))
-    // );
-    // formData.append("tour_buses", formattedBuses);
-    // // Format and append tour_hotels as a JSON string
-    // const formattedHotels = JSON.stringify(
-    //   hotels.map((hotel) => ({
-    //     destination: hotel.destination,
-    //     hotel_name: hotel.hotel_name,
-    //     room_type: hotel.room_type,
-    //     check_in: hotel.check_in,
-    //     check_out: hotel.check_out,
-    //     nights: hotel.nights,
-    //   }))
-    // );
-    // formData.append("tour_hotels", formattedHotels);
-    
+      const formattedBuses = JSON.stringify(
+        buses.map((bus) => ({
+          transportation: bus.transportation,
+          seats: bus.seats,
+        }))
+      );
+      formData.append("tour_buses", formattedBuses);
+      // Format and append tour_hotels as a JSON string
+      const formattedHotels = JSON.stringify(
+        hotels.map((hotel) => ({
+          destination: hotel.destination,
+          hotel_name: hotel.hotel_name,
+          room_type: hotel.room_type,
+          check_in: hotel.check_in,
+          check_out: hotel.check_out,
+          nights: hotel.nights,
+        }))
+      );
+      formData.append("tour_hotels", formattedHotels);
+    }
     // Call the postData function to send the data to the backend
     postData(formData, 'Booking Added Successfully');
   };
@@ -500,7 +499,7 @@ const ManualBooking = ({ refetch, setUpdate }) => {
                 required
                 >
                 {services.map((service) => (
-                    <MenuItem key={service.id} value={service.id}>
+                    <MenuItem key={service.id} value={service}>
                     {service.service_name}
                     </MenuItem>
                 ))}
@@ -753,9 +752,10 @@ const ManualBooking = ({ refetch, setUpdate }) => {
         </button>
         {visibleSection === 'details' && (
           <div>
-            <div className="space-y-4 p-6">
+            <div className="space-y-4 p-6">  
 
             {/* Hotel Details */}
+            {selectedService.service_name === "Hotel" && (
               <div className="border rounded-lg overflow-hidden shadow-lg">
                 <button type='button'
                   onClick={() => setDetails({ ...details, hotel: !details.hotel })}
@@ -870,8 +870,10 @@ const ManualBooking = ({ refetch, setUpdate }) => {
                     )}
 
               </div>
+            )}
 
             {/* Bus Details */}
+            {selectedService.service_name === "Bus" && (
               <div className="border rounded-lg overflow-hidden shadow-lg">
                     <button type='button'
                     onClick={() => setDetails({ ...details, bus: !details.bus })}
@@ -1016,8 +1018,10 @@ const ManualBooking = ({ refetch, setUpdate }) => {
                     )}
 
               </div>
+            )}
 
             {/* Visa Details */}
+            {selectedService.service_name === "Visa" && (
               <div className="border rounded-lg overflow-hidden shadow-lg">
                 <button type='button'
                   onClick={() => setDetails({ ...details, visa: !details.visa })}
@@ -1117,8 +1121,10 @@ const ManualBooking = ({ refetch, setUpdate }) => {
                   </div>
                 )}
               </div>
+            )}
 
             {/* Flight  Details */}
+            {selectedService.service_name === "Flight" && (
               <div className="border rounded-lg overflow-hidden shadow-lg">
                 <button type='button'
                   onClick={() => setDetails({ ...details, flight : !details.flight  })}
@@ -1424,289 +1430,292 @@ const ManualBooking = ({ refetch, setUpdate }) => {
                 )}
 
               </div>
+            )}
 
             {/* Tour  Details */}
-            <div className="border rounded-lg overflow-hidden shadow-lg">
-              <button
-                type="button"
-                onClick={() => setDetails({ ...details, tour: !details.tour })}
-                className="w-full flex justify-between items-center px-6 py-3 bg-blue-50 text-blue-700 font-semibold hover:bg-blue-100 transition-all duration-300"
-              >
-                <span>Tour Details</span>
-                <span>{details.tour ? '-' : '+'}</span>
-              </button>
+            {selectedService.service_name === "Tour" && (
+              <div className="border rounded-lg overflow-hidden shadow-lg">
+                <button
+                  type="button"
+                  onClick={() => setDetails({ ...details, tour: !details.tour })}
+                  className="w-full flex justify-between items-center px-6 py-3 bg-blue-50 text-blue-700 font-semibold hover:bg-blue-100 transition-all duration-300"
+                >
+                  <span>Tour Details</span>
+                  <span>{details.tour ? '-' : '+'}</span>
+                </button>
 
-              {details.tour && (
-                <div className='flex flex-col'>
-                  <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 bg-gray-50">
+                {details.tour && (
+                  <div className='flex flex-col'>
+                    <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 bg-gray-50">
 
-                     {/* Tour */}
-                     <div className="mb-4">
-                        <TextField
-                          label="Tour Name"
-                          variant="outlined"
-                          fullWidth
-                          className='w-full'
-                          value={tour}  
-                          onChange={(e) => setTour(e.target.value)}
-                          placeholder="Enter Tour Name"
-                        />
-                      </div>
-
-                      <TextField
-                        select
-                        fullWidth
-                        variant="outlined"
-                        value={selectedTourType}
-                        onChange={(e) => setSelectedTourType(e.target.value)}
-                        label={'Select Tour Type'}
-                        className="w-full"
-                        placeholder="Enter Tour Type"
-                        >
-                        {tourType.map((tour) => (
-                            <MenuItem key={tour.value} value={tour.value}>
-                            {tour.label}
-                            </MenuItem>
-                        ))}
-                      </TextField>
-
-                       {/* Children */}
-                       <div className="mb-4">
-                        <TextField
-                          label="Children"
-                          type="number"
-                          variant="outlined"
-                          fullWidth
-                          className='w-full'
-                          value={tourChildren}  
-                          onChange={(e) => setTourChildren(e.target.value)}
-                          placeholder="Enter number of children"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div>
-
-                      {/* Adults */}
+                      {/* Tour */}
                       <div className="mb-4">
+                          <TextField
+                            label="Tour Name"
+                            variant="outlined"
+                            fullWidth
+                            className='w-full'
+                            value={tour}  
+                            onChange={(e) => setTour(e.target.value)}
+                            placeholder="Enter Tour Name"
+                          />
+                        </div>
+
                         <TextField
-                          label="Adults"
-                          type="number"
-                          variant="outlined"
+                          select
                           fullWidth
-                          className='w-full'
-                          value={tourAdults}
-                          onChange={(e) => setTourAdults(e.target.value)}
-                          placeholder="Enter number of adults"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div>
-
-                       {/* Child Price */}
-                       <div className="mb-4">
-                        <TextField
-                          label="Child Price"
-                          type="number"
                           variant="outlined"
-                          fullWidth
-                          className='w-full'
-                          value={tourChildPrice}
-                          onChange={(e) => setTourChildPrice(e.target.value)}
-                          placeholder="Enter Child Price"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div>
+                          value={selectedTourType}
+                          onChange={(e) => setSelectedTourType(e.target.value)}
+                          label={'Select Tour Type'}
+                          className="w-full"
+                          placeholder="Enter Tour Type"
+                          >
+                          {tourType.map((tour) => (
+                              <MenuItem key={tour.value} value={tour.value}>
+                              {tour.label}
+                              </MenuItem>
+                          ))}
+                        </TextField>
 
-                      {/* Adult Price */}
-                      <div className="mb-4">
-                        <TextField
-                          label="Adult Price"
-                          type="number"
-                          variant="outlined"
-                          fullWidth
-                          className='w-full'
-                          value={tourAdultPrice}
-                          onChange={(e) => setTourAdultPrice(e.target.value)}
-                          placeholder="Enter Adult Price"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div>
-                  </div>
+                        {/* Children */}
+                        <div className="mb-4">
+                          <TextField
+                            label="Children"
+                            type="number"
+                            variant="outlined"
+                            fullWidth
+                            className='w-full'
+                            value={tourChildren}  
+                            onChange={(e) => setTourChildren(e.target.value)}
+                            placeholder="Enter number of children"
+                            inputProps={{ min: 0 }} // Prevent typing values below 0
+                          />
+                        </div>
 
-{/* Hotel Inputs */}
-{hotels.map((hotel, index) => (
-  <div key={index} className="p-4 bg-gray-50">
-    <h1 className="bg-gray-100 p-2 font-semibold text-mainColor flex justify-center">
-      Hotel Details
-    </h1>
-    <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <TextField
-        label="Destination"
-        value={hotel.destination}
-        onChange={(e) => handleHotelChange(index, "destination", e.target.value)}
-        fullWidth
-        className="mb-2"
-      />
-      <TextField
-        label="Hotel Name"
-        value={hotel.hotel_name}
-        onChange={(e) => handleHotelChange(index, "hotel_name", e.target.value)}
-        fullWidth
-        className="mb-2"
-      />
-      <TextField
-        label="Room Type"
-        value={hotel.room_type}
-        onChange={(e) => handleHotelChange(index, "room_type", e.target.value)}
-        fullWidth
-        className="mb-2"
-      />
-      <TextField
-        label="Check-In Date"
-        type="date"
-        value={hotel.check_in}
-        onChange={(e) => handleHotelChange(index, "check_in", e.target.value)}
-        fullWidth
-        InputLabelProps={{ shrink: true }}
-        className="mb-2"
-      />
-      <TextField
-        label="Check-Out Date"
-        type="date"
-        value={hotel.check_out}
-        onChange={(e) => handleHotelChange(index, "check_out", e.target.value)}
-        fullWidth
-        InputLabelProps={{ shrink: true }}
-        className="mb-2"
-      />
-      <TextField
-        label="Nights"
-        type="number"
-        value={hotel.nights}
-        onChange={(e) => handleHotelChange(index, "nights", e.target.value)}
-        fullWidth
-        className="mb-2"
-      />
-    </div>
+                        {/* Adults */}
+                        <div className="mb-4">
+                          <TextField
+                            label="Adults"
+                            type="number"
+                            variant="outlined"
+                            fullWidth
+                            className='w-full'
+                            value={tourAdults}
+                            onChange={(e) => setTourAdults(e.target.value)}
+                            placeholder="Enter number of adults"
+                            inputProps={{ min: 0 }} // Prevent typing values below 0
+                          />
+                        </div>
 
-    {/* Buttons (Add and Remove) */}
-    <div className="flex justify-between mt-2">
-      {/* Remove button is shown only if there are more than 1 hotel */}
-      {index !== 0 && hotels.length > 1 && (
-         <button
-         variant="contained"
-         // color="secondary"
-         className='bg-red-500 text-white p-2'
-         onClick={() => removeHotel(index)}
-       >
-         Remove Hotel
-       </button>
-      )}
+                        {/* Child Price */}
+                        <div className="mb-4">
+                          <TextField
+                            label="Child Price"
+                            type="number"
+                            variant="outlined"
+                            fullWidth
+                            className='w-full'
+                            value={tourChildPrice}
+                            onChange={(e) => setTourChildPrice(e.target.value)}
+                            placeholder="Enter Child Price"
+                            inputProps={{ min: 0 }} // Prevent typing values below 0
+                          />
+                        </div>
 
-      {/* Add button shown only for the last hotel */}
-      {index === hotels.length - 1 && (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={addNewHotel}
-        >
-          + Add Another Hotel
-        </Button>
-      )}
-    </div>
-  </div>
-))}
+                        {/* Adult Price */}
+                        <div className="mb-4">
+                          <TextField
+                            label="Adult Price"
+                            type="number"
+                            variant="outlined"
+                            fullWidth
+                            className='w-full'
+                            value={tourAdultPrice}
+                            onChange={(e) => setTourAdultPrice(e.target.value)}
+                            placeholder="Enter Adult Price"
+                            inputProps={{ min: 0 }} // Prevent typing values below 0
+                          />
+                        </div>
+                    </div>
 
+  {/* Hotel Inputs */}
+  {hotels.map((hotel, index) => (
+    <div key={index} className="p-4 bg-gray-50">
+      <h1 className="bg-gray-100 p-2 font-semibold text-mainColor flex justify-center">
+        Hotel Details
+      </h1>
+      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <TextField
+          label="Destination"
+          value={hotel.destination}
+          onChange={(e) => handleHotelChange(index, "destination", e.target.value)}
+          fullWidth
+          className="mb-2"
+        />
+        <TextField
+          label="Hotel Name"
+          value={hotel.hotel_name}
+          onChange={(e) => handleHotelChange(index, "hotel_name", e.target.value)}
+          fullWidth
+          className="mb-2"
+        />
+        <TextField
+          label="Room Type"
+          value={hotel.room_type}
+          onChange={(e) => handleHotelChange(index, "room_type", e.target.value)}
+          fullWidth
+          className="mb-2"
+        />
+        <TextField
+          label="Check-In Date"
+          type="date"
+          value={hotel.check_in}
+          onChange={(e) => handleHotelChange(index, "check_in", e.target.value)}
+          fullWidth
+          InputLabelProps={{ shrink: true }}
+          className="mb-2"
+        />
+        <TextField
+          label="Check-Out Date"
+          type="date"
+          value={hotel.check_out}
+          onChange={(e) => handleHotelChange(index, "check_out", e.target.value)}
+          fullWidth
+          InputLabelProps={{ shrink: true }}
+          className="mb-2"
+        />
+        <TextField
+          label="Nights"
+          type="number"
+          value={hotel.nights}
+          onChange={(e) => handleHotelChange(index, "nights", e.target.value)}
+          fullWidth
+          className="mb-2"
+        />
+      </div>
 
-
-{/* Bus Inputs */}
-{buses.map((bus, index) => (
-  <div key={index} className="p-4 bg-gray-50">
-    <h1 className="bg-gray-100 p-2 font-semibold text-mainColor flex justify-center">
-      Bus Details
-    </h1>
-    <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <TextField
-        label="Transportation"
-        value={bus.transportation}
-        onChange={(e) => handleBusChange(index, "transportation", e.target.value)}
-        fullWidth
-        className="mb-2"
-      />
-      <TextField
-        label="Seats"
-        type="number"
-        value={bus.seats}
-        onChange={(e) => handleBusChange(index, "seats", e.target.value)}
-        fullWidth
-        className="mb-2"
-      />
-    </div>
-
-    {/* Buttons (Add and Remove) */}
-    <div className="flex justify-between mt-2">
-      {/* Remove button is shown only if there are more than 1 bus */}
-      {index !== 0 && buses.length > 1 && (
-        <button
+      {/* Buttons (Add and Remove) */}
+      <div className="flex justify-between mt-2">
+        {/* Remove button is shown only if there are more than 1 hotel */}
+        {index !== 0 && hotels.length > 1 && (
+          <button
           variant="contained"
           // color="secondary"
           className='bg-red-500 text-white p-2'
-          onClick={() => removeBus(index)}
+          onClick={() => removeHotel(index)}
         >
-          Remove Bus
+          Remove Hotel
         </button>
-      )}
+        )}
 
-      {/* Add button shown only for the last bus */}
-      {index === buses.length - 1 && (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={addNewBus}
-        >
-          + Add Another Bus
-        </Button>
-      )}
+        {/* Add button shown only for the last hotel */}
+        {index === hotels.length - 1 && (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={addNewHotel}
+          >
+            + Add Another Hotel
+          </Button>
+        )}
+      </div>
     </div>
-  </div>
-))}
+  ))}
 
 
 
-                  {/* Bus Inputs */}
-                  {/* {buses.map((bus, index) => (
-                    <>
-                    <h1 className='bg-gray-100 p-2 font-semibold text-mainColor flex justify-center'>Bus Details</h1>
-                    <div key={index} className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 bg-gray-50">
-                      
-                      <TextField
-                        label="Transportation"
-                        value={bus.transportation}
-                        onChange={(e) => handleBusChange(index, "transportation", e.target.value)}
-                        fullWidth
-                        className="mb-2"
-                      />
-                      <TextField
-                        label="Seats"
-                        type="number"
-                        value={bus.seats}
-                        onChange={(e) => handleBusChange(index, "seats", e.target.value)}
-                        fullWidth
-                        className="mb-2"
-                      />
-                      </div>
-                    </>
-                  ))}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={addNewBus}
-                    className="mb-4"
-                  >
-                    + Add Another Bus
-                  </Button> */}
+  {/* Bus Inputs */}
+  {buses.map((bus, index) => (
+    <div key={index} className="p-4 bg-gray-50">
+      <h1 className="bg-gray-100 p-2 font-semibold text-mainColor flex justify-center">
+        Bus Details
+      </h1>
+      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <TextField
+          label="Transportation"
+          value={bus.transportation}
+          onChange={(e) => handleBusChange(index, "transportation", e.target.value)}
+          fullWidth
+          className="mb-2"
+        />
+        <TextField
+          label="Seats"
+          type="number"
+          value={bus.seats}
+          onChange={(e) => handleBusChange(index, "seats", e.target.value)}
+          fullWidth
+          className="mb-2"
+        />
+      </div>
 
-                </div>
-              )}
-            </div>
+      {/* Buttons (Add and Remove) */}
+      <div className="flex justify-between mt-2">
+        {/* Remove button is shown only if there are more than 1 bus */}
+        {index !== 0 && buses.length > 1 && (
+          <button
+            variant="contained"
+            // color="secondary"
+            className='bg-red-500 text-white p-2'
+            onClick={() => removeBus(index)}
+          >
+            Remove Bus
+          </button>
+        )}
+
+        {/* Add button shown only for the last bus */}
+        {index === buses.length - 1 && (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={addNewBus}
+          >
+            + Add Another Bus
+          </Button>
+        )}
+      </div>
+    </div>
+  ))}
+
+
+
+                    {/* Bus Inputs */}
+                    {/* {buses.map((bus, index) => (
+                      <>
+                      <h1 className='bg-gray-100 p-2 font-semibold text-mainColor flex justify-center'>Bus Details</h1>
+                      <div key={index} className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 bg-gray-50">
+                        
+                        <TextField
+                          label="Transportation"
+                          value={bus.transportation}
+                          onChange={(e) => handleBusChange(index, "transportation", e.target.value)}
+                          fullWidth
+                          className="mb-2"
+                        />
+                        <TextField
+                          label="Seats"
+                          type="number"
+                          value={bus.seats}
+                          onChange={(e) => handleBusChange(index, "seats", e.target.value)}
+                          fullWidth
+                          className="mb-2"
+                        />
+                        </div>
+                      </>
+                    ))}
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={addNewBus}
+                      className="mb-4"
+                    >
+                      + Add Another Bus
+                    </Button> */}
+
+                  </div>
+                )}
+              </div>
+            )}
 
             </div>
           </div>
