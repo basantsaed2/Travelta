@@ -21,6 +21,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false); // To control modal visibility
 
    useEffect(() => {
     if (userData) {
@@ -28,7 +29,7 @@ const Login = () => {
            auth.login(userData); // Call auth.login with the updated data
            setIsLoading(false);
 
-           if (userType === "agent" && userData.plan_id !== null) {
+            if (userType === "agent" && userData.plan_id !== null) {
                   navigate("/dashboard_agent", { replace: true });
            }
            else if (userType === "agent" && userData.plan_id === null) {
@@ -39,6 +40,14 @@ const Login = () => {
      }
     }
   }, [userData]);
+
+  
+  const handleCloseModal = () => {
+    setModalVisible(false); // Close the modal
+    // navigate('/'); // Navigate to login page
+    setEmail('');
+    setPassword('');
+  };
  
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,22 +73,30 @@ const Login = () => {
       });
 
       if (response.status === 200) {
-        toast.success('Login successful!');
-              console.log('Response:', response.data);
-              const userData = {
-                ...response.data.user,
-                roles: [response.data.user.role] // Assuming role is the user's role
-              };
-        setUserData(userData);
-        setUserType(response.data.user.role);
-        console.log("response role", response.data.user.role);
+          if (response.data.user.status === "pending") {
+            console.log('Response:', response.data);
+            setModalVisible(true); // Show the modal on successful sign-up
+          }else if (response.data.user.status === "approve") {
+              toast.success('Login successful!');
+                    console.log('Response:', response.data);
+                    const userData = {
+                      ...response.data.user,
+                      roles: [response.data.user.role] // Assuming role is the user's role
+                    };
+              setUserData(userData);
+              setUserType(response.data.user.role);
+              console.log("response role", response.data.user.role);
+                  }
       } else {
         toast.error('Unexpected error occurred during login.');
       }
     } catch (error) {
+      if (error?.response?.data?.faield === "creational not Valid") {
+        toast.error("Email or Password is incorrect");
+      } else {
       console.error('Error submitting form:', error);
       toast.error(error?.response?.data?.error || 'Network error');
-    }
+    }}
   };
   
   if (isLoading) {
@@ -135,6 +152,28 @@ const Login = () => {
               <MainLogo />
             </div>
         </div>
+
+        {modalVisible && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-2xl shadow-xl max-w-lg w-full transform transition-all duration-300 scale-100">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">
+              Welcome!
+              </h3>
+              <p className="text-gray-600 leading-relaxed">
+              Your application is currently under review, and you will be notified as soon as it is approved.
+              </p>
+            </div>
+            <button
+              onClick={handleCloseModal}
+              className="mt-6 bg-mainColor text-white py-3 px-6 rounded-lg w-full font-medium text-lg hover:bg-mainColor/90 focus:outline-none focus:ring-4 focus:ring-mainColor/50 transition-all duration-200"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+        )}
+  
     </div>
   );
 };
