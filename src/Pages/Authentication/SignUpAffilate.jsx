@@ -10,12 +10,13 @@ import Select from 'react-select';
 import Loading from '../../Components/Loading';
 
 const SignUpAffilate = () => {
-
+  const auth = useAuth();
   const [data, setData] = useState('');
   const [userData, setUserData] = useState('');
   const [userType, setUserType] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
+  const [modalVisible, setModalVisible] = useState(false); // To control modal visibility
+
   const [fName, setFName] = useState('');
   const [lName, setLName] = useState('');
   const [email, setEmail] = useState('');
@@ -62,11 +63,21 @@ const SignUpAffilate = () => {
     console.log('Selected Role:', selected); // Do something with the selected option
   };
 
+  
+  const handleCloseModal = () => {
+    setModalVisible(false); // Close the modal
+    navigate('/'); // Navigate to login page
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name) {
-      auth.toastError('Please Enter the Name.');
+    if (!fName) {
+      auth.toastError('Please Enter the First Name.');
+      return;
+    }
+    if (!lName) {
+      auth.toastError('Please Enter the Last Name.');
       return;
     }
     if (!email) {
@@ -86,10 +97,10 @@ const SignUpAffilate = () => {
       auth.toastError('Please Select Image Type.');
       return;
     }
-    if (!selectedRoleOption) {
-      auth.toastError('Please Select Role.');
-      return;
-    }
+    // if (!selectedRoleOption) {
+    //   auth.toastError('Please Select Role.');
+    //   return;
+    // }
 
     if (selectedImageTypeOption.value === 'passport' && !passportImage) {
       toast.error('Please upload your passport image.');
@@ -108,7 +119,8 @@ const SignUpAffilate = () => {
     formData.append('phone', phone);
     formData.append('password', password);
     formData.append('image_type', selectedImageTypeOption?.value);
-    formData.append('role', selectedRoleOption?.value);
+    // formData.append('role', selectedRoleOption?.value);
+    formData.append('role', 'affilate');
 
     if (selectedImageTypeOption.value === 'passport') {
       formData.append('passport_image', passportImage);
@@ -125,22 +137,35 @@ const SignUpAffilate = () => {
       });
 
       if (response.status === 200) {
-        toast.success('Sign-up successful!');
-              console.log('Response:', response.data);
-              const userData = {
-                ...response.data.user,
-                roles: ['user'] // Assuming type represents the user's role
-              };
-        setUserData(userData);
-        setUserType(response.data.user.role);
-        console.log("response role", response.data.user.role);
-      } else {
-        toast.error('Unexpected error occurred during sign-up.');
+                         // toast.success('Sign-up successful!');
+                         console.log('Response:', response.data);
+                         setModalVisible(true); // Show the modal on successful sign-up
+               } else {
+                   toast.error('Unexpected error occurred during sign-up.');
+               }
+        } catch (error) {
+               console.error('Error submitting form:', error);
+               if (
+                 error.response.data.errors.owner_phone &&
+                 error.response.data.errors.owner_phone[0] === "The owner phone has already been taken."
+               ) {
+                 toast.error("The owner phone has already been taken.");
+               } else if (
+                 error.response.data.errors.phone &&
+                 error.response.data.errors.phone[0] === "The phone has already been taken."
+               ) {
+                 toast.error("The phone has already been taken.");
+               } else if (
+                 error.response.data.errors.owner_email &&
+                 error.response.data.errors.owner_email[0] === "The owner email has already been taken."
+               ) {
+                 toast.error("The owner email has already been taken.");
+               } else {
+                 toast.error(error?.response?.data?.error || 'Network error');
+               }
+      } finally {
+          setIsLoading(false);
       }
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      toast.error(error?.response?.data?.error || 'Network error');
-    }
   };
 
   if (isLoading) {
@@ -229,7 +254,7 @@ const SignUpAffilate = () => {
                 </>
                 )}
                 </div>
-                <div className="w-full">
+                {/* <div className="w-full">
                     <Select        
                       options={roleOptions}
                       value={selectedRoleOption}
@@ -237,7 +262,7 @@ const SignUpAffilate = () => {
                       placeholder="Choose a Role"
                       className="custom__control p-2"
                     />
-                </div>
+                </div> */}
                 <button
                 type="submit"
                 className="bg-mainColor text-white px-4 py-2 rounded hover:bg-opacity-90 w-full"
@@ -258,6 +283,30 @@ const SignUpAffilate = () => {
               <MainLogo />
             </div>
         </div>
+
+        
+         {/* Modal */}
+         {modalVisible && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-2xl shadow-xl max-w-lg w-full transform transition-all duration-300 scale-100">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">
+              Sign-Up Successful!
+              </h3>
+              <p className="text-gray-600 leading-relaxed">
+              Thank you for signing up! We are reviewing your application and will get back to you shortly
+              </p>
+            </div>
+            <button
+              onClick={handleCloseModal}
+              className="mt-6 bg-mainColor text-white py-3 px-6 rounded-lg w-full font-medium text-lg hover:bg-mainColor/90 focus:outline-none focus:ring-4 focus:ring-mainColor/50 transition-all duration-200"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+        )}
+
     </div>
   );
 };

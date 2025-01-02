@@ -206,7 +206,8 @@ const SignUpAgent = () => {
         formData.append('city_id', selectedCityOption?.value || '');
         formData.append('source_id', selectedSourceOption?.value || '');
 
-        formData.append('role', selectedRoleOption?.value || '');
+        // formData.append('role', selectedRoleOption?.value || '');
+        formData.append('role', 'agent');
 
         // Add other files
         if (taxCardImage) formData.append('tax_card_image', taxCardImage);
@@ -497,7 +498,7 @@ const SignUpAgent = () => {
                       className="custom__control p-2"
                     />
                     </div>
-                    <div className="w-full">
+                    {/* <div className="w-full">
                     <Select        
                       options={roleOptions}
                       value={selectedRoleOption}
@@ -505,7 +506,7 @@ const SignUpAgent = () => {
                       placeholder="Choose a Role"
                       className="custom__control p-2"
                     />
-                    </div>
+                    </div> */}
 
                     <div className="flex justify-between">
                       <button type="button" onClick={prevStep} className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">Back</button>
