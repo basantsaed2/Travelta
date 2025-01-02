@@ -323,7 +323,7 @@ const SignUpSupplier = () => {
 
   return (
     <div className="sign-up-page flex flex-col items-center justify-center lg:justify-around w-full xl:h-screen lg:h-full text-secoundColor">
-        <h2 className="p-4 pb-0 text-3xl font-semibold text-mainColor text-center mb-5">Sign Up</h2>        
+        <h2 className="p-4 pb-0 text-3xl font-semibold text-mainColor text-center mb-5">SignUp Supplier</h2>        
 
         <div className="flex fixed items-center justify-between w-full relative">
             {[1, 2, 3, 4, 5].map((step, index) => (

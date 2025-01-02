@@ -178,7 +178,7 @@ const SignUpAffilate = () => {
 
   return (
     <div className="sign-up-page flex flex-col items-center justify-center lg:justify-around w-full xl:h-screen lg:h-full text-secoundColor">
-        <h2 className="p-4 pb-0 text-3xl font-semibold text-mainColor text-center mb-5">Sign Up Affilate</h2>
+        <h2 className="p-4 pb-0 text-3xl font-semibold text-mainColor text-center mb-5">SignUp Affilate</h2>
 
          <div className='w-full flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-around w-full'>
             <div className="xl:w-1/2 flex flex-col items-center w-full bg-white rounded-lg p-2 ">  
