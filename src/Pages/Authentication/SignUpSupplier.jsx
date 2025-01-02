@@ -69,7 +69,7 @@ const SignUpSupplier = () => {
     try {
            const response = await axios.get('https://www.travelta.online/agent/signupLists', {
                   headers: {
-                         Authorization: `Bearer ${auth.user.token}`,
+                    'Content-Type': 'multipart/form-data',
                   },
            });
            if (response.status === 200) {
