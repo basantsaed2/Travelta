@@ -1,5 +1,7 @@
-// Dashboard
+//Landing Page
+export { default as LandingPage } from "./LandingPage/LandingPage";
 
+// Dashboard
 //Plans
 export { default as PlansPage } from "./Dashboard/Plans/PlanPage";
 //Cart 

@@ -172,7 +172,7 @@ const SignUpSupplier = () => {
 
   const handleCloseModal = () => {
     setModalVisible(false); // Close the modal
-    navigate('/'); // Navigate to login page
+    navigate('/login'); // Navigate to login page
   };
 
 
@@ -574,7 +574,7 @@ const SignUpSupplier = () => {
               {/* Log In Link */}
               <p className="mt-6 text-mainColor text-center">
                 I Have An Account?{" "}
-                <Link to="/" className="text-mainColor font-semibold hover:underline">Log In</Link>
+                <Link to="/login" className="text-mainColor font-semibold hover:underline">Log In</Link>
               </p>
             </div>
 

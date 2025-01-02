@@ -10,6 +10,7 @@ import Login from "./Pages/Authentication/Login";
 import AgentLayout from "./Layouts/AgentLayouts/AgentLayout";
 import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";  
 import {AddLeadLayout, AddSupplierLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditSupplierLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, SupplierLayout, UpcomingBookingLayout} from "./Layouts/AllLayouts";
+import { LandingPage } from "./Pages/AllPages";
 
 const AppLayoutAgent = () => (
     <>
@@ -44,6 +45,10 @@ const BookingListLayout = () => (
 export const router = createBrowserRouter([
 
     {
+      path: "/",
+      element: <LandingPage />,
+    },
+    {
         path: "/sign_agent",
         element: <SignUpAgent />,
     },
@@ -56,11 +61,11 @@ export const router = createBrowserRouter([
         element: <SignUpFreelancer />,
     },
     {
-        path: "/sign_affilate",
+        path: "/sign_affiliate",
         element: <SignUpAffilate />,
     },
     {
-        path: "/",
+        path: "/login",
         element: <Login />,
     },
     {

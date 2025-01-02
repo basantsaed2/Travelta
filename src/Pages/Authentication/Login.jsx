@@ -44,9 +44,7 @@ const Login = () => {
   
   const handleCloseModal = () => {
     setModalVisible(false); // Close the modal
-    // navigate('/'); // Navigate to login page
-    setEmail('');
-    setPassword('');
+    navigate('/'); // Navigate to login page
   };
  
   const handleSubmit = async (e) => {
