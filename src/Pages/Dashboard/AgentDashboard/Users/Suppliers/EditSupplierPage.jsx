@@ -14,6 +14,7 @@ const EditSupplierPage = ({ update, setUpdate }) => {
 
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
+    const [alternatePhone, setAlternatePhone] = useState("");
     const [email, setEmail] = useState("");
     const [adminName, setAdminName] = useState("");
     const [adminPhone, setAdminPhone] = useState("");
@@ -36,6 +37,7 @@ const EditSupplierPage = ({ update, setUpdate }) => {
             const supplier = supplierData.supplier_agent;
             setName(supplier.agent || '')
             setPhone(supplier.phones || '')
+            setAlternatePhone(supplier.emergency_phone || '')
             setEmail(supplier.emails || '')
             setAdminName(supplier.admin_name || '')
             setAdminPhone(supplier.admin_phone || '')
@@ -57,6 +59,7 @@ const EditSupplierPage = ({ update, setUpdate }) => {
         setAdminPhone('')
         setAdminEmail('')
         setSelectedServices([])
+        setAlternatePhone('')
       }
 
      useEffect(() => {
@@ -107,9 +110,10 @@ const EditSupplierPage = ({ update, setUpdate }) => {
   formData.append('admin_phone', adminPhone)
   formData.append('admin_email', adminEmail)
   formData.append('services', JSON.stringify(selectedServices));
+  formData.append('emergency_phone', alternatePhone)
 
-    postData(formData, 'Lead Updated Success');
-    }
+  postData(formData, 'Lead Updated Success');
+  }
 
   return (
     <>
@@ -142,6 +146,18 @@ const EditSupplierPage = ({ update, setUpdate }) => {
             required
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
+            className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+          />
+        </div>
+        <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
+            {/* <span className="text-xl font-TextFontRegular text-thirdColor">Name:</span> */}
+            <TextField
+            label="Alternate Agent Phone"
+            variant="outlined"
+            type="tel"
+            fullWidth
+            value={alternatePhone}
+            onChange={(e) => setAlternatePhone(e.target.value)}
             className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
           />
         </div>

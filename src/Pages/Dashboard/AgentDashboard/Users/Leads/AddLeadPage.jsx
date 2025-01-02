@@ -12,6 +12,7 @@ const AddLeadPage = ({ update, setUpdate }) => {
     const [leads, setLeads] = useState([]);
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
+    const [alternatePhone, setAlternatePhone] = useState("");
     const [email, setEmail] = useState("");
     const [gender, setGender] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
@@ -33,6 +34,7 @@ const AddLeadPage = ({ update, setUpdate }) => {
         setPhone('');
         setEmail('');
         setGender('');
+        setAlternatePhone('')
     };
 
     useEffect(() => {
@@ -67,6 +69,7 @@ const AddLeadPage = ({ update, setUpdate }) => {
         formData.append('phone', phone);
         formData.append('email', email);
         formData.append('gender', gender);
+        formData.append('emergency_phone', alternatePhone);
 
         postNewLead(formData, 'Lead Added Success');
     };
@@ -118,6 +121,18 @@ const AddLeadPage = ({ update, setUpdate }) => {
               required
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
+              className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+            />
+          </div>
+          <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
+              {/* <span className="text-xl font-TextFontRegular text-thirdColor">Name:</span> */}
+              <TextField
+              label="Alternate Phone"
+              variant="outlined"
+              type="tel"
+              fullWidth
+              value={alternatePhone}
+              onChange={(e) => setAlternatePhone(e.target.value)}
               className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
             />
           </div>

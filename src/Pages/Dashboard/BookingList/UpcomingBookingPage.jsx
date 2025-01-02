@@ -26,7 +26,7 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
     }
   }, [upcomingData]);
 
-  const headers = ['SL', 'From Client','To Client', 'Check In', 'Check Out', 'Total Price'];
+  const headers = ['SL', 'Client Name','Client Phone','Client Alternate','Client Email','Agent', 'Check In', 'Check Out', 'Total Price'];
 
   const tabLists = {
     Hotel: upcomingHotelList,
@@ -80,16 +80,25 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
                     {index + 1}
                   </td>
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                    {item?.name|| '-'}
+                    {item?.to_client?.name|| '-'}
                   </td>
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                    {item?.to_client?.name || '-'}
+                    {item?.to_client?.phone|| '-'}
                   </td>
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                  {item?.[activeTab.toLowerCase()]?.departure?.split(" ")[0] || '-'}
+                    {item?.to_client?.emergency_phone|| '-'}
                   </td>
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                  {item?.[activeTab.toLowerCase()]?.arrival?.split(" ")[0] || '-'}
+                    {item?.to_client?.email|| '-'}
+                  </td>
+                  <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                    {item?.from_supplier?.agent || '-'}
+                  </td>
+                  <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                  {item?.start_date || '-'}
+                  </td>
+                  <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                  {item?.end_date || '-'}
                   </td>
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
                     {item?.total_price|| '-'}

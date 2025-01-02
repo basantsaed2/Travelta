@@ -475,7 +475,7 @@ const ManualBooking = ({ refetch, setUpdate }) => {
 
   return (
     <form onSubmit={handleSubmit} className="bg-gray-100 flex justify-center items-center">
-      <div className="bg-white shadow-lg rounded-lg w-full p-8">
+      <div className="bg-white shadow-lg rounded-lg w-full p-4 lg:p-8">
         {/* <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Manual Booking</h1> */}
 
 
@@ -752,7 +752,7 @@ const ManualBooking = ({ refetch, setUpdate }) => {
         </button>
         {visibleSection === 'details' && (
           <div>
-            <div className="space-y-4 p-6">  
+            <div className="space-y-4 p-2 lg:p-6">  
 
             {/* Hotel Details */}
             {selectedService.service_name === "Hotel" && (

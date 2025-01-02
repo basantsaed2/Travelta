@@ -26,7 +26,7 @@ const CurrentBookingPage = ({ refetch, setUpdate }) => {
         }
     }, [currentData]); // Only run this effect when `data` changes
 
-    const headers = ['SL', 'From Client','To Client', 'Check In', 'Check Out', 'Total Price'];
+    const headers = ['SL', 'Client Name','Client Phone','Client Alternate','Client Email','Agent', 'Check In', 'Check Out', 'Total Price'];
 
     const tabLists = {
       Hotel: currentHotelList,
