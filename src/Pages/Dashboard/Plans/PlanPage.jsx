@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import StaticLoader from '../../../Components/StaticLoader';
 import { useGet } from '../../../Hooks/useGet';
 import { useAuth } from '../../../Context/Auth';
-import { FaShoppingCart } from "react-icons/fa";
+import { FaShoppingCart ,FaSignOutAlt } from "react-icons/fa";
 import { addToCart, removeFromCart } from '../../../Redux/CartSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
 import Logo from "../../../Assets/Images/Logo.jsx";
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 const PlanPage = ({ refetch, setUpdate }) => {
   const { refetch: refetchPlan, loading: loadingPlan, data: dataPlan } = useGet({
     url: 'https://travelta.online/agent/plan',
@@ -15,6 +17,7 @@ const PlanPage = ({ refetch, setUpdate }) => {
   const [selectedPlan, setSelectedPlan] = useState(null);  // New state to track selected plan
   const auth = useAuth(); // Assuming this provides user data including the role
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Get the cart count from Redux store
   const cartItems = useSelector((state) => state.cart);
@@ -84,11 +87,16 @@ useEffect(() => {
   }
 }, [plans]);
 
+const handleLogout = () => {
+  auth.logout();
+  navigate("/login", { replace: true });
+  }
+
 
   return (
     <>
       <div className="w-full flex flex-col h-screen">
-          <nav className="bg-mainColor shadow-md px-4 py-2 flex items-center justify-around">
+          {/* <nav className="bg-mainColor shadow-md px-4 py-2 flex items-center justify-around">
 
           <div className='flex items-center space-x-4'>
           <div className="w-10 h-10 rounded-full flex items-center justify-center">
@@ -97,7 +105,6 @@ useEffect(() => {
             <span className="text-xl font-semibold text-white">Travelta</span>
           </div>
 
-          {/* Sidebar Toggle Button */}
           <h1 className="text-xl font-semibold text-white">Hello, <span>{auth.user.name}</span></h1>
 
           <div className="relative">
@@ -110,7 +117,35 @@ useEffect(() => {
               )}
             </Link>
           </div>
-          </nav>
+          </nav> */}
+           <nav className="bg-mainColor shadow-md px-4 py-2 flex items-center justify-around">
+    <div className="flex items-center space-x-4">
+      <div className="w-10 h-10 rounded-full flex items-center justify-center">
+        <Logo />
+      </div>
+      <span className="text-xl font-semibold text-white">Travelta</span>
+    </div>
+
+    {/* Sidebar Toggle Button */}
+    <h1 className="text-xl font-semibold text-white">Hello, <span>{auth.user.name}</span></h1>
+
+    <div className="relative">
+      <Link to="/dashboard/cart">
+        <FaShoppingCart className="text-white" size={32} />
+        {cartCount > 0 && (
+          <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white text-xs font-bold">
+            {cartCount}
+          </span>
+        )}
+      </Link>
+    </div>
+
+    {/* Logout Button */}
+    <button onClick={handleLogout} className="flex items-center space-x-2 text-white hover:text-gray-300">
+      <FaSignOutAlt size={24} />
+      <span>Logout</span>
+    </button>
+  </nav>
 
           <div className="w-full flex flex-col items-center justify-start p-4 xl:p-12 bg-gray-100">
             <div className="max-w-4xl w-full text-center mb-10">
