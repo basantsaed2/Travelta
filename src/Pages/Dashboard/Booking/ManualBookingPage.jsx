@@ -30,6 +30,9 @@ const ManualBooking = ({ refetch, setUpdate }) => {
         url: selectedCountry ? `https://travelta.online/agent/manual_booking/taxes?country_id=${selectedCountry}` : ''
     });
 
+    const [title, setTitle] = useState([])
+    const [selectedTitle, setSelectedTitle] = useState('');
+
     const [details, setDetails] = useState({
     flight : false,
     bus: false,
@@ -82,21 +85,126 @@ const ManualBooking = ({ refetch, setUpdate }) => {
     const [totalNights, setTotalNights] = useState('');
     const [roomType, setRoomType] = useState('');
     const [roomQuantity, setRoomQuantity] = useState('');
-    const [adults, setAdults] = useState('');
-    const [children, setChildren] = useState('');
+    const [adultsHotelNumber, setAdultsHotelNumber] = useState(0);
+    const [childrenHotelNumber, setChildrenHotelNumber] = useState(0);
+
+    const [hotelAdults, setHotelAdults] = useState([]);
+    const [hotelChildren, setHotelChildren] = useState([]);
+  
+    // Handle change in number of adults for hotel
+    const handleAdultsHotelNumberChange = (e) => {
+      const number = parseInt(e.target.value, 10) || 0;
+      setAdultsHotelNumber(number);
+  
+      // Preserve existing data while adding/removing fields based on number of adults
+      setHotelAdults((prevAdults) => {
+        const updatedAdults = [...prevAdults];
+  
+        // If the number of adults is more, add empty objects
+        while (updatedAdults.length < number) {
+          updatedAdults.push({ title: '', firstName: '', lastName: '' });
+        }
+  
+        // If the number of adults is less, trim the excess fields
+        updatedAdults.length = number;
+  
+        return updatedAdults;
+      });
+    };
+  
+    // Handle change in number of children for hotel
+    const handleChildrenHotelNumberChange = (e) => {
+      const number = parseInt(e.target.value, 10) || 0;
+      setChildrenHotelNumber(number);
+  
+      // Preserve existing data while adding/removing fields based on number of children
+      setHotelChildren((prevChildren) => {
+        const updatedChildren = [...prevChildren];
+  
+        // If the number of children is more, add empty objects
+        while (updatedChildren.length < number) {
+          updatedChildren.push({ age: '', firstName: '', lastName: '' });
+        }
+  
+        // If the number of children is less, trim the excess fields
+        updatedChildren.length = number;
+  
+        return updatedChildren;
+      });
+    };
+  
+    // Function to handle adult details change
+    const handleAdultHotelChange = (index, field, value) => {
+      const updatedAdults = [...hotelAdults];
+      updatedAdults[index][field] = value;
+      setHotelAdults(updatedAdults);
+    };
+  
+    // Function to handle child details change
+    const handleChildHotelChange = (index, field, value) => {
+      const updatedChildren = [...hotelChildren];
+      updatedChildren[index][field] = value;
+      setHotelChildren(updatedChildren);
+    };
+  
 
     // To track the bus details 
     const [busFrom, setBusFrom] = useState('');
     const [busTo, setBusTo] = useState('');
     const [departure, setDeparture] = useState('');
     const [arrival, setArrival] = useState('');
-    const [busAdults, setBusAdults] = useState('');
-    const [busChildren, setBusChildren] = useState('');
+    const [busAdultsNumber, setBusAdultsNumber] = useState(0);
+    const [busChildrenNumber, setBusChildrenNumber] = useState(0);
     const [adultPrice, setAdultPrice] = useState('');
     const [childPrice, setChildPrice] = useState('');
     const [busName, setBusName] = useState('');
     const [busNumber, setBusNumber] = useState('');
     const [driverPhone, setDriverPhone] = useState('');
+
+    const [busAdults, setBusAdults] = useState([]);
+    const [busChildren, setBusChildren] = useState([]);
+
+    const handleBusAdultsNumberChange = (e) => {
+      const number = parseInt(e.target.value, 10) || 0;
+      setBusAdultsNumber(number);
+    
+      // Preserve existing data while adding/removing fields based on the number of adults
+      setBusAdults((prevAdults) => {
+        const updatedAdults = [...prevAdults];
+    
+        // Add empty objects if the number of adults is more
+        while (updatedAdults.length < number) {
+          updatedAdults.push({ selectedTitle: '', firstName: '', lastName: '' });
+        }
+    
+        // Trim excess fields if the number of adults is less
+        updatedAdults.length = number;
+    
+        return updatedAdults;
+      });
+    };
+    
+    const handleBusChildrenNumberChange = (e) => {
+      const number = parseInt(e.target.value, 10) || 0;
+      setBusChildrenNumber(number);
+    
+      // Preserve existing data while adding/removing fields based on the number of children
+      setBusChildren((prevChildren) => {
+        const updatedChildren = [...prevChildren];
+    
+        // Add empty objects if the number of children is more
+        while (updatedChildren.length < number) {
+          updatedChildren.push({ age: '', firstName: '', lastName: '' });
+        }
+    
+        // Trim excess fields if the number of children is less
+        updatedChildren.length = number;
+    
+        return updatedChildren;
+      });
+    };    
+
+
 
     // To track the flight details
     const flightType = [
@@ -113,8 +221,6 @@ const ManualBooking = ({ refetch, setUpdate }) => {
     const [selectedFlightDirection, setselectedFlightDirection] = useState('');
     const [flightDeparture, setFlightDeparture] = useState('');
     const [flightArrival, setFlightArrival] = useState('');
-    const [flightFrom, setFlightFrom] = useState('');
-    const [flightTo, setFlightTo] = useState('');
 
     const [multiCityFlights, setMultiCityFlights] = useState([
       { from: "", to: ""},
@@ -136,8 +242,10 @@ const ManualBooking = ({ refetch, setUpdate }) => {
     };
     const [flightNumber, setFlightNumber] = useState('');
     const [flightCustomers, setFlightCustomers] = useState([]);
-    const [flightChildren, setFlightChildren] = useState('');
-    const [flightAdults, setFlightAdults] = useState('');
+    const [flightChildrenNumber, setFlightChildrenNumber] = useState('');
+    const [flightAdultsNumber, setFlightAdultsNumber] = useState(0);
+    const [flightAdults, setFlightAdults] = useState([]);
+    const [flightChildren, setFlightChildren] = useState([]);
     const [flightInfants, setFlightInfants] = useState('');
     const [flightAdultPrice, setFlightAdultPrice] = useState('');
     const [flightChildPrice, setFlightChildPrice] = useState('');
@@ -146,6 +254,62 @@ const ManualBooking = ({ refetch, setUpdate }) => {
     const [flightTicketNumber, setFlightTicketNumber] = useState('');
     const [flightRefPNR, setFlightRefPNR] = useState('');
 
+
+  // Function to handle number of adults change
+  const handleFlightAdultsNumberChange = (e) => {
+      const number = parseInt(e.target.value, 10) || 0;
+      setFlightAdultsNumber(number);
+
+      // Preserve existing data while adding/removing fields based on number of adults
+      setFlightAdults((prevAdults) => {
+        const updatedAdults = [...prevAdults];
+        
+        // If the number of adults is more, add empty objects
+        while (updatedAdults.length < number) {
+          updatedAdults.push({ selectedTitle: '', firstName: '', lastName: '' });
+        }
+        
+        // If the number of adults is less, trim the excess fields
+        updatedAdults.length = number;
+        
+        return updatedAdults;
+      });
+  };
+
+  // Function to handle adult details change
+  const handleAdultChange = (index, field, value) => {
+    const updatedAdults = [...flightAdults];
+    updatedAdults[index][field] = value;
+    setFlightAdults(updatedAdults);
+  };
+
+  // Function to handle number of children change
+  const handleFlightChildrenNumberChange = (e) => {
+    const number = parseInt(e.target.value, 10) || 0;
+    setFlightChildrenNumber(number);
+
+    // Preserve existing data while adding/removing fields based on number of children
+    setFlightChildren((prevChildren) => {
+      const updatedChildren = [...prevChildren];
+
+      // If the number of children is more, add empty objects
+      while (updatedChildren.length < number) {
+        updatedChildren.push({ age: '', firstName: '', lastName: '' });
+      }
+
+      // If the number of children is less, trim the excess fields
+      updatedChildren.length = number;
+
+      return updatedChildren;
+    });
+  };
+
+  // Function to handle children details change
+  const handleChildChange = (index, field, value) => {
+    const updatedChildren = [...flightChildren];
+    updatedChildren[index][field] = value;
+    setFlightChildren(updatedChildren);
+  };
     // To track the visa details
     const [visaCountry, setVisaCountry] = useState('');
     const [visaTravelDate, setVisaTravelDate] = useState('');
@@ -254,6 +418,7 @@ const ManualBooking = ({ refetch, setUpdate }) => {
                     setCountries(bookingListData.contries);
                     setCities(bookingListData.cities);
                     setCurrencies(bookingListData.currencies);
+                    setTitle(bookingListData.adult_title)
                     setSuppliers(suppliersData.suppliers);
                     setCustomers(suppliersData.customers);
             }
@@ -387,8 +552,27 @@ const ManualBooking = ({ refetch, setUpdate }) => {
       formData.append('nights', totalNights)
       formData.append('room_type', roomType)
       formData.append('room_quantity', roomQuantity)
-      formData.append('adults', adults)
-      formData.append('childreen', children)
+      formData.append('adults', adultsHotelNumber)
+      formData.append('childreen', childrenHotelNumber)
+
+      // Prepare adult data for Hotel
+      const adults_data = hotelAdults.map((adult) => ({
+        title: adult.title,
+        first_name: adult.firstName,
+        last_name: adult.lastName,
+      }));
+
+      // Prepare children data for Hotel
+      const children_data = hotelChildren.map((child) => ({
+        age: child.age,
+        first_name: child.firstName,
+        last_name: child.lastName,
+      }));
+
+      // Append adults and children data for Hotel
+      formData.append('adults_data', JSON.stringify(adults_data));
+      formData.append('children_data', JSON.stringify(children_data));
+
     }
     // Append Bus fields to FormData 
     else if(selectedService.service_name === 'Bus'){
@@ -396,13 +580,31 @@ const ManualBooking = ({ refetch, setUpdate }) => {
       formData.append('to', busTo);
       formData.append('departure', departure);
       formData.append('arrival', arrival);
-      formData.append('adults', busAdults);
-      formData.append('childreen', busChildren);
+      formData.append('adults', busAdultsNumber);
+      formData.append('childreen', busChildrenNumber);
       formData.append('child_price', childPrice);
       formData.append('adult_price', adultPrice);
       formData.append('bus', busName);
       formData.append('bus_number', busNumber);
       formData.append('driver_phone', driverPhone);
+
+       // Prepare adult data for Bus
+    const adults_data = busAdults.map((adult) => ({
+      title: adult.selectedTitle,
+      first_name: adult.firstName,
+      last_name: adult.lastName,
+    }));
+
+    // Prepare children data for Bus
+    const children_data = busChildren.map((child) => ({
+      age: child.age,
+      first_name: child.firstName,
+      last_name: child.lastName,
+    }));
+
+    // Append adults and children data for Bus
+    formData.append('adults_data', JSON.stringify(adults_data));
+    formData.append('children_data', JSON.stringify(children_data));
     }
     // Append Visa fields to FormData 
     else if(selectedService.service_name === 'Visa'){
@@ -419,8 +621,8 @@ const ManualBooking = ({ refetch, setUpdate }) => {
       formData.append('departure', flightDeparture);
       formData.append('direction', selectedFlightDirection);
       formData.append("customers", JSON.stringify(flightCustomers)); // Serialize array to JSON
-      formData.append('childreen', flightChildren);
-      formData.append('adults', flightAdults);
+      formData.append('childreen', flightChildrenNumber);
+      formData.append('adults', flightAdultsNumber);
       formData.append('infants', flightInfants);
       formData.append('adult_price', flightAdultPrice);
       formData.append('child_price', flightChildPrice);
@@ -428,6 +630,22 @@ const ManualBooking = ({ refetch, setUpdate }) => {
       formData.append('airline', flightAirline);
       formData.append('ticket_number', flightTicketNumber);
       formData.append('ref_pnr', flightRefPNR);
+
+      const adults_data = flightAdults.map((adult) => ({
+        title: adult.selectedTitle,
+        first_name: adult.firstName,
+        last_name: adult.lastName,
+      }));
+  
+      // Prepare children_data
+      const children_data = flightChildren.map((child) => ({
+        age: child.age,
+        first_name: child.firstName,
+        last_name: child.lastName,
+      }));
+      formData.append('adults_data', JSON.stringify(adults_data));
+      formData.append('children_data', JSON.stringify(children_data));
+
       if (selectedFlightDirection === 'round_trip' || selectedFlightDirection === 'multi_city') {
         formData.append('arrival', flightArrival);
       }
@@ -841,31 +1059,143 @@ const ManualBooking = ({ refetch, setUpdate }) => {
                         />
 
                         {/* Adults */}
-                        <TextField
+                        {/* <TextField
                             fullWidth
                             label="Adults"
-                            value={adults}
-                            onChange={(e) => setAdults(e.target.value)}
+                            value={adultsHotelNumber}
+                            onChange={(e) => setAdultsHotelNumber(e.target.value)}
                             variant="outlined"
                             type="number"
                             placeholder="Enter number of adults"
                             className="w-full"
                             inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
+                        /> */}
 
                         {/* Children */}
-                            <TextField
+                            {/* <TextField
                             fullWidth
                             label="Children"
-                            value={children}
-                            onChange={(e) => setChildren(e.target.value)}
+                            value={childrenHotelNumber}
+                            onChange={(e) => setChildrenHotelNumber(e.target.value)}
                             variant="outlined"
                             type="number"
                             placeholder="Enter number of children"
                             className="w-full"
                             inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                        
+                        /> */}
+
+                        {/* Adults */}
+                          <div className="mb-4">
+                            <TextField
+                              label="Adults"
+                              type="number"
+                              variant="outlined"
+                              fullWidth
+                              className="w-full"
+                              value={adultsHotelNumber}
+                              onChange={handleAdultsHotelNumberChange}
+                              placeholder="Enter number of adults"
+                              inputProps={{ min: 0 }} // Prevent typing values below 0
+                            />
+                          </div>
+
+                          {/* Adult Details Inputs */}
+                          {hotelAdults.map((adult, index) => (
+                            <>
+                              <div className="mb-4">
+                                <TextField
+                                  select
+                                  label={`Title for Adult ${index + 1}`}
+                                  variant="outlined"
+                                  fullWidth
+                                  value={adult.title}
+                                  className="w-full"
+                                  onChange={(e) => handleAdultHotelChange(index, 'title', e.target.value)}
+                                >
+                                  {title.map((title, idx) => (
+                                    <MenuItem key={idx} value={title}>
+                                      {title}
+                                    </MenuItem>
+                                  ))}
+                                </TextField>
+                              </div>
+
+                              <div className="mb-4">
+                                <TextField
+                                  label={`First Name for Adult ${index + 1}`}
+                                  variant="outlined"
+                                  fullWidth
+                                  className="w-full"
+                                  value={adult.firstName}
+                                  onChange={(e) => handleAdultHotelChange(index, 'firstName', e.target.value)}
+                                />
+                              </div>
+
+                              <div className="mb-4">
+                                <TextField
+                                  label={`Last Name for Adult ${index + 1}`}
+                                  variant="outlined"
+                                  fullWidth
+                                  className="w-full"
+                                  value={adult.lastName}
+                                  onChange={(e) => handleAdultHotelChange(index, 'lastName', e.target.value)}
+                                />
+                              </div>
+                            </>
+                          ))}
+
+                          {/* Children */}
+                          <div className="mb-4">
+                            <TextField
+                              label="Children"
+                              type="number"
+                              variant="outlined"
+                              fullWidth
+                              className="w-full"
+                              value={childrenHotelNumber}
+                              onChange={handleChildrenHotelNumberChange}
+                              placeholder="Enter number of children"
+                              inputProps={{ min: 0 }} // Prevent typing values below 0
+                            />
+                          </div>
+
+                          {/* Children Details Inputs */}
+                          {hotelChildren.map((child, index) => (
+                            <>
+                              <div className="mb-4">
+                                <TextField
+                                  label={`Age for Child ${index + 1}`}
+                                  variant="outlined"
+                                  fullWidth
+                                  className="w-full"
+                                  value={child.age}
+                                  onChange={(e) => handleChildHotelChange(index, 'age', e.target.value)}
+                                />
+                              </div>
+
+                              <div className="mb-4">
+                                <TextField
+                                  label={`First Name for Child ${index + 1}`}
+                                  variant="outlined"
+                                  fullWidth
+                                  className="w-full"
+                                  value={child.firstName}
+                                  onChange={(e) => handleChildHotelChange(index, 'firstName', e.target.value)}
+                                />
+                              </div>
+
+                              <div className="mb-4">
+                                <TextField
+                                  label={`Last Name for Child ${index + 1}`}
+                                  variant="outlined"
+                                  fullWidth
+                                  className="w-full"
+                                  value={child.lastName}
+                                  onChange={(e) => handleChildHotelChange(index, 'lastName', e.target.value)}
+                                />
+                              </div>
+                            </>
+                          ))}           
                     </div>
                     )}
 
@@ -931,30 +1261,141 @@ const ManualBooking = ({ refetch, setUpdate }) => {
                             />
 
                             {/* Adults */}
-                            <TextField
+                            {/* <TextField
                             fullWidth
                             label="Adults"
-                            value={busAdults}
-                            onChange={(e) => setBusAdults(e.target.value)}
+                            value={busAdultsNumber}
+                            onChange={(e) => setBusAdultsNumber(e.target.value)}
                             variant="outlined"
                             type="number"
                             placeholder="Enter number of adults"
                             className="w-full"
                             inputProps={{ min: 0 }} // Prevent typing values below 0
-                            />
+                            /> */}
 
                             {/* Children */}
-                            <TextField
+                            {/* <TextField
                             fullWidth
                             label="Children"
-                            value={busChildren}
-                            onChange={(e) => setBusChildren(e.target.value)}
+                            value={busChildrenNumber}
+                            onChange={(e) => setBusChildrenNumber(e.target.value)}
                             variant="outlined"
                             type="number"
                             placeholder="Enter number of children"
                             className="w-full"
                             inputProps={{ min: 0 }} // Prevent typing values below 0
-                            />
+                            /> */}
+
+                            {/* Adults */}
+                            <div className="mb-4">
+                              <TextField
+                                label="Adults"
+                                type="number"
+                                variant="outlined"
+                                fullWidth
+                                className="w-full"
+                                value={busAdultsNumber}
+                                onChange={handleBusAdultsNumberChange}
+                                placeholder="Enter number of adults"
+                                inputProps={{ min: 0 }} // Prevent typing values below 0
+                              />
+                            </div>
+
+                            {/* Adult Details Inputs */}
+                            {busAdults.map((adult, index) => (
+                              <>
+                                <div className="mb-4">
+                                  <TextField
+                                    select
+                                    label={`Title for Adult ${index + 1}`}
+                                    variant="outlined"
+                                    fullWidth
+                                    value={adult.selectedTitle}
+                                    onChange={(e) => handleAdultChange(index, 'selectedTitle', e.target.value)}
+                                    className="w-full"
+                                  >
+                                    {title.map((title, idx) => (
+                                      <MenuItem key={idx} value={title}>
+                                        {title}
+                                      </MenuItem>
+                                    ))}
+                                  </TextField>
+                                </div>
+                                <div className="mb-4">
+                                  <TextField
+                                    label={`First Name for Adult ${index + 1}`}
+                                    variant="outlined"
+                                    fullWidth
+                                    className="w-full"
+                                    value={adult.firstName}
+                                    onChange={(e) => handleAdultChange(index, 'firstName', e.target.value)}
+                                  />
+                                </div>
+                                <div className="mb-4">
+                                  <TextField
+                                    label={`Last Name for Adult ${index + 1}`}
+                                    variant="outlined"
+                                    fullWidth
+                                    className="w-full"
+                                    value={adult.lastName}
+                                    onChange={(e) => handleAdultChange(index, 'lastName', e.target.value)}
+                                  />
+                                </div>
+                              </>
+                            ))}
+
+                            {/* Children */}
+                            <div className="mb-4">
+                              <TextField
+                                label="Children"
+                                type="number"
+                                variant="outlined"
+                                fullWidth
+                                className="w-full"
+                                value={busChildrenNumber}
+                                onChange={handleBusChildrenNumberChange}
+                                placeholder="Enter number of children"
+                                inputProps={{ min: 0 }} // Prevent typing values below 0
+                              />
+                            </div>
+
+                            {/* Children Details Inputs */}
+                            {busChildren.map((child, index) => (
+                              <>
+                                <div className="mb-4">
+                                  <TextField
+                                    label={`Age for Child ${index + 1}`}
+                                    type="number"
+                                    variant="outlined"
+                                    fullWidth
+                                    className="w-full"
+                                    value={child.age}
+                                    onChange={(e) => handleChildChange(index, 'age', e.target.value)}
+                                  />
+                                </div>
+                                <div className="mb-4">
+                                  <TextField
+                                    label={`First Name for Child ${index + 1}`}
+                                    variant="outlined"
+                                    fullWidth
+                                    className="w-full"
+                                    value={child.firstName}
+                                    onChange={(e) => handleChildChange(index, 'firstName', e.target.value)}
+                                  />
+                                </div>
+                                <div className="mb-4">
+                                  <TextField
+                                    label={`Last Name for Child ${index + 1}`}
+                                    variant="outlined"
+                                    fullWidth
+                                    className="w-full"
+                                    value={child.lastName}
+                                    onChange={(e) => handleChildChange(index, 'lastName', e.target.value)}
+                                  />
+                                </div>
+                              </>
+                            ))}
+
 
                             {/* Adult Price */}
                             <TextField
@@ -1299,22 +1740,6 @@ const ManualBooking = ({ refetch, setUpdate }) => {
                         </div>
                       ))}
 
-
-                      {/* Children */}
-                      <div className="mb-4">
-                        <TextField
-                          label="Children"
-                          type="number"
-                          variant="outlined"
-                          fullWidth
-                          className='w-full'
-                          value={flightChildren}  
-                          onChange={(e) => setFlightChildren(e.target.value)}
-                          placeholder="Enter number of children"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div>
-
                       {/* Adults */}
                       <div className="mb-4">
                         <TextField
@@ -1323,12 +1748,107 @@ const ManualBooking = ({ refetch, setUpdate }) => {
                           variant="outlined"
                           fullWidth
                           className='w-full'
-                          value={flightAdults}
-                          onChange={(e) => setFlightAdults(e.target.value)}
+                          value={flightAdultsNumber}
+                          onChange={handleFlightAdultsNumberChange}
                           placeholder="Enter number of adults"
                           inputProps={{ min: 0 }} // Prevent typing values below 0
                         />
                       </div>
+
+                      {/* Adult Details Inputs */}
+                      {flightAdults.map((adult, index) => (
+                            // <div key={index} className="flex">
+                            <>
+                              <div className="mb-4">
+                              <TextField
+                                select
+                                label={`Title for Adult ${index + 1}`}
+                                variant="outlined"
+                                fullWidth
+                                value={adult.selectedTitle}
+                                className="w-full"
+                                onChange={(e) => handleAdultChange(index, 'selectedTitle', e.target.value)}
+                              >
+                                {title.map((title, idx) => (
+                                  <MenuItem key={idx} value={title}>
+                                    {title}
+                                  </MenuItem>
+                                ))}
+                              </TextField>
+                              </div>
+                              <div className="mb-4">
+                              <TextField
+                                label={`First Name for Adult ${index + 1}`}
+                                variant="outlined"
+                                fullWidth
+                                className="w-full"
+                                value={adult.firstName}
+                                onChange={(e) => handleAdultChange(index, 'firstName', e.target.value)}
+                              />
+                              </div>
+                              <div className="mb-4">
+                              <TextField
+                                label={`Last Name for Adult ${index + 1}`}
+                                variant="outlined"
+                                fullWidth
+                                className="w-full"
+                                value={adult.lastName}
+                                onChange={(e) => handleAdultChange(index, 'lastName', e.target.value)}
+                              />
+                              </div>
+                            </>
+                      ))}
+
+                      {/* Children */}
+                      <div className="mb-4">
+                        <TextField
+                          label="Children"
+                          type="number"
+                          variant="outlined"
+                          fullWidth
+                          className="w-full"
+                          value={flightChildrenNumber}
+                          onChange={handleFlightChildrenNumberChange}
+                          placeholder="Enter number of children"
+                          inputProps={{ min: 0 }} // Prevent typing values below 0
+                        />
+                      </div>
+
+                      {/* Children Details Inputs */}
+                      {flightChildren.map((child, index) => (
+                        <>
+                        <div className="mb-4">
+                          <TextField
+                            label={`Age for Child ${index + 1}`}
+                            variant="outlined"
+                            fullWidth
+                            className="w-full"
+                            value={child.age}
+                            onChange={(e) => handleChildChange(index, 'age', e.target.value)}
+                          />
+                          </div>
+                          <div className="mb-4">
+                          <TextField
+                            label={`First Name for Child ${index + 1}`}
+                            variant="outlined"
+                            fullWidth
+                            className="w-full"
+                            value={child.firstName}
+                            onChange={(e) => handleChildChange(index, 'firstName', e.target.value)}
+                          />
+                          </div>
+                          <div className="mb-4">
+                          <TextField
+                            label={`Last Name for Child ${index + 1}`}
+                            variant="outlined"
+                            fullWidth
+                            className="w-full"
+                            value={child.lastName}
+                            onChange={(e) => handleChildChange(index, 'lastName', e.target.value)}
+                          />
+                          </div>
+                        </>
+                      ))}
 
                       {/* Infants */}
                       <div className="mb-4">
