@@ -8,7 +8,7 @@ const AddSupplierPage = ({ update, setUpdate }) => {
     const { postData, loadingPost, response } = usePost({ url:'https://travelta.online/agent/supplier/add'});
     const [suppliersServices, setSupplierServices] = useState([])
     const [selectedServices, setSelectedServices] = useState([]); // Holds the selected service ID
-
+    
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [alternatePhone, setAlternatePhone] = useState("");
@@ -46,12 +46,20 @@ const AddSupplierPage = ({ update, setUpdate }) => {
         if (!loadingPost) {
                 handleReset()
                 setUpdate(!update)
+                
             }
     }, [response])
 
 
     const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // const newSupplier = {
+    //   name, phone, alternatePhone, email, adminName, adminPhone, adminEmail, selectedServices 
+    // };
+
+    // // Call the onSubmit function passed from the parent, passing the new supplier data
+    // onSubmit(newSupplier);
 
     if (!name) {
            auth.toastError('please Enter Name')
@@ -109,7 +117,7 @@ const AddSupplierPage = ({ update, setUpdate }) => {
         <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
             {/* <span className="text-xl font-TextFontRegular text-thirdColor">Name:</span> */}
             <TextField
-            label="Agent Name"
+            label="Supplier Name"
             variant="outlined"
             fullWidth
             required
@@ -121,7 +129,7 @@ const AddSupplierPage = ({ update, setUpdate }) => {
         <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
             {/* <span className="text-xl font-TextFontRegular text-thirdColor">Name:</span> */}
             <TextField
-            label="Agent Phone"
+            label="Supplier Phone"
             variant="outlined"
             type="tel"
             fullWidth
@@ -134,7 +142,7 @@ const AddSupplierPage = ({ update, setUpdate }) => {
         <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
             {/* <span className="text-xl font-TextFontRegular text-thirdColor">Name:</span> */}
             <TextField
-            label="Alternate Agent Phone"
+            label="Alternate Supplier Phone"
             variant="outlined"
             type="tel"
             fullWidth
@@ -146,7 +154,7 @@ const AddSupplierPage = ({ update, setUpdate }) => {
         <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
             {/* <span className="text-xl font-TextFontRegular text-thirdColor">Name:</span> */}
             <TextField
-            label="Agent Email"
+            label="Supplier Email"
             variant="outlined"
             type="email"
             fullWidth
