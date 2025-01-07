@@ -7,7 +7,7 @@ const ManualBookingLayout = () => {
   return (
     <>
       <TitlePage text={'Manual Booking'} />
-      <ManualBookingPage update={update} setUpdate={setUpdate}/>
+      <ManualBookingPage/>
     </>
   )
 }

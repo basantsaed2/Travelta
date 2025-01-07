@@ -18,7 +18,7 @@ const AddLeadPage = ({ update, setUpdate }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-
+    const [filteredLeads,SetfilteredLeads] = useState([])
     useEffect(() => {
         refetchLead();
     }, [refetchLead,update]);
@@ -84,10 +84,25 @@ const AddLeadPage = ({ update, setUpdate }) => {
 
     };
 
-    const filteredLeads = leads.filter((lead) =>
-        lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        lead.phone.includes(searchQuery)
-    );
+    const handleSearch = () => {
+      if (searchQuery.trim() === "") {
+       
+        SetfilteredLeads([]);  
+      } else {
+        
+        const filtered = leads.filter((lead) =>
+          lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          lead.phone === searchQuery 
+        );
+        SetfilteredLeads(filtered);
+      }
+    };
+    
+  
+    // const filteredLeads = leads.filter((lead) =>
+    //     lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //     lead.phone.includes(searchQuery)
+    // );
 
     return (
         <>
@@ -185,53 +200,79 @@ const AddLeadPage = ({ update, setUpdate }) => {
 
         <div className="w-full flex flex-col gap-5 p-6 bg-white shadow-md rounded-md">
         <h1 className="w-full flex justify-center font-semibold text-mainColor text-xl">Add Lead</h1>
-            <TextField
+           <div className=" flex justify-between gap-3 ">
+           <TextField
               label="Search by Name or Phone"
               variant="outlined"
               fullWidth
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                handleSearch();}
+              }
               className="mb-4 shadow-sm border-2 border-gray-300 focus:border-mainColor rounded-md p-3 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-mainColor focus:ring-opacity-50 transition-all duration-200"
             />
+                 <Button
+                type="button"
+                variant="contained"
+                className="bg-mainColor hover:bg-blue-600 text-white "
+                onClick={handleSearch}
+            >
+                Search
+            </Button>
 
-            <TableContainer className="overflow-x-auto bg-white shadow-md rounded-lg">
-              <Table className="min-w-full">
-                <thead className="w-full bg-gray-100">
-                  <tr className="border-b-2 border-gray-300">
-                    <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Name</th>
-                    <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Email</th>
-                    <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Phone</th>
-                    <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Gender</th>
-                    <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Action</th>
+           </div>
+
+      
+   {filteredLeads.length === 0 ?
+    <p className="text-center py-4 text-lg text-mainColor"></p>
+   :
+      <TableContainer className="overflow-x-auto bg-white shadow-md rounded-lg">
+        <Table className="min-w-full">
+          <thead className="w-full bg-gray-100">
+            <tr className="border-b-2 border-gray-300">
+              <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Name</th>
+              <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Email</th>
+              <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Phone</th>
+              <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Gender</th>
+              <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Action</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white">
+            {filteredLeads.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="text-center py-3 text-xl text-mainColor font-TextFontMedium">
+                  No Leads List Found
+                </td>
+              </tr>
+            ) : (
+              filteredLeads
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((lead, index) => (
+                  <tr key={index} className="border-b border-gray-200 hover:bg-gray-50">
+                    <td className="py-2 text-center text-thirdColor">{lead.name || '-'}</td>
+                    <td className="py-2 text-center text-thirdColor">{lead.email || '-'}</td>
+                    <td className="py-2 text-center text-thirdColor">{lead.phone || '-'}</td>
+                    <td className="py-2 text-center text-thirdColor">{lead.gender || '-'}</td>
+                    <td className="py-2 text-center flex justify-center items-center">
+                      <button
+                        onClick={() => handleAddLead(lead.id)}
+                        className="flex gap-1 justify-center items-center text-mainColor font-bold hover:text-blue-600"
+                      >
+                        <IoMdPersonAdd /> Add Lead
+                      </button>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="bg-white">
-                  {filteredLeads.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} className="text-center py-3 text-xl text-mainColor font-TextFontMedium">
-                        No Leads List Found
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredLeads.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((lead,index) => (
-                      <tr key={index} className="border-b border-gray-200 hover:bg-gray-50">
-                        <td className="py-2 text-center text-thirdColor">{lead.name || '-'}</td>
-                        <td className="py-2 text-center text-thirdColor">{lead.email || '-'}</td>
-                        <td className="py-2 text-center text-thirdColor">{lead.phone || '-'}</td>
-                        <td className="py-2 text-center text-thirdColor">{lead.gender || '-'}</td>
-                        <td className="py-2 text-center flex justify-center items-center">
-                          <button onClick={() => handleAddLead(lead.id)} className="flex gap-1 justify-center items-center text-mainColor font-bold hover:text-blue-600">
-                          <IoMdPersonAdd/> Add Lead
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </Table>
-            </TableContainer>
+                ))
+            )}
+          </tbody>
+        </Table>
+      </TableContainer>}
 
-            <TablePagination
+
+
+
+            {/* <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
                 count={filteredLeads.length}
@@ -240,7 +281,7 @@ const AddLeadPage = ({ update, setUpdate }) => {
                 onPageChange={(e, newPage) => setPage(newPage)}
                 onRowsPerPageChange={(e) => setRowsPerPage(parseInt(e.target.value, 10))}
                 className="mt-4"
-            />
+            /> */}
         </div>
        </>
     );
