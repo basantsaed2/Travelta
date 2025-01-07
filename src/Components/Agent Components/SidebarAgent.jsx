@@ -5,8 +5,8 @@ import Logo from "../../Assets/Images/Logo";
 
 const SidebarAgent = ({ isSidebarCollapsed, onToggleSidebar, isSidebarVisible ,  onLinkClick}) => {
   return (
-    <div
-      className={`fixed lg:relative top-0 left-0 min-h-screen bg-mainColor text-white transition-all duration-300 
+    <aside
+      className={`fixed z-50 lg:relative top-0 left-0 min-h-screen bg-mainColor text-white transition-all duration-300 
       ${isSidebarCollapsed ? "lg:w-20" : "lg:w-64"} w-64 ${isSidebarVisible ? "block" : "hidden"}`}
     >
       {/* Sidebar Header */}
@@ -33,7 +33,7 @@ const SidebarAgent = ({ isSidebarCollapsed, onToggleSidebar, isSidebarVisible , 
         <MenuSideAgent onLinkClick={onLinkClick} // Pass the link click handler here
         isSidebarCollapsed={isSidebarCollapsed} />
       </div>
-    </div>
+    </aside>
   );
 };
 

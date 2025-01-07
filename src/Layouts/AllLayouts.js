@@ -26,3 +26,5 @@ export { default as AddLeadLayout } from "./AgentLayouts/Users/Leads/AddLeadLayo
 export { default as SupplierLayout } from "./AgentLayouts/Users/Suppliers/SupplierLayout";
 export { default as AddSupplierLayout } from "./AgentLayouts/Users/Suppliers/AddSupplierLayout";
 export { default as EditSupplierLayout } from "./AgentLayouts/Users/Suppliers/EditSupplierLayout";  
+//CheckOutProcess
+export { default as CheckOutProcessPage } from "./AgentLayouts/CheckOutProcess/CheckOutProcessLayout"; 

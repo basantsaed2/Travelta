@@ -6,12 +6,14 @@ import { useAuth } from '../../../Context/Auth';
 import axios from 'axios';
 import { MdAttachMoney } from "react-icons/md";
 import { FiPercent } from "react-icons/fi";
+import { Link , useNavigate} from 'react-router-dom';
 
 const ManualBooking = ({ refetch, setUpdate }) => {
     const { refetch: refetchBookingList, loading: loadingBookingList, data: bookingListData } = useGet({url:'https://travelta.online/agent/manual_booking/lists'});
     const { refetch: refetchSuppliers, loading: loadingSuppliers, data: suppliersData } = useGet({url:'https://travelta.online/agent/manual_booking/supplier_customer'});
-    const { postData, loadingPost, response } = usePost({ url:'https://travelta.online/agent/manual_booking'});
+    const { postData, loadingPost, response } = usePost({ url:'https://travelta.online/agent/manual_booking/cart'});
     const auth = useAuth();
+    const navigate = useNavigate(); // Hook to navigate
 
     const [suppliers, setSuppliers] = useState([])
     const [customers, setCustomers] = useState([])
@@ -240,8 +242,8 @@ const ManualBooking = ({ refetch, setUpdate }) => {
         { from: "", to: ""},
       ]);
     };
-    const [flightNumber, setFlightNumber] = useState('');
-    const [flightCustomers, setFlightCustomers] = useState([]);
+    // const [flightNumber, setFlightNumber] = useState('');
+    // const [flightCustomers, setFlightCustomers] = useState([]);
     const [flightChildrenNumber, setFlightChildrenNumber] = useState('');
     const [flightAdultsNumber, setFlightAdultsNumber] = useState(0);
     const [flightAdults, setFlightAdults] = useState([]);
@@ -391,19 +393,19 @@ const ManualBooking = ({ refetch, setUpdate }) => {
       setVisaCustomers(updatedCustomers);
     };
 
-    const handleFlightNumberChange = (e) => {
-      const number = parseInt(e.target.value, 10) || 0;
-      setFlightNumber(number);
+    // const handleFlightNumberChange = (e) => {
+    //   const number = parseInt(e.target.value, 10) || 0;
+    //   setFlightNumber(number);
   
-      // Adjust the customer inputs dynamically based on the number entered
-      setFlightCustomers(Array(number).fill(''));
-    };
+    //   // Adjust the customer inputs dynamically based on the number entered
+    //   setFlightCustomers(Array(number).fill(''));
+    // };
   
-    const handleFlightCustomerNameChange = (index, value) => {
-      const updatedCustomers = [...flightCustomers];
-      updatedCustomers[index] = value;
-      setFlightCustomers(updatedCustomers);
-    };
+    // const handleFlightCustomerNameChange = (index, value) => {
+    //   const updatedCustomers = [...flightCustomers];
+    //   updatedCustomers[index] = value;
+    //   setFlightCustomers(updatedCustomers);
+    // };
 
    useEffect(() => {
         refetchBookingList();
@@ -487,11 +489,11 @@ const ManualBooking = ({ refetch, setUpdate }) => {
       const parsedMarkupValue = parseFloat(markupValue || 0);
     
       // Check if isMarkupPercentage is 1, treat markupValue as percentage
-      const calculatedMarkupValue = isMarkupPercentage === 1 
-        ? (parsedMarkupValue / 100) // Calculate percentage of cost
-        : parsedMarkupValue; // Use markupValue directly if it's not a percentage
+      const calculatedMarkupValue = isMarkupPercentage === 1
+      ? (parsedMarkupValue / 100) * parsedCost // Calculate percentage of the cost
+      : parsedMarkupValue; // Use markupValue directly if it's not a percentage
     
-      const calculatedPrice = parsedCost + calculatedMarkupValue;
+      const calculatedPrice = parsedCost + calculatedMarkupValue;    
     
       // Calculate total tax amount
       let totalTaxAmount = 0;
@@ -512,6 +514,13 @@ const ManualBooking = ({ refetch, setUpdate }) => {
       setPrice(calculatedPrice.toFixed(2));
       setTotalPrice(calculatedTotalPrice.toFixed(2));
     }, [cost, markupValue, selectedTaxId, isMarkupPercentage, taxes]);
+
+    useEffect(() => {
+      if (!loadingPost && response && response.data) {
+        console.log('Response Submit:', response);
+        navigate('/dashboard_agent/checkOut_process', { state: { cartData: response.data } });
+      }
+    }, [response, loadingPost, navigate]);
     
 
   const handleSubmit = async (e) => {
@@ -620,7 +629,7 @@ const ManualBooking = ({ refetch, setUpdate }) => {
       formData.append('type', selectedFlightType);
       formData.append('departure', flightDeparture);
       formData.append('direction', selectedFlightDirection);
-      formData.append("customers", JSON.stringify(flightCustomers)); // Serialize array to JSON
+      // formData.append("customers", JSON.stringify(flightCustomers)); // Serialize array to JSON
       formData.append('childreen', flightChildrenNumber);
       formData.append('adults', flightAdultsNumber);
       formData.append('infants', flightInfants);
@@ -1710,7 +1719,7 @@ const ManualBooking = ({ refetch, setUpdate }) => {
                       )}
 
                        {/* Number of Customers */}
-                       <div className="mb-4">
+                       {/* <div className="mb-4">
                         <TextField
                           label="Customer Number"
                           type="number"
@@ -1723,10 +1732,10 @@ const ManualBooking = ({ refetch, setUpdate }) => {
                           placeholder="Enter number of customers"
                           inputProps={{ min: 0 }} // Prevent typing values below 0
                         />
-                      </div>
+                      </div> */}
 
                       {/* Customer Names */}
-                      {flightCustomers.map((customer, index) => (
+                      {/* {flightCustomers.map((customer, index) => (
                         <div className="mb-4" key={index}>
                           <TextField
                             label={`Customer Name ${index + 1}`}
@@ -1738,7 +1747,7 @@ const ManualBooking = ({ refetch, setUpdate }) => {
                             placeholder={`Enter name for customer ${index + 1}`}
                           />
                         </div>
-                      ))}
+                      ))} */}
 
                       {/* Adults */}
                       <div className="mb-4">
@@ -2240,11 +2249,12 @@ const ManualBooking = ({ refetch, setUpdate }) => {
             </div>
           </div>
         )}
+
         {/* Submit Button */}
         <div className="mt-6 text-center">
-          <button type="submit" onClick={handleSubmit} className="bg-blue-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-600">
+          <Link to="/dashboard_agent/checkOut_process" type="submit" onClick={handleSubmit} className="bg-blue-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-600">
             Submit Booking
-          </button>
+          </Link>
         </div>
       </div>
     </form>

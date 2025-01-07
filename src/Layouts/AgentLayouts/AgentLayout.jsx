@@ -10,6 +10,7 @@ const AgentLayout = () => {
   const handleToggleSidebar = () => {
     if (window.innerWidth < 740) {
       setIsSidebarVisible((prev) => !prev);
+      setIsSidebarCollapsed(window.innerWidth >= 740)
     } else {
       setIsSidebarCollapsed((prev) => !prev);
     }

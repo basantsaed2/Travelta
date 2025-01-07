@@ -252,7 +252,7 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
             // Only navigate if on `/dashboard/setting` but not already on any sub-route
             if (
                    result === "/dashboard_agent/booking" &&
-                   !["/dashboard_agent/booking/manual_booking",].some(path => pathName.startsWith(path))
+                   !["/dashboard_agent/booking/manual_booking"].some(path => pathName.startsWith(path))
             ) {
               handleClickBooking();
               navigate('/dashboard_agent/booking/manual_booking');
@@ -357,7 +357,7 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
 
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full">
 
       {/* Home */}
       <Link to="/dashboard_agent"
@@ -383,7 +383,7 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
       <Link to="users"
         onMouseMove={() => setIsActiveUsersIcon(true)}
         onMouseOut={() => setIsActiveUsersIcon(false)}
-        onClick={() => { handleClickUsers(); onLinkClick(); }}
+        onClick={handleClickUsers}
         className={`
           ${isActiveUsers ? 'active' : ''}
          flex items-center 
@@ -404,7 +404,7 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
       </Link>
       <div className={`${isOpenUsers && !isSidebarCollapsed ? "h-17" : "h-0 "} overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}>
             <ul className='list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2'>
-                    <Link to={"users/customers"} onClick={handleClickCustomers}>
+                    <Link to={"users/customers"} onClick={() => { handleClickCustomers(); onLinkClick(); }}>
                           <li
                                   className={`${isActiveCustomers ? 'rounded-xl bg-white text-mainColor' : 'text-white'}
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`
@@ -412,7 +412,7 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
                                   Customers
                           </li>
                     </Link>
-                    <Link to={"users/leads"} onClick={handleClickLeads}>
+                    <Link to={"users/leads"} onClick={() => { handleClickLeads(); onLinkClick(); }}>
                           <li
                                   className={`${isActiveLeads ? 'rounded-xl bg-white text-mainColor' : 'text-white'}
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`
@@ -420,7 +420,7 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
                                   Leads
                           </li>
                     </Link>
-                    <Link to={"users/suppliers"} onClick={handleClickSuppliers}>
+                    <Link to={"users/suppliers"} onClick={() => { handleClickSuppliers(); onLinkClick(); }}>
                           <li
                                   className={`${isActiveSuppliers ? 'rounded-xl bg-white text-mainColor' : 'text-white'}
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`
@@ -474,7 +474,7 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
        <Link to="booking_list"
         onMouseMove={() => setIsActiveBookingListIcon(true)}
         onMouseOut={() => setIsActiveBookingListIcon(false)}
-        onClick={() => { handleClickBookingList(); onLinkClick(); }}
+        onClick={() => { handleClickBookingList(); }}
         className={`
           ${isActiveBookingList ? 'active' : ''}
          flex items-center 
@@ -495,7 +495,7 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
       </Link>
       <div className={`${isOpenBookingList && !isSidebarCollapsed ? "h-17" : "h-0 "} overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}>
             <ul className='list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2'>
-                    <Link to={"booking_list/upcoming_booking"} onClick={handleClickUpcomingBooking}>
+                    <Link to={"booking_list/upcoming_booking"} onClick={() => { handleClickUpcomingBooking(); onLinkClick(); }}>
                           <li
                                   className={`${isActiveUpcomingBookingList ? 'rounded-xl bg-white text-mainColor' : 'text-white'}
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`
@@ -503,7 +503,7 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
                                   UpComing
                           </li>
                     </Link>
-                    <Link to={"booking_list/current_booking"} onClick={handleClickCurrentBooking}>
+                    <Link to={"booking_list/current_booking"} onClick={() => { handleClickCurrentBooking(); onLinkClick(); }}>
                           <li
                                   className={`${isActiveCurrentBookingList ? 'rounded-xl bg-white text-mainColor' : 'text-white'}
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`
@@ -511,7 +511,7 @@ const MenuSideAgent = ({ isSidebarCollapsed , onLinkClick  }) => {
                                   Current
                           </li>
                     </Link>
-                    <Link to={"booking_list/past_booking"} onClick={handleClickPastBooking}>
+                    <Link to={"booking_list/past_booking"} onClick={() => { handleClickPastBooking(); onLinkClick(); }}>
                           <li
                                   className={`${isActivePastBookingList ? 'rounded-xl bg-white text-mainColor' : 'text-white'}
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`

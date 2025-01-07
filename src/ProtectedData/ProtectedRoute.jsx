@@ -22,12 +22,12 @@ const ProtectedRoute = ({ allowedRoles }) => {
        console.log("hasPermission", hasPermission)
 
        if (!hasPermission) {
-              if (auth.user.role === "admin") {
-                     return <Navigate to={'/dashboard'} />;
+              if (auth.user.role === "agent") {
+                     return <Navigate to={'/dashboard_agent'} />;
               }
-            //   else if(auth.user.role === "user") {
-            //          return <Navigate to={'/dashboard_user'} />;
-            //   }
+              // else if(auth.user.role === "user") {
+              //        return <Navigate to={'/dashboard_user'} />;
+              // }
             else {
                      console.log('5')
                      return <Navigate to={'/'} />;

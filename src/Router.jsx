@@ -11,6 +11,7 @@ import AgentLayout from "./Layouts/AgentLayouts/AgentLayout";
 import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";  
 import {AddLeadLayout, AddSupplierLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditSupplierLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, SupplierLayout, UpcomingBookingLayout} from "./Layouts/AllLayouts";
 import { LandingPage } from "./Pages/AllPages";
+import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 
 const AppLayoutAgent = () => (
     <>
@@ -83,7 +84,7 @@ export const router = createBrowserRouter([
 
       /* Admin Routes*/
       {
-        // element: <ProtectedRoute allowedRoles={['admin']} />,
+        element: <ProtectedRoute allowedRoles={['agent']} />,
         path: '/dashboard_agent',
         children: [
           {
@@ -132,7 +133,6 @@ export const router = createBrowserRouter([
     
                 ]
               },
-
               {
                 path: 'booking',
                 element: <BookingLayout />,
@@ -160,6 +160,10 @@ export const router = createBrowserRouter([
                     element: <UpcomingBookingLayout />,
                   },
                 ]
+              },
+              {
+                path: "checkOut_process",
+                element: <CheckOutProcessLayout />,
               },
             ]
           },
