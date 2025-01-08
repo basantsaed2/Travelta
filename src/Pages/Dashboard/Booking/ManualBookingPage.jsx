@@ -14,7 +14,6 @@ import { useAuth } from "../../../Context/Auth";
 import axios from "axios";
 import { MdAttachMoney } from "react-icons/md";
 import { FiPercent } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
 import { AddSupplierPage } from "../../AllPages";
 import { Link , useNavigate} from 'react-router-dom';
 
@@ -35,7 +34,7 @@ const ManualBooking = () => {
     url: "https://travelta.online/agent/manual_booking/cart",
   });
   const auth = useAuth();
-  const navigate = useNavigate();    const navigate = useNavigate(); // Hook to navigate
+  const navigate = useNavigate();   
 
   const [showPopup, setShowPopup] = useState(false);
   const [suppliers, setSuppliers] = useState([]);
