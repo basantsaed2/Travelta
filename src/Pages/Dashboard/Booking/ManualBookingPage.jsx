@@ -14,9 +14,8 @@ import { useAuth } from "../../../Context/Auth";
 import axios from "axios";
 import { MdAttachMoney } from "react-icons/md";
 import { FiPercent } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
 import { AddSupplierPage } from "../../AllPages";
-import { Link , useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const ManualBooking = () => {
   const {
@@ -35,7 +34,7 @@ const ManualBooking = () => {
     url: "https://travelta.online/agent/manual_booking/cart",
   });
   const auth = useAuth();
-  const navigate = useNavigate();    const navigate = useNavigate(); // Hook to navigate
+  const navigate = useNavigate();
 
   const [showPopup, setShowPopup] = useState(false);
   const [suppliers, setSuppliers] = useState([]);
@@ -285,8 +284,6 @@ const ManualBooking = () => {
   const addNewMultiCityFlight = () => {
     setMultiCityFlights((prev) => [...prev, { from: "", to: "" }]);
   };
-  // const [flightNumber, setFlightNumber] = useState("");
-  // const [flightCustomers, setFlightCustomers] = useState([]);
   const [flightChildrenNumber, setFlightChildrenNumber] = useState("");
   const [flightAdultsNumber, setFlightAdultsNumber] = useState(0);
   const [flightAdults, setFlightAdults] = useState([]);
@@ -452,20 +449,6 @@ const ManualBooking = () => {
     setVisaCustomers(updatedCustomers);
   };
 
-    // const handleFlightNumberChange = (e) => {
-    //   const number = parseInt(e.target.value, 10) || 0;
-    //   setFlightNumber(number);
-  
-    //   // Adjust the customer inputs dynamically based on the number entered
-    //   setFlightCustomers(Array(number).fill(''));
-    // };
-  
-    // const handleFlightCustomerNameChange = (index, value) => {
-    //   const updatedCustomers = [...flightCustomers];
-    //   updatedCustomers[index] = value;
-    //   setFlightCustomers(updatedCustomers);
-    // };
-
   useEffect(() => {
     refetchBookingList();
     refetchSuppliers();
@@ -538,45 +521,45 @@ const ManualBooking = () => {
 
   const selectedTaxes = taxes.filter((tax) => selectedTaxId.includes(tax.id));
 
-    useEffect(() => {
-      // Parse cost and markupValue as floats, fallback to 0 if not set
-      const parsedCost = parseFloat(cost || 0);
-      const parsedMarkupValue = parseFloat(markupValue || 0);
-    
-      // Check if isMarkupPercentage is 1, treat markupValue as percentage
-      const calculatedMarkupValue = isMarkupPercentage === 1
+  useEffect(() => {
+    // Parse cost and markupValue as floats, fallback to 0 if not set
+    const parsedCost = parseFloat(cost || 0);
+    const parsedMarkupValue = parseFloat(markupValue || 0);
+
+    // Check if isMarkupPercentage is 1, treat markupValue as percentage
+    const calculatedMarkupValue = isMarkupPercentage === 1
       ? (parsedMarkupValue / 100) * parsedCost // Calculate percentage of the cost
       : parsedMarkupValue; // Use markupValue directly if it's not a percentage
-    
-      const calculatedPrice = parsedCost + calculatedMarkupValue;    
-    
-      // Calculate total tax amount
-      let totalTaxAmount = 0;
-      selectedTaxId.forEach((id) => {
-        const tax = taxes.find((tax) => tax.id === id); // Find tax object by ID
-        if (tax) {
-          if (tax.type === "precentage") {
-            totalTaxAmount += (parseFloat(tax.amount) / 100); // Apply percentage tax
-          } else if (tax.type === "value") {
-            totalTaxAmount += parseFloat(tax.amount || 0); // Apply fixed value tax
-          }
-        }
-      });
-    
-      const calculatedTotalPrice = calculatedPrice + totalTaxAmount;
-    
-      // Update the state with calculated values
-      setPrice(calculatedPrice.toFixed(2));
-      setTotalPrice(calculatedTotalPrice.toFixed(2));
-    }, [cost, markupValue, selectedTaxId, isMarkupPercentage, taxes]);
 
-    useEffect(() => {
-      if (!loadingPost && response && response.data) {
-        console.log('Response Submit:', response);
-        navigate('/dashboard_agent/checkOut_process', { state: { cartData: response.data } });
+    const calculatedPrice = parsedCost + calculatedMarkupValue;
+
+    // Calculate total tax amount
+    let totalTaxAmount = 0;
+    selectedTaxId.forEach((id) => {
+      const tax = taxes.find((tax) => tax.id === id); // Find tax object by ID
+      if (tax) {
+        if (tax.type === "precentage") {
+          totalTaxAmount += (parseFloat(tax.amount) / 100); // Apply percentage tax
+        } else if (tax.type === "value") {
+          totalTaxAmount += parseFloat(tax.amount || 0); // Apply fixed value tax
+        }
       }
-    }, [response, loadingPost, navigate]);
-    
+    });
+
+    const calculatedTotalPrice = calculatedPrice + totalTaxAmount;
+
+    // Update the state with calculated values
+    setPrice(calculatedPrice.toFixed(2));
+    setTotalPrice(calculatedTotalPrice.toFixed(2));
+  }, [cost, markupValue, selectedTaxId, isMarkupPercentage, taxes]);
+
+  useEffect(() => {
+    if (!loadingPost && response && response.data) {
+      console.log('Response Submit:', response);
+      navigate('/dashboard_agent/checkOut_process', { state: { cartData: response.data } });
+    }
+  }, [response, loadingPost, navigate]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -679,11 +662,10 @@ const ManualBooking = () => {
       formData.append("notes", visaNotes);
     }
     // Append Flight fields to FormData 
-    else if(selectedService.service_name === 'Flight'){
+    else if (selectedService.service_name === 'Flight') {
       formData.append('type', selectedFlightType);
       formData.append('departure', flightDeparture);
       formData.append('direction', selectedFlightDirection);
-      // formData.append("customers", JSON.stringify(flightCustomers)); // Serialize array to JSON
       formData.append('childreen', flightChildrenNumber);
       formData.append('adults', flightAdultsNumber);
       formData.append('infants', flightInfants);
@@ -847,9 +829,8 @@ const ManualBooking = () => {
             <div className="flex items-center">
               <span className="text-mainColor font-semibold">Mark Up : </span>
               <MdAttachMoney
-                className={`ml-2 ${
-                  isMarkupPercentage ? "text-gray-500" : "text-green-500"
-                }`}
+                className={`ml-2 ${isMarkupPercentage ? "text-gray-500" : "text-green-500"
+                  }`}
               />
               <Switch
                 checked={isMarkupPercentage === 1}
@@ -857,9 +838,8 @@ const ManualBooking = () => {
                 color="primary"
               />
               <FiPercent
-                className={`ml-2 ${
-                  isMarkupPercentage ? "text-blue-500" : "text-gray-500"
-                }`}
+                className={`ml-2 ${isMarkupPercentage ? "text-blue-500" : "text-gray-500"
+                  }`}
               />
             </div>
 
@@ -926,7 +906,7 @@ const ManualBooking = () => {
                     .join(" , "), // Join the selected tax names with a comma
               }}
               variant="outlined"
-              // className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+            // className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
             >
               {taxes.length > 0 ? (
                 taxes.map((tax) => (
@@ -958,7 +938,7 @@ const ManualBooking = () => {
                       : `${tax.amount}`;
                   })
                   .join(" , ")}`}
-                // disabled
+              // disabled
               />
             )}
 
@@ -1064,7 +1044,7 @@ const ManualBooking = () => {
                     Add Supplier
                   </Button>
                 )}
-                {showPopup && (
+                {/* {showPopup && ( */}
                   <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
                     <div className="bg-white p-8 rounded-lg shadow-lg w-[100%] max-w-lg">
                       <div className="flex justify-between items-center mb-4">
@@ -1077,10 +1057,10 @@ const ManualBooking = () => {
                         </Button>
                       </div>
 
-                      <AddSupplierPage update={update} setUpdate={setUpdate}/>
+                      <AddSupplierPage update={update} setUpdate={setUpdate} />
                     </div>
                   </div>
-                )}
+                {/* )} */}
               </>
             )}
           </div>
@@ -1227,7 +1207,7 @@ const ManualBooking = () => {
                         />
                       </div>
 
-                
+
 
                       {/* Children */}
                       <div className="mb-4">
@@ -1441,32 +1421,6 @@ const ManualBooking = () => {
                       />
 
                       {/* Adults */}
-                      {/* <TextField
-                            fullWidth
-                            label="Adults"
-                            value={busAdultsNumber}
-                            onChange={(e) => setBusAdultsNumber(e.target.value)}
-                            variant="outlined"
-                            type="number"
-                            placeholder="Enter number of adults"
-                            className="w-full"
-                            inputProps={{ min: 0 }} // Prevent typing values below 0
-                            /> */}
-
-                      {/* Children */}
-                      {/* <TextField
-                            fullWidth
-                            label="Children"
-                            value={busChildrenNumber}
-                            onChange={(e) => setBusChildrenNumber(e.target.value)}
-                            variant="outlined"
-                            type="number"
-                            placeholder="Enter number of children"
-                            className="w-full"
-                            inputProps={{ min: 0 }} // Prevent typing values below 0
-                            /> */}
-
-                      {/* Adults */}
                       <div className="mb-4">
                         <TextField
                           label="Adults"
@@ -1481,7 +1435,7 @@ const ManualBooking = () => {
                         />
                       </div>
 
-                  
+
 
                       {/* Children */}
                       <div className="mb-4">
@@ -1562,8 +1516,8 @@ const ManualBooking = () => {
                         </div>
                       ))}
 
-                          {/* Adult Details Inputs */}
-                          {busAdults.map((adult, index) => (
+                      {/* Adult Details Inputs */}
+                      {busAdults.map((adult, index) => (
                         <div
                           key={index}
                           className="mb-6 w-full shadow-md p-6 rounded-lg bg-white"
@@ -1770,7 +1724,7 @@ const ManualBooking = () => {
                         />
                       </div>
 
-                   
+
 
                       {/* Notes */}
                       <div className="mb-4">
@@ -1786,8 +1740,8 @@ const ManualBooking = () => {
                         />
                       </div>
 
-                         {/* Customer Names */}
-                         {visaCustomers.map((customer, index) => (
+                      {/* Customer Names */}
+                      {visaCustomers.map((customer, index) => (
                         <div
                           key={index}
                           className="mb-6 w-full shadow-md p-4 rounded-lg bg-white"
@@ -1812,7 +1766,7 @@ const ManualBooking = () => {
                         </div>
                       ))}
                     </div>
-                    
+
                   )}
                 </div>
               )}
@@ -1887,53 +1841,53 @@ const ManualBooking = () => {
                       {/* Conditionally Render Fields */}
                       {(selectedFlightDirection === "round_trip" ||
                         selectedFlightDirection === "multi_city") && (
-                        <div className="mb-4">
-                          <TextField
-                            type="datetime-local"
-                            label="Arrival Date & Time"
-                            value={flightArrival}
-                            onChange={(e) => setFlightArrival(e.target.value)}
-                            placeholder="Enter Arrival Date & Time"
-                            variant="outlined"
-                            fullWidth
-                            InputLabelProps={{ shrink: true }}
-                            className="w-full"
-                          />
-                        </div>
-                      )}
+                          <div className="mb-4">
+                            <TextField
+                              type="datetime-local"
+                              label="Arrival Date & Time"
+                              value={flightArrival}
+                              onChange={(e) => setFlightArrival(e.target.value)}
+                              placeholder="Enter Arrival Date & Time"
+                              variant="outlined"
+                              fullWidth
+                              InputLabelProps={{ shrink: true }}
+                              className="w-full"
+                            />
+                          </div>
+                        )}
 
                       {/* From and To Inputs */}
                       {(selectedFlightDirection === "one_way" ||
                         selectedFlightDirection === "round_trip") && (
-                        <>
-                          <div className="mb-4">
-                            <TextField
-                              label="From"
-                              variant="outlined"
-                              fullWidth
-                              className="w-full"
-                              value={multiCityFlights[0].from}
-                              onChange={(e) =>
-                                handleMultiCityChange(0, "from", e.target.value)
-                              }
-                              placeholder="Enter Flight From"
-                            />
-                          </div>
-                          <div className="mb-4">
-                            <TextField
-                              label="To"
-                              variant="outlined"
-                              fullWidth
-                              className="w-full"
-                              value={multiCityFlights[0].to}
-                              onChange={(e) =>
-                                handleMultiCityChange(0, "to", e.target.value)
-                              }
-                              placeholder="Enter Flight To"
-                            />
-                          </div>
-                        </>
-                      )}
+                          <>
+                            <div className="mb-4">
+                              <TextField
+                                label="From"
+                                variant="outlined"
+                                fullWidth
+                                className="w-full"
+                                value={multiCityFlights[0].from}
+                                onChange={(e) =>
+                                  handleMultiCityChange(0, "from", e.target.value)
+                                }
+                                placeholder="Enter Flight From"
+                              />
+                            </div>
+                            <div className="mb-4">
+                              <TextField
+                                label="To"
+                                variant="outlined"
+                                fullWidth
+                                className="w-full"
+                                value={multiCityFlights[0].to}
+                                onChange={(e) =>
+                                  handleMultiCityChange(0, "to", e.target.value)
+                                }
+                                placeholder="Enter Flight To"
+                              />
+                            </div>
+                          </>
+                        )}
 
                       {/* Multi-City Inputs */}
                       {selectedFlightDirection === "multi_city" && (
@@ -1985,40 +1939,6 @@ const ManualBooking = () => {
                         </>
                       )}
 
-                       {/* Number of Customers */}
-                       {/* <div className="mb-4">
-                        <TextField
-                          label="Customer Number"
-                          type="number"
-                          required
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={flightNumber}
-                          onChange={handleFlightNumberChange}
-                          placeholder="Enter number of customers"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div> */}
-
-                      {/* Customer Names */}
-                      {/* {flightCustomers.map((customer, index) => (
-                        <div className="mb-4" key={index}>
-                          <TextField
-                            label={`Customer Name ${index + 1}`}
-                            variant="outlined"
-                            fullWidth
-                            className="w-full"
-                            value={customer}
-                            onChange={(e) => handleFlightCustomerNameChange(index, e.target.value)}
-                            placeholder={`Enter name for customer ${index + 1}`}
-                          />
-                        </div>
-                      ))} */}
-
-
-
-
                       {/* Children */}
                       <div className="mb-4">
                         <TextField
@@ -2033,148 +1953,123 @@ const ManualBooking = () => {
                           inputProps={{ min: 0 }} // Prevent typing values below 0
                         />
                       </div>
-                       {/* Customer Names */}
 
-                       {flightCustomers.map((customer, index) => (
+                      {/* Adult Details Inputs */}
+                      {flightAdults.map((adult, index) => (
                         <div
-                          className="mb-6 w-full flex flex-col shadow-md p-4 rounded-lg bg-white"
                           key={index}
+                          className="mb-6 w-full flex flex-col shadow-md p-5 rounded-lg bg-white"
                         >
-                          <h1 className="text-lg font-semibold mb-2 text-gray-700">
-                            Customer {index + 1}
+                          <h1 className="text-lg font-semibold mb-4 text-gray-700">
+                            Adult {index + 1}
                           </h1>
-                          <TextField
-                            label="Customer Name"
-                            variant="outlined"
-                            fullWidth
-                            className="w-full"
-                            value={customer}
-                            onChange={(e) =>
-                              handleFlightCustomerNameChange(
-                                index,
-                                e.target.value
-                              )
-                            }
-                            placeholder={`Enter name for customer ${index + 1}`}
-                          />
+
+                          {/* Title */}
+                          <div className="mb-4">
+                            <TextField
+                              select
+                              label="Title"
+                              variant="outlined"
+                              fullWidth
+                              value={adult.selectedTitle}
+                              onChange={(e) =>
+                                handleAdultChange(index, "selectedTitle", e.target.value)
+                              }
+                              className="w-full"
+                            >
+                              {title.map((title, idx) => (
+                                <MenuItem key={idx} value={title}>
+                                  {title}
+                                </MenuItem>
+                              ))}
+                            </TextField>
+                          </div>
+
+                          {/* First Name */}
+                          <div className="mb-4">
+                            <TextField
+                              label="First Name"
+                              variant="outlined"
+                              fullWidth
+                              value={adult.firstName}
+                              onChange={(e) =>
+                                handleAdultChange(index, "firstName", e.target.value)
+                              }
+                              className="w-full"
+                            />
+                          </div>
+
+                          {/* Last Name */}
+                          <div className="mb-4">
+                            <TextField
+                              label="Last Name"
+                              variant="outlined"
+                              fullWidth
+                              value={adult.lastName}
+                              onChange={(e) =>
+                                handleAdultChange(index, "lastName", e.target.value)
+                              }
+                              className="w-full"
+                            />
+                          </div>
                         </div>
                       ))}
-                                            {/* Adult Details Inputs */}
-                                            {flightAdults.map((adult, index) => (
-  <div
-    key={index}
-    className="mb-6 w-full flex flex-col shadow-md p-5 rounded-lg bg-white"
-  >
-    <h1 className="text-lg font-semibold mb-4 text-gray-700">
-      Adult {index + 1} 
-    </h1>
-
-    {/* Title */}
-    <div className="mb-4">
-      <TextField
-        select
-        label="Title"
-        variant="outlined"
-        fullWidth
-        value={adult.selectedTitle}
-        onChange={(e) =>
-          handleAdultChange(index, "selectedTitle", e.target.value)
-        }
-        className="w-full"
-      >
-        {title.map((title, idx) => (
-          <MenuItem key={idx} value={title}>
-            {title}
-          </MenuItem>
-        ))}
-      </TextField>
-    </div>
-
-    {/* First Name */}
-    <div className="mb-4">
-      <TextField
-        label="First Name"
-        variant="outlined"
-        fullWidth
-        value={adult.firstName}
-        onChange={(e) =>
-          handleAdultChange(index, "firstName", e.target.value)
-        }
-        className="w-full"
-      />
-    </div>
-
-    {/* Last Name */}
-    <div className="mb-4">
-      <TextField
-        label="Last Name"
-        variant="outlined"
-        fullWidth
-        value={adult.lastName}
-        onChange={(e) =>
-          handleAdultChange(index, "lastName", e.target.value)
-        }
-        className="w-full"
-      />
-    </div>
-  </div>
-))}
 
                       {/* Children Details Inputs */}
                       {flightChildren.map((child, index) => (
-  <div
-    key={index}
-    className="mb-6 w-full flex flex-col shadow-md p-6 rounded-lg bg-white"
-  >
-    <h1 className="text-lg font-semibold mb-4 text-gray-700">
-      Child {index + 1} 
-    </h1>
+                        <div
+                          key={index}
+                          className="mb-6 w-full flex flex-col shadow-md p-6 rounded-lg bg-white"
+                        >
+                          <h1 className="text-lg font-semibold mb-4 text-gray-700">
+                            Child {index + 1}
+                          </h1>
 
-    {/* Age */}
-    <div className="mb-4">
-      <TextField
-        label="Age"
-        type="number"
-        variant="outlined"
-        fullWidth
-        value={child.age}
-        onChange={(e) =>
-          handleChildChange(index, "age", e.target.value)
-        }
-        inputProps={{ min: 0 }} // Prevents negative values
-        className="w-full"
-      />
-    </div>
+                          {/* Age */}
+                          <div className="mb-4">
+                            <TextField
+                              label="Age"
+                              type="number"
+                              variant="outlined"
+                              fullWidth
+                              value={child.age}
+                              onChange={(e) =>
+                                handleChildChange(index, "age", e.target.value)
+                              }
+                              inputProps={{ min: 0 }} // Prevents negative values
+                              className="w-full"
+                            />
+                          </div>
 
-    {/* First Name */}
-    <div className="mb-4">
-      <TextField
-        label="First Name"
-        variant="outlined"
-        fullWidth
-        value={child.firstName}
-        onChange={(e) =>
-          handleChildChange(index, "firstName", e.target.value)
-        }
-        className="w-full"
-      />
-    </div>
+                          {/* First Name */}
+                          <div className="mb-4">
+                            <TextField
+                              label="First Name"
+                              variant="outlined"
+                              fullWidth
+                              value={child.firstName}
+                              onChange={(e) =>
+                                handleChildChange(index, "firstName", e.target.value)
+                              }
+                              className="w-full"
+                            />
+                          </div>
 
-    {/* Last Name */}
-    <div className="mb-4">
-      <TextField
-        label="Last Name"
-        variant="outlined"
-        fullWidth
-        value={child.lastName}
-        onChange={(e) =>
-          handleChildChange(index, "lastName", e.target.value)
-        }
-        className="w-full"
-      />
-    </div>
-  </div>
-))}
+                          {/* Last Name */}
+                          <div className="mb-4">
+                            <TextField
+                              label="Last Name"
+                              variant="outlined"
+                              fullWidth
+                              value={child.lastName}
+                              onChange={(e) =>
+                                handleChildChange(index, "lastName", e.target.value)
+                              }
+                              className="w-full"
+                            />
+                          </div>
+                        </div>
+                      ))}
 
 
                       {/* Infants */}
