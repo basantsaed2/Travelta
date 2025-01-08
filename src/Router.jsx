@@ -12,6 +12,7 @@ import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";
 import {AddLeadLayout, AddSupplierLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditSupplierLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, SupplierLayout, UpcomingBookingLayout} from "./Layouts/AllLayouts";
 import { LandingPage } from "./Pages/AllPages";
 import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
+import InComing from "./Pages/Dashboard/AgentDashboard/ComingSoon/ComingSoon";
 
 const AppLayoutAgent = () => (
     <>
@@ -23,6 +24,8 @@ const UsersLayout = () => (
   <Outlet />
   </>
 );
+
+
 const AppLeadLayout = () => (
   <>
   <Outlet />
@@ -95,6 +98,12 @@ export const router = createBrowserRouter([
                 path: '',
                 element: <AgentHomePage/>,
               },
+
+              {
+                path: 'IncomingPage',
+                element: <InComing/>,
+              },
+
               {
                 path: 'users',
                 element: <UsersLayout />,
@@ -130,6 +139,7 @@ export const router = createBrowserRouter([
                       }
                     ]
                   },
+
     
                 ]
               },

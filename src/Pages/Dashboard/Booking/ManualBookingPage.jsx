@@ -34,7 +34,7 @@ const ManualBooking = () => {
     url: "https://travelta.online/agent/manual_booking/cart",
   });
   const auth = useAuth();
-  const navigate = useNavigate();
+  const navigate = useNavigate();   
 
   const [showPopup, setShowPopup] = useState(false);
   const [suppliers, setSuppliers] = useState([]);
