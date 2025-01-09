@@ -2,6 +2,7 @@ import React, { useState ,useEffect} from "react";
 import { TextField, MenuItem, Select, Checkbox, ListItemText, Button } from "@mui/material";
 import { usePost } from '../../../../../Hooks/usePostJson';
 import { useGet } from '../../../../../Hooks/useGet';
+import { FaPlus } from 'react-icons/fa';
 
 const AddSupplierPage = ({ update, setUpdate }) => {
     const { refetch: refetchSupplier, loading: loadingSupplier, data: dataSupplier } = useGet({url:'https://travelta.online/agent/supplier'});
@@ -11,8 +12,12 @@ const AddSupplierPage = ({ update, setUpdate }) => {
     
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
-    const [alternatePhone, setAlternatePhone] = useState("");
-    const [email, setEmail] = useState("");
+
+    // const [alternatePhone, setAlternatePhone] = useState("");
+    const [email, setEmail] = useState("")
+    const [additionalPhones, setAdditionalPhones] = useState([]);
+    const [additionalEmails, setAdditionalEmails] = useState([]);
+    ;
     const [adminName, setAdminName] = useState("");
     const [adminPhone, setAdminPhone] = useState("");
     const [adminEmail, setAdminEmail] = useState("");
@@ -34,7 +39,9 @@ const AddSupplierPage = ({ update, setUpdate }) => {
     const handleReset = () => {
         setName('')
         setPhone('')
-        setAlternatePhone('')
+
+        // setAlternatePhone('')
+
         setEmail('')
         setAdminName('')
         setAdminPhone('')
@@ -89,34 +96,66 @@ const AddSupplierPage = ({ update, setUpdate }) => {
         auth.toastError('please Select Service')
         return;
     }
+    const allPhones = [phone, ...additionalPhones];
+    const allEmails = [email, ...additionalEmails];
+
     const formData = new FormData();
 
     formData.append('agent', name)
-    formData.append('phones', phone)
-    formData.append('emails', email)
+    formData.append('phones', JSON.stringify(allPhones))
+    formData.append('emails', JSON.stringify(allEmails))
     formData.append('admin_name', adminName)
     formData.append('admin_phone', adminPhone)
     formData.append('admin_email', adminEmail)
-    formData.append('services', JSON.stringify(selectedServices));
-    formData.append('emergency_phone', alternatePhone)
 
+    formData.append('services', JSON.stringify(selectedServices));
+    // formData.append('emergency_phone', alternatePhone)
+        
+  
     console.log('formData', formData)
 
     postData(formData, 'Lead Added Success');
     }
 
+
+    const handleAddPhoneField = () => {
+      setAdditionalPhones([...additionalPhones, '']);
+    };
+
+  const handleAdditionalPhoneChange = (index, value) => {
+    const updatedPhones = [...additionalPhones];
+    updatedPhones[index] = value;
+    setAdditionalPhones(updatedPhones);
+
+    console.log('phone ', updatedPhones)
+  };
+
+  const handleRemovePhoneField = (index) => {
+    const updatedPhones = additionalPhones.filter((_, i) => i !== index);
+    setAdditionalPhones(updatedPhones);
+  };
+
+  const handleAddEmailField = () => {
+    setAdditionalEmails([...additionalEmails, ""]);
+  };
+  
+  const handleRemoveEmailField = (index) => {
+    const updatedEmails = additionalEmails.filter((_, i) => i !== index);
+    setAdditionalEmails(updatedEmails);
+  };
+  
+  const handleAdditionalEmailChange = (index, value) => {
+    const updatedEmails = [...additionalEmails];
+    updatedEmails[index] = value;
+    setAdditionalEmails(updatedEmails);
+  };
   return (
     <>
-    <form
-    className="w-full flex flex-col gap-10 p-6"
-    onSubmit={handleSubmit}
-    >
-        <div
-            className="w-full flex sm:flex-col lg:flex-row flex-wrap items-start justify-start gap-5"
-        >
-        <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
-            {/* <span className="text-xl font-TextFontRegular text-thirdColor">Name:</span> */}
-            <TextField
+  <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5 p-4">
+      <div className="w-full flex sm:flex-col lg:flex-row flex-wrap items-start justify-start gap-4">
+        {/* Supplier Name */}
+        <div className="sm:w-full lg:w-[35%] flex flex-col items-start justify-center gap-y-1">
+          <TextField
             label="Supplier Name"
             variant="outlined"
             fullWidth
@@ -124,11 +163,12 @@ const AddSupplierPage = ({ update, setUpdate }) => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-            />
+          />
         </div>
-        <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
-            {/* <span className="text-xl font-TextFontRegular text-thirdColor">Name:</span> */}
-            <TextField
+
+        {/* Supplier Phone */}
+        <div className="sm:w-full lg:w-[35%] flex flex-col items-start justify-center gap-y-1">
+          <TextField
             label="Supplier Phone"
             variant="outlined"
             type="tel"
@@ -139,21 +179,57 @@ const AddSupplierPage = ({ update, setUpdate }) => {
             className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
           />
         </div>
-        <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
-            {/* <span className="text-xl font-TextFontRegular text-thirdColor">Name:</span> */}
+      </div>
+
+      {/* Button to Add More Phone Fields */}
+      <div className="w-full flex justify-start gap-4 mt-2">
+        <Button
+          type="button"
+          variant="contained"
+          className="bg-mainColor hover:bg-blue-600 text-white px-4 py-1 flex items-center gap-2"
+          onClick={handleAddPhoneField}
+        >
+          <FaPlus /> Add More Phone
+        </Button>
+      </div>
+
+      {additionalPhones.map((phone, index) => (
+        <div
+          key={index}
+          className="w-full sm:w-full md:w-1/2 lg:w-1/2 flex sm:flex-col lg:flex-row gap-4 mt-2 bg-white p-3 rounded-lg shadow-lg"
+        >
+          {/* Phone Field */}
+          <div className="sm:w-full lg:w-[70%] flex flex-col items-start justify-center gap-y-1">
             <TextField
-            label="Alternate Supplier Phone"
-            variant="outlined"
-            type="tel"
-            fullWidth
-            value={alternatePhone}
-            onChange={(e) => setAlternatePhone(e.target.value)}
-            className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-          />
+              label={`Phone ${index + 2}`}
+              variant="outlined"
+              type="tel"
+              fullWidth
+              value={phone}
+              onChange={(e) => handleAdditionalPhoneChange(index, e.target.value)}
+              className="shadow-md border-mainColor hover:border-mainColor focus:border-mainColor p-2 rounded-lg"
+            />
+          </div>
+
+          {/* Remove Phone Button */}
+          <div className="flex items-center justify-center sm:w-full lg:w-[30%] mt-2 lg:mt-0">
+            <Button
+              type="button"
+              variant="contained"
+              className="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-lg shadow-md"
+              onClick={() => handleRemovePhoneField(index)}
+            >
+              Remove
+            </Button>
+          </div>
         </div>
-        <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
-            {/* <span className="text-xl font-TextFontRegular text-thirdColor">Name:</span> */}
-            <TextField
+      ))}
+
+      {/* Email Fields Section */}
+      <div className="w-full flex sm:flex-col lg:flex-row gap-4 mt-4">
+        {/* Supplier Email */}
+        <div className="sm:w-full lg:w-[35%] flex flex-col items-start justify-center gap-y-1">
+          <TextField
             label="Supplier Email"
             variant="outlined"
             type="email"
@@ -164,9 +240,55 @@ const AddSupplierPage = ({ update, setUpdate }) => {
             className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
           />
         </div>
-        <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
-            {/* <span className="text-xl font-TextFontRegular text-thirdColor">Name:</span> */}
+      </div>
+
+      {/* Button to Add More Email Fields */}
+      <div className="w-full flex justify-start gap-4 mt-2">
+        <Button
+          type="button"
+          variant="contained"
+          className="bg-mainColor hover:bg-blue-600 text-white px-4 py-1 flex items-center gap-2"
+          onClick={handleAddEmailField}
+        >
+          <FaPlus /> Add More Email
+        </Button>
+      </div>
+
+      {additionalEmails.map((email, index) => (
+        <div
+          key={index}
+          className="w-full sm:w-full md:w-1/2 lg:w-1/2 xl:w-[48%] flex sm:flex-col lg:flex-row gap-4 mt-2 bg-white p-3 rounded-lg shadow-lg"
+        >
+          <div className="sm:w-full lg:w-[70%] flex flex-col items-start justify-center gap-y-1">
             <TextField
+              label={`Email ${index + 2}`}
+              variant="outlined"
+              type="email"
+              fullWidth
+              value={email}
+              onChange={(e) => handleAdditionalEmailChange(index, e.target.value)}
+              className="shadow-md border-mainColor hover:border-mainColor focus:border-mainColor p-2 rounded-lg"
+            />
+          </div>
+          {/* Remove Email Button */}
+          <div className="flex items-center justify-center sm:w-full lg:w-[30%] mt-2 lg:mt-0">
+            <Button
+              type="button"
+              variant="contained"
+              className="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-lg shadow-md"
+              onClick={() => handleRemoveEmailField(index)}
+            >
+              Remove
+            </Button>
+          </div>
+        </div>
+      ))}
+
+      {/* Admin Fields Section */}
+      <div className="w-full flex sm:flex-col lg:flex-row gap-4 mt-4">
+        {/* Admin Name */}
+        <div className="sm:w-full lg:w-[35%] flex flex-col items-start justify-center gap-y-1">
+          <TextField
             label="Admin Name"
             variant="outlined"
             fullWidth
@@ -174,11 +296,12 @@ const AddSupplierPage = ({ update, setUpdate }) => {
             value={adminName}
             onChange={(e) => setAdminName(e.target.value)}
             className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-            />
+          />
         </div>
-        <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
-            {/* <span className="text-xl font-TextFontRegular text-thirdColor">Name:</span> */}
-            <TextField
+
+        {/* Admin Phone */}
+        <div className="sm:w-full lg:w-[35%] flex flex-col items-start justify-center gap-y-1">
+          <TextField
             label="Admin Phone"
             variant="outlined"
             type="tel"
@@ -189,9 +312,12 @@ const AddSupplierPage = ({ update, setUpdate }) => {
             className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
           />
         </div>
-        <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
-            {/* <span className="text-xl font-TextFontRegular text-thirdColor">Name:</span> */}
-            <TextField
+      </div>
+
+      {/* Admin Email */}
+      <div className="w-full flex sm:flex-col lg:flex-row gap-4 mt-2">
+        <div className="sm:w-full lg:w-[35%] flex flex-col items-start justify-center gap-y-1">
+          <TextField
             label="Admin Email"
             variant="outlined"
             type="email"
@@ -202,49 +328,53 @@ const AddSupplierPage = ({ update, setUpdate }) => {
             className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
           />
         </div>
-        <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
-            {/* <span className="text-xl font-TextFontRegular text-thirdColor">Name:</span> */}
-            <TextField
-              label="Services"
-              fullWidth
-              select
-              value={selectedServices}
-              onChange={(e) => setSelectedServices(e.target.value)}
-              SelectProps={{
-                multiple: true,
-                renderValue: (selected) =>
-                  selected
-                    .map((id) => suppliersServices.find((service) => service.id === id)?.service_name)
-                    .join(", "),
-              }}
-              variant="outlined"
-              className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-            >
-              {suppliersServices.map((service) => (
-                <MenuItem key={service.id} value={service.id}>
-                  <Checkbox checked={selectedServices.includes(service.id)} />
-                  <ListItemText primary={service.service_name} />
-                </MenuItem>
-              ))}
-            </TextField>
+      </div>
+
+      {/* Services Section */}
+      <div className="w-full flex sm:flex-col lg:flex-row gap-4 mt-4">
+        <div className="sm:w-full lg:w-[35%] flex flex-col items-start justify-center gap-y-1">
+          <TextField
+            label="Services"
+            fullWidth
+            select
+            value={selectedServices}
+            onChange={(e) => setSelectedServices(e.target.value)}
+            SelectProps={{
+              multiple: true,
+              renderValue: (selected) =>
+                selected
+                  .map((id) => suppliersServices.find((service) => service.id === id)?.service_name)
+                  .join(", "),
+            }}
+            variant="outlined"
+            className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+          >
+            {suppliersServices.map((service) => (
+              <MenuItem key={service.id} value={service.id}>
+                <Checkbox checked={selectedServices.includes(service.id)} />
+                <ListItemText primary={service.service_name} />
+              </MenuItem>
+            ))}
+          </TextField>
         </div>
-        </div>
-          <div className="w-full flex items-center gap-x-4">
-            {/* <div className="">
-                <StaticButton text={'Reset'} handleClick={handleReset} bgColor='bg-transparent' Color='text-mainColor' border={'border-2'} borderColor={'border-mainColor'} rounded='rounded-full' />
-            </div> */}
-            <div className="">
-                <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                className="bg-mainColor hover:bg-blue-600 text-white"
-            >
-                Submit
-            </Button>
-            </div>
-        </div>
+      </div>
+
+      {/* Submit Button */}
+      <div className="w-full flex justify-center mt-4">
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth
+          className="bg-mainColor hover:bg-blue-600 text-white px-6 py-2"
+          // onClick={handleSubmit}
+        >
+          Submit
+        </Button>
+      </div>
     </form>
+
+
+
     </>
   );
 };
