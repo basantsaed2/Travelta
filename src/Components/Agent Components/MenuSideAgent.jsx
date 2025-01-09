@@ -950,7 +950,7 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
         to="IncomingPage"
         onMouseMove={() => setIsActiveOperationIcon(true)}
         onMouseOut={() => setIsActiveOperationIcon(false)}
-        onClick={handleClickOperation}
+        onClick={() => {handleClickOperation();}}
         className={`
           ${isActiveOperation ? "active" : ""}
          flex items-center 

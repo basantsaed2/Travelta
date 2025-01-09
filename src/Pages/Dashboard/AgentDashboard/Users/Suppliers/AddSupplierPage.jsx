@@ -58,7 +58,7 @@ const AddSupplierPage = ({ update, setUpdate }) => {
     }, [response])
 
 
-    const handleSubmit = async (e) => {
+    const handleSubmitSupplier = async (e) => {
     e.preventDefault();
 
     // const newSupplier = {
@@ -151,11 +151,16 @@ const AddSupplierPage = ({ update, setUpdate }) => {
   };
   return (
     <>
-  <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5 p-4">
-      <div className="w-full flex sm:flex-col lg:flex-row flex-wrap items-start justify-start gap-4">
-        {/* Supplier Name */}
-        <div className="sm:w-full lg:w-[35%] flex flex-col items-start justify-center gap-y-1">
-          <TextField
+    <form
+    className="w-full flex flex-col gap-10 p-6"
+    onSubmit={handleSubmitSupplier}
+    >
+        <div
+            className="w-full flex sm:flex-col lg:flex-row flex-wrap items-start justify-start gap-5"
+        >
+        <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
+            {/* <span className="text-xl font-TextFontRegular text-thirdColor">Name:</span> */}
+            <TextField
             label="Supplier Name"
             variant="outlined"
             fullWidth
@@ -357,20 +362,23 @@ const AddSupplierPage = ({ update, setUpdate }) => {
             ))}
           </TextField>
         </div>
-      </div>
-
-      {/* Submit Button */}
-      <div className="w-full flex justify-center mt-4">
-        <Button
-          type="submit"
-          variant="contained"
-          fullWidth
-          className="bg-mainColor hover:bg-blue-600 text-white px-6 py-2"
-          // onClick={handleSubmit}
-        >
-          Submit
-        </Button>
-      </div>
+        </div>
+          <div className="w-full flex items-center gap-x-4">
+            {/* <div className="">
+                <StaticButton text={'Reset'} handleClick={handleReset} bgColor='bg-transparent' Color='text-mainColor' border={'border-2'} borderColor={'border-mainColor'} rounded='rounded-full' />
+            </div> */}
+            <div className="">
+                <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                className="bg-mainColor hover:bg-blue-600 text-white"
+                onClick={handleSubmitSupplier}
+            >
+                Submit
+            </Button>
+            </div>
+        </div>
     </form>
 
 

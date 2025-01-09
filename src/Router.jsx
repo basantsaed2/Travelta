@@ -178,6 +178,6 @@ export const router = createBrowserRouter([
             ]
           },
         ],
-        },
+      },
 
 ]);
