@@ -739,7 +739,7 @@ const ManualBooking = () => {
   };
 
   return (
-    <form className="bg-gray-100 flex justify-center items-center">
+    <form onSubmit={handleSubmit} className="bg-gray-100 flex justify-center items-center">
       <div className="bg-white shadow-lg rounded-lg w-full p-4 lg:p-8">
         {/* <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Manual Booking</h1> */}
 
@@ -906,7 +906,7 @@ const ManualBooking = () => {
                     .join(" , "), // Join the selected tax names with a comma
               }}
               variant="outlined"
-            // className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+            className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
             >
               {taxes.length > 0 ? (
                 taxes.map((tax) => (
@@ -918,9 +918,9 @@ const ManualBooking = () => {
                   </MenuItem>
                 ))
               ) : (
-                <MenuItem value="">
-                  <em>No Taxes available</em>
-                </MenuItem>
+              <MenuItem value="" disabled>
+                  No Taxes available
+              </MenuItem>              
               )}
             </TextField>
 
@@ -1044,9 +1044,9 @@ const ManualBooking = () => {
                     Add Supplier
                   </Button>
                 )}
-                {/* {showPopup && ( */}
-                  <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-white p-8 rounded-lg shadow-lg w-[100%] max-w-lg">
+                {showPopup && (
+                  <div className="fixed z-50 inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+                    <div className="bg-white p-2 rounded-lg shadow-lg max-w-xl">
                       <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xl font-semibold">Add Supplier</h2>
                         <Button
@@ -1057,10 +1057,10 @@ const ManualBooking = () => {
                         </Button>
                       </div>
 
-                      <AddSupplierPage update={update} setUpdate={setUpdate} />
+                      <AddSupplierPage />
                     </div>
                   </div>
-                {/* )} */}
+                )}
               </>
             )}
           </div>
@@ -2510,7 +2510,7 @@ const ManualBooking = () => {
           </Link>
         </div>
       </div>
-    </form>
+     </form>
   );
 };
 

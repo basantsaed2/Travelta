@@ -51,7 +51,7 @@ const AddSupplierPage = ({ update, setUpdate }) => {
     }, [response])
 
 
-    const handleSubmit = async (e) => {
+    const handleSubmitSupplier = async (e) => {
     e.preventDefault();
 
     // const newSupplier = {
@@ -109,7 +109,7 @@ const AddSupplierPage = ({ update, setUpdate }) => {
     <>
     <form
     className="w-full flex flex-col gap-10 p-6"
-    onSubmit={handleSubmit}
+    onSubmit={handleSubmitSupplier}
     >
         <div
             className="w-full flex sm:flex-col lg:flex-row flex-wrap items-start justify-start gap-5"
@@ -239,6 +239,7 @@ const AddSupplierPage = ({ update, setUpdate }) => {
                 variant="contained"
                 fullWidth
                 className="bg-mainColor hover:bg-blue-600 text-white"
+                onClick={handleSubmitSupplier}
             >
                 Submit
             </Button>

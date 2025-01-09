@@ -29,16 +29,16 @@ const AgentLayout = () => {
   };
 
   return (
-    <div className=" relative flex min-h-screen">
+    <div className=" relative flex">
       <SidebarAgent
         isSidebarCollapsed={isSidebarCollapsed}
         isSidebarVisible={isSidebarVisible}
         onToggleSidebar={handleToggleSidebar}
         onLinkClick={handleLinkClick} // Pass the link click handler
       />
-      <div className="flex-1 flex flex-col md:w-full sm:w-full min-h-screen">
+      <div className="flex flex-col w-full overflow-hidden">
         <Navbar onToggleSidebar={handleToggleSidebar} />
-        <main className="flex-1 bg-gray-100 p-6">
+        <main className="flex-1 bg-gray-100 p-6 min-h-full">
           <Outlet />
         </main>
       </div>
