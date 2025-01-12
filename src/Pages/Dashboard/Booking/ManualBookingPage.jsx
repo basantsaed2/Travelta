@@ -98,8 +98,8 @@ const ManualBooking = () => {
   const [selectedTaxType, setSelectedTaxType] = useState("");
   const [selectedTaxAmount, setSelectedTaxAmount] = useState("");
   const taxesType = [
-    { value: "include", label: "Include" },
-    { value: "exclude", label: "Exclude" },
+    { value: "include", label: "Include Tax" },
+    { value: "exclude", label: "Exclude Tax" },
   ];
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState([]);
@@ -127,6 +127,7 @@ const ManualBooking = () => {
   const [roomQuantity, setRoomQuantity] = useState("");
   const [adultsHotelNumber, setAdultsHotelNumber] = useState(0);
   const [childrenHotelNumber, setChildrenHotelNumber] = useState(0);
+  const [roomTypes, setRoomTypes] = useState([]); 
 
   const [hotelAdults, setHotelAdults] = useState([]);
   const [hotelChildren, setHotelChildren] = useState([]);
@@ -151,6 +152,7 @@ const ManualBooking = () => {
       return updatedAdults;
     });
   };
+
 
   // Handle change in number of children for hotel
   const handleChildrenHotelNumberChange = (e) => {
@@ -185,6 +187,23 @@ const ManualBooking = () => {
     const updatedChildren = [...hotelChildren];
     updatedChildren[index][field] = value;
     setHotelChildren(updatedChildren);
+  };
+
+  const handleQuantityChange = (e) => {
+    const quantity = Math.max(0, Number(e.target.value)); // Ensure quantity is non-negative
+    setRoomQuantity(quantity);
+
+    // Adjust the roomTypes array to match the quantity
+    const newRoomTypes = Array(quantity)
+      .fill('')
+      .map((_, idx) => roomTypes[idx] || ''); // Keep existing values if any
+    setRoomTypes(newRoomTypes);
+  };
+
+  const handleRoomTypeChange = (index, value) => {
+    const newRoomTypes = [...roomTypes];
+    newRoomTypes[index] = value; // Update the specific room type
+    setRoomTypes(newRoomTypes);
   };
 
   // To track the bus details
@@ -720,7 +739,7 @@ const ManualBooking = () => {
       formData.append("check_in", checkInDate);
       formData.append("check_out", checkOutDate);
       formData.append("nights", totalNights);
-      formData.append("room_type", roomType);
+      formData.append("room_type", roomTypes);
       formData.append("room_quantity", roomQuantity);
       formData.append("adults", adultsHotelNumber);
       formData.append("childreen", childrenHotelNumber);
@@ -1302,8 +1321,38 @@ const ManualBooking = () => {
                         inputProps={{ min: 0 }} // Prevent typing values below 0
                       />
 
+                        {/* Room Quantity */}
+                        <TextField
+        fullWidth
+        label="Room Quantity"
+        value={roomQuantity}
+        onChange={handleQuantityChange}
+        variant="outlined"
+        type="number"
+        placeholder="Enter number of rooms"
+        inputProps={{ min: 0 }}
+      />
+
+        {/* Room Types Inputs */}
+        {roomTypes.length > 0 &&
+  roomTypes.map((type, index) => (
+    <TextField
+      key={index}
+      fullWidth
+      label={`Room Type for Room ${index + 1}`}
+      value={type}
+      onChange={(e) => handleRoomTypeChange(index, e.target.value)}
+      variant="outlined"
+      type="text"
+      placeholder="Enter room type (e.g., Single, Double)"
+    />
+  ))
+}
+
+
                       {/* Room Type */}
-                      <TextField
+
+                      {/* <TextField
                         fullWidth
                         label="Room Type"
                         value={roomType}
@@ -1313,20 +1362,10 @@ const ManualBooking = () => {
                         placeholder="Enter room type (e.g., 1 for single, 2 for double)"
                         className="w-full"
                         inputProps={{ min: 0 }} // Prevent typing values below 0
-                      />
+                      /> 
+                      */}
 
-                      {/* Room Quantity */}
-                      <TextField
-                        fullWidth
-                        label="Room Quantity"
-                        value={roomQuantity}
-                        onChange={(e) => setRoomQuantity(e.target.value)}
-                        variant="outlined"
-                        type="number"
-                        placeholder="Enter number of rooms"
-                        className="w-full"
-                        inputProps={{ min: 0 }} // Prevent typing values below 0
-                      />
+                    
 
                       {/* Adults */}
                       {/* <TextField
@@ -1700,7 +1739,7 @@ const ManualBooking = () => {
             fullWidth
             value={adult.selectedTitle}
             onChange={(e) =>
-              handleAdultChange(index, "selectedTitle", e.target.value)
+              handleAdultChangeBus(index, "selectedTitle", e.target.value)
             }
             className="w-full"
           >

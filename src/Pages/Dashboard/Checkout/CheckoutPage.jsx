@@ -68,6 +68,7 @@ const CheckoutPage = ({ refetch, setUpdate }) => {
     }
   };
 
+
   const handleSubmit = async () => {
     if (selectedMethod.name === "Vodafone Cash") {
 
@@ -186,48 +187,58 @@ const CheckoutPage = ({ refetch, setUpdate }) => {
         Select Payment Method:
       </label>
 
-        {paymentMethods.map((method) => (
-          <div key={method.id} className="shadow bg-white p-6 w-full">
-            <label className="text-2xl flex items-center gap-3 cursor-pointer text-mainColor">
-              <input
-                type="radio"
-                name="paymentMethod"
-                className="w-6 h-6 border-2 text-mainColor border-mainColor"
-                value={method.name}
-                onChange={() => setSelectedMethod(method)}
-              />
-              {/* <img src={method.thumbnailUrl} alt={method.name} className="w-16" /> */}
-              {method.name}
-            </label>
-            {selectedMethod && selectedMethod.name === "Vodafone Cash" && method.name === "Vodafone Cash" && (
-            <div className="relative w-full mt-2">
-                <input
-                    type="text"
-                    className="w-full p-2  border border-mainColor rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-mainColor"
-                    value={thumbnails ? thumbnails.name : 'No file selected'}
-                    readOnly={true}
-                    onClick={handleInputClick} // Open file input dialog when clicked
-                    placeholder="Upload Receipt"
-                />
+      {paymentMethods.map((method) => (
+  <div
+    key={method.id}
+    className={`shadow bg-white p-6 w-full ${
+      selectedMethod?.id === method.id ? 'border-2 border-green-700' : ''
+    }`} // Apply green border if this method is selected
+  >
+    <label className="text-2xl flex items-center gap-3 cursor-pointer text-mainColor">
+      <input
+        type="radio"
+        name="paymentMethod"
+        className="w-6 h-6 border-2 text-mainColor border-mainColor"
+        value={method.name}
+        onChange={() => setSelectedMethod(method)} // Set the selected method
+      />
+      {/* <img src={method.thumbnailUrl} alt={method.name} className="w-16" /> */}
+      {method.name}
+    </label>
 
-                {/* Upload Icon */}
-                <FiUpload
-                    onClick={handleInputClick} // Allow the icon to trigger file selection too
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-mainColor cursor-pointer"
-                />
+    {/* Additional Input for Vodafone Cash */}
+    {selectedMethod &&
+      selectedMethod.name === 'Vodafone Cash' &&
+      method.name === 'Vodafone Cash' && (
+        <div className="relative w-full mt-2">
+          <input
+            type="text"
+            className="w-full p-2 border border-green-700 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-700"
+            value={thumbnails ? thumbnails.name : 'No file selected'}
+            readOnly={true}
+            onClick={handleInputClick} // Open file input dialog when clicked
+            placeholder="Upload Receipt"
+          />
 
-                {/* Hidden File Input */}
-                <input
-                    type="file"
-                    className="hidden"
-                    onChange={handleFileChange}
-                    ref={uploadRef}
-                    accept="image/*" // Optional: restrict to image file types
-                />
-              </div>
-            )}
-          </div>
-        ))}
+          {/* Upload Icon */}
+          <FiUpload
+            onClick={handleInputClick} // Allow the icon to trigger file selection too
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-mainColor cursor-pointer"
+          />
+
+          {/* Hidden File Input */}
+          <input
+            type="file"
+            className="hidden"
+            onChange={handleFileChange}
+            ref={uploadRef}
+            accept="image/*" // Optional: restrict to image file types
+          />
+        </div>
+      )}
+  </div>
+))}
+
 
               
       </div>
