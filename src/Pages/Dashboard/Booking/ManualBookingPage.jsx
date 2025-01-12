@@ -498,7 +498,7 @@ const ManualBooking = () => {
   
     // Function to handle children details change
     const handleChildTourChange = (index, field, value) => {
-      const updatedChildren = [...visaChildren];
+      const updatedChildren = [...tourChildren];
       updatedChildren[index][field] = value;
       setTourChildren(updatedChildren);
     };
@@ -853,8 +853,8 @@ const ManualBooking = () => {
       formData.append('departure', transportationDeparture);
       formData.append("adult_price", tourAdultPrice);
       formData.append("child_price", tourChildPrice);
-      formData.append('childreen', flightChildrenNumber);
-      formData.append('adults', flightAdultsNumber);
+      formData.append('childreen', tourChildrenNumber);
+      formData.append('adults', tourAdultsNumber);
 
       // formData.append("adults", tourAdults);
       // formData.append("childreen", tourChildren);
@@ -2772,19 +2772,19 @@ const ManualBooking = () => {
   <div className="w-full md:w-1/2 shadow-lg p-6 rounded-lg bg-white">
   <h2 className="text-xl font-semibold text-gray-700 mb-4">Children</h2>
   {tourChildren.map((child, index) => (
-<div
-key={index}
-className="mb-6 w-full flex flex-col shadow-lg p-6 rounded-lg bg-white hover:shadow-xl transition-shadow duration-300"
->
-{/* Child Title */}
-<h2 className="text-xl font-semibold mb-4 text-gray-700"> {/* Reduced margin-bottom */}
-  Child {index + 1}
-</h2>
+    <div
+    key={index}
+    className="mb-6 w-full flex flex-col shadow-lg p-6 rounded-lg bg-white hover:shadow-xl transition-shadow duration-300"
+    >
+    {/* Child Title */}
+    <h2 className="text-xl font-semibold mb-4 text-gray-700"> {/* Reduced margin-bottom */}
+      Child {index + 1}
+    </h2>
 
-{/* Input Fields Container */}
-<div className="w-full flex flex-col md:flex-row gap-4"> {/* Switch to flex-col on small screens */}
+    {/* Input Fields Container */}
+    <div className="w-full flex flex-col md:flex-row gap-4"> {/* Switch to flex-col on small screens */}
 
-  {/* Age */}
+      {/* Age */}
   <div className="flex-1 mb-3"> {/* Reduced margin-bottom */}
     <TextField
       label="Age"
