@@ -14,6 +14,7 @@ import { LandingPage } from "./Pages/AllPages";
 import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 import InComing from "./Pages/Dashboard/AgentDashboard/ComingSoon/ComingSoon";
 import WalletLayOut from "./Layouts/AgentLayouts/Wallet/WalletLayOut";
+import AddWallet from "./Pages/Dashboard/AgentDashboard/Wallet/AddWallet";
 
 const AppLayoutAgent = () => (
     <>
@@ -53,6 +54,11 @@ const AppSetting= () => (
   </>
 );
 const AppFinancialAccount= () => (
+  <>
+  <Outlet />
+  </>
+);
+const AppWalletLayOut= () => (
   <>
   <Outlet />
   </>
@@ -115,11 +121,7 @@ export const router = createBrowserRouter([
                 element: <InComing/>,
               },
 
-              {
-                path: 'wallet',
-                element: <WalletLayOut/>
-
-              }
+              
 
               {
                 path: 'users',
@@ -210,6 +212,22 @@ export const router = createBrowserRouter([
                         element: <EditFinancialAccountLayout/>,
                         },
                     ]
+                  },
+                  {
+                    path: 'wallet',
+                    element: <AppWalletLayOut/>,
+                    children:[
+                      {
+                        path: "",
+                        element: <WalletLayOut/>,
+                      },
+                      {
+                        path: "add",
+                        element: <AddWallet/>,
+                      },
+
+                    ]
+    
                   },
                 ]
               },

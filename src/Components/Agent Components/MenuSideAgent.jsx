@@ -140,6 +140,9 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
   const [isActiveFinancialAccount, setIsActiveFinancialAccount] = useState(
     stateLink.isActiveFinancialAccount ?? false
   );
+  const [isActiveWallet, setIsActiveWallet] = useState(
+    stateLink.isActiveWallet ?? false
+  );
 
   // Helper function to save the current active links state
   const saveActiveLinksState = useCallback(() => {
@@ -182,7 +185,7 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
       isActiveSettingIcon,
       isOpenSetting,
       isActiveFinancialAccount,
-
+isActiveWallet,
       isActiveAccounting,
       isActiveAccountingIcon,
       isOpenAccounting,
@@ -227,7 +230,7 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     isActiveSettingIcon,
     isOpenSetting,
     isActiveFinancialAccount,
-
+isActiveWallet,
     isActiveAccounting,
     isActiveAccountingIcon,
     isOpenAccounting,
@@ -275,6 +278,7 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     isActiveSettingIcon,
     isOpenSetting,
     isActiveFinancialAccount,
+    isActiveWallet,
 
     isActiveAccounting,
     isActiveAccountingIcon,
@@ -308,7 +312,7 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     setIsOpenOperation(false);
     setIsActiveOperationIcon(false);
     setIsActiveOperation(false);
-
+    setIsActiveWallet(false);
     setIsActiveRequests(false);
     setIsActiveRequestsIcon(false);
     setIsOpenRequests(false);
@@ -325,6 +329,7 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     setIsActiveSettingIcon(false);
     setIsOpenSetting(false);
     setIsActiveFinancialAccount(false);
+    
   };
 
   // Handler functions to manage navigation state
@@ -631,6 +636,7 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     setIsActiveSettingIcon(true);
     setIsActiveSetting(true);
     setIsActiveFinancialAccount(true)
+    setIsActiveWallet(true)
   }, []);
   useEffect(() => {
     const part = pathName.split("/");
@@ -640,6 +646,8 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     if (result === "/dashboard_agent/setting" &&
       ![
         "/dashboard_agent/setting/financial_account",
+      ].some((path) => pathName.startsWith(path)) && ![
+        "/dashboard_agent/setting/wallet",
       ].some((path) => pathName.startsWith(path))
     ) {
       handleClickSetting();
@@ -654,12 +662,30 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     setIsActiveSettingIcon(true);
     setIsActiveSetting(true);
     setIsActiveFinancialAccount(true)
+    setIsActiveWallet(false)
   }, []);
   useEffect(() => {
     const part = pathName.split("/");
     const result = part.slice(0, 4).join("/");
     if (result == "/dashboard_agent/setting/financial_account") {
       handleClickFinancialAccount();
+    }
+  }, [location]);
+
+  const handleClickWallet = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenSetting(true);
+    setIsActiveSettingIcon(true);
+    setIsActiveSetting(true);
+    
+    setIsActiveWallet(true)
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 4).join("/");
+    if (result == "/dashboard_agent/setting/wallet") {
+      handleClickWallet();
     }
   }, [location]);
 
@@ -1193,6 +1219,25 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
             >
               Financial Account
+            </li>
+          </Link>
+
+          <Link
+            to={"setting/wallet"}
+            onClick={() => {
+              handleClickFinancialAccount();
+              onLinkClick();
+            }}
+          >
+            <li
+              className={`${
+                isActiveWallet
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Wallet
             </li>
           </Link>
          
