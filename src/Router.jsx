@@ -119,7 +119,7 @@ export const router = createBrowserRouter([
                 path: 'wallet',
                 element: <WalletLayOut/>
 
-              }
+              },
 
               {
                 path: 'users',
