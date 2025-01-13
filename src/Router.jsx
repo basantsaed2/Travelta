@@ -9,7 +9,7 @@ import SignUpAffilate from "./Pages/Authentication/SignUpAffilate"
 import Login from "./Pages/Authentication/Login";
 import AgentLayout from "./Layouts/AgentLayouts/AgentLayout";
 import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";  
-import {AddLeadLayout, AddSupplierLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditSupplierLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, SupplierLayout, UpcomingBookingLayout} from "./Layouts/AllLayouts";
+import {AddFinancialAccountLayout, AddLeadLayout, AddSupplierLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditFinancialAccountLayout, EditSupplierLayout, FinancialAccountLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, SupplierLayout, UpcomingBookingLayout} from "./Layouts/AllLayouts";
 import { LandingPage } from "./Pages/AllPages";
 import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 import InComing from "./Pages/Dashboard/AgentDashboard/ComingSoon/ComingSoon";
@@ -42,6 +42,16 @@ const BookingLayout = () => (
   </>
 );
 const BookingListLayout = () => (
+  <>
+  <Outlet />
+  </>
+);
+const AppSetting= () => (
+  <>
+  <Outlet />
+  </>
+);
+const AppFinancialAccount= () => (
   <>
   <Outlet />
   </>
@@ -171,6 +181,32 @@ export const router = createBrowserRouter([
                   },
                 ]
               },
+
+              {
+                path: "setting",
+                element: <AppSetting/>,
+                children:[
+                  {
+                    path: "financial_account",
+                    element: <AppFinancialAccount/>,
+                    children:[
+                        {
+                          path: "",
+                          element: <FinancialAccountLayout/>,
+                        },       
+                        {
+                          path: "add",
+                          element: <AddFinancialAccountLayout/>,
+                        },
+                        {
+                        path: "edit/:accountId",
+                        element: <EditFinancialAccountLayout/>,
+                        },
+                    ]
+                  },
+                ]
+              },
+
               {
                 path: "checkOut_process",
                 element: <CheckOutProcessLayout />,

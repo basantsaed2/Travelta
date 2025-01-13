@@ -137,6 +137,9 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
   const [isActiveSetting, setIsActiveSetting] = useState(
     stateLink.isActiveSetting ?? false
   );
+  const [isActiveFinancialAccount, setIsActiveFinancialAccount] = useState(
+    stateLink.isActiveFinancialAccount ?? false
+  );
 
   // Helper function to save the current active links state
   const saveActiveLinksState = useCallback(() => {
@@ -178,6 +181,7 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
       isActiveSetting,
       isActiveSettingIcon,
       isOpenSetting,
+      isActiveFinancialAccount,
 
       isActiveAccounting,
       isActiveAccountingIcon,
@@ -222,6 +226,7 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     isActiveSetting,
     isActiveSettingIcon,
     isOpenSetting,
+    isActiveFinancialAccount,
 
     isActiveAccounting,
     isActiveAccountingIcon,
@@ -269,6 +274,7 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     isActiveSetting,
     isActiveSettingIcon,
     isOpenSetting,
+    isActiveFinancialAccount,
 
     isActiveAccounting,
     isActiveAccountingIcon,
@@ -318,6 +324,7 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     setIsActiveSetting(false);
     setIsActiveSettingIcon(false);
     setIsOpenSetting(false);
+    setIsActiveFinancialAccount(false);
   };
 
   // Handler functions to manage navigation state
@@ -343,8 +350,8 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     setIsActiveUsersIcon(true);
     setIsActiveUsers(true);
     setIsActiveCustomers(true);
-    setIsActiveLeads(true);
-    setIsActiveSuppliers(true);
+    // setIsActiveLeads(true);
+    // setIsActiveSuppliers(true);
   }, []);
   useEffect(() => {
     const part = pathName.split("/");
@@ -463,8 +470,8 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     setIsOpenBookingList(true);
     setIsActiveBookingListIcon(true);
     setIsActiveBookingList(true);
-    setIsActiveCurrentBookingList(true);
-    setIsActivePastBookingList(true);
+    // setIsActiveCurrentBookingList(true);
+    // setIsActivePastBookingList(true);
     setIsActiveUpcomingBookingList(true);
   }, []);
   useEffect(() => {
@@ -480,7 +487,7 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
         "/dashboard_agent/booking_list/upcoming_booking",
       ].some((path) => pathName.startsWith(path))
     ) {
-      setIsOpenBookingList();
+      handleClickBookingList();
       navigate("/dashboard_agent/booking_list/upcoming_booking");
     }
     console.log("result", result);
@@ -623,18 +630,40 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     setIsOpenSetting(true);
     setIsActiveSettingIcon(true);
     setIsActiveSetting(true);
+    setIsActiveFinancialAccount(true)
   }, []);
   useEffect(() => {
     const part = pathName.split("/");
     const result = part.slice(0, 3).join("/");
 
     // Only navigate if on `/dashboard/setting` but not already on any sub-route
-    if (result === "/dashboard_agent/IncomingPage") {
+    if (result === "/dashboard_agent/setting" &&
+      ![
+        "/dashboard_agent/setting/financial_account",
+      ].some((path) => pathName.startsWith(path))
+    ) {
       handleClickSetting();
-      
+      navigate("/dashboard_agent/setting/financial_account");
     }
-    console.log("result", result);
   }, [location]);
+
+  const handleClickFinancialAccount = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenSetting(true);
+    setIsActiveSettingIcon(true);
+    setIsActiveSetting(true);
+    setIsActiveFinancialAccount(true)
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 4).join("/");
+    if (result == "/dashboard_agent/setting/financial_account") {
+      handleClickFinancialAccount();
+    }
+  }, [location]);
+
+  
 
   return (
     <div className="space-y-4 w-full">
@@ -1106,7 +1135,7 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
 
          {/* Settings */}
          <Link
-        to="IncomingPage"
+        to="setting"
         onMouseMove={() => setIsActiveSettingIcon(true)}
         onMouseOut={() => setIsActiveSettingIcon(false)}
         onClick={handleClickSetting}
@@ -1142,6 +1171,33 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
           />
         )}
       </Link>
+      <div
+        className={`${
+          isOpenSetting && !isSidebarCollapsed ? "h-17" : "h-0 "
+        } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+      >
+        <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
+          <Link
+            to={"setting/financial_account"}
+            onClick={() => {
+              handleClickFinancialAccount();
+              onLinkClick();
+            }}
+          >
+            <li
+              className={`${
+                isActiveFinancialAccount
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Financial Account
+            </li>
+          </Link>
+         
+        </ul>
+      </div>
 
 
 

@@ -28,4 +28,10 @@ export { default as SupplierPage } from "./Dashboard/AgentDashboard/Users/Suppli
 export { default as AddSupplierPage } from "./Dashboard/AgentDashboard/Users/Suppliers/AddSupplierPage";
 export { default as EditSupplierPage } from "./Dashboard/AgentDashboard/Users/Suppliers/EditSupplierPage";
 //CheckOutProcess
-export { default as CheckOutProcessPage } from "./Dashboard/AgentDashboard/CheckOutProcess/CheckOutProcessPage";  
+export { default as CheckOutProcessPage } from "./Dashboard/AgentDashboard/CheckOutProcess/CheckOutProcessPage"; 
+//Setting 
+//FinancialAccount
+export { default as FinancialAccountPage } from "./Dashboard/AgentDashboard/Setting/FinancialAccount/FinancialAccountPage"; 
+export { default as AddFinancialAccountPage } from "./Dashboard/AgentDashboard/Setting/FinancialAccount/AddFinancialAccountPage"; 
+export { default as EditFinancialAccountPage } from "./Dashboard/AgentDashboard/Setting/FinancialAccount/EditFinancialAccountPage"; 
+

@@ -27,4 +27,9 @@ export { default as SupplierLayout } from "./AgentLayouts/Users/Suppliers/Suppli
 export { default as AddSupplierLayout } from "./AgentLayouts/Users/Suppliers/AddSupplierLayout";
 export { default as EditSupplierLayout } from "./AgentLayouts/Users/Suppliers/EditSupplierLayout";  
 //CheckOutProcess
-export { default as CheckOutProcessPage } from "./AgentLayouts/CheckOutProcess/CheckOutProcessLayout"; 
+export { default as CheckOutProcessPage } from "./AgentLayouts/CheckOutProcess/CheckOutProcessLayout"; //Setting 
+//FinancialAccount
+export { default as FinancialAccountLayout } from "./AgentLayouts/Setting/FinancialAccount/FinancialAccountLayout"; 
+export { default as AddFinancialAccountLayout } from "./AgentLayouts/Setting/FinancialAccount/AddFinancialAccountLayout"; 
+export { default as EditFinancialAccountLayout } from "./AgentLayouts/Setting/FinancialAccount/EditFinancialAccountLayout"; 
+
