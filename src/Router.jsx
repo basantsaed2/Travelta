@@ -9,7 +9,7 @@ import SignUpAffilate from "./Pages/Authentication/SignUpAffilate"
 import Login from "./Pages/Authentication/Login";
 import AgentLayout from "./Layouts/AgentLayouts/AgentLayout";
 import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";  
-import {AddFinancialAccountLayout, AddLeadLayout, AddSupplierLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditFinancialAccountLayout, EditSupplierLayout, FinancialAccountLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, SupplierLayout, UpcomingBookingLayout} from "./Layouts/AllLayouts";
+import {AddFinancialAccountLayout, AddLeadLayout, AddRoomTypeLayout, AddSupplierLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditFinancialAccountLayout, EditRoomTypeLayout, EditSupplierLayout, FinancialAccountLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, RoomTypeLayout, SupplierLayout, UpcomingBookingLayout} from "./Layouts/AllLayouts";
 import { LandingPage } from "./Pages/AllPages";
 import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 import InComing from "./Pages/Dashboard/AgentDashboard/ComingSoon/ComingSoon";
@@ -53,6 +53,21 @@ const AppSetting= () => (
   </>
 );
 const AppFinancialAccount= () => (
+  <>
+  <Outlet />
+  </>
+);
+const AppInventory= () => (
+  <>
+  <Outlet />
+  </>
+);
+const AppInventoryRoom= () => (
+  <>
+  <Outlet />
+  </>
+);
+const AppInventoryRoomSetting= () => (
   <>
   <Outlet />
   </>
@@ -218,6 +233,39 @@ export const router = createBrowserRouter([
                 path: "checkOut_process",
                 element: <CheckOutProcessLayout />,
               },
+
+              {
+                path:"inventory",
+                element: <AppInventory/>,
+                children:[
+                  {
+                    path:"room",
+                    element:<AppInventoryRoom/>,
+                    children:[
+                      {
+                        path:"setting_room",
+                        element:<AppInventoryRoomSetting/>,
+                        children:[
+                          {
+                            path:"room_type",
+                            element:<RoomTypeLayout/>
+                          },
+                          {
+                            path:"add",
+                            element:<AddRoomTypeLayout/>
+                          },
+                          {
+                            path:"edit/:roomTypeId",
+                            element:<EditRoomTypeLayout/>
+                          },
+                        ]
+
+                      }
+                    ]
+                  }
+                ]
+
+              }
             ]
           },
         ],

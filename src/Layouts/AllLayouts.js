@@ -25,7 +25,14 @@ export { default as AddLeadLayout } from "./AgentLayouts/Users/Leads/AddLeadLayo
 // Suppliers
 export { default as SupplierLayout } from "./AgentLayouts/Users/Suppliers/SupplierLayout";
 export { default as AddSupplierLayout } from "./AgentLayouts/Users/Suppliers/AddSupplierLayout";
-export { default as EditSupplierLayout } from "./AgentLayouts/Users/Suppliers/EditSupplierLayout";  
+export { default as EditSupplierLayout } from "./AgentLayouts/Users/Suppliers/EditSupplierLayout"; 
+//Inventory
+//Rooms
+//Room Settind
+//Room Type
+export { default as RoomTypeLayout } from "./AgentLayouts/Inventory/Rooms/RoomSetting/RoomType/RoomTypeLayout";  
+export { default as AddRoomTypeLayout } from "./AgentLayouts/Inventory/Rooms/RoomSetting/RoomType/AddRoomTypeLayout";  
+export { default as EditRoomTypeLayout } from "./AgentLayouts/Inventory/Rooms/RoomSetting/RoomType/EditRoomTypeLayout";  
 //CheckOutProcess
 export { default as CheckOutProcessPage } from "./AgentLayouts/CheckOutProcess/CheckOutProcessLayout"; //Setting 
 //FinancialAccount

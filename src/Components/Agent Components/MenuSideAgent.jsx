@@ -115,6 +115,21 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
   const [isActiveInventory, setIsActiveInventory] = useState(
     stateLink.isActiveInventory ?? false
   );
+              //Inventory Room
+              const [isOpenInventoryRoom, setIsOpenInventoryRoom] = useState(
+                stateLink.isOpenInventoryRoom ?? false
+              );
+              const [isActiveInventoryRoom, setIsActiveInventoryRoom] = useState(
+                  stateLink.isActiveInventoryRoom ?? false
+              );
+                              //Inventory Room Setting
+                              const [isOpenInventoryRoomSetting, setIsOpenInventoryRoomSetting] = useState(
+                                  stateLink.isOpenInventoryRoomSetting ?? false
+                              );
+                              const [isActiveInventoryRoomSetting, setIsActiveInventoryRoomSetting] = useState(
+                                  stateLink.isActiveInventoryRoomSetting ?? false
+                              );
+
 
   // Accounting
   const [isOpenAccounting, setIsOpenAccounting] = useState(
@@ -186,6 +201,11 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
       isActiveAccounting,
       isActiveAccountingIcon,
       isOpenAccounting,
+
+      isOpenInventoryRoom,
+      isActiveInventory,
+      isOpenInventoryRoomSetting,
+      isActiveInventoryRoomSetting,
     };
     auth.sidebar = JSON.stringify(activeLinks);
   }, [
@@ -231,6 +251,11 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     isActiveAccounting,
     isActiveAccountingIcon,
     isOpenAccounting,
+
+    isOpenInventoryRoom,
+    isActiveInventory,
+    isOpenInventoryRoomSetting,
+    isActiveInventoryRoomSetting,
   ]);
 
   // Save state to sidebar at auth when any link state changes
@@ -279,6 +304,11 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     isActiveAccounting,
     isActiveAccountingIcon,
     isOpenAccounting,
+
+    isOpenInventoryRoom,
+    isActiveInventory,
+    isOpenInventoryRoomSetting,
+    isActiveInventoryRoomSetting,
   ]);
 
   // Handler functions to manage all state
@@ -325,6 +355,11 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     setIsActiveSettingIcon(false);
     setIsOpenSetting(false);
     setIsActiveFinancialAccount(false);
+
+    setIsActiveInventoryRoom(false);
+    setIsOpenInventoryRoom(false);
+    setIsActiveInventoryRoomSetting(false)
+    setIsOpenInventoryRoomSetting(false)
   };
 
   // Handler functions to manage navigation state
@@ -590,18 +625,80 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     setIsOpenInventory(true);
     setIsActiveInventoryIcon(true);
     setIsActiveInventory(true);
+    setIsActiveInventoryRoom(true)
   }, []);
-  useEffect(() => {
-    const part = pathName.split("/");
-    const result = part.slice(0, 3).join("/");
+  // useEffect(() => {
+  //   const part = pathName.split("/");
+  //   const result = part.slice(0, 4).join("/");
 
-    // Only navigate if on `/dashboard/setting` but not already on any sub-route
-    if (result === "/dashboard_agent/IncomingPage") {
-      handleClickInventory();
-     
+  //   if (result === "/dashboard_agent/inventory/room" &&
+  //     ![
+  //       "/dashboard_agent/inventory/room",
+  //     ].some((path) => pathName.startsWith(path))
+  //   ) {
+  //     handleClickInventory();
+  //     navigate("/dashboard_agent/inventory/room");
+  //   }
+  //   console.log("result", result);
+  // }, [location]);
+
+   /* Inventory Room */
+   const handleClickInventoryRoom = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenInventory(true);
+    setIsActiveInventoryIcon(true);
+    setIsActiveInventory(true);
+    setIsOpenInventoryRoom(true);
+    setIsActiveInventoryRoom(true);
+    setIsActiveInventoryRoomSetting(true);
+  }, []);
+
+  // useEffect(() => {
+  //   const part = pathName.split("/");
+  //   const result = part.slice(0, 4).join("/");
+
+  //   if (
+  //     result === "/dashboard_agent/inventory/room" &&
+  //     !["/dashboard_agent/inventory/room/setting_room/room_type"].some((path) =>
+  //       pathName.startsWith(path)
+  //     )
+  //   ) {
+  //     handleClickInventoryRoom();
+  //     navigate("/dashboard_agent/inventory/room/setting_room/room_type");
+  //   }
+  //   console.log("result", result);
+  // }, [pathName]);
+
+  /* Inventory Room Setting */
+  const handleClickInventoryRoomSetting = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenInventory(true);
+    setIsActiveInventoryIcon(true);
+    setIsActiveInventory(true);
+    setIsOpenInventoryRoom(true);
+    setIsActiveInventoryRoom(true);
+    setIsOpenInventoryRoomSetting(true);
+    setIsActiveInventoryRoomSetting(true);
+  }, []);
+
+   useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 6).join("/");
+
+    if (
+      result === "/dashboard_agent/inventory/room/setting_room/room_type" &&
+      !["/dashboard_agent/inventory/room/setting_room/room_type"].some((path) =>
+        pathName.startsWith(path)
+      )
+    ) {
+      handleClickInventoryRoomSetting();
+      navigate("/dashboard_agent/inventory/room/setting_room/room_type");
     }
     console.log("result", result);
-  }, [location]);
+  }, [pathName]);
+
 
   // Accounting
   const handleClickAccounting = useCallback(() => {
@@ -663,7 +760,6 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     }
   }, [location]);
 
-  
 
   return (
     <div className="space-y-4 w-full">
@@ -1053,10 +1149,9 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
         )}
       </Link>
 
-        {/* Inventory */}
-       
-        <Link
-        to="IncomingPage"
+        {/* Inventory */}      
+        <div
+        // to="inventory"
         onMouseMove={() => setIsActiveInventoryIcon(true)}
         onMouseOut={() => setIsActiveInventoryIcon(false)}
         onClick={handleClickInventory}
@@ -1091,7 +1186,85 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
             } text-xl transition-all duration-300 group-hover:text-mainColor`}
           />
         )}
-      </Link>
+      </div>
+
+      <div
+        className={`${
+          isOpenInventory && !isSidebarCollapsed ? "h-17" : "h-0 "
+        } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+      >
+        <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-4">
+          <div className="flex flex-col gap-y-1"
+            // to={"inventory/room"}
+            onClick={handleClickInventoryRoom}
+          >
+            <li
+              className={`${
+                isActiveInventoryRoom
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                  text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Room
+            </li>
+
+            <div
+              className={`${
+                isOpenInventoryRoom && !isSidebarCollapsed ? "h-17" : "h-0 "
+              } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+            >
+              <ul className="list-disc w-full transition-all duration-700 flex flex-col gap-y-4">
+                <Link
+                  to={"inventory/room/setting_room/room_type"}
+                  onClick={handleClickInventoryRoomSetting}
+                >
+                  <li
+                    className={`${
+                      isActiveInventoryRoomSetting
+                        ? "rounded-xl bg-white text-mainColor"
+                        : "text-white"
+                    }
+                                text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+                  >
+                    Room Type
+                  </li>
+                </Link>
+              </ul>
+            </div>
+
+            <li
+              className={`text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Flight
+            </li>
+          </div>
+        </ul>
+      </div>
+
+      {/* <div
+        className={`${
+          isOpenInventoryRoom && !isSidebarCollapsed ? "h-17" : "h-0 "
+        } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+      >
+        <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
+          <Link
+            to={"inventory/room"}
+            onClick={handleClickInventoryRoomSetting}
+          >
+            <li
+              className={`${
+                isActiveInventoryRoomSetting
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Room Type
+            </li>
+          </Link>
+        </ul>
+      </div> */}
 
        {/* Accounting */}
        

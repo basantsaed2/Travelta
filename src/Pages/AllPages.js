@@ -27,6 +27,13 @@ export { default as AddLeadPage } from "./Dashboard/AgentDashboard/Users/Leads/A
 export { default as SupplierPage } from "./Dashboard/AgentDashboard/Users/Suppliers/SupplierPage";  
 export { default as AddSupplierPage } from "./Dashboard/AgentDashboard/Users/Suppliers/AddSupplierPage";
 export { default as EditSupplierPage } from "./Dashboard/AgentDashboard/Users/Suppliers/EditSupplierPage";
+//Inventory
+//Rooms
+//Room Settind
+//Room Type
+export { default as RoomTypePage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomSetting/RoomType/RoomTypePage";  
+export { default as AddRoomTypePage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomSetting/RoomType/AddRoomTypePage";  
+export { default as EditRoomTypePage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomSetting/RoomType/EditRoomTypePage";  
 //CheckOutProcess
 export { default as CheckOutProcessPage } from "./Dashboard/AgentDashboard/CheckOutProcess/CheckOutProcessPage"; 
 //Setting 
