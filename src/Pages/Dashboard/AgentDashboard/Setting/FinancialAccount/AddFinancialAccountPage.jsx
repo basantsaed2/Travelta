@@ -1,9 +1,10 @@
 import React, { useState, useEffect ,useRef } from "react";
-import { TextField, MenuItem, Button, Switch ,Input } from "@mui/material";
+import { TextField, MenuItem, Button, Switch ,InputAdornment, IconButton  } from "@mui/material";
 import { usePost } from '../../../../../Hooks/usePostJson';
 import { useGet } from '../../../../../Hooks/useGet';
-import IconButton from '@mui/material/IconButton';
 import { IoMdPersonAdd } from "react-icons/io";
+import { IoCloudUpload } from "react-icons/io5";
+import StaticLoader from '../../../../../Components/StaticLoader';
 
 const AddFinancialAccountPage = ({ update, setUpdate }) => {
     const { postData, loadingPost, response } = usePost({ url: 'https://travelta.online/agent/financial/add' });
@@ -85,12 +86,18 @@ const AddFinancialAccountPage = ({ update, setUpdate }) => {
         formData.append('balance', balance);
         formData.append('currency_id', selectedCurrency);
         formData.append('status', status);
-        formData.append('logo', logo);
+        formData.append('logo', logoFile);
 
         postData(formData, 'Financial Account Added Success');
     };
     
     return (
+        <>
+        {(loadingPost || loadingFinancialAccount )? (
+               <div className="w-full h-56 flex justify-center items-center">
+                      <StaticLoader />
+               </div>
+        ) : (
         <>
         <form
           className="w-full flex flex-col gap-5 p-6"
@@ -150,20 +157,53 @@ const AddFinancialAccountPage = ({ update, setUpdate }) => {
                 ))}
             </TextField>
           </div>
-          <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center">
+          {/* <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center">
             <TextField
                 id="logo-upload"
                 fullWidth
                 type="file"
                 label="Logo"
                 variant="outlined"
-                // value={logoName}
+                value={logoName}
                 InputLabelProps={{ shrink: true }}
                 inputProps={{ accept: 'image/*' }}
-                onChange={handleImageChange}
+                // onChange={handleImageChange}
                 onClick={() => handleImageClick(ImageRef)}
+                onChange={(e) => {
+                setLogoName(e.target.value);
+                handleImageChange(e);
+                }}
                 className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
             />
+        </div> */}
+        <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
+          {/* File input hidden, triggered by custom button */}
+                <input
+                    type="file"
+                    ref={ImageRef}
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                />
+            <div className="w-full flex flex-col items-start justify-center">
+                <TextField
+                    label="Upload Logo"
+                    variant="outlined"
+                    fullWidth
+                    value={logoName}
+                    onClick={() => handleImageClick(ImageRef)} // Open file dialog when clicked
+                    InputProps={{
+                        endAdornment: (
+                        <InputAdornment position="end">
+                            <IconButton> 
+                            < IoCloudUpload/>
+                             </IconButton>
+                         </InputAdornment>
+                        ),
+                    }}
+                    className="w-full shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+                    />
+            </div>
         </div>
           <div className="sm:w-full lg:w-[30%] flex items-center ml-5 mt-2">
              <span className="text-mainColor text-lg font-semibold">Status : </span>
@@ -191,6 +231,8 @@ const AddFinancialAccountPage = ({ update, setUpdate }) => {
           </div>
         </form>
        </>
+        )}
+        </>
     );
 };
 

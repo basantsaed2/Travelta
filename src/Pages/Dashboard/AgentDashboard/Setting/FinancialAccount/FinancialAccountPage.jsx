@@ -61,11 +61,10 @@ const FinancialAccountPage = ({ refetch, setUpdate }) => {
             if (success) {
                 // Update Discounts only if changeState succeeded
                 setFinancialAccount(
-                    financials.filter((account) =>
-                            account.id !== id
+                  financialAccount.filter((financial) =>
+                    financial.id !== id
                         )
                 );
-                setUpdate(!refetch)
             }
     };
 
@@ -73,7 +72,7 @@ const FinancialAccountPage = ({ refetch, setUpdate }) => {
 
   return (
     <div className="w-full flex items-start justify-start overflow-x-scroll scrollSection">
-      {loadingFinancialAccount  ? (
+      {loadingFinancialAccount || loadingChange || loadingDelete   ? (
         <div className="w-full h-56 flex justify-center items-center">
           <StaticLoader />
         </div>
@@ -134,45 +133,45 @@ const FinancialAccountPage = ({ refetch, setUpdate }) => {
                                 >
                                     <MdDelete color='#D01025' size="24"/>
                                 </button>
-                                {openDelete === account.id && (
+                                 {openDelete === account.id && (
                                     <Dialog
-                                            open={true}
-                                            onClose={handleCloseDelete}
-                                            className="relative z-10"
+                                      open={true}
+                                      onClose={handleCloseDelete}
+                                      className="relative z-10"
                                     >
-                                            <DialogBackdrop className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-                                            <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-                                                <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                                                        <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                                                            <div className="flex  flex-col items-center justify-center bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                                                                    <PiWarningCircle color='#0D47A1'
-                                                                    size="60"
-                                                                    />
-                                                                    <div className="flex items-center">
-                                                                        <div className="mt-2 text-center">
-                                                                                You will delete {account.name}
-                                                                        </div>
-                                                                    </div>
-                                                            </div>
-                                                            <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                                                    <button className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto" onClick={() => handleDelete(account.id, account.name)}>
-                                                                        Delete
-                                                                    </button>
-
-                                                                    <button
-                                                                        type="button"
-                                                                        data-autofocus
-                                                                        onClick={handleCloseDelete}
-                                                                        className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-6 py-3 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:mt-0 sm:w-auto"
-                                                                    >
-                                                                        Cancel
-                                                                    </button>
-                                                            </div>
-                                                        </DialogPanel>
+                                      <DialogBackdrop className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                                      <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+                                        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                                          <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                                            <div className="flex  flex-col items-center justify-center bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                              <PiWarningCircle color='#0D47A1'
+                                              size="60"
+                                              />
+                                              <div className="flex items-center">
+                                                <div className="mt-2 text-center">
+                                                  You will delete account {account?.name || "-"}
                                                 </div>
+                                              </div>
                                             </div>
+                                            <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                              <button className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto" onClick={() => handleDelete(account.id, account?.name)}>
+                                                Delete
+                                              </button>
+            
+                                              <button
+                                                type="button"
+                                                data-autofocus
+                                                onClick={handleCloseDelete}
+                                                className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-6 py-3 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:mt-0 sm:w-auto"
+                                              >
+                                                Cancel
+                                              </button>
+                                            </div>
+                                          </DialogPanel>
+                                        </div>
+                                      </div>
                                     </Dialog>
-                                )}
+                                  )}
                         </div>
                     </td>
                 </tr>
