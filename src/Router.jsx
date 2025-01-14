@@ -78,6 +78,11 @@ const AppInventoryRoomSetting= () => (
   <Outlet />
   </>
 );
+const AppRoomType= () => (
+  <>
+  <Outlet />
+  </>
+);
 export const router = createBrowserRouter([
 
     {
@@ -270,15 +275,21 @@ export const router = createBrowserRouter([
                         children:[
                           {
                             path:"room_type",
-                            element:<RoomTypeLayout/>
-                          },
-                          {
-                            path:"add",
-                            element:<AddRoomTypeLayout/>
-                          },
-                          {
-                            path:"edit/:roomTypeId",
-                            element:<EditRoomTypeLayout/>
+                            element:<AppRoomType/>,
+                            children:[
+                              {
+                                path:"",
+                                element:<RoomTypeLayout/>,
+                              },
+                              {
+                                path:"add",
+                                element:<AddRoomTypeLayout/>
+                              },
+                              {
+                                path:"edit/:roomTypeId",
+                                element:<EditRoomTypeLayout/>
+                              },
+                            ]
                           },
                         ]
 
