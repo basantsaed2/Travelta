@@ -12,36 +12,36 @@ import { FaEdit } from "react-icons/fa";
 import TitlePage from '../../../../../../../Components/TitlePage';
 import AddButton from '../../../../../../../Components/Buttons/AddButton';
 
-const RoomTypePage = ({ refetch, setUpdate }) => {
-    const { refetch: refetchRoomType, loading: loadingRoomType, data: roomTypeData } = useGet({url:'https://travelta.online/agent/room/settings/types'});
-    const [roomType, setRoomType] = useState([])
+const RoomExtraPage = ({ refetch, setUpdate }) => {
+    const { refetch: refetchRoomExtra, loading: loadingRoomExtra, data: roomExtraData } = useGet({url:'https://travelta.online/agent/room/settings/extra'});
+    const [roomExtra, setRoomExtra] = useState([])
     const { changeState, loadingChange, responseChange } = useChangeState();
     const { deleteData, loadingDelete, responseDelete } = useDelete();
     const [openDelete, setOpenDelete] = useState(null);
 
     useEffect(() => {
-        refetchRoomType();
-    }, [refetchRoomType, refetch]);
+        refetchRoomExtra();
+    }, [refetchRoomExtra, refetch]);
 
     useEffect(() => {
-        if (roomTypeData && roomTypeData.room_types) {
-                console.log("Room Type Data:", roomTypeData);
-                setRoomType(roomTypeData.room_types);
+        if (roomExtraData && roomExtraData.room_extra) {
+                console.log("Room Extra Data:", roomExtraData);
+                setRoomExtra(roomExtraData.room_extra);
         }
-    }, [roomTypeData]); // Only run this effect when `data` changes\
+    }, [roomExtraData]); // Only run this effect when `data` changes\
 
     // Change coupon status 
     const handleChangeStaus = async (id, name, status) => {
     const response = await changeState(
-            ` https://travelta.online/agent/room/settings/types/status/${id}`,
+            ` https://travelta.online/agent/room/settings/extra/status/${id}`,
             `${name} Changed Status.`,
             { status } // Pass status as an object if changeState expects an object
     );
 
         if (response) {
                 // Update categories only if changeState succeeded
-                setRoomType((prevRoomType) =>
-                    prevRoomType.map((room) =>
+                setRoomExtra((prevRoomExtra) =>
+                    prevRoomExtra.map((room) =>
                         room.id === id ? { ...room, status: status } : room
                     )
                 );
@@ -58,29 +58,29 @@ const RoomTypePage = ({ refetch, setUpdate }) => {
 
     // Delete Language
     const handleDelete = async (id, name) => {
-            const success = await deleteData(`https://travelta.online/agent/room/settings/types/delete/${id}`, `${name} Deleted Success.`);
+            const success = await deleteData(`https://travelta.online/agent/room/settings/extra/delete/${id}`, `${name} Deleted Success.`);
 
             if (success) {
                 // Update Discounts only if changeState succeeded
-                setRoomType(
-                  roomType.filter((room) =>
+                setRoomExtra(
+                  roomExtra.filter((room) =>
                     room.id !== id
                         )
                 );
             }
     };
 
-  const headers = ['SL', 'Name',"Status", "Action"];
+  const headers = ['SL', 'Name',"Price","Thumbnail","Hotel","Status", "Action"];
 
   return (
     <div className="w-full flex flex-col items-start justify-start overflow-x-scroll scrollSection">
         <div className='w-full flex justify-between items-center mb-6'>
-            <TitlePage text="Room Type" />
-            <Link to='add_type'>
+            <TitlePage text="Room Extra" />
+            <Link to='add_extra'>
                 <AddButton />
             </Link>
         </div>
-      {loadingRoomType || loadingChange || loadingDelete   ? (
+      {loadingRoomExtra || loadingChange || loadingDelete   ? (
         <div className="w-full h-56 flex justify-center items-center">
           <StaticLoader />
         </div>
@@ -96,18 +96,32 @@ const RoomTypePage = ({ refetch, setUpdate }) => {
             </tr>
           </thead>
           <tbody className="w-full">
-            {roomType.length === 0 ? (
+            {roomExtra.length === 0 ? (
               <tr>
-                <td colSpan={12} className='text-center text-xl text-mainColor font-TextFontMedium  '>Not find Room Type</td>
+                <td colSpan={12} className='text-center text-xl text-mainColor font-TextFontMedium  '>Not find Room Extra</td>
               </tr>
             ) : (
-                roomType.map((room, index) => ( 
+                roomExtra.map((room, index) => ( 
                 <tr className="w-full border-b-2" key={index}>
                     <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
                         {index + 1}
                     </td>
                     <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
                         {room?.name|| '-'}
+                    </td>
+                    <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                        {room?.price|| '0'}
+                    </td>
+                    <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 overflow-hidden">
+                        <div className="flex justify-center">
+                            <img src={room.thumbnail_link}
+                                  className="rounded-full min-w-14 min-h-14 max-w-14 max-h-14"
+                                  alt="Logo"
+                            />
+                        </div>
+                      </td>
+                      <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                        {room?.hotel?.hotel_name|| '-'}
                     </td>
                     <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
                         <Switch
@@ -120,7 +134,7 @@ const RoomTypePage = ({ refetch, setUpdate }) => {
                     </td>
                     <td className="px-4 py-3 text-center">
                         <div className="flex items-center justify-center gap-2">
-                                <Link to={`edit_type/${room.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
+                                <Link to={`edit_extra/${room.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
                                 <button
                                     type="button"
                                     onClick={() => handleOpenDelete(room.id)}
@@ -179,4 +193,4 @@ const RoomTypePage = ({ refetch, setUpdate }) => {
   );
 }
 
-export default RoomTypePage;
+export default RoomExtraPage;

@@ -1,31 +1,7 @@
-// import React, { useState } from 'react'
-// import TitlePage from '../../../../../../Components/TitlePage'
-// import {RoomTypePage } from '../../../../../../Pages/AllPages'
-// import AddButton from '../../../../../../Components/Buttons/AddButton'
-// import { Link } from 'react-router-dom'
-
-// const RoomTypeLayout = () => {
-  // const [update, setUpdate] = useState(false)
-//   return (
-//     <>
-//     <div className='flex justify-between items-center'>
-//     <TitlePage text={'Room Type'} />
-//     <Link to='add'>
-//         <AddButton />
-//       </Link>
-//     </div>
-//       <RoomTypePage update={update} setUpdate={setUpdate}/>
-//     </>
-//   )
-// }
-
-// export default RoomTypeLayout
-
 import React, { useState } from 'react';
-import TitlePage from '../../../../../../Components/TitlePage';
 import { RoomTypePage } from '../../../../../../Pages/AllPages';
-import AddButton from '../../../../../../Components/Buttons/AddButton';
-import { Link } from 'react-router-dom';
+import RoomExtraLayout from '../RoomExtra/RoomExtraLayout';
+import RoomAmenityLayout from '../RoomAmenities/RoomAmenityLayout';
 
 const RoomTypeLayout = () => {
   const [activeTab, setActiveTab] = useState('RoomType');
@@ -36,9 +12,9 @@ const RoomTypeLayout = () => {
       case 'RoomType':
         return <RoomTypePage update={update} setUpdate={setUpdate}/>;
       case 'Extra':
-        return <ExtraPage />;
+        return <RoomExtraLayout />;
       case 'RoomAmenities':
-        return <RoomAmenitiesPage />;
+        return <RoomAmenityLayout />;
       default:
         return <RoomTypePage />;
     }
@@ -46,12 +22,6 @@ const RoomTypeLayout = () => {
 
   return (
     <div className="p-6">
-      {/* <div className='flex justify-between items-center mb-6'>
-        <TitlePage text={activeTab} />
-        <Link to='add'>
-          <AddButton />
-        </Link>
-      </div> */}
       <div className='flex border-b border-gray-300 mb-4'>
         {['RoomType', 'Extra', 'RoomAmenities'].map((tab) => (
           <button

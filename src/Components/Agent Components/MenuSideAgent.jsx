@@ -690,16 +690,16 @@ isActiveWallet,
 
    useEffect(() => {
     const part = pathName.split("/");
-    const result = part.slice(0, 6).join("/");
+    const result = part.slice(0, 4).join("/");
 
     if (
-      result === "/dashboard_agent/inventory/room/setting_room/room_type" &&
-      !["/dashboard_agent/inventory/room/setting_room/room_type"].some((path) =>
+      result === "/dashboard_agent/inventory/room/setting_room" &&
+      !["/dashboard_agent/inventory/room/setting_room/add_type","/dashboard_agent/inventory/room/setting_room/add_extra"].some((path) =>
         pathName.startsWith(path)
       )
     ) {
       handleClickInventoryRoomSetting();
-      navigate("/dashboard_agent/inventory/room/setting_room/room_type");
+      navigate("/dashboard_agent/inventory/room/setting_room");
     }
     console.log("result", result);
   }, [pathName]);
@@ -1242,7 +1242,7 @@ isActiveWallet,
             >
               <ul className="list-disc w-full transition-all duration-700 flex flex-col gap-y-4">
                 <Link
-                  to={"inventory/room/setting_room/room_type"}
+                  to={"inventory/room/setting_room"}
                   onClick={handleClickInventoryRoomSetting}
                 >
                   <li
@@ -1253,7 +1253,7 @@ isActiveWallet,
                     }
                                 text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
                   >
-                    Room Type
+                    Room Setting
                   </li>
                 </Link>
               </ul>

@@ -11,37 +11,38 @@ import { PiWarningCircle } from "react-icons/pi";
 import { FaEdit } from "react-icons/fa";
 import TitlePage from '../../../../../../../Components/TitlePage';
 import AddButton from '../../../../../../../Components/Buttons/AddButton';
+import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 
-const RoomTypePage = ({ refetch, setUpdate }) => {
-    const { refetch: refetchRoomType, loading: loadingRoomType, data: roomTypeData } = useGet({url:'https://travelta.online/agent/room/settings/types'});
-    const [roomType, setRoomType] = useState([])
+const RoomAmenityPage = ({ refetch, setUpdate }) => {
+    const { refetch: refetchRoomAmenity, loading: loadingRoomAmenity, data: roomAmenityData } = useGet({url:'https://travelta.online/agent/room/settings/amenity'});
+    const [roomAmenity, setRoomAmenity] = useState([])
     const { changeState, loadingChange, responseChange } = useChangeState();
     const { deleteData, loadingDelete, responseDelete } = useDelete();
     const [openDelete, setOpenDelete] = useState(null);
 
     useEffect(() => {
-        refetchRoomType();
-    }, [refetchRoomType, refetch]);
+        refetchRoomAmenity();
+    }, [refetchRoomAmenity, refetch]);
 
     useEffect(() => {
-        if (roomTypeData && roomTypeData.room_types) {
-                console.log("Room Type Data:", roomTypeData);
-                setRoomType(roomTypeData.room_types);
+        if (roomAmenityData && roomAmenityData.room_amenity) {
+                console.log("Room Amenity Data:", roomAmenityData);
+                setRoomAmenity(roomAmenityData.room_amenity);
         }
-    }, [roomTypeData]); // Only run this effect when `data` changes\
+    }, [roomAmenityData]); // Only run this effect when `data` changes\
 
     // Change coupon status 
     const handleChangeStaus = async (id, name, status) => {
     const response = await changeState(
-            ` https://travelta.online/agent/room/settings/types/status/${id}`,
+            ` https://travelta.online/agent/room/settings/amenity/status/${id}`,
             `${name} Changed Status.`,
             { status } // Pass status as an object if changeState expects an object
     );
 
         if (response) {
                 // Update categories only if changeState succeeded
-                setRoomType((prevRoomType) =>
-                    prevRoomType.map((room) =>
+                setRoomAmenity((prevRoomAmenity) =>
+                    prevRoomAmenity.map((room) =>
                         room.id === id ? { ...room, status: status } : room
                     )
                 );
@@ -58,29 +59,29 @@ const RoomTypePage = ({ refetch, setUpdate }) => {
 
     // Delete Language
     const handleDelete = async (id, name) => {
-            const success = await deleteData(`https://travelta.online/agent/room/settings/types/delete/${id}`, `${name} Deleted Success.`);
+            const success = await deleteData(`https://travelta.online/agent/room/settings/amenity/delete/${id}`, `${name} Deleted Success.`);
 
             if (success) {
                 // Update Discounts only if changeState succeeded
-                setRoomType(
-                  roomType.filter((room) =>
+                setRoomAmenity(
+                  roomAmenity.filter((room) =>
                     room.id !== id
                         )
                 );
             }
     };
 
-  const headers = ['SL', 'Name',"Status", "Action"];
+  const headers = ['SL', 'Name',"Included","Status", "Action"];
 
   return (
     <div className="w-full flex flex-col items-start justify-start overflow-x-scroll scrollSection">
         <div className='w-full flex justify-between items-center mb-6'>
-            <TitlePage text="Room Type" />
-            <Link to='add_type'>
+            <TitlePage text="Room Amenity" />
+            <Link to='add_amenity'>
                 <AddButton />
             </Link>
         </div>
-      {loadingRoomType || loadingChange || loadingDelete   ? (
+      {loadingRoomAmenity || loadingChange || loadingDelete   ? (
         <div className="w-full h-56 flex justify-center items-center">
           <StaticLoader />
         </div>
@@ -96,18 +97,33 @@ const RoomTypePage = ({ refetch, setUpdate }) => {
             </tr>
           </thead>
           <tbody className="w-full">
-            {roomType.length === 0 ? (
+            {roomAmenity.length === 0 ? (
               <tr>
-                <td colSpan={12} className='text-center text-xl text-mainColor font-TextFontMedium  '>Not find Room Type</td>
+                <td colSpan={12} className='text-center text-xl text-mainColor font-TextFontMedium  '>Not find Room Amenity</td>
               </tr>
             ) : (
-                roomType.map((room, index) => ( 
+                roomAmenity.map((room, index) => ( 
                 <tr className="w-full border-b-2" key={index}>
                     <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
                         {index + 1}
                     </td>
                     <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
                         {room?.name|| '-'}
+                    </td>
+                    <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                    <div className="flex justify-center items-center gap-2">
+                        {room?.selected === 'yes' ? (
+                        <>
+                            <FaCheckCircle className="text-green-500" />
+                            <span className="text-green-500">True</span>
+                        </>
+                        ) : (
+                        <>
+                            <FaTimesCircle className="text-red-500" />
+                            <span className="text-red-500">False</span>
+                        </>
+                        )}
+                    </div>
                     </td>
                     <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
                         <Switch
@@ -120,7 +136,7 @@ const RoomTypePage = ({ refetch, setUpdate }) => {
                     </td>
                     <td className="px-4 py-3 text-center">
                         <div className="flex items-center justify-center gap-2">
-                                <Link to={`edit_type/${room.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
+                                <Link to={`edit_amenity/${room.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
                                 <button
                                     type="button"
                                     onClick={() => handleOpenDelete(room.id)}
@@ -179,4 +195,4 @@ const RoomTypePage = ({ refetch, setUpdate }) => {
   );
 }
 
-export default RoomTypePage;
+export default RoomAmenityPage;

@@ -9,7 +9,7 @@ import SignUpAffilate from "./Pages/Authentication/SignUpAffilate"
 import Login from "./Pages/Authentication/Login";
 import AgentLayout from "./Layouts/AgentLayouts/AgentLayout";
 import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";  
-import {AddFinancialAccountLayout, AddLeadLayout, AddRoomTypeLayout, AddSupplierLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditFinancialAccountLayout, EditRoomTypeLayout, EditSupplierLayout, FinancialAccountLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, RoomTypeLayout, SupplierLayout, UpcomingBookingLayout} from "./Layouts/AllLayouts";
+import {AddFinancialAccountLayout, AddLeadLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomTypeLayout, AddSupplierLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditFinancialAccountLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomTypeLayout, EditSupplierLayout, FinancialAccountLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, RoomExtraLayout, RoomTypeLayout, SupplierLayout, UpcomingBookingLayout} from "./Layouts/AllLayouts";
 import { LandingPage } from "./Pages/AllPages";
 import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 import InComing from "./Pages/Dashboard/AgentDashboard/ComingSoon/ComingSoon";
@@ -79,6 +79,11 @@ const AppInventoryRoomSetting= () => (
   </>
 );
 const AppRoomType= () => (
+  <>
+  <Outlet />
+  </>
+);
+const AppRoomExtra= () => (
   <>
   <Outlet />
   </>
@@ -274,23 +279,69 @@ export const router = createBrowserRouter([
                         element:<AppInventoryRoomSetting/>,
                         children:[
                           {
-                            path:"room_type",
-                            element:<AppRoomType/>,
-                            children:[
-                              {
-                                path:"",
-                                element:<RoomTypeLayout/>,
-                              },
-                              {
-                                path:"add",
-                                element:<AddRoomTypeLayout/>
-                              },
-                              {
-                                path:"edit/:roomTypeId",
-                                element:<EditRoomTypeLayout/>
-                              },
-                            ]
+                            path:"",
+                            element:<RoomTypeLayout/>,
                           },
+                          {
+                            path:"add_type",
+                            element:<AddRoomTypeLayout/>
+                          },
+                          {
+                            path:"edit_type/:roomTypeId",
+                            element:<EditRoomTypeLayout/>
+                          },
+                          {
+                            path:"add_extra",
+                            element:<AddRoomExtraLayout/>
+                          },
+                          {
+                            path:"edit_extra/:roomExtraId",
+                            element:<EditRoomExtraLayout/>
+                          },
+                          {
+                            path:"add_amenity",
+                            element:<AddRoomAmenityLayout/>
+                          },
+                          {
+                            path:"edit_amenity/:roomAmenityId",
+                            element:<EditRoomAmenityLayout/>
+                          },
+                          // {
+                          //   path:"room_type",
+                          //   element:<AppRoomType/>,
+                          //   children:[
+                          //     {
+                                // path:"",
+                                // element:<RoomTypeLayout/>,
+                          //     },
+                          //     {
+                          //       path:"add",
+                          //       element:<AddRoomTypeLayout/>
+                          //     },
+                          //     {
+                          //       path:"edit/:roomTypeId",
+                          //       element:<EditRoomTypeLayout/>
+                          //     },
+                          //   ]
+                          // },
+                          // {
+                          //   path:"room_extra",
+                          //   element:<AppRoomExtra/>,
+                          //   children:[
+                          //     {
+                          //       path:"",
+                          //       element:<RoomExtraLayout/>,
+                          //     },
+                          //     {
+                          //       path:"add",
+                          //       element:<AddRoomExtraLayout/>
+                          //     },
+                          //     {
+                          //       path:"edit/:roomExtraId",
+                          //       element:<EditRoomExtraLayout/>
+                          //     },
+                          //   ]
+                          // },
                         ]
 
                       }

@@ -1,38 +1,25 @@
 import React, { useState, useEffect ,useRef } from "react";
-import { TextField, MenuItem, Button, Switch ,InputAdornment, IconButton  } from "@mui/material";
+import { TextField, FormControlLabel , Button, Switch ,Checkbox, IconButton  } from "@mui/material";
 import { usePost } from '../../../../../../../Hooks/usePostJson';
-import { useGet } from '../../../../../../../Hooks/useGet';
 import StaticLoader from '../../../../../../../Components/StaticLoader';
-import { useNavigate, useParams } from 'react-router-dom';
 
-const EditRoomTypePage = ({ update, setUpdate }) => {
-    const { roomTypeId } = useParams();
-    const { refetch: refetchRoomType, loading: loadingRoomType, data: dataRoomType } = useGet({ url:`https://travelta.online/agent/room/settings/types/item/${roomTypeId}` });
-    const { postData, loadingPost, response } = usePost({ url: `https://travelta.online/agent/room/settings/types/update/${roomTypeId}` });
+const AddRoomAmenityPage = ({ update, setUpdate }) => {
+    const { postData, loadingPost, response } = usePost({ url: 'https://travelta.online/agent/room/settings/amenity/add' });
 
     const [name, setName] = useState("");
+    const [isChecked, setIsChecked] = useState(true);
     const [status, setStatus] = useState(0);
-
-     useEffect(() => {
-        refetchRoomType();
-        }, [refetchRoomType,update]);
-          
-        useEffect(() => {
-            if (dataRoomType && dataRoomType.room_types) {
-              const room = dataRoomType.room_types;
-              setName(room.name || '')
-              setStatus(room.status || 0)
-            }
-            console.log('room type', dataRoomType)
-          }, [dataRoomType]); // Only run this effect when `data` changes
-
 
     const handleSwitchChange = () => {
         setStatus((prev) => (prev === 1 ? 0 : 1)); // Toggle between 1 and 0
-    };   
-   
+    };  
+    const handleCheckboxChange = (event) => {
+        setIsChecked(event.target.checked);
+    };
+
     const handleReset = () => {
         setName('');
+        setIsChecked(true)
         setStatus(0)
     };
 
@@ -45,7 +32,7 @@ const EditRoomTypePage = ({ update, setUpdate }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        console.log(isChecked)
         if (!name) {
             auth.toastError('Please Enter Name');
             return;
@@ -53,9 +40,10 @@ const EditRoomTypePage = ({ update, setUpdate }) => {
 
         const formData = new FormData();
         formData.append('name', name);
+        formData.append('selected',isChecked === true ? 'yes': 'no' );
         formData.append('status', status);
 
-        postData(formData, 'Room Type Updated Success');
+        postData(formData, 'Room Amenity Added Success');
     };
     
     return (
@@ -75,7 +63,7 @@ const EditRoomTypePage = ({ update, setUpdate }) => {
           >
           <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
             <TextField
-              label="Room Type"
+              label="Room Amenity"
               variant="outlined"
               fullWidth
               required
@@ -84,13 +72,28 @@ const EditRoomTypePage = ({ update, setUpdate }) => {
               className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
               />
           </div>
-          <div className="sm:w-full lg:w-[30%] flex items-center ml-5 mt-2">
+          <div className="sm:w-full lg:w-[30%] gap-5 flex items-center ml-5 mt-2">
+            <div>
              <span className="text-mainColor text-lg font-semibold">Status : </span>
                 <Switch
                     checked={status === 1}
                     onChange={handleSwitchChange}
                     color="primary"
                 />
+            </div>
+            <div>
+                <span className="text-mainColor text-lg font-semibold">Included : </span>
+                <FormControlLabel
+                    control={
+                    <Checkbox
+                        checked={isChecked}
+                        onChange={handleCheckboxChange}
+                        color="primary"
+                    />
+                    }
+                    label={isChecked ? 'Yes' : 'No'}
+                />
+            </div>
           </div>
           </div>
           <div className="w-full flex items-center gap-x-4">
@@ -115,4 +118,4 @@ const EditRoomTypePage = ({ update, setUpdate }) => {
     );
 };
 
-export default EditRoomTypePage;
+export default AddRoomAmenityPage;
