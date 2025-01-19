@@ -9,12 +9,10 @@ import SignUpAffilate from "./Pages/Authentication/SignUpAffilate"
 import Login from "./Pages/Authentication/Login";
 import AgentLayout from "./Layouts/AgentLayouts/AgentLayout";
 import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";  
-import {AddFinancialAccountLayout, AddLeadLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomTypeLayout, AddSupplierLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditFinancialAccountLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomTypeLayout, EditSupplierLayout, FinancialAccountLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, RoomExtraLayout, RoomTypeLayout, SupplierLayout, UpcomingBookingLayout} from "./Layouts/AllLayouts";
+import {AddFinancialAccountLayout, AddLeadLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddWalletLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditFinancialAccountLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomTypeLayout, EditSupplierLayout, FinancialAccountLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, RoomExtraLayout, RoomTypeLayout, SupplierLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
 import { LandingPage } from "./Pages/AllPages";
 import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 import InComing from "./Pages/Dashboard/AgentDashboard/ComingSoon/ComingSoon";
-import WalletLayOut from "./Layouts/AgentLayouts/Wallet/WalletLayOut";
-import AddWallet from "./Pages/Dashboard/AgentDashboard/Wallet/AddWallet";
 
 const AppLayoutAgent = () => (
     <>
@@ -58,7 +56,7 @@ const AppFinancialAccount= () => (
   <Outlet />
   </>
 );
-const AppWalletLayOut= () => (
+const AppWalletLayout= () => (
   <>
   <Outlet />
   </>
@@ -146,11 +144,11 @@ export const router = createBrowserRouter([
                 element: <InComing/>,
               },
 
-              {
-                path: 'wallet',
-                element: <WalletLayOut/>
+              // {
+              //   path: 'wallet',
+              //   element: <WalletLayout/>
 
-              },
+              // },
 
               {
                 path: 'users',
@@ -244,15 +242,15 @@ export const router = createBrowserRouter([
                   },
                   {
                     path: 'wallet',
-                    element: <AppWalletLayOut/>,
+                    element: <AppWalletLayout/>,
                     children:[
                       {
                         path: "",
-                        element: <WalletLayOut/>,
+                        element: <WalletLayout/>,
                       },
                       {
                         path: "add",
-                        element: <AddWallet/>,
+                        element: <AddWalletLayout/>,
                       },
 
                     ]
@@ -306,44 +304,12 @@ export const router = createBrowserRouter([
                             path:"edit_amenity/:roomAmenityId",
                             element:<EditRoomAmenityLayout/>
                           },
-                          // {
-                          //   path:"room_type",
-                          //   element:<AppRoomType/>,
-                          //   children:[
-                          //     {
-                                // path:"",
-                                // element:<RoomTypeLayout/>,
-                          //     },
-                          //     {
-                          //       path:"add",
-                          //       element:<AddRoomTypeLayout/>
-                          //     },
-                          //     {
-                          //       path:"edit/:roomTypeId",
-                          //       element:<EditRoomTypeLayout/>
-                          //     },
-                          //   ]
-                          // },
-                          // {
-                          //   path:"room_extra",
-                          //   element:<AppRoomExtra/>,
-                          //   children:[
-                          //     {
-                          //       path:"",
-                          //       element:<RoomExtraLayout/>,
-                          //     },
-                          //     {
-                          //       path:"add",
-                          //       element:<AddRoomExtraLayout/>
-                          //     },
-                          //     {
-                          //       path:"edit/:roomExtraId",
-                          //       element:<EditRoomExtraLayout/>
-                          //     },
-                          //   ]
-                          // },
                         ]
 
+                      },
+                      {
+                        path:"add",
+                        element:<AddRoomLayout/>
                       }
                     ]
                   }

@@ -200,13 +200,13 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
       isActiveSettingIcon,
       isOpenSetting,
       isActiveFinancialAccount,
-isActiveWallet,
+      isActiveWallet,
       isActiveAccounting,
       isActiveAccountingIcon,
       isOpenAccounting,
 
       isOpenInventoryRoom,
-      isActiveInventory,
+      isActiveInventoryRoom,
       isOpenInventoryRoomSetting,
       isActiveInventoryRoomSetting,
     };
@@ -250,13 +250,13 @@ isActiveWallet,
     isActiveSettingIcon,
     isOpenSetting,
     isActiveFinancialAccount,
-isActiveWallet,
+    isActiveWallet,
     isActiveAccounting,
     isActiveAccountingIcon,
     isOpenAccounting,
 
     isOpenInventoryRoom,
-    isActiveInventory,
+    isActiveInventoryRoom,
     isOpenInventoryRoomSetting,
     isActiveInventoryRoomSetting,
   ]);
@@ -310,7 +310,7 @@ isActiveWallet,
     isOpenAccounting,
 
     isOpenInventoryRoom,
-    isActiveInventory,
+    isActiveInventoryRoom,
     isOpenInventoryRoomSetting,
     isActiveInventoryRoomSetting,
   ]);
@@ -679,18 +679,18 @@ isActiveWallet,
   const handleClickInventoryRoomSetting = useCallback(() => {
     handleStateLinks();
 
-    setIsOpenInventory(true);
-    setIsActiveInventoryIcon(true);
-    setIsActiveInventory(true);
-    setIsOpenInventoryRoom(true);
-    setIsActiveInventoryRoom(true);
+    // setIsOpenInventory(true);
+    // setIsActiveInventoryIcon(true);
+    // setIsActiveInventory(true);
+    // setIsOpenInventoryRoom(true);
+    // setIsActiveInventoryRoom(true);
     setIsOpenInventoryRoomSetting(true);
     setIsActiveInventoryRoomSetting(true);
   }, []);
 
    useEffect(() => {
     const part = pathName.split("/");
-    const result = part.slice(0, 4).join("/");
+    const result = part.slice(0, 5).join("/");
 
     if (
       result === "/dashboard_agent/inventory/room/setting_room" &&
@@ -698,6 +698,8 @@ isActiveWallet,
         pathName.startsWith(path)
       )
     ) {
+      handleClickInventory()
+      handleClickInventoryRoom()
       handleClickInventoryRoomSetting();
       navigate("/dashboard_agent/inventory/room/setting_room");
     }

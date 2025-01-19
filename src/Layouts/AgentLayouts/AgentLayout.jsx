@@ -38,7 +38,7 @@ const AgentLayout = () => {
       />
       <div className="flex flex-col w-full overflow-hidden">
         <Navbar onToggleSidebar={handleToggleSidebar} />
-        <main className="flex-1 bg-gray-100 p-6">
+        <main className="flex-1 bg-gray-100 p-2 xl:p-6">
           <Outlet />
         </main>
       </div>

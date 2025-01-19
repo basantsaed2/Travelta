@@ -40,11 +40,15 @@ export { default as EditRoomExtraLayout } from "./AgentLayouts/Inventory/Rooms/R
 //Room Amenity
 export { default as RoomAmenityLayout } from "./AgentLayouts/Inventory/Rooms/RoomSetting/RoomAmenities/RoomAmenityLayout";  
 export { default as AddRoomAmenityLayout } from "./AgentLayouts/Inventory/Rooms/RoomSetting/RoomAmenities/AddRoomAmenityLayout";  
-export { default as EditRoomAmenityLayout } from "./AgentLayouts/Inventory/Rooms/RoomSetting/RoomAmenities/EditRoomAmenityLayout";  
+export { default as EditRoomAmenityLayout } from "./AgentLayouts/Inventory/Rooms/RoomSetting/RoomAmenities/EditRoomAmenityLayout";
+//Add Room
+export { default as AddRoomLayout } from "./AgentLayouts/Inventory/Rooms/AddRoomLayout";    
 //CheckOutProcess
-export { default as CheckOutProcessPage } from "./AgentLayouts/CheckOutProcess/CheckOutProcessLayout"; //Setting 
+export { default as CheckOutProcessPage } from "./AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 //FinancialAccount
 export { default as FinancialAccountLayout } from "./AgentLayouts/Setting/FinancialAccount/FinancialAccountLayout"; 
 export { default as AddFinancialAccountLayout } from "./AgentLayouts/Setting/FinancialAccount/AddFinancialAccountLayout"; 
 export { default as EditFinancialAccountLayout } from "./AgentLayouts/Setting/FinancialAccount/EditFinancialAccountLayout"; 
-
+//Wallet
+export { default as WalletLayout } from "./AgentLayouts/Setting/Wallet/WalletLayout"; 
+export { default as AddWalletLayout } from "./AgentLayouts/Setting/Wallet/AddWalletLayout";

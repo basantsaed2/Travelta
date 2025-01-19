@@ -42,6 +42,9 @@ export { default as EditRoomExtraPage } from "./Dashboard/AgentDashboard/Invento
 export { default as RoomAmenityPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomSetting/RoomAmenities/RoomAmenityPage";  
 export { default as AddRoomAmenityPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomSetting/RoomAmenities/AddRoomAmenityPage";  
 export { default as EditRoomAmenityPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomSetting/RoomAmenities/EditRoomAmenityPage";  
+//Add Room
+export { default as AddRoomPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/AddRoomPage";  
+
 //CheckOutProcess
 export { default as CheckOutProcessPage } from "./Dashboard/AgentDashboard/CheckOutProcess/CheckOutProcessPage"; 
 //Setting 
@@ -49,4 +52,6 @@ export { default as CheckOutProcessPage } from "./Dashboard/AgentDashboard/Check
 export { default as FinancialAccountPage } from "./Dashboard/AgentDashboard/Setting/FinancialAccount/FinancialAccountPage"; 
 export { default as AddFinancialAccountPage } from "./Dashboard/AgentDashboard/Setting/FinancialAccount/AddFinancialAccountPage"; 
 export { default as EditFinancialAccountPage } from "./Dashboard/AgentDashboard/Setting/FinancialAccount/EditFinancialAccountPage"; 
-
+//Wallet
+export { default as WalletPage } from "./Dashboard/AgentDashboard/Setting/Wallet/WalletPage"; 
+export { default as AddWalletPage } from "./Dashboard/AgentDashboard/Setting/Wallet/AddWalletPage"; 

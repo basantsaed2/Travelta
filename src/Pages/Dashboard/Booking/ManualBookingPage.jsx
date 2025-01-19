@@ -2625,9 +2625,6 @@ const ManualBooking = () => {
                           />
                         </div>
 
-
-
-
                         <TextField
                           select
                           fullWidth
