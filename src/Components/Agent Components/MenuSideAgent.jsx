@@ -690,11 +690,11 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
 
    useEffect(() => {
     const part = pathName.split("/");
-    const result = part.slice(0, 5).join("/");
+    const result = part.slice(0, 4).join("/");
 
     if (
       result === "/dashboard_agent/inventory/room/setting_room" &&
-      !["/dashboard_agent/inventory/room/setting_room/add_type","/dashboard_agent/inventory/room/setting_room/add_extra"].some((path) =>
+      !["/dashboard_agent/inventory/room/setting_room/add_type","/dashboard_agent/inventory/room/setting_room/edit_type/:id"].some((path) =>
         pathName.startsWith(path)
       )
     ) {
