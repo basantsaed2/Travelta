@@ -42,9 +42,10 @@ export { default as EditRoomExtraPage } from "./Dashboard/AgentDashboard/Invento
 export { default as RoomAmenityPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomSetting/RoomAmenities/RoomAmenityPage";  
 export { default as AddRoomAmenityPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomSetting/RoomAmenities/AddRoomAmenityPage";  
 export { default as EditRoomAmenityPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomSetting/RoomAmenities/EditRoomAmenityPage";  
-//Add Room
-export { default as AddRoomPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/AddRoomPage";  
-
+//Room Review
+export { default as RoomPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomReview/RoomPage";
+export { default as AddRoomPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomReview/AddRoomPage";
+export { default as EditRoomPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomReview/EditRoomPage";  
 //CheckOutProcess
 export { default as CheckOutProcessPage } from "./Dashboard/AgentDashboard/CheckOutProcess/CheckOutProcessPage"; 
 //Setting 

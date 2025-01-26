@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import TitlePage from '../../../../Components/TitlePage'
-import { AddRoomPage } from '../../../../Pages/AllPages'
+import TitlePage from '../../../../../Components/TitlePage'
+import { AddRoomPage } from '../../../../../Pages/AllPages'
 
 const AddRoomLayout = () => {
   const [update, setUpdate] = useState(false)

@@ -9,7 +9,7 @@ import SignUpAffilate from "./Pages/Authentication/SignUpAffilate"
 import Login from "./Pages/Authentication/Login";
 import AgentLayout from "./Layouts/AgentLayouts/AgentLayout";
 import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";  
-import {AddFinancialAccountLayout, AddLeadLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddWalletLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditFinancialAccountLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomTypeLayout, EditSupplierLayout, FinancialAccountLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, RoomExtraLayout, RoomTypeLayout, SupplierLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
+import {AddFinancialAccountLayout, AddLeadLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddWalletLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditFinancialAccountLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomTypeLayout, EditSupplierLayout, FinancialAccountLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, RoomExtraLayout, RoomLayout, RoomTypeLayout, SupplierLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
 import { LandingPage } from "./Pages/AllPages";
 import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 import InComing from "./Pages/Dashboard/AgentDashboard/ComingSoon/ComingSoon";
@@ -76,7 +76,7 @@ const AppInventoryRoomSetting= () => (
   <Outlet />
   </>
 );
-const AppRoomType= () => (
+const AppRoomLayout= () => (
   <>
   <Outlet />
   </>
@@ -144,12 +144,7 @@ export const router = createBrowserRouter([
                 element: <InComing/>,
               },
 
-              // {
-              //   path: 'wallet',
-              //   element: <WalletLayout/>
-
-              // },
-
+    
               {
                 path: 'users',
                 element: <UsersLayout />,
@@ -308,17 +303,31 @@ export const router = createBrowserRouter([
 
                       },
                       {
-                        path:"add",
-                        element:<AddRoomLayout/>
-                      }
+                        path:"list",
+                        element:<AppRoomLayout/>,
+                        children:[
+                          {
+                            path:"",
+                            element:<RoomLayout/>,
+                          },
+                          {
+                            path:"add",
+                            element:<AddRoomLayout/>,
+                          },
+                          {
+                            path:"edit/:roomId",
+                            element:<EditRoomLayout/>,
+                          },
                     ]
                   }
                 ]
 
               }
             ]
-          },
-        ],
+              },
+            ],
       },
+    ]
+    },
 
 ]);

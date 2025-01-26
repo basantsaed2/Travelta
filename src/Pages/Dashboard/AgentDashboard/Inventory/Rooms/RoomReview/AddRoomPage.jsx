@@ -1,7 +1,7 @@
 import React, { useState ,useEffect ,useRef} from 'react';
 import { TextField, MenuItem, Checkbox, InputAdornment ,Switch, Button,FormControlLabel,RadioGroup,Radio  } from "@mui/material";
-import { useGet } from '../../../../../Hooks/useGet';
-import { usePost } from '../../../../../Hooks/usePostJson';
+import { useGet } from '../../../../../../Hooks/useGet';
+import { usePost } from '../../../../../../Hooks/usePostJson';
 import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
 import { MdAttachMoney } from "react-icons/md";
 import { FiPercent } from "react-icons/fi";
@@ -120,19 +120,30 @@ const AddRoomPage = ({ update, setUpdate }) => {
         });
     };
 
+    // const handleImageUpload = (e) => {
+    //   const file = e.target.files[0];
+    //   if (file) {
+    //     const reader = new FileReader();
+    //     reader.onload = () => {
+    //       setRoomDetails((prevState) => ({
+    //         ...prevState,
+    //         thumbnail: reader.result,
+    //       }));
+    //     };
+    //     reader.readAsDataURL(file);
+    //   }
+    // };
+
     const handleImageUpload = (e) => {
       const file = e.target.files[0];
       if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          setRoomDetails((prevState) => ({
-            ...prevState,
-            thumbnail: reader.result,
-          }));
-        };
-        reader.readAsDataURL(file);
+        setRoomDetails((prevState) => ({
+          ...prevState,
+          thumbnail: file,  // Store the actual file, not base64
+        }));
       }
     };
+    
   
     const handleRemoveImage = () => {
       setRoomDetails((prevState) => ({
@@ -218,44 +229,6 @@ const AddRoomPage = ({ update, setUpdate }) => {
         [name]: value, // Update specific field in state
       }));
     };
-  // // Handle change for each policy's cancellationType
-  // const handleCancellationSwitchChange = (index) => {
-  //   setPolicyDetails((prevState) => {
-  //     const updatedPolicies = [...prevState.cancellationPolicies];
-  //     updatedPolicies[index].cancellationType =
-  //       updatedPolicies[index].cancellationType === "Percentage" ? "Value" : "Percentage";
-  //     return { ...prevState, cancellationPolicies: updatedPolicies };
-  //   });
-  // };
-  
-  //   const handlePolicyFieldChange = (e, index) => {
-  //     const { name, value } = e.target;
-  //     const updatedPolicies = [...policyDetails.cancellationPolicies];
-  //     updatedPolicies[index][name] = value;
-  //     setPolicyDetails((prevState) => ({
-  //       ...prevState,
-  //       cancellationPolicies: updatedPolicies,
-  //     }));
-  //   };
-  
-  //   const handleAddPolicy = () => {
-  //     setPolicyDetails((prevState) => ({
-  //       ...prevState,
-  //       cancellationPolicies: [
-  //         ...prevState.cancellationPolicies,
-  //         { cancellationValue: '', cancellationBeforeDays: '' }, // Add new policy
-  //       ],
-  //     }));
-  //   };
-  
-  //   const handleRemovePolicy = (index) => {
-  //     const updatedPolicies = policyDetails.cancellationPolicies.filter((_, i) => i !== index);
-  //     setPolicyDetails((prevState) => ({
-  //       ...prevState,
-  //       cancellationPolicies: updatedPolicies,
-  //     }));
-  //   };
-
 
   const handleCancellationSwitchChange = (index) => {
     setPolicyDetails((prevState) => {
@@ -425,7 +398,12 @@ const AddRoomPage = ({ update, setUpdate }) => {
               </Button>
               {roomDetails.thumbnail && (
                 <div className="flex flex-col xl:flex-row gap-5 items-center mt-4">
-                  <img src={roomDetails.thumbnail} alt="Room Preview" className="h-80 w-96 object-cover mr-4" />
+                  {/* <img src={roomDetails.thumbnail} alt="Room Preview" className="h-80 w-96 object-cover mr-4" /> */}
+                  <img
+                    src={URL.createObjectURL(roomDetails.thumbnail)}
+                    alt="Room Preview"
+                    className="h-80 w-96 object-cover mr-4"
+                  />
                   {/* <Button variant="outlined" onClick={handleRemoveImage}>
                     Remove Image
                   </Button> */}

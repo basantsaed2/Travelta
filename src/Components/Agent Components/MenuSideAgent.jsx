@@ -11,6 +11,9 @@ import { FaWrench } from 'react-icons/fa';
 import { FaDatabase } from 'react-icons/fa';
 import { FaBriefcase } from 'react-icons/fa';
 import { FaCog } from 'react-icons/fa';
+import { MdOutlineBedroomChild } from "react-icons/md";
+import { MdOutlineFlight } from "react-icons/md";
+
 const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
   const auth = useAuth();
   const navigate = useNavigate();
@@ -119,16 +122,38 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
               const [isOpenInventoryRoom, setIsOpenInventoryRoom] = useState(
                 stateLink.isOpenInventoryRoom ?? false
               );
+              const [isActiveInventoryRoomIcon, setIsActiveInventoryRoomIcon] = useState(
+                stateLink.isActiveInventoryRoomIcon ?? false
+              );
               const [isActiveInventoryRoom, setIsActiveInventoryRoom] = useState(
                   stateLink.isActiveInventoryRoom ?? false
               );
-                              //Inventory Room Setting
-                              const [isOpenInventoryRoomSetting, setIsOpenInventoryRoomSetting] = useState(
-                                  stateLink.isOpenInventoryRoomSetting ?? false
-                              );
-                              const [isActiveInventoryRoomSetting, setIsActiveInventoryRoomSetting] = useState(
-                                  stateLink.isActiveInventoryRoomSetting ?? false
-                              );
+                      //Inventory Room Setting
+                      const [isOpenInventoryRoomSetting, setIsOpenInventoryRoomSetting] = useState(
+                          stateLink.isOpenInventoryRoomSetting ?? false
+                      );
+                      const [isActiveInventoryRoomSetting, setIsActiveInventoryRoomSetting] = useState(
+                          stateLink.isActiveInventoryRoomSetting ?? false
+                      );
+
+                      //Inventory Room Preview
+                      const [isOpenInventoryRoomPreview, setIsOpenInventoryRoomPreview] = useState(
+                        stateLink.isOpenInventoryRoomPreview ?? false
+                      );
+                      const [isActiveInventoryRoomPreview, setIsActiveInventoryRoomPreview] = useState(
+                          stateLink.isActiveInventoryRoomPreview ?? false
+                      );
+
+              //Inventory Flight
+               const [isOpenInventoryFlight, setIsOpenInventoryFlight] = useState(
+                stateLink.isOpenInventoryFlight ?? false
+              );
+              const [isActiveInventoryFlightIcon, setIsActiveInventoryFlightIcon] = useState(
+                stateLink.isActiveInventoryFlightIcon ?? false
+              );
+              const [isActiveInventoryFlight, setIsActiveInventoryFlight] = useState(
+                  stateLink.isActiveInventoryFlight?? false
+              );
 
 
   // Accounting
@@ -207,8 +232,17 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
 
       isOpenInventoryRoom,
       isActiveInventoryRoom,
+      isActiveInventoryRoomIcon,
+
+      isOpenInventoryFlight,
+      isActiveInventoryFlight,
+      isActiveInventoryFlightIcon,
+
       isOpenInventoryRoomSetting,
       isActiveInventoryRoomSetting,
+
+      isOpenInventoryRoomPreview,
+      isActiveInventoryRoomPreview,
     };
     auth.sidebar = JSON.stringify(activeLinks);
   }, [
@@ -257,8 +291,17 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
 
     isOpenInventoryRoom,
     isActiveInventoryRoom,
+    isActiveInventoryRoomIcon,
+
+    isOpenInventoryFlight,
+    isActiveInventoryFlight,
+    isActiveInventoryFlightIcon,
+
     isOpenInventoryRoomSetting,
     isActiveInventoryRoomSetting,
+
+    isOpenInventoryRoomPreview,
+    isActiveInventoryRoomPreview,
   ]);
 
   // Save state to sidebar at auth when any link state changes
@@ -311,8 +354,17 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
 
     isOpenInventoryRoom,
     isActiveInventoryRoom,
+    isActiveInventoryRoomIcon,
+
+    isOpenInventoryFlight,
+    isActiveInventoryFlight,
+    isActiveInventoryFlightIcon,
+
     isOpenInventoryRoomSetting,
     isActiveInventoryRoomSetting,
+
+    isOpenInventoryRoomPreview,
+    isActiveInventoryRoomPreview,
   ]);
 
   // Handler functions to manage all state
@@ -360,11 +412,20 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     setIsOpenSetting(false);
     setIsActiveFinancialAccount(false);
     
-
     setIsActiveInventoryRoom(false);
     setIsOpenInventoryRoom(false);
-    setIsActiveInventoryRoomSetting(false)
-    setIsOpenInventoryRoomSetting(false)
+    setIsActiveInventoryRoomIcon(false);
+
+    setIsActiveInventoryFlight(false);
+    setIsOpenInventoryFlight(false);
+    setIsActiveInventoryFlightIcon(false);
+
+    setIsActiveInventoryRoomSetting(false);
+    setIsOpenInventoryRoomSetting(false);
+
+    setIsActiveInventoryRoomPreview(false);
+    setIsOpenInventoryRoomPreview(false);
+
   };
 
   // Handler functions to manage navigation state
@@ -410,7 +471,7 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
       navigate("/dashboard_agent/users/customers");
     }
     console.log("result", result);
-  }, [pathName]);
+  }, [location]);
 
   const handleClickCustomers = useCallback(() => {
     handleStateLinks();
@@ -484,7 +545,7 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
       navigate("/dashboard_agent/booking/manual_booking");
     }
     console.log("result", result);
-  }, [pathName]);
+  }, [location]);
 
   /* Manual Booking */
   const handleClickManualBooking = useCallback(() => {
@@ -531,7 +592,7 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
       navigate("/dashboard_agent/booking_list/upcoming_booking");
     }
     console.log("result", result);
-  }, [pathName]);
+  }, [location]);
 
   /* Current Booking */
   const handleClickCurrentBooking = useCallback(() => {
@@ -630,22 +691,7 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     setIsOpenInventory(true);
     setIsActiveInventoryIcon(true);
     setIsActiveInventory(true);
-    setIsActiveInventoryRoom(true)
   }, []);
-  // useEffect(() => {
-  //   const part = pathName.split("/");
-  //   const result = part.slice(0, 4).join("/");
-
-  //   if (result === "/dashboard_agent/inventory/room" &&
-  //     ![
-  //       "/dashboard_agent/inventory/room",
-  //     ].some((path) => pathName.startsWith(path))
-  //   ) {
-  //     handleClickInventory();
-  //     navigate("/dashboard_agent/inventory/room");
-  //   }
-  //   console.log("result", result);
-  // }, [location]);
 
    /* Inventory Room */
    const handleClickInventoryRoom = useCallback(() => {
@@ -654,58 +700,73 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     setIsOpenInventory(true);
     setIsActiveInventoryIcon(true);
     setIsActiveInventory(true);
+
     setIsOpenInventoryRoom(true);
     setIsActiveInventoryRoom(true);
-    setIsActiveInventoryRoomSetting(true);
+    setIsActiveInventoryRoomIcon(true);
   }, []);
 
-  // useEffect(() => {
-  //   const part = pathName.split("/");
-  //   const result = part.slice(0, 4).join("/");
+  const handleClickInventoryFlight = useCallback(() => {
+    handleStateLinks();
 
-  //   if (
-  //     result === "/dashboard_agent/inventory/room" &&
-  //     !["/dashboard_agent/inventory/room/setting_room/room_type"].some((path) =>
-  //       pathName.startsWith(path)
-  //     )
-  //   ) {
-  //     handleClickInventoryRoom();
-  //     navigate("/dashboard_agent/inventory/room/setting_room/room_type");
-  //   }
-  //   console.log("result", result);
-  // }, [pathName]);
+    setIsOpenInventory(true);
+    setIsActiveInventoryIcon(true);
+    setIsActiveInventory(true);
+
+    setIsOpenInventoryFlight(true);
+    setIsActiveInventoryFlight(true);
+    setIsActiveInventoryFlightIcon(true);
+  }, []);
+
+  const handleClickInventoryRoomPreview = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenInventory(true);
+    setIsActiveInventoryIcon(true);
+    setIsActiveInventory(true);
+
+    setIsOpenInventoryRoom(true);
+    setIsActiveInventoryRoom(true);
+    setIsActiveInventoryRoomIcon(true);
+
+    setIsOpenInventoryRoomPreview(true);
+    setIsActiveInventoryRoomPreview(true);
+  }, []);
+
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 5).join("/");
+    if (
+      result === "/dashboard_agent/inventory/room/list") {
+      handleClickInventoryRoomPreview();
+    }
+  }, [location]);
+
 
   /* Inventory Room Setting */
   const handleClickInventoryRoomSetting = useCallback(() => {
     handleStateLinks();
 
-    // setIsOpenInventory(true);
-    // setIsActiveInventoryIcon(true);
-    // setIsActiveInventory(true);
-    // setIsOpenInventoryRoom(true);
-    // setIsActiveInventoryRoom(true);
+    setIsOpenInventory(true);
+    setIsActiveInventoryIcon(true);
+    setIsActiveInventory(true);
+
+    setIsOpenInventoryRoom(true);
+    setIsActiveInventoryRoom(true);
+    setIsActiveInventoryRoomIcon(true);
+
     setIsOpenInventoryRoomSetting(true);
     setIsActiveInventoryRoomSetting(true);
   }, []);
 
-   useEffect(() => {
+  useEffect(() => {
     const part = pathName.split("/");
-    const result = part.slice(0, 4).join("/");
-
+    const result = part.slice(0, 5).join("/");
     if (
-      result === "/dashboard_agent/inventory/room/setting_room" &&
-      !["/dashboard_agent/inventory/room/setting_room/add_type","/dashboard_agent/inventory/room/setting_room/edit_type/:id"].some((path) =>
-        pathName.startsWith(path)
-      )
-    ) {
-      handleClickInventory()
-      handleClickInventoryRoom()
-      handleClickInventoryRoomSetting();
-      navigate("/dashboard_agent/inventory/room/setting_room");
+      result === "/dashboard_agent/inventory/room/setting_room") {
+        handleClickInventoryRoomSetting();
     }
-    console.log("result", result);
-  }, [pathName]);
-
+  }, [location]);
 
   // Accounting
   const handleClickAccounting = useCallback(() => {
@@ -1097,9 +1158,8 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
         </ul>
       </div>
 
-      {/* Operation */}
-       
-        <Link
+      {/* Operation */}     
+      <Link
         to="IncomingPage"
         onMouseMove={() => setIsActiveOperationIcon(true)}
         onMouseOut={() => setIsActiveOperationIcon(false)}
@@ -1137,9 +1197,8 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
         )}
       </Link>
 
-        {/* Requests */}
-       
-        <Link
+      {/* Requests */}    
+      <Link
         to="IncomingPage"
         onMouseMove={() => setIsActiveRequestsIcon(true)}
         onMouseOut={() => setIsActiveRequestsIcon(false)}
@@ -1177,9 +1236,8 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
         )}
       </Link>
 
-        {/* Inventory */}      
-        <div
-        // to="inventory"
+      {/* Inventory */}      
+      <div
         onMouseMove={() => setIsActiveInventoryIcon(true)}
         onMouseOut={() => setIsActiveInventoryIcon(false)}
         onClick={handleClickInventory}
@@ -1221,51 +1279,147 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
           isOpenInventory && !isSidebarCollapsed ? "h-17" : "h-0 "
         } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
       >
-        <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-4">
+        <ul className="list-disc w-full transition-all duration-700 flex flex-col gap-y-4">
           <div className="flex flex-col gap-y-1"
             // to={"inventory/room"}
-            onClick={handleClickInventoryRoom}
+            // onClick={handleClickInventory}
           >
-            <li
-              className={`${
-                isActiveInventoryRoom
-                  ? "rounded-xl bg-white text-mainColor"
-                  : "text-white"
-              }
-                  text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+
+      <li
+        onMouseMove={() => setIsActiveInventoryRoomIcon(true)}
+        onMouseOut={() => setIsActiveInventoryRoomIcon(false)}
+        onClick={handleClickInventoryRoom}
+        className={`
+          ${isActiveInventoryRoom ? "active" : ""}
+         flex items-center 
+         ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
+        hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+      >
+        <div className="flex font-semibold text-xl items-center gap-x-2">
+          <MdOutlineBedroomChild
+            className={`${
+              isActiveInventoryRoomIcon || isActiveInventoryRoom
+                ? "text-mainColor"
+                : "text-white"
+            }`}
+          />
+          {!isSidebarCollapsed && (
+            <span
+              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
+                isActiveInventoryRoom ? "text-mainColor" : "text-white"
+              }`}
             >
               Room
-            </li>
+            </span>
+          )}
+        </div>
+        {!isSidebarCollapsed && (
+          <IoIosArrowForward
+            className={`${
+              isActiveInventoryRoom ? "text-mainColor rotate-90" : "text-white rotate-0"
+            } text-xl transition-all duration-300 group-hover:text-mainColor`}
+          />
+        )}
+      </li>
+      
+                    <div
+                      className={`${
+                        isOpenInventoryRoom && !isSidebarCollapsed ? "h-17" : "h-0 "
+                      } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+                    >
+                      <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-4">
+                        {/* <Link
+                          to={"inventory/room/setting_room"}
+                          onClick={handleClickInventoryRoomSetting}
+                        >
+                          <li
+                            className={`${
+                              isActiveInventoryRoomPreview
+                                ? "rounded-xl bg-white text-mainColor"
+                                : "text-white"
+                            }
+                                        text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+                          >
+                            Room List
+                          </li> */}
 
-            <div
-              className={`${
-                isOpenInventoryRoom && !isSidebarCollapsed ? "h-17" : "h-0 "
-              } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
-            >
-              <ul className="list-disc w-full transition-all duration-700 flex flex-col gap-y-4">
-                <Link
-                  to={"inventory/room/setting_room"}
-                  onClick={handleClickInventoryRoomSetting}
-                >
-                  <li
-                    className={`${
-                      isActiveInventoryRoomSetting
-                        ? "rounded-xl bg-white text-mainColor"
-                        : "text-white"
-                    }
-                                text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
-                  >
-                    Room Setting
-                  </li>
-                </Link>
-              </ul>
-            </div>
+                              <Link
+                                to={"inventory/room/list"}
+                                onClick={() => {
+                                    handleClickInventoryRoomPreview();
+                                    onLinkClick();
+                                  }}
+                                >
+                                  <li
+                                    className={`${
+                                      isActiveInventoryRoomPreview
+                                        ? "rounded-xl bg-white text-mainColor"
+                                        : "text-white"
+                                    }
+                                                text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+                                  >
+                                    Room List
+                                  </li>
+                              </Link>
 
-            <li
-              className={`text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+                              <Link
+                              to={"inventory/room/setting_room"}
+                              onClick={() => {
+                                handleClickInventoryRoomSetting();
+                                onLinkClick();
+                                }}
+                              >
+                                <li
+                                className={`${
+                                  isActiveInventoryRoomSetting
+                                    ? "rounded-xl bg-white text-mainColor"
+                                    : "text-white"
+                                }
+                                            text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+                              >
+                                Room Setting
+                              </li>
+                              </Link>
+                      </ul>
+                    </div>
+
+      <li
+        onMouseMove={() => setIsActiveInventoryFlightIcon(true)}
+        onMouseOut={() => setIsActiveInventoryFlightIcon(false)}
+        onClick={handleClickInventoryFlight}
+        className={`
+          ${isActiveInventoryFlight ? "active" : ""}
+         flex items-center 
+         ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
+        hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+      >
+        <div className="flex font-semibold text-xl items-center gap-x-2">
+          <MdOutlineFlight
+            className={`${
+              isActiveInventoryFlightIcon || isActiveInventoryFlight
+                ? "text-mainColor"
+                : "text-white"
+            }`}
+          />
+          {!isSidebarCollapsed && (
+            <span
+              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
+                isActiveInventoryFlight ? "text-mainColor" : "text-white"
+              }`}
             >
               Flight
-            </li>
+            </span>
+          )}
+        </div>
+        {!isSidebarCollapsed && (
+          <IoIosArrowForward
+            className={`${
+              isActiveInventoryFlight ? "text-mainColor rotate-90" : "text-white rotate-0"
+            } text-xl transition-all duration-300 group-hover:text-mainColor`}
+          />
+        )}
+      </li>
+      
           </div>
         </ul>
       </div>
