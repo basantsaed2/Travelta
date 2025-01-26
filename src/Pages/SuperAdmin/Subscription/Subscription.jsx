@@ -61,8 +61,8 @@ const Subscription = () => {
       </div>
     ) : 
  (   <div className="p-4 overflow-x-auto">
-       <table className="min-w-full bg-white shadow-lg rounded-lg border-collapse border border-gray-300">
-       <thead className="bg-mainColor text-white">
+     <table className="table-auto border-collapse border border-gray-200 min-w-full text-left">
+     <thead className=' bg-mainColor text-white'>
         <tr className=" uppercase text-xs">
           <th className="px-4 py-3 border-b">Name</th>
           <th className="px-4 py-3 border-b">Email</th>
@@ -79,29 +79,35 @@ const Subscription = () => {
         {dataSubscription.map((subscription) => (
           <tr
             key={subscription.id}
-            className="hover:bg-gray-50 transition-colors duration-200 border-b text-center"
+            className="hover:bg-gray-50"
           >
-            <td className="px-4 py-3">{subscription.name}</td>
-            <td className="px-4 py-3">{subscription.email}</td>
-            <td className="px-4 py-3">{subscription.phone}</td>
-            <td className="px-4 py-3">{subscription.plan}</td>
-            <td className="px-4 py-3">{subscription.role}</td>
-            <td className="px-4 py-3">${subscription.price}</td>
-            <td className="px-4 py-3">{subscription.startDate}</td>
-            <td className="px-4 py-3">{subscription.endDate}</td>
-            <td className="px-4 py-3 flex justify-center items-center gap-2">
-              <button
+            <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.name}</td>
+            <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.email}</td>
+            <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.phone}</td>
+            <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.plan}</td>
+            <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.role}</td>
+            <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">${subscription.price}</td>
+            <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.startDate}</td>
+            <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.endDate}</td>
+            <td className="border border-gray-200 px-4 py-2">
+            <div className="flex flex-wrap gap-2">
+   <button
                 onClick={() => handleUpdate(subscription.id)}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs"
+                
+                className="bg-mainColor text-white px-3 py-1 rounded-lg hover:bg-blue-600 text-sm md:text-base w-full md:w-auto"
               >
-                <FaEdit />
+                Update
               </button>
               <button
                 onClick={() => handleDelete(subscription.id, subscription.name)}
-                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs"
+                
+                className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 text-sm md:text-base w-full md:w-auto"
               >
-                <FaTrash />
+                Delete
               </button>
+
+              </div>
+           
             </td>
           </tr>
         ))}

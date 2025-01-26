@@ -88,104 +88,104 @@ const CountryList = () => {
 
   return (
 
-    <div className="w-full overflow-x-scroll scrollSection">
-    {loadingCountry  ?  (
-        <div className="w-full h-56 flex justify-center items-center">
-            <StaticLoader />
-        </div>
-) :
-
-   (
-<div className="mx-auto p-8">
-  <div className="flex flex-col flex-wrap lg:flex-row gap-6">
-    {dataCountry.map((country) => (
-      <div
-        key={country.id}
-        className="relative bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105"
-      >
-        {/* Country Header */}
-        <div className="h-32 bg-gradient-to-r from-mainColor to-gray-600 flex items-center justify-center">
-          <h3 className="text-2xl font-bold text-white uppercase tracking-wider">
-            {country.name}
-          </h3>
-        </div>
-
-        {/* Card Content */}
-        <div className="p-6">
-          <p className="">
-            <strong>ID:</strong> {country.id}
-          </p>
-          <p className="">
-            <strong>Created At:</strong>{" "}
-            {country.created_at ? country.created_at : "Not Available"}
-          </p>
-          <p className="">
-            <strong>Updated At:</strong>{" "}
-            {country.updated_at ? country.updated_at : "Not Available"}
-          </p>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex justify-between px-6 py-4 bg-gray-50">
-          <button
-            onClick={() => handleUpdate(country)}
-            className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200"
-          >
-            Update
-          </button>
-          <button
-            onClick={() => handleDelete(country.id, country.name)}
-            className="flex-1 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-200 ml-4"
-          >
-            Delete
-          </button>
-        </div>
+<div className="w-full overflow-x-auto scrollSection">
+  {loadingCountry ? (
+    <div className="w-full h-56 flex justify-center items-center">
+      <StaticLoader />
+    </div>
+  ) : (
+    <div className="p-4 lg:p-8">
+      <div className="overflow-x-auto">
+        <table className="table-auto border-collapse border border-gray-200 min-w-full text-left">
+        <thead className=' bg-mainColor text-white'>
+            <tr className="">
+              <th className="border border-gray-200 px-4 py-2 text-sm md:text-base">
+                Country Name
+              </th>
+              <th className="border border-gray-200 px-4 py-2 text-sm md:text-base">
+                Created At
+              </th>
+              <th className="border border-gray-200 px-4 py-2 text-sm md:text-base">
+                Updated At
+              </th>
+              <th className="border border-gray-200 px-4 py-2 text-sm md:text-base">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {dataCountry.map((country) => (
+              <tr key={country.id} className="hover:bg-gray-50">
+                <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">
+                  {country.name}
+                </td>
+                <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">
+                  {country.created_at ? country.created_at : "Not Available"}
+                </td>
+                <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">
+                  {country.updated_at ? country.updated_at : "Not Available"}
+                </td>
+                <td className="border border-gray-200 px-4 py-2">
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => handleUpdate(country)}
+                      className="bg-mainColor text-white px-3 py-1 rounded-lg hover:bg-blue-600 text-sm md:text-base w-full md:w-auto"
+                    >
+                      Update
+                    </button>
+                    <button
+                      onClick={() => handleDelete(country.id, country.name)}
+                      className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 text-sm md:text-base w-full md:w-auto"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-    ))}
-  </div>
 
-  {/* Popup Modal */}
-  {showPopup && (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
-        <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
-          Update Country
-        </h3>
-        <input
-          type="text"
-          value={newName}
-          onChange={(e) => setNewName(e.target.value)}
-          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 mb-6"
-          placeholder="Enter new country name"
-        />
-        <div className="flex justify-end gap-4">
-          <button
-            onClick={handlePopupClose}
-            className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg transition"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleUpdateSubmit}
-            disabled={loadingUpdate}
-            className={`px-4 py-2 rounded-lg font-bold ${
-              loadingUpdate
-                ? "bg-gray-300 text-gray-500"
-                : "bg-blue-500 text-white hover:bg-blue-600"
-            } transition`}
-          >
-            {loadingUpdate ? "Updating..." : "Update"}
-          </button>
+      {showPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-4 rounded-lg shadow-xl w-full max-w-xs sm:max-w-md">
+            <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-4 text-center">
+              Update Country
+            </h3>
+            <input
+              type="text"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              className="w-full p-2 md:p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 mb-4 text-sm md:text-base"
+              placeholder="Enter new country name"
+            />
+            <div className="flex flex-wrap justify-end gap-2 mt-4">
+              <button
+                onClick={handlePopupClose}
+                className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg text-sm md:text-base w-full sm:w-auto"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUpdateSubmit}
+                disabled={loadingUpdate}
+                className={`px-4 py-2 rounded-lg font-bold text-sm md:text-base w-full sm:w-auto ${
+                  loadingUpdate
+                    ? "bg-gray-300 text-gray-500"
+                    : "bg-blue-500 text-white hover:bg-blue-600"
+                }`}
+              >
+                {loadingUpdate ? "Updating..." : "Update"}
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )}
 </div>
 
-
-  
-  ) }
-    </div>
   );
 };
 

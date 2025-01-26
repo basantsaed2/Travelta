@@ -53,25 +53,24 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
   };
 
   const handleAddFeature = async () => {
-    // Check if name or description already exists
     const existingFeatureName = dataFeature.find(
       (feature) => feature.name === newFeature.name 
     );
 
     const existingFeatureDescription = dataFeature.find(
-        (feature) =>feature.description === newFeature.description
-      );
+        (feature) => feature.description === newFeature.description
+    );
 
     if (existingFeatureName) {
-        auth.toastError("Feature name already exists.");
+      auth.toastError("Feature name already exists.");
       return;
     }
 
     if (existingFeatureDescription) {
-        auth.toastError("Feature description already exists.");
-        return;
-      }
-    
+      auth.toastError("Feature description already exists.");
+      return;
+    }
+
     if (!newFeature.name || !newFeature.description || !newFeature.image) {
       auth.toastError("Please fill in all fields!");
       return;
@@ -79,11 +78,12 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
 
     setError(""); // Clear any previous error
     postData(newFeature, "Feature Added Successfully");
-    handleReset()
+    handleReset();
   };
- const handleReset  =()=>{
-  setNewFeature({name:"",description:"",image:""})
- }
+
+  const handleReset = () => {
+    setNewFeature({ name: "", description: "", image: "" });
+  };
 
   const handleUpdateSubmit = async () => {
     if (!selectedFeatures.length) {
@@ -91,8 +91,7 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
       return;
     }
 
-    // Prepare updated data for selected features
-    const updatedFeatures = selectedFeatures.map(feature => ({
+    const updatedFeatures = selectedFeatures.map((feature) => ({
       ...feature,
       name: newFeature.name || feature.name,
       description: newFeature.description || feature.description,
@@ -100,7 +99,6 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
     }));
 
     try {
-      // Send update request for each selected feature
       for (const feature of updatedFeatures) {
         const response = await fetch(
           `https://www.travelta.online/api/super/Feature/Update/${feature.id}`, 
@@ -129,9 +127,8 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
         }
       }
 
-      // Clear the form and close the popup
-      setShowPopup(false); 
-      setSelectedFeatures([]); // Clear selection after update
+      setShowPopup(false);
+      setSelectedFeatures([]);
       setNewFeature({ name: "", description: "", image: "" });
     } catch (error) {
       console.error("Update Error:", error);
@@ -160,146 +157,153 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
 
   return (
     <div className="max-w-7xl mx-auto p-6 bg-gradient-to-t from-indigo-100 to-blue-50">
-      {loadingFeature ? (
-        <div className="flex justify-center items-center h-64">
-          <StaticLoader />
-        </div>
-      ) : (
-        <div className="space-y-8">
-          {/* Feature Cards */}
-          <div className="flex flex-wrap justify-center gap-8">
-            {dataFeature.map((feature, index) => (
-              <div
-                key={index}
-                className="w-80 bg-white rounded-lg shadow-lg hover:shadow-xl p-6 border border-gray-300 transform transition-all duration-300"
-              >
-                <div className="relative">
-                  {/* Feature Image */}
-                  <img
-                    src={feature.image_url}
-                    alt={feature.name}
-                    className="w-20 h-20 object-cover rounded-md mb-4 cursor-pointer"
-                    onClick={() => handleFeatureSelect(feature)}
-                  />
-                </div>
-                <h3 className="text-xl font-semibold text-indigo-600 mb-2">{feature.name}</h3>
-                <p className="text-sm text-gray-600 mb-4">{feature.description}</p>
-                <div className="flex gap-4 mt-4">
-                  <button
-                    type="button"
-                    onClick={() => handleFeatureSelect(feature)}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md"
-                  >
-                    {selectedFeatures.find((f) => f.id === feature.id) ? "Deselect" : "Select"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setNewFeature({
-                        name: feature.name,
-                        description: feature.description,
-                        image: feature.image_url,
-                      });
-                      setSelectedFeatures([feature]);
-                      setShowPopup(true);
-                    }}
-                    className="px-4 py-2 bg-yellow-600 text-white rounded-md"
-                  >
-                    Update
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(feature.id, feature.name)}
-                    className="px-4 py-2 bg-red-600 text-white rounded-md"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Error message */}
-          {error && <p className="text-red-600 text-sm mt-4">{error}</p>}
-
-          {/* Add Feature Form */}
-          <div className="mt-8">
-            <h2 className="text-2xl font-semibold text-indigo-600 mb-4">Add New Feature</h2>
-            <input
-              type="text"
-              name="name"
-              value={newFeature.name}
-              onChange={handleFeatureChange}
-              placeholder="Feature Name"
-              className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
-            />
-            <textarea
-              name="description"
-              value={newFeature.description}
-              onChange={handleFeatureChange}
-              placeholder="Feature Description"
-              className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
-            />
-            <input
-              type="file"
-              onChange={handleImageChange}
-              className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
-            />
-            <button
-              type="button"
-              onClick={handleAddFeature}
-              disabled={loadingPost}
-              className="px-6 py-3 rounded-md text-white transition-all duration-300 bg-blue-600 hover:bg-blue-700"
+    {loadingFeature ? (
+      <div className="flex justify-center items-center h-64">
+        <StaticLoader />
+      </div>
+    ) : (
+      <div className="space-y-8">
+        {/* Feature Cards */}
+        <div className="flex flex-col gap-8">
+          {dataFeature.map((feature, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-between bg-white rounded-lg shadow-lg hover:shadow-xl overflow-auto p-6 border border-gray-300 transform transition-all duration-300"
             >
-              {loadingPost ? "Adding..." : "Add Feature"}
-            </button>
-          </div>
-
-          {/* Update Feature Form (Popup) */}
-          {showPopup && selectedFeatures.length > 0 && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-              <div className="bg-white p-8 rounded-lg max-w-lg">
-                <h3 className="text-xl font-semibold text-indigo-600 mb-4">Update Selected Features</h3>
+              <div className="flex items-center gap-4">
+                {/* Feature Checkbox */}
                 <input
-                  type="text"
-                  value={newFeature.name}
-                  onChange={(e) => setNewFeature({ ...newFeature, name: e.target.value })}
-                  className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
+                  type="checkbox"
+                  checked={selectedFeatures.find((f) => f.id === feature.id)}
+                  onChange={() => handleFeatureSelect(feature)}
+                  className="h-5 w-5"
                 />
-                <textarea
-                  value={newFeature.description}
-                  onChange={(e) => setNewFeature({ ...newFeature, description: e.target.value })}
-                  className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
+  
+                {/* Feature Image */}
+                <img
+                  src={feature.image_url}
+                  alt={feature.name}
+                  className="w-16 h-16 object-cover rounded-full border-4 border-indigo-500 cursor-pointer"
+                  onClick={() => handleFeatureSelect(feature)}
                 />
-                <input
-                  type="text"
-                  value={newFeature.image}
-                  onChange={(e) => setNewFeature({ ...newFeature, image: e.target.value })}
-                  className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
-                />
-                <div className="flex gap-4 mt-4">
-                  <button
-                    type="button"
-                    onClick={handleUpdateSubmit}
-                    disabled={loadingPut}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md"
-                  >
-                    {loadingPut ? "Updating..." : "Update Features"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowPopup(false)}
-                    className="px-4 py-2 bg-gray-400 text-white rounded-md"
-                  >
-                    Cancel
-                  </button>
-                </div>
+              </div>
+  
+              {/* Feature Details */}
+              <div className="flex-1 ml-4">
+                <h3 className="text-xl font-semibold text-indigo-600 mb-2">{feature.name}</h3>
+                <p className="text-sm text-gray-600">{feature.description}</p>
+              </div>
+  
+              {/* Buttons */}
+              <div className="flex gap-4 ml-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setNewFeature({
+                      name: feature.name,
+                      description: feature.description,
+                      image: feature.image_url,
+                    });
+                    setSelectedFeatures([feature]);
+                    setShowPopup(true);
+                  }}
+                  className="px-4 py-2 bg-yellow-600 text-white rounded-md"
+                >
+                  Update
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(feature.id, feature.name)}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md"
+                >
+                  Delete
+                </button>
               </div>
             </div>
-          )}
+          ))}
         </div>
-      )}
-    </div>
+  
+        {error && <p className="text-red-600 text-sm mt-4">{error}</p>}
+  
+        {/* Add Feature Form */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold text-indigo-600 mb-4">Add New Feature</h2>
+          <input
+            type="text"
+            name="name"
+            value={newFeature.name}
+            onChange={handleFeatureChange}
+            placeholder="Feature Name"
+            className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
+          />
+          <textarea
+            name="description"
+            value={newFeature.description}
+            onChange={handleFeatureChange}
+            placeholder="Feature Description"
+            className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
+          />
+          <input
+            type="file"
+            onChange={handleImageChange}
+            className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
+          />
+          <button
+            type="button"
+            onClick={handleAddFeature}
+            disabled={loadingPost}
+            className="px-6 py-3 rounded-md text-white transition-all duration-300 bg-blue-600 hover:bg-blue-700"
+          >
+            {loadingPost ? "Adding..." : "Add Feature"}
+          </button>
+        </div>
+  
+        {/* Update Feature Form (Popup) */}
+        {showPopup && selectedFeatures.length > 0 && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white p-8 rounded-lg max-w-lg">
+              <h3 className="text-xl font-semibold text-indigo-600 mb-4">Update Selected Features</h3>
+              <input
+                type="text"
+                value={newFeature.name}
+                onChange={(e) => setNewFeature({ ...newFeature, name: e.target.value })}
+                className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
+              />
+              <textarea
+                value={newFeature.description}
+                onChange={(e) => setNewFeature({ ...newFeature, description: e.target.value })}
+                className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
+              />
+              <input
+                type="text"
+                value={newFeature.image}
+                onChange={(e) => setNewFeature({ ...newFeature, image: e.target.value })}
+                className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
+              />
+              <div className="flex gap-4 mt-4">
+                <button
+                  type="button"
+                  onClick={handleUpdateSubmit}
+                  disabled={loadingPut}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md"
+                >
+                  {loadingPut ? "Updating..." : "Update Features"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowPopup(false)}
+                  className="px-4 py-2 bg-gray-400 text-white rounded-md"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+  
   );
 };
 

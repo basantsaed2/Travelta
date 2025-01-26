@@ -3,6 +3,10 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { useGet } from '../../../Hooks/useGet';
 import StaticLoader from '../../../Components/StaticLoader';
+import { FaPhoneAlt, FaEnvelope, FaBus,FaPlane,FaHotel  } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaDollarSign, FaClock, FaUser, FaBriefcase, FaCalendarAlt, FaBusAlt,FaMapPin } from 'react-icons/fa';
+
+
 const Booking = () => {
   const { refetch: refetchBooking, loading: loadingBooking, data: DataBooking } = useGet({ url: 'https://www.travelta.online/api/super/bookings' });
 
@@ -41,105 +45,236 @@ const Booking = () => {
     }
   };
 
+  
   const renderBusCards = () => (
-    <div className="flex flex-wrap flex-col lg:flex-row mt-4">
+    <div className="flex flex-wrap flex-col lg:flex-row mt-4 gap-6">
       {dataBus.map((item, index) => (
         <div
           key={index}
-          className="bg-blue-100 shadow-lg rounded-lg overflow-hidden transform  transition-transform duration-300"
+          className="w-[500px] p-6 transition-all duration-300 transform hover:shadow-xl rounded-lg border border-gray-200"
         >
-          <div className="bg-mainColor text-white p-4">
-            <h3 className="text-xl font-semibold">{item.bus_name}</h3>
-            <p>{item.country}</p>
+          <div className="bg-gradient-to-r from-white to-white text-white rounded-lg shadow-lg overflow-auto">
+            {/* Header Section */}
+            <div className="bg-gradient-to-r from-indigo-600 to-blue-800 text-white p-6 flex items-center justify-between">
+              <div>
+                <h3 className="text-2xl font-semibold">{item.bus_name}</h3>
+                <p className="text-lg">{item.country}</p>
+              </div>
+              <FaBus className="text-white text-3xl" />
+            </div>
+  
+            {/* Bus Info Section */}
+            <div className="p-6 space-y-4 text-gray-800">
+              <div className="flex items-center gap-2">
+                <FaCalendarAlt className="text-indigo-600" size={18} />
+                <p><strong className="text-gray-700">Departure:</strong> {item.depature}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <FaBusAlt className="text-green-500" size={18} />
+                <p><strong className="text-gray-700">Bus No.:</strong> {item.bus_no}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <FaMapMarkerAlt className="text-yellow-500" size={18} />
+                <p><strong className="text-gray-700">From:</strong> {item.from}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <FaMapPin className="text-red-500" size={18} />
+                <p><strong className="text-gray-700">To:</strong> {item.to}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <FaClock className="text-purple-500" size={18} />
+                <p><strong className="text-gray-700">Arrival:</strong> {item.arrival}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <FaDollarSign className="text-teal-600" size={18} />
+                <p><strong className="text-gray-700">Price:</strong> ${item.total_price}</p>
+              </div>
+            </div>
+  
+            {/* Supplier Info Section */}
+            <div className="border-t border-gray-200 p-6 space-y-4">
+              <div className="flex items-center gap-2">
+                <FaPhoneAlt className="text-gray-700" size={18} />
+                <p><strong className="text-gray-700">Supplier Phone:</strong> {item.supplier_from_phone || 'N/A'}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <FaEnvelope className="text-gray-700" size={18} />
+                <p><strong className="text-gray-700">Supplier Email:</strong> {item.supplier_from_email || 'N/A'}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <FaPhoneAlt className="text-gray-700" size={18} />
+                <p><strong className="text-gray-700">Driver Phone:</strong> {item.driver_phone}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <FaUser className="text-gray-700" size={18} />
+                <p><strong className="text-gray-700">To Name:</strong> {item.to_name}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <FaPhoneAlt className="text-gray-700" size={18} />
+                <p><strong className="text-gray-700">To Phone:</strong> {item.to_phone}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <FaBriefcase className="text-gray-700" size={18} />
+                <p><strong className="text-gray-700">To Role:</strong> {item.to_role}</p>
+              </div>
+            </div>
           </div>
-          <div className="p-4">
-            <p><strong>Departure:</strong> {item.depature}</p>
-            <p><strong>Bus No.:</strong> {item.bus_no}</p>
-            <p><strong>From:</strong> {item.from}</p>
-            <p><strong>To:</strong> {item.to}</p>
-            <p><strong>Arrival:</strong> {item.arrival}</p>
-            <p><strong>Price:</strong> ${item.total_price}</p>
-          </div>
-          <div className="border border-t-2 p-4">
-            <p><strong>Supplier Name:</strong> {item.supplier_from_name}</p>
-            <p><strong>Supplier Phone:</strong> {item.supplier_from_phone || 'N/A'}</p>
-            <p><strong>Supplier Email:</strong> {item.supplier_from_email || 'N/A'}</p>
-            <p><strong>Driver Phone:</strong> {item.driver_phone}</p>
-            <p><strong>To Name:</strong> {item.to_name}</p>
-            <p><strong>To Phone:</strong> {item.to_phone}</p>
-            <p><strong>To Role:</strong> {item.to_role}</p>
-          </div>
-          
-          {/* <div className="flex justify-between items-center p-4 bg-gray-200">
-            <button
-              onClick={() => handleUpdate(item.id)}
-              className="text-blue-500 hover:text-blue-700"
-            >
-              <FaEdit />
-            </button>
-            <button
-              onClick={() => handleDelete(item.id, item.supplier_from_name)}
-              className="text-red-500 hover:text-red-700"
-            >
-              <FaTrash />
-            </button>
-          </div> */}
         </div>
       ))}
     </div>
   );
   
   
+  
   const renderFlightCards = () => (
-    <div className="flex flex-col flex-wrap lg:flex-row gap-6 mt-4">
+    <div className="flex flex-wrap mt-4 gap-6">
       {dataFlight.map((item, index) => (
         <div
           key={index}
-          className="bg-blue-100 shadow-lg rounded-lg overflow-hidden transform  transition-transform duration-200"
+          className="w-[500px] p-6 transition-all duration-500 transform hover:scale-105 hover:shadow-xl"
         >
-          <div className="bg-mainColor text-white p-4">
-            <h3 className="text-xl font-semibold">{item.supplier_from_name}</h3>
-            <p>{item.depature}</p>
+          <div className="bg-white shadow-lg rounded-xl overflow-auto border border-gray-200 hover:shadow-2xl hover:translate-y-2 h-[500px]">
+            {/* Header Section */}
+            <div className="bg-gradient-to-r from-indigo-600 to-blue-500 text-white p-6 rounded-t-lg flex items-center justify-between">
+              <div>
+                <h3 className="text-2xl font-bold">{item.supplier_from_name}</h3>
+                <p className="text-lg font-medium">{item.depature}</p>
+              </div>
+              <FaPlane className="text-white text-4xl hover:rotate-12 transition-transform duration-300" />
+            </div>
+    
+            {/* Flight Info Section */}
+            <div className="p-6 space-y-4 text-gray-800">
+              {[
+                { label: 'Flight No.', value: item.ticket_no },
+                { label: 'Price', value: `$${item.total_price}`, icon: FaDollarSign },
+                { label: 'Flight Class', value: item.flight_class },
+                { label: 'Flight Type', value: item.flight_type },
+                { label: 'Flight Direction', value: item.flight_direction },
+                { label: 'From', value: item.from_to[0]?.from || 'N/A' },
+                { label: 'To', value: item.from_to[0]?.to || 'N/A' },
+                { label: 'Arrival', value: item.arrival || 'N/A' }
+              ].map(({ label, value, icon: Icon }, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  {Icon && <Icon className="text-indigo-600" size={18} />}
+                  <p><strong>{label}:</strong> {value}</p>
+                </div>
+              ))}
+            </div>
+    
+            {/* Supplier Info Section */}
+            <div className="border-t border-gray-200 p-6 space-y-4">
+              {[
+                { label: 'Supplier Phone', value: item.supplier_from_phone },
+                { label: 'Supplier Email', value: item.supplier_from_email },
+                { label: 'Adults No.', value: item.adults_no },
+                { label: 'Children No.', value: item.children_no },
+                { label: 'Infants No.', value: item.infants_no },
+                { label: 'Ref PNR', value: item.ref_pnr }
+              ].map(({ label, value }, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <p><strong>{label}:</strong> {value || 'N/A'}</p>
+                </div>
+              ))}
+            </div>
+    
+            {/* To Info Section */}
+            <div className="border-t border-gray-200 p-6 space-y-4">
+              {[
+                { label: 'To Name', value: item.to_name },
+                { label: 'To Phone', value: item.to_phone },
+                { label: 'To Role', value: item.to_role },
+                { label: 'To Email', value: item.to_email }
+              ].map(({ label, value }, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <p><strong>{label}:</strong> {value || 'N/A'}</p>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="p-4">
-            <p><strong>Arrival:</strong> {item.arrival || 'N/A'}</p>
-            <p><strong>Flight No.:</strong> {item.ticket_no}</p>
-            <p><strong>Flight Class:</strong> {item.flight_class}</p>
-            <p><strong>Flight Direction:</strong> {item.flight_direction}</p>
-            <p><strong>Flight Type:</strong> {item.flight_type}</p>
-            <p><strong>From:</strong> {item.from_to[0]?.from || 'N/A'}</p>
-            <p><strong>To:</strong> {item.from_to[0]?.to || 'N/A'}</p>
-            <p><strong>Price:</strong> ${item.total_price}</p>
+        </div>
+      ))}
+    </div>
+  );
+  
+  
+  
+  
+  
+
+  const renderTourCards = () => (
+    <div className="flex flex-wrap mt-4 gap-6">
+      {dataTour.map((item, index) => (
+        <div
+          key={index}
+          className="w-[500px] p-6 transition-transform duration-300 transform hover:scale-105"
+        >
+          <div className="bg-white shadow-lg rounded-xl overflow-y-auto border border-gray-200 hover:shadow-xl h-[450px]">
+            {/* Header Section */}
+            <div className="bg-mainColor text-white p-6 rounded-t-lg flex items-center justify-between">
+              <div>
+                <h3 className="text-2xl font-semibold">{item.tour_name}</h3>
+                <p className="text-lg">{item.tour_type}</p>
+              </div>
+            </div>
+  
+            {/* Tour Info Section */}
+            <div className="p-6 space-y-4">
+              <p><strong className="text-gray-700">Price:</strong> ${item.total_price}</p>
+              <p><strong className="text-gray-700">Adults No.:</strong> {item.adults_no}</p>
+              <p><strong className="text-gray-700">Children No.:</strong> {item.children_no}</p>
+              <p><strong className="text-gray-700">Country:</strong> {item.country}</p>
+            </div>
+  
+            {/* Supplier Info Section */}
+            <div className="border-t border-gray-200 p-6 space-y-4">
+              <p><strong className="text-gray-700">Supplier Name:</strong> {item.supplier_from_name}</p>
+              <div className="flex items-center">
+                <FaPhoneAlt className="text-gray-700 mr-2" />
+                <p><strong className="text-gray-700">Supplier Phone:</strong> {item.supplier_from_phone || 'N/A'}</p>
+              </div>
+              <div className="flex items-center">
+                <FaEnvelope className="text-gray-700 mr-2" />
+                <p><strong className="text-gray-700">Supplier Email:</strong> {item.supplier_from_email || 'N/A'}</p>
+              </div>
+            </div>
+  
+            {/* To Info Section */}
+            <div className="border-t border-gray-200 p-6 space-y-4">
+              <p><strong className="text-gray-700">To Name:</strong> {item.to_name}</p>
+              <p><strong className="text-gray-700">To Role:</strong> {item.to_role}</p>
+              <div className="flex items-center">
+                <FaPhoneAlt className="text-gray-700 mr-2" />
+                <p><strong className="text-gray-700">To Phone:</strong> {item.to_phone || 'N/A'}</p>
+              </div>
+              <div className="flex items-center">
+                <FaEnvelope className="text-gray-700 mr-2" />
+                <p><strong className="text-gray-700">To Email:</strong> {item.to_email || 'N/A'}</p>
+              </div>
+            </div>
+  
+            {/* Tour Buses & Hotels Section */}
+            <div className="border-t border-gray-200 p-6 space-y-4">
+              <div>
+                <p><strong className="text-gray-700">Tour Buses:</strong></p>
+                {item.tour_buses.map((bus, idx) => (
+                  <div key={idx} className="flex items-center">
+                    <FaBus className="text-gray-700 mr-2" />
+                    <p>{bus.transportation}: {bus.seats} seats</p>
+                  </div>
+                ))}
+              </div>
+              <div>
+                <p><strong className="text-gray-700">Tour Hotels:</strong></p>
+                {item.tour_hotels.map((hotel, idx) => (
+                  <div key={idx} className="flex items-center">
+                    <FaHotel className="text-gray-700 mr-2" />
+                    <p>{hotel.hotel_name} ({hotel.room_type} room, Check-in: {hotel.check_in}, Check-out: {hotel.check_out})</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-          <div className="border border-t-2 p-4">
-            <p><strong>Supplier Name:</strong> {item.supplier_from_name}</p>
-            <p><strong>Supplier Phone:</strong> {item.supplier_from_phone || 'N/A'}</p>
-            <p><strong>Supplier Email:</strong> {item.supplier_from_email || 'N/A'}</p>
-            <p><strong>Adults No.:</strong> {item.adults_no}</p>
-            <p><strong>Children No.:</strong> {item.children_no}</p>
-            <p><strong>Infants No.:</strong> {item.infants_no}</p>
-            <p><strong>Ref PNR:</strong> {item.ref_pnr}</p>
-          </div>
-          <div className="border border-t-2 p-4">
-            <p><strong>To Name:</strong> {item.to_name}</p>
-            <p><strong>To Phone:</strong> {item.to_phone}</p>
-            <p><strong>To Role:</strong> {item.to_role}</p>
-            <p><strong>To Email:</strong> {item.to_email || 'N/A'}</p>
-          </div>
-          {/* <div className="flex justify-between items-center p-4 bg-gray-200">
-            <button
-              onClick={() => handleUpdate(item.id)}
-              className="text-blue-500 hover:text-blue-700"
-            >
-              <FaEdit />
-            </button>
-            <button
-              onClick={() => handleDelete(item.id, item.supplier_from_name)}
-              className="text-red-500 hover:text-red-700"
-            >
-              <FaTrash />
-            </button>
-          </div> */}
         </div>
       ))}
     </div>
@@ -149,145 +284,123 @@ const Booking = () => {
   
   
 
-  const renderTourCards = () => (
-    <div className="flex flex-col flex-wrap lg:flex-row gap-6 mt-4">
-      {dataTour.map((item, index) => (
-        <div
-          key={index}
-          className="bg-blue-100 shadow-lg rounded-lg overflow-hidden transform transition-transform duration-300"
-        >
-          <div className="bg-mainColor text-white p-4">
-            <h3 className="text-xl font-semibold">{item.tour_name}</h3>
-            <p>{item.tour_type}</p>
-          </div>
-          <div className="p-4">
-            <p><strong>Price:</strong> ${item.total_price}</p>
-            <p><strong>Adults No.:</strong> {item.adults_no}</p>
-            <p><strong>Children No.:</strong> {item.children_no}</p>
-            <p><strong>Country:</strong> {item.country}</p>
-          </div>
-          <div className="border border-t-2 p-4">
-            <p><strong>Supplier Name:</strong> {item.supplier_from_name}</p>
-            <p><strong>Supplier Email:</strong> {item.supplier_from_email || 'N/A'}</p>
-            <p><strong>Supplier Phone:</strong> {item.supplier_from_phone || 'N/A'}</p>
-            <p><strong>To Name:</strong> {item.to_name}</p>
-            <p><strong>To Email:</strong> {item.to_email || 'N/A'}</p>
-            <p><strong>To Phone:</strong> {item.to_phone || 'N/A'}</p>
-            <p><strong>To Role:</strong> {item.to_role}</p>
-          </div>
-          <div className="border border-t-2 p-4">
-            <p><strong>Tour Buses:</strong></p>
-            {item.tour_buses.map((bus, idx) => (
-              <div key={idx}>
-                {bus.transportation}: {bus.seats} seats
-              </div>
-            ))}
-            <p><strong>Tour Hotels:</strong></p>
-            {item.tour_hotels.map((hotel, idx) => (
-              <div key={idx}>
-                {hotel.hotel_name} ({hotel.room_type} room, Check-in: {hotel.check_in}, Check-out: {hotel.check_out})
-              </div>
-            ))}
-          </div>
-          {/* <div className="flex justify-between items-center p-4 bg-gray-200">
-            <button onClick={() => handleUpdate(item.id)} className="text-blue-500 hover:text-blue-700">
-              <FaEdit />
-            </button>
-            <button onClick={() => handleDelete(item.id, item.supplier_from_name)} className="text-red-500 hover:text-red-700">
-              <FaTrash />
-            </button>
-          </div> */}
-        </div>
-      ))}
-    </div>
-  );
-  
-  
   const renderVisaCards = () => (
-    <div className="flex flex-col flex-wrap lg:flex-row gap-6 mt-4">
+    <div className="flex flex-wrap gap-6 mt-4">
       {dataVisa.map((item, index) => (
         <div
           key={index}
-          className="bg-blue-100 shadow-lg rounded-lg overflow-hidden transform  transition-transform duration-300"
+          className="w-[500px] p-6 transition-transform duration-300 transform hover:scale-105"
         >
-            <div className="bg-mainColor text-white p-4">
-            <h3 className="text-xl font-semibold">{item.visa_name}</h3>
-            
+          <div className="bg-white shadow-lg rounded-xl overflow-y-auto border border-gray-200 hover:shadow-xl h-[450px]">
+            {/* Header Section */}
+            <div className="bg-mainColor text-white p-6 rounded-t-lg flex items-center justify-between">
+              <div>
+                <h3 className="text-2xl font-semibold">{item.visa_name}</h3>
+              </div>
+            </div>
+  
+            {/* Visa Info Section */}
+            <div className="p-6 space-y-4">
+              <p><strong className="text-gray-700">Appointment Date:</strong> {item.appointment}</p>
+              <p><strong className="text-gray-700">Travel Date:</strong> {item.travel_date}</p>
+              <p><strong className="text-gray-700">Price:</strong> ${item.total_price}</p>
+              <p><strong className="text-gray-700">Country:</strong> {item.country}</p>
+              <p><strong className="text-gray-700">Country Name:</strong> {item.country_name}</p>
+              <p><strong className="text-gray-700">Adults No.:</strong> {item.no_adults}</p>
+              <p><strong className="text-gray-700">Children No.:</strong> {item.no_children}</p>
+              <p><strong className="text-gray-700">Notes:</strong> {item.notes}</p>
+            </div>
+  
+            {/* Supplier Info Section */}
+            <div className="border-t border-gray-200 p-6 space-y-4">
+              <p><strong className="text-gray-700">Supplier From:</strong> {item.supplier_from_name}</p>
+              <div className="flex items-center">
+                <FaPhoneAlt className="text-gray-700 mr-2" />
+                <p><strong className="text-gray-700">Supplier From Phone:</strong> {item.supplier_from_phone || 'N/A'}</p>
+              </div>
+              <div className="flex items-center">
+                <FaEnvelope className="text-gray-700 mr-2" />
+                <p><strong className="text-gray-700">Supplier From Email:</strong> {item.supplier_from_email || 'N/A'}</p>
+              </div>
+            </div>
+  
+            {/* To Info Section */}
+            <div className="border-t border-gray-200 p-6 space-y-4">
+              <p><strong className="text-gray-700">Supplier To:</strong> {item.to_name}</p>
+              <p><strong className="text-gray-700">Supplier To Role:</strong> {item.to_role}</p>
+              <div className="flex items-center">
+                <FaPhoneAlt className="text-gray-700 mr-2" />
+                <p><strong className="text-gray-700">Supplier To Phone:</strong> {item.to_phone || 'N/A'}</p>
+              </div>
+              <div className="flex items-center">
+                <FaEnvelope className="text-gray-700 mr-2" />
+                <p><strong className="text-gray-700">Supplier To Email:</strong> {item.to_email || 'N/A'}</p>
+              </div>
+            </div>
           </div>
-          <div className="p-4">
-            <p><strong>Appointment Date:</strong> {item.appointment}</p>
-            <p><strong>Travel Date:</strong> {item.travel_date}</p>
-            <p><strong>Price:</strong> ${item.total_price}</p>
-            <p><strong>Country:</strong> {item.country}</p>
-            <p><strong>Country Name:</strong> {item.country_name}</p>
-            <p><strong>Adults No.:</strong> {item.no_adults}</p>
-            <p><strong>Children No.:</strong> {item.no_children}</p>
-            <p><strong>Notes:</strong> {item.notes}</p>
-          </div>
-          <div className="border border-t-2 p-4">
-            <p><strong>Supplier From:</strong> {item.supplier_from_name}</p>
-            <p><strong>Supplier From Email:</strong> {item.supplier_from_email || 'N/A'}</p>
-            <p><strong>Supplier From Phone:</strong> {item.supplier_from_phone || 'N/A'}</p>
-            <p><strong>Supplier To:</strong> {item.to_name}</p>
-            <p><strong>Supplier To Email:</strong> {item.to_email || 'N/A'}</p>
-            <p><strong>Supplier To Phone:</strong> {item.to_phone || 'N/A'}</p>
-            <p><strong>Supplier To Role:</strong> {item.to_role}</p>
-          </div>
-          {/* <div className="flex justify-between items-center p-4 bg-gray-200">
-            <button onClick={() => handleUpdate(item.id)} className="text-blue-500 hover:text-blue-700">
-              <FaEdit />
-            </button>
-            <button onClick={() => handleDelete(item.id, item.supplier_from_name)} className="text-red-500 hover:text-red-700">
-              <FaTrash />
-            </button>
-          </div> */}
         </div>
       ))}
     </div>
   );
   
   const renderHotelCards = () => (
-    <div className="flex flex-col flex-wrap lg:flex-row gap-6 mt-4">
+    <div className="flex flex-wrap gap-6 mt-4">
       {dataHotel.map((item, index) => (
         <div
           key={index}
-          className="bg-blue-100 border shadow-lg rounded-lg  transform transition-transform duration-300"
+          className="w-[500px] p-6 transition-transform duration-300 transform hover:scale-105"
         >
-          <div className="bg-mainColor text-white p-4">
-            <h3 className="text-xl font-semibold">{item.hotel_name}</h3>
+          <div className="bg-white border border-gray-200 shadow-lg rounded-xl overflow-y-auto hover:shadow-xl h-[450px]">
+            {/* Header Section */}
+            <div className="bg-mainColor text-white p-6 rounded-t-lg">
+              <h3 className="text-2xl font-semibold">{item.hotel_name}</h3>
+            </div>
+  
+            {/* Hotel Info Section */}
+            <div className="p-6 space-y-4">
+              <p><strong className="text-gray-700">Check-in Date:</strong> {item.check_in}</p>
+              <p><strong className="text-gray-700">Check-out Date:</strong> {item.check_out}</p>
+              <p><strong className="text-gray-700">Price:</strong> ${item.total_price}</p>
+              <p><strong className="text-gray-700">Country:</strong> {item.country}</p>
+              <p><strong className="text-gray-700">Room Type:</strong> {item.room_type}</p>
+              <p><strong className="text-gray-700">Adults No.:</strong> {item.no_adults}</p>
+              <p><strong className="text-gray-700">Children No.:</strong> {item.no_children}</p>
+              <p><strong className="text-gray-700">Nights No.:</strong> {item.no_nights}</p>
+            </div>
+  
+            {/* Supplier Info Section */}
+            <div className="border-t border-gray-200 p-6 space-y-4">
+              <p><strong className="text-gray-700">Supplier From:</strong> {item.supplier_from_name}</p>
+              <div className="flex items-center">
+                <FaPhoneAlt className="text-gray-700 mr-2" />
+                <p><strong className="text-gray-700">Supplier From Phone:</strong> {item.supplier_from_phone || 'N/A'}</p>
+              </div>
+              <div className="flex items-center">
+                <FaEnvelope className="text-gray-700 mr-2" />
+                <p><strong className="text-gray-700">Supplier From Email:</strong> {item.supplier_from_email || 'N/A'}</p>
+              </div>
+            </div>
+  
+            {/* To Info Section */}
+            <div className="border-t border-gray-200 p-6 space-y-4">
+              <p><strong className="text-gray-700">Supplier To:</strong> {item.to_name}</p>
+              <p><strong className="text-gray-700">Supplier To Role:</strong> {item.to_role}</p>
+              <div className="flex items-center">
+                <FaPhoneAlt className="text-gray-700 mr-2" />
+                <p><strong className="text-gray-700">Supplier To Phone:</strong> {item.to_phone || 'N/A'}</p>
+              </div>
+              <div className="flex items-center">
+                <FaEnvelope className="text-gray-700 mr-2" />
+                <p><strong className="text-gray-700">Supplier To Email:</strong> {item.to_email || 'N/A'}</p>
+              </div>
+            </div>
           </div>
-          <div className="p-4">
-            
-            <p><strong>Check-in Date:</strong> {item.check_in}</p>
-            <p><strong>Check-out Date:</strong> {item.check_out}</p>
-            <p><strong>Price:</strong> ${item.total_price}</p>
-            <p><strong>Country:</strong> {item.country}</p>
-            <p><strong>Room Type:</strong> {item.room_type}</p>
-            <p><strong>Adults No.:</strong> {item.no_adults}</p>
-            <p><strong>Children No.:</strong> {item.no_children}</p>
-            <p><strong>Nights No.:</strong> {item.no_nights}</p>
-          </div>
-          <div className="border border-t-2 p-4">
-            <p><strong>Supplier From:</strong> {item.supplier_from_name}</p>
-            <p><strong>Supplier From Email:</strong> {item.supplier_from_email || 'N/A'}</p>
-            <p><strong>Supplier From Phone:</strong> {item.supplier_from_phone || 'N/A'}</p>
-            <p><strong>Supplier To:</strong> {item.to_name}</p>
-            <p><strong>Supplier To Email:</strong> {item.to_email || 'N/A'}</p>
-            <p><strong>Supplier To Phone:</strong> {item.to_phone || 'N/A'}</p>
-            <p><strong>Supplier To Role:</strong> {item.to_role}</p>
-          </div>
-          {/* <div className="flex justify-between items-center p-4 bg-gray-200">
-            <button onClick={() => handleUpdate(item.id)} className="text-blue-500 hover:text-blue-700">
-              <FaEdit />
-            </button>
-            <button onClick={() => handleDelete(item.id, item.supplier_from_name)} className="text-red-500 hover:text-red-700">
-              <FaTrash />
-            </button>
-          </div> */}
         </div>
       ))}
     </div>
   );
+  
+  
   
 
   const renderActiveTabContent = () => {

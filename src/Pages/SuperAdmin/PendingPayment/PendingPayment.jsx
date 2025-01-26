@@ -81,7 +81,7 @@ const PendingPayment = () => {
               dataPending.map((payment) => (
                 <div
                   key={payment.id}
-                  className="bg-blue-100 shadow-lg rounded-lg hover:shadow-xl transition-all duration-300 p-6 flex flex-col justify-between"
+                  className="bg-gradient-to-r border border-blue-300 shadow-lg rounded-lg hover:shadow-xl transition-all duration-300 p-6 flex flex-col justify-between"
                   style={{ minHeight: '450px', maxWidth: '100%' }}
                 >
                   <h3 className="text-xl font-semibold text-blue-800 mb-4">{payment.plan_name || "No Plan Name"}</h3>
