@@ -447,7 +447,7 @@ useEffect(() => {
     formData.append("phone_number", phoneNumber);
     formData.append("stars", rating);
 
-    // formData.append("hotel_logo", hotelLogo);
+    formData.append("hotel_logo", hotelLogo);
 
     formData.append("check_in", checkInDate);
     formData.append("check_out", checkOutDate);
@@ -487,9 +487,9 @@ console.log("Policies:", policies);
 
    // Append each image to FormData
    
-  //  images.forEach(image => {
-  //   formData.append("images[]",JSON.stringify(image)); // 'images[]' for array of images
-  // });
+   images.forEach(image => {
+    formData.append("images[]",JSON.stringify(image)); // 'images[]' for array of images
+  });
 
   try {
     // Simulate an API call
