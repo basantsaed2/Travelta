@@ -1173,7 +1173,7 @@ const ManualBooking = () => {
             </TextField>
 
             {/* Second Dropdown */}
-            {suppliers.length > 0 || customers > 0 ? (
+            {secondMenuData.length > 0 || customers > 0 ? (
               <TextField
                 select
                 fullWidth
@@ -1189,7 +1189,7 @@ const ManualBooking = () => {
                   }
                 }}
               >
-                {suppliers
+                {secondMenuData
                   .filter((supplier) => supplier.id !== selectedFromSupplier)
                   .map((supplier) => (
                     <MenuItem key={supplier.id} value={supplier.id}>
@@ -2624,9 +2624,6 @@ const ManualBooking = () => {
                             placeholder="Enter Tour Name"
                           />
                         </div>
-
-
-
 
                         <TextField
                           select

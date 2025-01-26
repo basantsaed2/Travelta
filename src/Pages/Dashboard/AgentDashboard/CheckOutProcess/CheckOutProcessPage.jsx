@@ -48,8 +48,8 @@ const CheckOutProcessPage = () => {
                 setCartDetails(cartData.data);
                 setTotalPrice(total); 
             }
-            if (paymentMehodData && paymentMehodData.payment_methods) {
-                setPaymentMethod(paymentMehodData.payment_methods);
+            if (paymentMehodData && paymentMehodData.financial_accounting) {
+                setPaymentMethod(paymentMehodData.financial_accounting);
             }
         }
     }, [cartData, paymentMehodData]);
@@ -137,7 +137,7 @@ const CheckOutProcessPage = () => {
                     <StaticLoader />
                 </div>
         ) : (
-            <div className="h-full p-6 flex flex-col gap-5">
+            <div className="h-full p-3 xl:p-6 flex flex-col gap-5">
                 {/* Step Indicator */}
                 <div className="stepper flex fixed items-center justify-between w-full relative">
                     {[1, 2, 3].map((step, index) => {
@@ -192,68 +192,129 @@ const CheckOutProcessPage = () => {
                     <div>
                         {/* Step 1: Booking Summary */}
                         {currentStep === 1 && (
-                            <div className="p-8 space-y-8">
+                            <div className="p-4 xl:p-8 space-y-8">
                                 <h2 className="text-3xl font-bold text-[#0D47A1] text-center mb-6">Booking Preview</h2>
 
                                 {/* Cart Details Section */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                {/* Appointment Information Card */}
-                                <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
-                                    <h3 className="text-2xl font-semibold text-[#0D47A1] mb-4">Appointment Information</h3>
+                                
+                                {/* Service-specific Details */}
+                                {cartDetails.from_service === "Visa" && (
+                                    <div className="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                                    <h3 className="text-2xl font-semibold text-[#0D47A1] mb-4">Visa Details</h3>
                                     <div className="space-y-3">
-                                    <div className="flex items-center">
+                                        <div className="flex items-center">
+                                        <i className="fas fa-passport text-[#0D47A1] mr-3"></i>
+                                        <p><strong>Country Visa:</strong> {cartDetails.visa.country_visa}</p>
+                                        </div>
+                                        <div className="flex items-center">
                                         <i className="fas fa-calendar-day text-[#0D47A1] mr-3"></i>
-                                        <p><strong>Appointment Date:</strong> {formatDate(cartDetails.appointment_date)}</p>
-                                    </div>
-                                    <div className="flex items-center">
+                                        <p><strong>Appointment Date:</strong> {formatDate(cartDetails.visa.appointment_date)}</p>
+                                        </div>
+                                        <div className="flex items-center">
                                         <i className="fas fa-calendar-alt text-[#0D47A1] mr-3"></i>
-                                        <p><strong>Travel Date:</strong> {formatDate(cartDetails.travel_date)}</p>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <i className="fas fa-hashtag text-[#0D47A1] mr-3"></i>
-                                        <p><strong>Number:</strong> {cartDetails.number}</p>
-                                    </div>
-                                    <div className="flex items-center">
+                                        <p><strong>Travel Date:</strong> {formatDate(cartDetails.visa.travel_date)}</p>
+                                        </div>
+                                        <div className="flex items-center">
+                                        <i className="fas fa-child text-[#0D47A1] mr-3"></i>
+                                        <p><strong>Number of Children:</strong> {cartDetails.visa.children_data.length}</p>
+                                        </div>
+                                        <div className="flex items-center">
+                                        <i className="fas fa-users text-[#0D47A1] mr-3"></i>
+                                        <p><strong>Number of Adults:</strong> {cartDetails.visa.adults_data.length}</p>
+                                        </div>
+                                        <div className="flex items-center">
                                         <i className="fas fa-sticky-note text-[#0D47A1] mr-3"></i>
-                                        <p><strong>Notes:</strong> {cartDetails.notes}</p>
+                                        <p><strong>Notes:</strong> {cartDetails.visa.notes}</p>
+                                        </div>
                                     </div>
                                     </div>
-                                </div>
+                                )}
+                                {cartDetails.from_service === "Flight" && (
+    <div className="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+        <h3 className="text-2xl font-semibold text-[#0D47A1] mb-4">Flight Details</h3>
+        <div className="space-y-3">
+            <div className="flex items-center">
+                <i className="fas fa-plane-departure text-[#0D47A1] mr-3"></i>
+                <p><strong>Airline:</strong> {cartDetails.flight.airline}</p>
+            </div>
+            <div className="flex items-center">
+                <i className="fas fa-calendar-day text-[#0D47A1] mr-3"></i>
+                <p><strong>Departure Date:</strong> {formatDate(cartDetails.flight.departure)}</p>
+            </div>
+            <div className="flex items-center">
+                <i className="fas fa-calendar-alt text-[#0D47A1] mr-3"></i>
+                <p><strong>Arrival Date:</strong> {cartDetails.flight.arrival ? formatDate(cartDetails.flight.arrival) : "TBD"}</p>
+            </div>
+            <div className="flex items-center">
+                <i className="fas fa-map-marker-alt text-[#0D47A1] mr-3"></i>
+                <p><strong>From/To:</strong> {cartDetails.flight.from_to[0].from} to {cartDetails.flight.from_to[0].to}</p>
+            </div>
+            <div className="flex items-center">
+                <i className="fas fa-users text-[#0D47A1] mr-3"></i>
+                <p><strong>Number of Adults:</strong> {cartDetails.flight.adults_data.length}</p>
+            </div>
+            <div className="flex items-center">
+                <i className="fas fa-child text-[#0D47A1] mr-3"></i>
+                <p><strong>Number of Children:</strong> {cartDetails.flight.children_data.length}</p>
+            </div>
+            <div className="flex items-center">
+                <i className="fas fa-baby text-[#0D47A1] mr-3"></i>
+                <p><strong>Number of Infants:</strong> {cartDetails.flight.infants}</p>
+            </div>
+            <div className="flex items-center">
+                <i className="fas fa-ticket-alt text-[#0D47A1] mr-3"></i>
+                <p><strong>Ticket Number:</strong> {cartDetails.flight.ticket_number}</p>
+            </div>
+            <div className="flex items-center">
+                <i className="fas fa-sticky-note text-[#0D47A1] mr-3"></i>
+                <p><strong>Notes:</strong> {cartDetails.flight.notes || "No additional notes"}</p>
+            </div>
+        </div>
+    </div>
+                                )}
 
                                 {/* Price & Costs Card */}
-                                <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                                <div className="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
                                     <h3 className="text-2xl font-semibold text-[#0D47A1] mb-4">Price & Costs</h3>
                                     <div className="space-y-3">
                                     <div className="flex items-center">
                                         <i className="fas fa-dollar-sign text-[#0D47A1] mr-3"></i>
                                         <p><strong>Cost:</strong> {formatPrice(cartDetails.cost)}</p>
                                     </div>
+
+                                    {/* Mark-Up Handling */}
+                                    <div className="flex items-center">
+                                        <i className="fas fa-percentage text-[#0D47A1] mr-3"></i>
+                                        {cartDetails.mark_up_type === "value" ? (
+                                        <p><strong>Mark Up:</strong> {formatPrice(cartDetails.mark_up)} ({cartDetails.mark_up_type})</p>
+                                        ) : (
+                                        <p><strong>Mark Up:</strong> {cartDetails.mark_up}%</p>
+                                        )}
+                                    </div>
                                     <div className="flex items-center">
                                         <i className="fas fa-tag text-[#0D47A1] mr-3"></i>
                                         <p><strong>Price:</strong> {formatPrice(cartDetails.price)}</p>
                                     </div>
-                                    <div className="flex items-center">
-                                        <i className="fas fa-credit-card text-[#0D47A1] mr-3"></i>
-                                        <p><strong>Total Price:</strong> {formatPrice(totalPrice)}</p>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <i className="fas fa-percentage text-[#0D47A1] mr-3"></i>
-                                        <p><strong>Mark Up:</strong> {cartDetails.mark_up}% ({cartDetails.mark_up_type})</p>
-                                    </div>
+
                                     <div className="flex items-center">
                                         <i className="fas fa-cogs text-[#0D47A1] mr-3"></i>
                                         <p><strong>Tax Type:</strong> {cartDetails.tax_type}</p>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <i className="fas fa-credit-card text-[#0D47A1] mr-3"></i>
+                                        <p><strong>Total Price:</strong> {formatPrice(cartDetails.total_price)}</p>
                                     </div>
                                     </div>
                                 </div>
 
                                 {/* Customer & Supplier Information Card */}
-                                <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                                <div className="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
                                     <h3 className="text-2xl font-semibold text-[#0D47A1] mb-4">Customer & Supplier Information</h3>
                                     <div className="space-y-3">
                                     <div className="flex items-center">
                                         <i className="fas fa-users text-[#0D47A1] mr-3"></i>
-                                        <p><strong>Customers:</strong> {cartDetails.customers ? JSON.parse(cartDetails.customers).join(", ") : "No customers listed"}</p>
+                                        <p><strong>Supplier:</strong> {cartDetails.from_supplier}</p>
                                     </div>
                                     <div className="flex items-center">
                                         <i className="fas fa-globe-americas text-[#0D47A1] mr-3"></i>
@@ -261,21 +322,16 @@ const CheckOutProcessPage = () => {
                                     </div>
                                     <div className="flex items-center">
                                         <i className="fas fa-map-marker-alt text-[#0D47A1] mr-3"></i>
-                                        <p><strong>City ID:</strong> {cartDetails.city_id}</p>
+                                        <p><strong>City:</strong> {cartDetails.city}</p>
                                     </div>
                                     <div className="flex items-center">
                                         <i className="fas fa-building text-[#0D47A1] mr-3"></i>
-                                        <p><strong>From Supplier ID:</strong> {cartDetails.from_supplier_id}</p>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <i className="fas fa-building text-[#0D47A1] mr-3"></i>
-                                        <p><strong>To Supplier ID:</strong> {cartDetails.to_supplier_id}</p>
+                                        <p><strong>To Client:</strong> {cartDetails.to_client}</p>
                                     </div>
                                     </div>
-                                </div>
                                 </div>
 
-                            
+                                </div>
                             </div>
                         )}
 
@@ -316,12 +372,10 @@ const CheckOutProcessPage = () => {
                                     </p>     
                                 </div>
                             )}
+                            {/* Partial Payment */}
                             {paymentType === 'Partial' && (
                                 <div className="p-6 space-y-3">
-                                    {/* Section Title */}
                                     <h2 className="text-xl md:text-2xl font-semibold text-center text-[#0D47A1]">Partial Payment</h2>
-
-                                    {/* Initial Amount Paid */}
                                     <div className="space-y-3">
                                         <label className="block text-lg font-medium text-gray-700">
                                             Enter Initial Amount Paid:
@@ -337,76 +391,66 @@ const CheckOutProcessPage = () => {
                                             className="w-full border border-[#0D47A1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0D47A1] transition duration-300"
                                         />
                                     </div>
-
-                                    {/* Remaining Balance */}
-                                    <p className="text-xl font-bold text-[#0D47A1] text-center ">
+                                    <p className="text-xl font-bold text-[#0D47A1] text-center">
                                         Remaining Balance: <span className="text-gray-800">{remainingBalance} EGP</span>
                                     </p>
+                                    <div className="flex flex-col lg:flex-row gap-5">
+                                        {remainingBalance > 0 && (
+                                            <div className="w-full md:w-1/2 bg-[#E3F2FD] p-4 rounded-lg shadow-sm space-y-3">
+                                                {/* Payment date and amount fields */}
+                                                <div className="space-y-2">
+                                                    <label className="block text-lg font-medium text-gray-700">Enter Payment Date:</label>
+                                                    <TextField
+                                                        label="Payment Date"
+                                                        variant="outlined"
+                                                        fullWidth
+                                                        required
+                                                        type="date"
+                                                        InputLabelProps={{ shrink: true }}
+                                                        value={paymentDate}
+                                                        onChange={(e) => setPaymentDate(e.target.value)}
+                                                        inputProps={{ min: currentDate }}
+                                                        className="w-full border border-[#0D47A1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0D47A1] transition duration-300"
+                                                    />
+                                                </div>
 
-                                    <div className='flex flex-col lg:flex-row gap-5'>
-                                    {/* If there is remaining balance, show payment date and amount fields */}
-                                    {remainingBalance > 0 && (
-                                        <div className="w-full md:w-1/2 bg-[#E3F2FD] p-4 rounded-lg shadow-sm space-y-3">
-                                            <div className="space-y-2">
-                                                <label className="block text-lg font-medium text-gray-700">
-                                                    Enter Payment Date:
-                                                </label>
-                                                <TextField
-                                                    label="Initial Amount"
-                                                    variant="outlined"
-                                                    fullWidth
-                                                    required
-                                                    InputLabelProps={{ shrink: true }}
-                                                    type="date"
-                                                    value={paymentDate}
-                                                    onChange={(e) => setPaymentDate(e.target.value)}
-                                                    inputProps={{ min: currentDate }}
-                                                    className="w-full border border-[#0D47A1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0D47A1] transition duration-300"
-                                                />
+                                                <div className="space-y-2">
+                                                    <label className="block text-lg font-medium text-gray-700">Enter Payment Amount:</label>
+                                                    <TextField
+                                                        label="Payment Amount"
+                                                        variant="outlined"
+                                                        fullWidth
+                                                        required
+                                                        type="number"
+                                                        value={paymentAmount}
+                                                        onChange={(e) => setPaymentAmount(Number(e.target.value) || 0)}
+                                                        className="w-full border border-[#0D47A1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0D47A1] transition duration-300"
+                                                    />
+                                                </div>
+                                                <div className="mt-6">
+                                                    <button
+                                                        onClick={handleAddPayment}
+                                                        className="w-full px-2 py-4 font-semibold bg-[#0D47A1] text-white rounded-lg hover:bg-[#1565C0] focus:outline-none focus:ring-4 focus:ring-[#0D47A1] transition duration-300"
+                                                    >
+                                                        Add Payment
+                                                    </button>
+                                                </div>
                                             </div>
-
-                                            <div className="space-y-2">
-                                                <label className="block text-lg font-medium text-gray-700">
-                                                    Enter Payment Amount:
-                                                </label>
-                                                <TextField
-                                                    label="Initial Amount"
-                                                    variant="outlined"
-                                                    fullWidth
-                                                    required
-                                                    type="number"
-                                                    value={paymentAmount}
-                                                    onChange={(e) => setPaymentAmount(Number(e.target.value) || 0)}
-                                                    className="w-full border border-[#0D47A1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0D47A1] transition duration-300"
-                                                />
+                                        )}
+                                        {/* Show added payments */}
+                                        {payments.length > 0 && (
+                                            <div className="w-full md:w-1/2  bg-[#E3F2FD] p-6 rounded-lg shadow-sm">
+                                                <h4 className="text-2xl font-semibold text-[#0D47A1] mb-4">Payments Made:</h4>
+                                                <ul className="space-y-3">
+                                                    {payments.map((payment, index) => (
+                                                        <li key={index} className="text-lg text-gray-800 flex justify-between items-center">
+                                                            <span className="font-medium">{payment.date}:</span>
+                                                            <span className="text-[#0D47A1]">{payment.amount} EGP</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
                                             </div>
-
-                                            {/* Add Payment Button */}
-                                            <div className="mt-6">
-                                                <button
-                                                    onClick={handleAddPayment}
-                                                    className="w-full px-2 py-4 font-semibold bg-[#0D47A1] text-white rounded-lg hover:bg-[#1565C0] focus:outline-none focus:ring-4 focus:ring-[#0D47A1] transition duration-300"
-                                                >
-                                                    Add Payment
-                                                </button>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {/* Show added payments dynamically */}
-                                    {payments.length > 0 && (
-                                        <div className="w-full md:w-1/2  bg-[#E3F2FD] p-6 rounded-lg shadow-sm ">
-                                            <h4 className="text-2xl font-semibold text-[#0D47A1] mb-4">Payments Made:</h4>
-                                            <ul className="space-y-3">
-                                                {payments.map((payment, index) => (
-                                                    <li key={index} className="text-lg text-gray-800 flex justify-between items-center">
-                                                        <span className="font-medium">{payment.date}:</span>
-                                                        <span className="text-[#0D47A1]">{payment.amount} EGP</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
+                                        )}
                                     </div>
                                 </div>
                             )}
@@ -496,6 +540,7 @@ const CheckOutProcessPage = () => {
                         <h2 className="text-3xl font-bold text-[#0D47A1] text-center mb-6">Select Payment Method</h2>
                         
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <h1>${totalPrice || amount}</h1>
                             {paymentMethod.map((method, index) => (
                             <div
                                 key={index}
@@ -533,10 +578,10 @@ const CheckOutProcessPage = () => {
                         <button
                             onClick={currentStep === 3 ? handleSubmit : handleNextStep} // Conditional to call submit on Step 3
                             className={`${
-                            currentStep === 3 ? 'bg-mainColor' : 'bg-mainColor'
+                            currentStep === 3 || paymentType === 'Later' ? 'bg-mainColor' : 'bg-mainColor'
                             } text-white px-8 py-2 rounded-full font-semibold ml-auto`}
                         >
-                            {currentStep === 3 ? "Apply" : "Next"} {/* Apply on Step 3, Next on other steps */}
+                            {currentStep === 3 || paymentType === 'Later' ? "Apply" : "Next"} {/* Apply on Step 3, Next on other steps */}
                         </button>
                     </div>
 

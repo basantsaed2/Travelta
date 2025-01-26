@@ -11,6 +11,9 @@ import { FaWrench } from 'react-icons/fa';
 import { FaDatabase } from 'react-icons/fa';
 import { FaBriefcase } from 'react-icons/fa';
 import { FaCog } from 'react-icons/fa';
+import { MdOutlineBedroomChild } from "react-icons/md";
+import { MdOutlineFlight } from "react-icons/md";
+
 const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
   const auth = useAuth();
   const navigate = useNavigate();
@@ -115,6 +118,43 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
   const [isActiveInventory, setIsActiveInventory] = useState(
     stateLink.isActiveInventory ?? false
   );
+              //Inventory Room
+              const [isOpenInventoryRoom, setIsOpenInventoryRoom] = useState(
+                stateLink.isOpenInventoryRoom ?? false
+              );
+              const [isActiveInventoryRoomIcon, setIsActiveInventoryRoomIcon] = useState(
+                stateLink.isActiveInventoryRoomIcon ?? false
+              );
+              const [isActiveInventoryRoom, setIsActiveInventoryRoom] = useState(
+                  stateLink.isActiveInventoryRoom ?? false
+              );
+                      //Inventory Room Setting
+                      const [isOpenInventoryRoomSetting, setIsOpenInventoryRoomSetting] = useState(
+                          stateLink.isOpenInventoryRoomSetting ?? false
+                      );
+                      const [isActiveInventoryRoomSetting, setIsActiveInventoryRoomSetting] = useState(
+                          stateLink.isActiveInventoryRoomSetting ?? false
+                      );
+
+                      //Inventory Room Preview
+                      const [isOpenInventoryRoomPreview, setIsOpenInventoryRoomPreview] = useState(
+                        stateLink.isOpenInventoryRoomPreview ?? false
+                      );
+                      const [isActiveInventoryRoomPreview, setIsActiveInventoryRoomPreview] = useState(
+                          stateLink.isActiveInventoryRoomPreview ?? false
+                      );
+
+              //Inventory Flight
+               const [isOpenInventoryFlight, setIsOpenInventoryFlight] = useState(
+                stateLink.isOpenInventoryFlight ?? false
+              );
+              const [isActiveInventoryFlightIcon, setIsActiveInventoryFlightIcon] = useState(
+                stateLink.isActiveInventoryFlightIcon ?? false
+              );
+              const [isActiveInventoryFlight, setIsActiveInventoryFlight] = useState(
+                  stateLink.isActiveInventoryFlight?? false
+              );
+
 
   // Accounting
   const [isOpenAccounting, setIsOpenAccounting] = useState(
@@ -185,10 +225,24 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
       isActiveSettingIcon,
       isOpenSetting,
       isActiveFinancialAccount,
-isActiveWallet,
+      isActiveWallet,
       isActiveAccounting,
       isActiveAccountingIcon,
       isOpenAccounting,
+
+      isOpenInventoryRoom,
+      isActiveInventoryRoom,
+      isActiveInventoryRoomIcon,
+
+      isOpenInventoryFlight,
+      isActiveInventoryFlight,
+      isActiveInventoryFlightIcon,
+
+      isOpenInventoryRoomSetting,
+      isActiveInventoryRoomSetting,
+
+      isOpenInventoryRoomPreview,
+      isActiveInventoryRoomPreview,
     };
     auth.sidebar = JSON.stringify(activeLinks);
   }, [
@@ -230,10 +284,24 @@ isActiveWallet,
     isActiveSettingIcon,
     isOpenSetting,
     isActiveFinancialAccount,
-isActiveWallet,
+    isActiveWallet,
     isActiveAccounting,
     isActiveAccountingIcon,
     isOpenAccounting,
+
+    isOpenInventoryRoom,
+    isActiveInventoryRoom,
+    isActiveInventoryRoomIcon,
+
+    isOpenInventoryFlight,
+    isActiveInventoryFlight,
+    isActiveInventoryFlightIcon,
+
+    isOpenInventoryRoomSetting,
+    isActiveInventoryRoomSetting,
+
+    isOpenInventoryRoomPreview,
+    isActiveInventoryRoomPreview,
   ]);
 
   // Save state to sidebar at auth when any link state changes
@@ -283,6 +351,20 @@ isActiveWallet,
     isActiveAccounting,
     isActiveAccountingIcon,
     isOpenAccounting,
+
+    isOpenInventoryRoom,
+    isActiveInventoryRoom,
+    isActiveInventoryRoomIcon,
+
+    isOpenInventoryFlight,
+    isActiveInventoryFlight,
+    isActiveInventoryFlightIcon,
+
+    isOpenInventoryRoomSetting,
+    isActiveInventoryRoomSetting,
+
+    isOpenInventoryRoomPreview,
+    isActiveInventoryRoomPreview,
   ]);
 
   // Handler functions to manage all state
@@ -330,6 +412,20 @@ isActiveWallet,
     setIsOpenSetting(false);
     setIsActiveFinancialAccount(false);
     
+    setIsActiveInventoryRoom(false);
+    setIsOpenInventoryRoom(false);
+    setIsActiveInventoryRoomIcon(false);
+
+    setIsActiveInventoryFlight(false);
+    setIsOpenInventoryFlight(false);
+    setIsActiveInventoryFlightIcon(false);
+
+    setIsActiveInventoryRoomSetting(false);
+    setIsOpenInventoryRoomSetting(false);
+
+    setIsActiveInventoryRoomPreview(false);
+    setIsOpenInventoryRoomPreview(false);
+
   };
 
   // Handler functions to manage navigation state
@@ -375,7 +471,7 @@ isActiveWallet,
       navigate("/dashboard_agent/users/customers");
     }
     console.log("result", result);
-  }, [pathName]);
+  }, [location]);
 
   const handleClickCustomers = useCallback(() => {
     handleStateLinks();
@@ -449,7 +545,7 @@ isActiveWallet,
       navigate("/dashboard_agent/booking/manual_booking");
     }
     console.log("result", result);
-  }, [pathName]);
+  }, [location]);
 
   /* Manual Booking */
   const handleClickManualBooking = useCallback(() => {
@@ -496,7 +592,7 @@ isActiveWallet,
       navigate("/dashboard_agent/booking_list/upcoming_booking");
     }
     console.log("result", result);
-  }, [pathName]);
+  }, [location]);
 
   /* Current Booking */
   const handleClickCurrentBooking = useCallback(() => {
@@ -596,16 +692,80 @@ isActiveWallet,
     setIsActiveInventoryIcon(true);
     setIsActiveInventory(true);
   }, []);
+
+   /* Inventory Room */
+   const handleClickInventoryRoom = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenInventory(true);
+    setIsActiveInventoryIcon(true);
+    setIsActiveInventory(true);
+
+    setIsOpenInventoryRoom(true);
+    setIsActiveInventoryRoom(true);
+    setIsActiveInventoryRoomIcon(true);
+  }, []);
+
+  const handleClickInventoryFlight = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenInventory(true);
+    setIsActiveInventoryIcon(true);
+    setIsActiveInventory(true);
+
+    setIsOpenInventoryFlight(true);
+    setIsActiveInventoryFlight(true);
+    setIsActiveInventoryFlightIcon(true);
+  }, []);
+
+  const handleClickInventoryRoomPreview = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenInventory(true);
+    setIsActiveInventoryIcon(true);
+    setIsActiveInventory(true);
+
+    setIsOpenInventoryRoom(true);
+    setIsActiveInventoryRoom(true);
+    setIsActiveInventoryRoomIcon(true);
+
+    setIsOpenInventoryRoomPreview(true);
+    setIsActiveInventoryRoomPreview(true);
+  }, []);
+
   useEffect(() => {
     const part = pathName.split("/");
-    const result = part.slice(0, 3).join("/");
-
-    // Only navigate if on `/dashboard/setting` but not already on any sub-route
-    if (result === "/dashboard_agent/IncomingPage") {
-      handleClickInventory();
-     
+    const result = part.slice(0, 5).join("/");
+    if (
+      result === "/dashboard_agent/inventory/room/list") {
+      handleClickInventoryRoomPreview();
     }
-    console.log("result", result);
+  }, [location]);
+
+
+  /* Inventory Room Setting */
+  const handleClickInventoryRoomSetting = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenInventory(true);
+    setIsActiveInventoryIcon(true);
+    setIsActiveInventory(true);
+
+    setIsOpenInventoryRoom(true);
+    setIsActiveInventoryRoom(true);
+    setIsActiveInventoryRoomIcon(true);
+
+    setIsOpenInventoryRoomSetting(true);
+    setIsActiveInventoryRoomSetting(true);
+  }, []);
+
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 5).join("/");
+    if (
+      result === "/dashboard_agent/inventory/room/setting_room") {
+        handleClickInventoryRoomSetting();
+    }
   }, [location]);
 
   // Accounting
@@ -689,7 +849,6 @@ isActiveWallet,
     }
   }, [location]);
 
-  
 
   return (
     <div className="space-y-4 w-full">
@@ -999,9 +1158,8 @@ isActiveWallet,
         </ul>
       </div>
 
-      {/* Operation */}
-       
-        <Link
+      {/* Operation */}     
+      <Link
         to="IncomingPage"
         onMouseMove={() => setIsActiveOperationIcon(true)}
         onMouseOut={() => setIsActiveOperationIcon(false)}
@@ -1039,9 +1197,8 @@ isActiveWallet,
         )}
       </Link>
 
-        {/* Requests */}
-       
-        <Link
+      {/* Requests */}    
+      <Link
         to="IncomingPage"
         onMouseMove={() => setIsActiveRequestsIcon(true)}
         onMouseOut={() => setIsActiveRequestsIcon(false)}
@@ -1079,10 +1236,8 @@ isActiveWallet,
         )}
       </Link>
 
-        {/* Inventory */}
-       
-        <Link
-        to="IncomingPage"
+      {/* Inventory */}      
+      <div
         onMouseMove={() => setIsActiveInventoryIcon(true)}
         onMouseOut={() => setIsActiveInventoryIcon(false)}
         onClick={handleClickInventory}
@@ -1117,7 +1272,181 @@ isActiveWallet,
             } text-xl transition-all duration-300 group-hover:text-mainColor`}
           />
         )}
-      </Link>
+      </div>
+
+      <div
+        className={`${
+          isOpenInventory && !isSidebarCollapsed ? "h-17" : "h-0 "
+        } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+      >
+        <ul className="list-disc w-full transition-all duration-700 flex flex-col gap-y-4">
+          <div className="flex flex-col gap-y-1"
+            // to={"inventory/room"}
+            // onClick={handleClickInventory}
+          >
+
+      <li
+        onMouseMove={() => setIsActiveInventoryRoomIcon(true)}
+        onMouseOut={() => setIsActiveInventoryRoomIcon(false)}
+        onClick={handleClickInventoryRoom}
+        className={`
+          ${isActiveInventoryRoom ? "active" : ""}
+         flex items-center 
+         ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
+        hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+      >
+        <div className="flex font-semibold text-xl items-center gap-x-2">
+          <MdOutlineBedroomChild
+            className={`${
+              isActiveInventoryRoomIcon || isActiveInventoryRoom
+                ? "text-mainColor"
+                : "text-white"
+            }`}
+          />
+          {!isSidebarCollapsed && (
+            <span
+              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
+                isActiveInventoryRoom ? "text-mainColor" : "text-white"
+              }`}
+            >
+              Room
+            </span>
+          )}
+        </div>
+        {!isSidebarCollapsed && (
+          <IoIosArrowForward
+            className={`${
+              isActiveInventoryRoom ? "text-mainColor rotate-90" : "text-white rotate-0"
+            } text-xl transition-all duration-300 group-hover:text-mainColor`}
+          />
+        )}
+      </li>
+      
+                    <div
+                      className={`${
+                        isOpenInventoryRoom && !isSidebarCollapsed ? "h-17" : "h-0 "
+                      } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+                    >
+                      <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-4">
+                        {/* <Link
+                          to={"inventory/room/setting_room"}
+                          onClick={handleClickInventoryRoomSetting}
+                        >
+                          <li
+                            className={`${
+                              isActiveInventoryRoomPreview
+                                ? "rounded-xl bg-white text-mainColor"
+                                : "text-white"
+                            }
+                                        text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+                          >
+                            Room List
+                          </li> */}
+
+                              <Link
+                                to={"inventory/room/list"}
+                                onClick={() => {
+                                    handleClickInventoryRoomPreview();
+                                    onLinkClick();
+                                  }}
+                                >
+                                  <li
+                                    className={`${
+                                      isActiveInventoryRoomPreview
+                                        ? "rounded-xl bg-white text-mainColor"
+                                        : "text-white"
+                                    }
+                                                text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+                                  >
+                                    Room List
+                                  </li>
+                              </Link>
+
+                              <Link
+                              to={"inventory/room/setting_room"}
+                              onClick={() => {
+                                handleClickInventoryRoomSetting();
+                                onLinkClick();
+                                }}
+                              >
+                                <li
+                                className={`${
+                                  isActiveInventoryRoomSetting
+                                    ? "rounded-xl bg-white text-mainColor"
+                                    : "text-white"
+                                }
+                                            text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+                              >
+                                Room Setting
+                              </li>
+                              </Link>
+                      </ul>
+                    </div>
+
+      <li
+        onMouseMove={() => setIsActiveInventoryFlightIcon(true)}
+        onMouseOut={() => setIsActiveInventoryFlightIcon(false)}
+        onClick={handleClickInventoryFlight}
+        className={`
+          ${isActiveInventoryFlight ? "active" : ""}
+         flex items-center 
+         ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
+        hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+      >
+        <div className="flex font-semibold text-xl items-center gap-x-2">
+          <MdOutlineFlight
+            className={`${
+              isActiveInventoryFlightIcon || isActiveInventoryFlight
+                ? "text-mainColor"
+                : "text-white"
+            }`}
+          />
+          {!isSidebarCollapsed && (
+            <span
+              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
+                isActiveInventoryFlight ? "text-mainColor" : "text-white"
+              }`}
+            >
+              Flight
+            </span>
+          )}
+        </div>
+        {!isSidebarCollapsed && (
+          <IoIosArrowForward
+            className={`${
+              isActiveInventoryFlight ? "text-mainColor rotate-90" : "text-white rotate-0"
+            } text-xl transition-all duration-300 group-hover:text-mainColor`}
+          />
+        )}
+      </li>
+      
+          </div>
+        </ul>
+      </div>
+
+      {/* <div
+        className={`${
+          isOpenInventoryRoom && !isSidebarCollapsed ? "h-17" : "h-0 "
+        } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+      >
+        <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
+          <Link
+            to={"inventory/room"}
+            onClick={handleClickInventoryRoomSetting}
+          >
+            <li
+              className={`${
+                isActiveInventoryRoomSetting
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Room Type
+            </li>
+          </Link>
+        </ul>
+      </div> */}
 
        {/* Accounting */}
        

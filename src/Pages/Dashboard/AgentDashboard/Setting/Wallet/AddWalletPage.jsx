@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useAuth } from '../../../../Context/Auth';
-import { usePost } from '../../../../Hooks/usePostJson';
-import { useGet } from '../../../../Hooks/useGet';
+import { useAuth } from '../../../../../Context/Auth';
+import { usePost } from '../../../../../Hooks/usePostJson';
+import { useGet } from '../../../../../Hooks/useGet';
 
 const AddWallet = () => {
   // State to hold form data

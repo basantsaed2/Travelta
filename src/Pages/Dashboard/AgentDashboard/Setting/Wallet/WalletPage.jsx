@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useGet } from '../../../../Hooks/useGet';
-import StaticLoader from '../../../../Components/StaticLoader';
-import { useDelete } from '../../../../Hooks/useDelete';
-import { useAuth } from '../../../../Context/Auth';
-import { usePost } from '../../../../Hooks/usePostJson';
+import { useGet } from '../../../../../Hooks/useGet';
+import StaticLoader from '../../../../../Components/StaticLoader';
+import { useDelete } from '../../../../../Hooks/useDelete';
+import { useAuth } from '../../../../../Context/Auth';
+import { usePost } from '../../../../../Hooks/usePostJson';
 
 const Wallet = () => {
   // State to store card data
