@@ -25,9 +25,10 @@ const ProtectedRoute = ({ allowedRoles }) => {
               if (auth.user.role === "agent") {
                      return <Navigate to={'/dashboard_agent'} />;
               }
-              // else if(auth.user.role === "user") {
-              //        return <Navigate to={'/dashboard_user'} />;
-              // }
+              else if(auth.user.role === "SuperAdmin") {
+                     return <Navigate to={'/super_admin'} />;
+              }
+              
             else {
                      console.log('5')
                      return <Navigate to={'/'} />;

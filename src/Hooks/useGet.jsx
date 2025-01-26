@@ -17,7 +17,7 @@ export const useGet = ({ url }) => {
             const response = await axios.get(url, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${auth.user?.token || ''}`,
+                    'Authorization': `Bearer ${auth.user?.token|| ''}`,
                 },
             });
             if (response.status === 200) {
