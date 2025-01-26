@@ -48,7 +48,13 @@ const AddHotels = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [features, setFeatures] = useState([]); 
   const [selectedFeatures, setSelectedFeatures] = useState([]);
+
   const [previewUrls, setPreviewUrls] = useState([]); // Stores preview URLs for display
+  
+  const handlePoliciesUpdate = (updatedPolicies) => {
+    setPolicies(updatedPolicies);
+    console.log("Policies in Parent: ", updatedPolicies);
+  };
   const togglePopup = ()=>{
     setIsOpen(!isOpen)
   }
@@ -350,6 +356,19 @@ useEffect(() => {
 //     console.error("No file selected.");
 // }
 // };}
+useEffect(() => {
+  console.log("loadingPost:", loadingPost); // Debugging
+  console.log("response:", response); // Debugging
+
+  if (!loadingPost) {
+    if (response) {
+      navigate(-1); // Navigate back only when the response is successful
+    } else {
+      console.error("Response does not indicate success:", response);
+    }
+  }
+}, [loadingPost, response, navigate]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -427,7 +446,8 @@ useEffect(() => {
     formData.append("email", email);
     formData.append("phone_number", phoneNumber);
     formData.append("stars", rating);
-    formData.append("hotel_logo", hotelLogo);
+
+    // formData.append("hotel_logo", hotelLogo);
 
     formData.append("check_in", checkInDate);
     formData.append("check_out", checkOutDate);
@@ -466,9 +486,10 @@ console.log("Policies:", policies);
 // console.log("Themes:", themesArray);
 
    // Append each image to FormData
-   images.forEach(image => {
-    formData.append("images[]",JSON.stringify(image)); // 'images[]' for array of images
-  });
+   
+  //  images.forEach(image => {
+  //   formData.append("images[]",JSON.stringify(image)); // 'images[]' for array of images
+  // });
 
   try {
     // Simulate an API call
@@ -479,9 +500,9 @@ console.log("Policies:", policies);
 
     resetForm();
 
-    // Navigate back
+    // // Navigate back
 
-    navigate(-1);
+   
   } catch (error) {
     auth.toastError("Error occurred during submission.");
   } finally {
@@ -568,10 +589,10 @@ const resetForm = () => {
         
 
     </div>
-    <form onSubmit={handleSubmit} className="w-full mx-auto rounded-lg p-6 shadow-md">
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <form onSubmit={handleSubmit} className="w-full  rounded-lg p-6 shadow-md">
+  <div className="flex flex-wrap flex-col lg:flex-row gap-6 mb-6">
     {/* Left Side */}
-    <div>
+    <div className="flex-1">
   {/* Country Dropdown */}
   <div className="mb-6">
     <TextField
@@ -779,8 +800,9 @@ const resetForm = () => {
     />
   </div>
 
-  <HotelPolicy policies={policies} setPolicies={setPolicies} />
-  
+  {/* <HotelPolicy policies={policies} setPolicies={setPolicies} /> */}
+  <HotelPolicy onPoliciesChange={handlePoliciesUpdate} />
+
 </div>
 
 
@@ -860,7 +882,7 @@ const resetForm = () => {
                     control={
                       <Checkbox
                         name={facility.id}
-                        checked={selectedFacilities.includes(Number(facility.id))}
+                        checked={selectedFacilities.includes(facility.id.toString())}
                         onChange={handleFacilityChange}
                       />
                     }

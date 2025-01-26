@@ -38,14 +38,14 @@ const Hotels = () => {
   };
 
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="w-full overflow-x-auto scrollSection">
       {loadingHotel ? (
         <div className="w-full h-56 flex justify-center items-center">
           <StaticLoader />
         </div>
       ) : (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-  <div className="overflow-x-auto">
+        <div className="p-4 lg:p-8">
+      <div className="overflow-x-auto">
     <table className="min-w-full border-collapse border border-gray-300">
       <thead>
         <tr className='bg-mainColor text-white'>
@@ -81,18 +81,25 @@ const Hotels = () => {
               </a>
             </td>
             <td className="px-4 py-2 border border-gray-300">
-              <button
+            <div className="flex flex-wrap gap-2"> 
+                 <button
                 onClick={() => handleUpdate(hotel.id)}
-                className="px-2 py-1  rounded bg-green-500 text-white"
+               
+                   
+                className="bg-mainColor text-white px-3 py-1 rounded-lg hover:bg-blue-600 text-sm md:text-base w-full md:w-auto"
               >
-                Edit
+                Update
               </button>
               <button
                 onClick={() => handleDelete(hotel.id, hotel.hotel_name)}
-                className="px-2 py-1  rounded ml-2 bg-red-600 text-white"
-              >
-                Delete
+               
+                   
+                    className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 text-sm md:text-base w-full md:w-auto"
+                  >
+                    Delete
               </button>
+              </div>
+            
             </td>
           </tr>
         ))}

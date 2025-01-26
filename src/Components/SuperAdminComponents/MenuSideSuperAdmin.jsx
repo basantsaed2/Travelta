@@ -744,13 +744,13 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                     </span>
                   )}
                 </div>
-                {!isSidebarCollapsed && (
+                {/* {!isSidebarCollapsed && (
                   <IoIosArrowForward
                     className={`${
                       isActiveClient ? "text-mainColor rotate-90" : "text-white rotate-0"
                     } text-xl transition-all duration-300 group-hover:text-mainColor`}
                   />
-                )}
+                )} */}
               </Link>
             
         
@@ -830,7 +830,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                     </span>
                   )}
                 </div>
-                {!isSidebarCollapsed && (
+                {/* {!isSidebarCollapsed && (
                   <IoIosArrowForward
                     className={`${
                       isActiveHotels
@@ -838,7 +838,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                         : "text-white rotate-0"
                     } text-xl transition-all duration-300 group-hover:text-mainColor`}
                   />
-                )}
+                )} */}
               </Link>
        {/* Admin*/}
        <Link
@@ -873,7 +873,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                     </span>
                   )}
                 </div>
-                {!isSidebarCollapsed && (
+                {/* {!isSidebarCollapsed && (
                   <IoIosArrowForward
                     className={`${
                       isActiveAdmin
@@ -881,7 +881,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                         : "text-white rotate-0"
                     } text-xl transition-all duration-300 group-hover:text-mainColor`}
                   />
-                )}
+                )} */}
               </Link>       
 
             {/* AgentProfile*/}
@@ -917,7 +917,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                     </span>
                   )}
                 </div>
-                {!isSidebarCollapsed && (
+                {/* {!isSidebarCollapsed && (
                   <IoIosArrowForward
                     className={`${
                       isActiveAgentProfile
@@ -925,7 +925,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                         : "text-white rotate-0"
                     } text-xl transition-all duration-300 group-hover:text-mainColor`}
                   />
-                )}
+                )} */}
               </Link>        
 
                    {/* Booking*/}
@@ -961,7 +961,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                     </span>
                   )}
                 </div>
-                {!isSidebarCollapsed && (
+                {/* {!isSidebarCollapsed && (
                   <IoIosArrowForward
                     className={`${
                       isActiveBooking
@@ -969,7 +969,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                         : "text-white rotate-0"
                     } text-xl transition-all duration-300 group-hover:text-mainColor`}
                   />
-                )}
+                )} */}
               </Link>            
         
                           {/* PendingPayment*/}
@@ -1005,7 +1005,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                     </span>
                   )}
                 </div>
-                {!isSidebarCollapsed && (
+                {/* {!isSidebarCollapsed && (
                   <IoIosArrowForward
                     className={`${
                       isActivePendingPayment
@@ -1013,7 +1013,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                         : "text-white rotate-0"
                     } text-xl transition-all duration-300 group-hover:text-mainColor`}
                   />
-                )}
+                )} */}
               </Link>   
 
                                {/* Plans*/}
@@ -1049,7 +1049,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                     </span>
                   )}
                 </div>
-                {!isSidebarCollapsed && (
+                {/* {!isSidebarCollapsed && (
                   <IoIosArrowForward
                     className={`${
                       isActivePlans
@@ -1057,7 +1057,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                         : "text-white rotate-0"
                     } text-xl transition-all duration-300 group-hover:text-mainColor`}
                   />
-                )}
+                )} */}
               </Link>      
 
                                      {/* Ticketing*/}
@@ -1093,7 +1093,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                     </span>
                   )}
                 </div>
-                {!isSidebarCollapsed && (
+                {/* {!isSidebarCollapsed && (
                   <IoIosArrowForward
                     className={`${
                       isActiveTicket
@@ -1101,7 +1101,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                         : "text-white rotate-0"
                     } text-xl transition-all duration-300 group-hover:text-mainColor`}
                   />
-                )}
+                )} */}
               </Link>         
          
                                         {/* Subscription*/}
@@ -1137,7 +1137,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                     </span>
                   )}
                 </div>
-                {!isSidebarCollapsed && (
+                {/* {!isSidebarCollapsed && (
                   <IoIosArrowForward
                     className={`${
                       isActiveSubscription
@@ -1145,7 +1145,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                         : "text-white rotate-0"
                     } text-xl transition-all duration-300 group-hover:text-mainColor`}
                   />
-                )}
+                )} */}
               </Link>   
 
                                                {/* Settings*/}
@@ -1181,7 +1181,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                     </span>
                   )}
                 </div>
-                {!isSidebarCollapsed && (
+                {/* {!isSidebarCollapsed && (
                   <IoIosArrowForward
                     className={`${
                       isActiveSettings
@@ -1189,7 +1189,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                         : "text-white rotate-0"
                     } text-xl transition-all duration-300 group-hover:text-mainColor`}
                   />
-                )}
+                )} */}
               </Link>       
 {/* SignUp */}
 
@@ -1225,7 +1225,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                     </span>
                   )}
                 </div>
-                {!isSidebarCollapsed && (
+                {/* {!isSidebarCollapsed && (
                   <IoIosArrowForward
                     className={`${
                       isActiveSignUp
@@ -1233,7 +1233,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                         : "text-white rotate-0"
                     } text-xl transition-all duration-300 group-hover:text-mainColor`}
                   />
-                )}
+                )} */}
               </Link>       
 
          

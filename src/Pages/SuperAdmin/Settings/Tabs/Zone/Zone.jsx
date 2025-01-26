@@ -125,131 +125,122 @@ const handleUpdateSubmit = async () => {
   const getCityName = (id) => dataCity.find((c) => c.id === id)?.name || "Unknown City";
 
   return (
-    <div className="w-full overflow-x-scroll scrollSection">
-    {loadingCountry || loadingCity ?  (
-        <div className="w-full h-56 flex justify-center items-center">
-            <StaticLoader />
-        </div>
-) :
-( 
-<div className="mx-auto p-8 min-h-screen">
-<div className="flex flex-col flex-wrap lg:flex-row gap-6">
-    {dataZone.map((zone) => (
-      <div
-        key={zone.id}
-         className="relative bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105"
-      >
- 
-           {/* Country Header */}
-           <div className="h-32 bg-gradient-to-r from-mainColor to-gray-600 flex items-center justify-center">
-          <h3 className="text-2xl font-bold text-white uppercase tracking-wider">
-            {zone.name}
-          </h3>
-        </div>
-        <div className="p-6">
-          <p>
-            <strong>Created At:</strong> {zone.created_at || "Not Available"}
-          </p>
-          <p>
-            <strong>Updated At:</strong> {zone.updated_at || "Not Available"}
-          </p>
-          <p>
-            <strong>Country:</strong> {getCountryName(zone.country_id)}
-          </p>
-          <p>
-            <strong>City:</strong> {getCityName(zone.city_id)}
-          </p>
-        </div>
-        <div className="flex justify-between px-6 py-4 bg-gray-50">
-        <button
-            onClick={() => handleUpdate(zone)}
-            className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200"
-          >
-            Update
-          </button>
-          <button
-            onClick={() => handleDelete(zone.id, zone.name)}
-            className="flex-1 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-200 ml-4"
-          >
-            Delete
-          </button>
-        </div>
+<div className="w-full overflow-x-auto scrollSection">
+  {loadingCountry || loadingCity ? (
+    <div className="w-full h-56 flex justify-center items-center">
+      <StaticLoader />
+    </div>
+  ) : (
+    <div className="p-4 lg:p-8">
+      <div className="overflow-x-auto">
+        <table className="table-auto border-collapse border border-gray-200 min-w-full text-left">
+        <thead className='bg-mainColor text-white'>
+            <tr className="">
+              <th className="border border-gray-200 px-4 py-2 text-sm md:text-base">Zone Name</th>
+              <th className="border border-gray-200 px-4 py-2 text-sm md:text-base">Country Name</th>
+              <th className="border border-gray-200 px-4 py-2 text-sm md:text-base">City Name</th>
+              <th className="border border-gray-200 px-4 py-2 text-sm md:text-base">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {dataZone.map((zone) => (
+              <tr key={zone.id} className="hover:bg-gray-50">
+                <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{zone.name}</td>
+                <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">
+                  {getCountryName(zone.country_id)}
+                </td>
+                <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">
+                  {getCityName(zone.city_id)}
+                </td>
+                <td className="border border-gray-200 px-4 py-2">
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => handleUpdate(zone)}
+                      className="bg-mainColor text-white px-3 py-1 rounded-lg hover:bg-blue-600 text-sm md:text-base w-full md:w-auto"
+                    >
+                      Update
+                    </button>
+                    <button
+                      onClick={() => handleDelete(zone.id, zone.name)}
+                      className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 text-sm md:text-base w-full md:w-auto"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-    ))}
-  </div>
 
-  {showPopup && (
-    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h3 className="text-xl font-semibold mb-6 text-gray-800">Update Zone</h3>
-        <div className="mb-4">
-          <TextField
-            fullWidth
-            variant="outlined"
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            label="Zone Name"
-          />
+      {showPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-4 rounded-lg shadow-xl w-full max-w-xs sm:max-w-md">
+            <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-4 text-center">Update Zone</h3>
+            <input
+              type="text"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              className="w-full p-2 md:p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 mb-4 text-sm md:text-base"
+              placeholder="Enter new zone name"
+            />
+            <TextField
+              select
+              fullWidth
+              variant="outlined"
+              value={countryId}
+              onChange={(e) => setCountryId(e.target.value)}
+              label="Select Country"
+              size="small"
+            >
+              {dataCountry.map((country) => (
+                <MenuItem key={country.id} value={country.id}>
+                  {country.name}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              select
+              fullWidth
+              variant="outlined"
+              value={cityId}
+              onChange={(e) => setCityId(e.target.value)}
+              label="Select City"
+              size="small"
+            >
+              {dataCity.map((city) => (
+                <MenuItem key={city.id} value={city.id}>
+                  {city.name}
+                </MenuItem>
+              ))}
+            </TextField>
+            <div className="flex flex-wrap justify-end gap-2 mt-4">
+              <button
+                onClick={handlePopupClose}
+                className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg text-sm md:text-base w-full sm:w-auto"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUpdateSubmit}
+                disabled={loadingUpdate}
+                className={`px-4 py-2 rounded-lg font-bold text-sm md:text-base w-full sm:w-auto ${
+                  loadingUpdate
+                    ? "bg-gray-300 text-gray-500"
+                    : "bg-blue-500 text-white hover:bg-blue-600"
+                }`}
+              >
+                {loadingUpdate ? "Updating..." : "Update"}
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="mb-4">
-          <TextField
-            select
-            fullWidth
-            variant="outlined"
-            value={countryId}
-            onChange={(e) => setCountryId(e.target.value)}
-            label="Select Country"
-          >
-            {dataCountry.map((country) => (
-              <MenuItem key={country.id} value={country.id}>
-                {country.name}
-              </MenuItem>
-            ))}
-          </TextField>
-        </div>
-        <div className="mb-4">
-          <TextField
-            select
-            fullWidth
-            variant="outlined"
-            value={cityId}
-            onChange={(e) => setCityId(e.target.value)}
-            label="Select City"
-          >
-            {dataCity.map((city) => (
-              <MenuItem key={city.id} value={city.id}>
-                {city.name}
-              </MenuItem>
-            ))}
-          </TextField>
-        </div>
-        <div className="flex justify-end gap-4">
-          <button
-            onClick={handlePopupClose}
-            className="px-4 py-2 bg-gray-500 text-white rounded-lg"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleUpdateSubmit}
-            disabled={loadingUpdate}
-            className={`px-4 py-2 text-white rounded-lg ${
-              loadingUpdate ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
-            }`}
-          >
-            {loadingUpdate ? "Updating..." : "Update"}
-          </button>
-        </div>
-      </div>
+      )}
     </div>
   )}
 </div>
 
-
-    
-  )
-     } 
-    </div>
   );
 };
 

@@ -47,11 +47,11 @@ const Freelancer = () => {
   return (
     <div className="w-full overflow-x-scroll">
       {data && data.length > 0 ? (
-        <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+        <div className="max-w-6xl mx-auto p-6 ">
           
           {/* Loop through each freelancer and display their details */}
           {data.map((freelancer, index) => (
-            <div key={index} className="bg-gray-50 p-6 rounded-lg shadow-md mb-6 hover:shadow-xl transition duration-300 ease-in-out">
+            <div key={index} className="bg-gray-50 bg-gradient-to-r from-indigo-50 p-6 rounded-lg shadow-md mb-6 hover:shadow-xl transition duration-300 ease-in-out">
               {/* Freelancer Info */}
               <div className="flex justify-between items-center mb-4">
                 <div className="text-start">

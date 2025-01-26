@@ -103,7 +103,7 @@ useEffect(() => {
             <th className="px-4 py-3 border-b">Action</th>
           </tr>
         </thead>
-        <tbody className="text-gray-600">
+        <tbody>
           {dataCline?.map((row, index) => (
             <tr
               key={index}
@@ -128,8 +128,9 @@ useEffect(() => {
           
                 <button 
                 onClick={() => handleDelete(row.id,row.name)}
-                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs">
-                  <FaTrash />
+                className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 text-sm md:text-base w-full md:w-auto"
+              >
+                Delete
                 </button>
               </td>
             </tr>

@@ -90,61 +90,57 @@ const Currency = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className="w-full overflow-x-auto scrollSection">
       {loadingCurrency ? (
         <div className="text-center">
           <StaticLoader />
         </div>
       ) : (
-        <div className="overflow-x-auto">     <table className="w-full min-w-[1200px] border border-gray-200 text-left text-sm">
+        <div className="p-4 lg:p-8">
+      <div className="overflow-x-auto">
+      <table className="table-auto border-collapse border border-gray-200 min-w-full text-left">
           <thead className="bg-mainColor text-white">
             <tr>
-              <th className="px-4 py-3 border-b">#</th>
-              <th className="px-4 py-3 border-b">Currency Code</th>
-              <th className="px-4 py-3 border-b">Currency Name</th>
-              <th className="px-4 py-3 border-b">Symbol</th>
-              <th className="px-4 py-3 border-b">Created At</th>
-              <th className="px-4 py-3 border-b">Updated At</th>
+              <th className="border border-gray-200 px-4 py-2 text-sm md:text-base">#</th>
+              <th className="border border-gray-200 px-4 py-2 text-sm md:text-base">Currency Code</th>
+              <th className="border border-gray-200 px-4 py-2 text-sm md:text-base">Currency Name</th>
+              <th className="border border-gray-200 px-4 py-2 text-sm md:text-base">Symbol</th>
               <th className="px-4 py-3 border-b">Actions</th>
             </tr>
           </thead>
           <tbody>
             {dataCurrency.map((currency, index) => (
-              <tr key={currency.id} className="text-center hover:bg-gray-100">
-                <td className="px-4 py-2 border">{index + 1}</td>
-                <td className="px-4 py-2 border">{currency.currancy_code}</td>
-                <td className="px-4 py-2 border">{currency.currancy_name}</td>
-                <td className="px-4 py-2 border">{currency.currancy_symbol}</td>
-                <td className="px-4 py-2 border">
-                  {currency.created_at ? new Date(currency.created_at).toLocaleString() : 'N/A'}
-                </td>
-                <td className="px-4 py-3 border-b">
-                  {currency.updated_at ? new Date(currency.updated_at).toLocaleString() : 'N/A'}
-                </td>
-                <td className="px-4 py-3 border-b gap-3">
-                  <button
+              <tr key={currency.id} >
+                <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{index + 1}</td>
+                <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{currency.currancy_code}</td>
+                <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{currency.currancy_name}</td>
+                <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{currency.currancy_symbol}</td>
+               
+                <td className="border border-gray-200 px-4 py-2">
+               
+                <div className="flex flex-wrap gap-2">    <button
                     onClick={() => handleUpdate(currency.id)}
-                    aria-label={`Update ${currency.currancy_name}`}
-                    className="text-blue-500 hover:text-blue-600 mr-3 transition-all duration-300"
-                  >
-                    <FaEdit size={18} />
+                   
+                      className="bg-mainColor text-white px-3 py-1 rounded-lg hover:bg-blue-600 text-sm md:text-base w-full md:w-auto"
+                    >
+                      Update
                   </button>
 
                   <button
                     onClick={() => handleDelete(currency.id, currency.currancy_name)}
-                    disabled={loadingDelete}
-                    aria-label={`Delete ${currency.currancy_name}`}
-                    className={`text-red-500 hover:text-red-600 transition-all duration-300 ${
-                      loadingDelete && "cursor-not-allowed"
-                    }`}
+                   
+                    className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 text-sm md:text-base w-full md:w-auto"
                   >
-                    <FaTrash size={18} />
-                  </button>
+                    Delete
+                  </button></div>
+            
                 </td>
+                
               </tr>
             ))}
           </tbody>
         </table></div>
+        </div>
      
       )}
 
