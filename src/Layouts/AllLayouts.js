@@ -44,7 +44,15 @@ export { default as EditRoomAmenityLayout } from "./AgentLayouts/Inventory/Rooms
 //Room Review
 export { default as RoomLayout } from "./AgentLayouts/Inventory/Rooms/RoomReview/RoomLayout";
 export { default as AddRoomLayout } from "./AgentLayouts/Inventory/Rooms/RoomReview/AddRoomLayout";   
-export { default as EditRoomLayout } from "./AgentLayouts/Inventory/Rooms/RoomReview/EditRoomLayout"; 
+export { default as EditRoomLayout } from "./AgentLayouts/Inventory/Rooms/RoomReview/EditRoomLayout";
+//Room Pricing
+export { default as RoomPricingLayout } from "./AgentLayouts/Inventory/Rooms/RoomPricing/RoomPricingLayout";
+export { default as AddRoomPricingLayout } from "./AgentLayouts/Inventory/Rooms/RoomPricing/AddRoomPricingLayout";
+export { default as EditRoomPricingLayout } from "./AgentLayouts/Inventory/Rooms/RoomPricing/EditRoomPricingLayout";
+//Room Gallery
+export { default as RoomGalleryLayout } from "./AgentLayouts/Inventory/Rooms/RoomGallery/RoomGalleryLayout";
+export { default as AddRoomGalleryLayout } from "./AgentLayouts/Inventory/Rooms/RoomGallery/AddRoomGalleryLayout";
+export { default as EditRoomGalleryLayout } from "./AgentLayouts/Inventory/Rooms/RoomGallery/EditRoomGalleryLayout";
 //CheckOutProcess
 export { default as CheckOutProcessPage } from "./AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 //FinancialAccount
