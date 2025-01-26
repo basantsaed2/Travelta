@@ -360,31 +360,6 @@ const AddRoomPage = ({ update, setUpdate }) => {
           <div className="p-4">
 
       {/* Image Upload Section */}
-      {/* <div className="mb-4">
-        <Button variant="contained" component="label">
-          Upload Image
-          <input
-            type="file"
-            hidden
-            accept="image/*"
-            onChange={handleImageUpload}
-            ref={fileInputRef} // Reference to the input field
-          />
-        </Button>
-        {roomDetails.image && (
-          <div className="flex flex-col gap-5 items-center mt-4">
-            <img src={roomDetails.thumbnail} alt="Room Preview" className="w-full h-64 object-contain" />
-             <button
-                type="button"
-                onClick={handleRemoveImage}
-                className="remove-supplement-btn bg-red-500 text-white px-4 py-2 rounded-md mt-4"
-            >
-                Remove
-            </button>
-          </div>
-        )}
-      </div> */}
-
             <div className="mb-4">
               <Button variant="contained" component="label">
                 Upload Image
@@ -618,6 +593,7 @@ const AddRoomPage = ({ update, setUpdate }) => {
                             label="Supplement Price"
                             name="supplementPrice"
                             type="number"
+                            required
                             value={supplement.supplementPrice}
                             onChange={(e) => handleSupplementChange(e, index)}
                             fullWidth
@@ -626,6 +602,7 @@ const AddRoomPage = ({ update, setUpdate }) => {
                             select
                             label="Select Currency"
                             name="selectedCurrency"
+                            required
                             value={supplement.selectedCurrency}
                             onChange={(e) => handleSupplementChange(e, index)}
                             fullWidth

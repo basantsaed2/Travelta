@@ -82,6 +82,46 @@
   border-radius: 10px;
 }
 
+.room-container {
+  height: 600px; /* Adjust based on your preference */
+}
+
+/* Custom scrollbar styles */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #0D47A1; /* Custom thumb color */
+  border-radius: 50%;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: #f1f1f1; /* Light track color */
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #0D47A1 #f1f1f1; /* For Firefox */
+}
+
+/* Smooth scrolling */
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  opacity: 0; /* Hide scrollbar by default */
+  transition: opacity 0.3s ease;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar,
+.custom-scrollbar:focus::-webkit-scrollbar {
+  opacity: 1; /* Show scrollbar on hover or focus */
+}
+
+
+
 
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

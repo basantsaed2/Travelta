@@ -2,17 +2,34 @@ import React, { useEffect, useState } from "react";
 import StaticLoader from "../../../../../../Components/StaticLoader";
 import { useGet  } from "../../../../../../Hooks/useGet";
 import { usePost } from "../../../../../../Hooks/usePostJson";
+import { useDelete } from "../../../../../../Hooks/useDelete";
 import { FaBed, FaDollarSign, FaEdit,FaCopy ,FaTrash} from "react-icons/fa";
 import { FaCalendarAlt, FaCalendarCheck, FaUsers, FaUserFriends, FaClock } from 'react-icons/fa';
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { Switch } from "@headlessui/react";
+import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
+import { PiWarningCircle } from "react-icons/pi";
+import { Link } from 'react-router-dom';
+import {useChangeState} from '../../../../../../Hooks/useChangeState';
+import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
+import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+
 const RoomPage = ({ refetch, setUpdate }) => {
-    const { postData:postHotelId, loadingPost:loadingHotelId , response:responseHotelId} = usePost({url:`https://travelta.online/agent/room/hotel_lists`});
-    const { postData, loadingPost, response } = usePost({url: "https://travelta.online/agent/room/add",});
-    const { refetch: refetchRoom, loading: loadingRoom, data: dataRoom } = useGet({
-        url: "https://travelta.online/agent/room/room_list",
-    });
-    const [rooms, setRooms] = useState([]);
+
+  const { deleteData, loadingDelete, responseDelete } = useDelete();
+  const [openDelete, setOpenDelete] = useState(null);
+  const { changeState, loadingChange, responseChange } = useChangeState();
+
+  const { postData:postHotelId, loadingPost:loadingHotelId , response:responseHotelId} = usePost({url:`https://travelta.online/agent/room/hotel_lists`});
+
+  // const { postData:postCopy, loadingPost:loadCopy, response:resopnseCopy } = usePost({url: `https://travelta.online/agent/room/duplicate_room/${}`,});
+  const { changeState:postDuplicate, loadingChange:loadDuplicate, responseChange:resopnseDuplicate } = useChangeState();
+
+  const { refetch: refetchRoom, loading: loadingRoom, data: dataRoom } = useGet({
+      url: "https://travelta.online/agent/room/room_list",
+  });
+  const [rooms, setRooms] = useState([]);
+  const [isCopied, setIsCopied] = useState(false); // State to show feedback (optional)
 
   useEffect(() => {
     refetchRoom();
@@ -29,12 +46,6 @@ const RoomPage = ({ refetch, setUpdate }) => {
   const [isFreeCancellationOpen, setIsFreeCancellationOpen ] = useState(false);
 
   const [status, setStatus] = useState(false); // For managing the switch status
-
-  const handleCopy = () => {
-    // Logic to copy content to clipboard
-    navigator.clipboard.writeText("Content to copy");
-    alert("Copied to clipboard!");
-  };
 
 
   const [expandedIndex, setExpandedIndex] = useState(0);
@@ -94,9 +105,77 @@ const handleToggleDescription = (roomIndex) => {
     return text.length > limit ? text.substring(0, limit) + '...' : text;
   };
 
+
+   // Change coupon status 
+  const handleChangeStaus = async (id, name, status) => {
+    const response = await changeState(
+            ` https://travelta.online/agent/room/status/${id}`,
+            `${name} Changed Status.`,
+            { status } // Pass status as an object if changeState expects an object
+    );
+    if (response) {
+      // Update categories only if changeState succeeded
+      setRooms((prevRoomType) =>
+          prevRoomType.map((room) =>
+              room.id === id ? { ...room, status: status } : room
+          )
+      );
+    }
+  };
+  const handleChangeAcceptedStatus = async (id, name, accepted) => {
+    const response = await changeState(
+            ` https://travelta.online/agent/room/accepted/${id}`,
+            `${name} Changed Accepted.`,
+            { accepted } // Pass status as an object if changeState expects an object
+    );
+    if (response) {
+      setRooms((prevRoomType) =>
+          prevRoomType.map((room) =>
+              room.id === id ? { ...room, accepted: accepted } : room
+          )
+      );
+    }
+  };
+  const handleCopy = async (id, name) => {
+      const response = await postDuplicate(
+        ` https://travelta.online/agent/room/duplicate_room/${id}`,
+        `${name} Copied to clipboard!`,
+        { status } // Pass status as an object if changeState expects an object
+        );
+        if (response) {
+          refetchRoom();
+        }
+  };
+
+  useEffect(() => {
+          if (!loadDuplicate) {
+                  setUpdate(!refetch)  
+              }
+      }, [resopnseDuplicate])
+
+  const handleOpenDelete = (item) => {
+    setOpenDelete(item);
+  };
+  const handleCloseDelete = () => {
+    setOpenDelete(null);
+  };
+
+  // Delete Customer
+  const handleDelete = async (id, name) => {
+    const success = await deleteData(`https://travelta.online/agent/room/delete/${id}`, `${name} Deleted Success.`);
+
+    if (success) {
+      setRooms(
+        rooms.filter((room) =>
+          room.id !== id
+        )
+      );
+    }
+  };
+
   return (
-    <div className="p-6">
-      <div className="w-full pb-28">
+    <div className="p-4">
+      <div className="w-full pb-10">
         {loadingRoom ? (
           <div className="w-full h-56 flex justify-center items-center">
             <StaticLoader />
@@ -106,7 +185,7 @@ const handleToggleDescription = (roomIndex) => {
         {rooms.map((room, roomIndex) => (
             <div
             key={room.id}
-            className="bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+            className="bg-white room-container custom-scrollbar overflow-y-auto rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
           >
             <div className="relative">
             <img
@@ -129,7 +208,8 @@ const handleToggleDescription = (roomIndex) => {
             <div className="p-4 flex items-center space-x-4 border-b border-gray-200">
               <FaBed className="text-blue-600 text-2xl" />
               <div>
-                <h2 className="text-2xl font-semibold text-gray-800">Room #{room.id}</h2>
+                {/* <h2 className="text-2xl font-semibold text-gray-800">Room #{room.id}</h2> */}
+                <h2 className="text-2xl font-semibold text-gray-800">{room.room_type?.name || 'Room'}</h2>
                 <p className="text-sm text-gray-500">{room.hotel?.hotel_name || 'Hotel N/A'} Hotel</p>
                 <p className="text-sm text-gray-500">{room.hotel_meal?.meal_name || 'Meal Plan: N/A'}</p>
               </div>
@@ -154,7 +234,7 @@ const handleToggleDescription = (roomIndex) => {
               </div>
       
               {/* Tab Content */}
-              <div className="p-4">
+              <div className="p-2">
                 {/* General Info */}
                 { activeTabs[room.id] === 0 && (
                     <div className="space-y-4">
@@ -484,61 +564,124 @@ const handleToggleDescription = (roomIndex) => {
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-4 border-t border-gray-200">
+            <div className="flex justify-between items-center gap-3 p-2 border-t border-gray-200">
+              <div className="flex items-center gap-2">
                 Status: 
                     <Switch
-                    checked={status}
-                    onChange={setStatus}
-                    className={`${
-                        status ? "bg-green-500" : "bg-gray-300"
-                    } relative inline-flex h-7 w-14 items-center rounded-full transition-colors`}
-                    >
-                    <span
+                        checked={room.status === 1}  // This will evaluate to true or false
+                        onChange={() => {
+                            handleChangeStaus(room.id, room.room_type?.name, room.status === 1 ? 0 : 1);
+                        }}
                         className={`${
-                        status ? "translate-x-7" : "translate-x-1"
-                        } inline-block h-5 w-5 transform rounded-full bg-white shadow transition`}
-                    />
-                    </Switch>
-                    <span
-                    className={`text-sm font-medium ${
-                        status ? "text-green-600" : "text-gray-500"
-                    }`}
+                            room.status === 1 ? "bg-green-500" : "bg-gray-300"
+                        } relative inline-flex h-7 w-14 items-center rounded-full transition-colors`}
                     >
-                    {status ? "Active" : "Inactive"}
-                    </span>
+                        <span
+                            className={`${
+                                room.status === 1 ? "translate-x-7" : "translate-x-1"
+                            } inline-block h-5 w-5 transform rounded-full bg-white shadow transition`}
+                        />
+                    </Switch>
+              </div>
+              <div className="flex items-center gap-2 p-1">
+              {/* Accepted:  */}
+                <div
+                  className={`${
+                      room.accepted === 1 ? "bg-green-500 text-white" : "bg-red-500 text-white"
+                  } cursor-pointer p-2 rounded-full flex items-center gap-2`}
+                  onClick={() => {
+                      handleChangeAcceptedStatus(room.id,room.room_type?.name,room.accepted === 1 ? 0 : 1);
+                  }}
+                >
+                  {room.accepted === 1 ? (
+                      <>
+                          <FaCheckCircle size={20} />
+                          Available
+                      </>
+                  ) : (
+                      <>
+                          <FaTimesCircle size={20} />
+                          Not Available
+                      </>
+                  )}
                 </div>
+              </div>
+              </div>
       
             {/* Edit Button */}
-            <div className="p-4 border-t border-gray-300 flex items-center justify-between bg-gray-50">
+            <div className="p-4 border-t border-gray-300 flex items-center justify-center bg-gray-50">
 
                 {/* Buttons Section */}
                 <div className="flex items-center gap-3">
                     {/* Copy Button */}
-                    <button
-                    className="flex items-center gap-2 bg-gray-600 text-white py-2 px-4 rounded-lg shadow hover:bg-gray-700 transition"
-                    onClick={handleCopy}
-                    >
-                    <FaCopy />
-                    <span className="text-sm">Copy Room</span>
-                    </button>
-
+                      <button
+                          className="flex items-center gap-2 bg-gray-600 text-white py-2 px-4 rounded-lg shadow hover:bg-gray-700 transition"
+                          // onClick={handleCopy}
+                          onClick={() => {
+                            handleCopy(room.id, room.room_type?.name);
+                        }}
+                      >
+                          <FaCopy />
+                          <span className="text-sm">{isCopied ? 'Copied!' : 'Copy'}</span>
+                      </button>
                     {/* Edit Button */}
-                    <button
+                    <Link
+                    to={`edit/${room.id}`}
                     className="flex items-center gap-2 bg-blue-600 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-700 transition"
                     >
                     <FaEdit />
                     <span className="text-sm">Edit</span>
-                    </button>
+                    </Link>
+                    {/* <Link to={`edit/${supplier.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link> */}
 
                     <button
                         className="flex items-center gap-2 bg-red-600 text-white py-2 px-4 rounded-lg shadow hover:bg-red-700 transition"
-                        // onClick={handleDelete}
+                        onClick={() => handleOpenDelete(room.id)}
                         >
                         <FaTrash />
                         <span className="text-sm">Delete</span>
-                        </button>
+                    </button>
+                    {openDelete === room.id && (
+                      <Dialog
+                        open={true}
+                        onClose={handleCloseDelete}
+                        className="relative z-10"
+                      >
+                        <DialogBackdrop className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+                          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                            <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                              <div className="flex  flex-col items-center justify-center bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                <PiWarningCircle color='#0D47A1'
+                                size="60"
+                                />
+                                <div className="flex items-center">
+                                  <div className="mt-2 text-center">
+                                    You will delete room {room?.room_type?.name || "-"}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                <button className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto" onClick={() => handleDelete(room.id, room?.room_type?.name)}>
+                                  Delete
+                                </button>
+
+                                <button
+                                  type="button"
+                                  data-autofocus
+                                  onClick={handleCloseDelete}
+                                  className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-6 py-3 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:mt-0 sm:w-auto"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            </DialogPanel>
+                          </div>
+                        </div>
+                      </Dialog>
+                    )}
                 </div>
-                </div>
+            </div>
 
           </div>
         ))}
