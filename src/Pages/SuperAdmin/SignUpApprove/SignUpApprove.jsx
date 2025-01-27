@@ -35,15 +35,24 @@ const SignUpApprove = () => {
   }, [DataSignUp]);
 
  
-
   const handleApprove = async (id, role) => {
-    const apiUrl = `https://www.travelta.online/api/super/${role}/approve/${id}`;
-    const postData = { id, role }; // Data to be sent
+    let apiUrl;
+  
+    // Determine the correct API endpoint based on the role
+    if (role === "freelancer" || role === "affiliate") {
+      apiUrl = `https://www.travelta.online/api/super/affiliate/approve/${id}`;
+    } else if (role === "agent" || role === "supplier") {
+      apiUrl = `https://www.travelta.online/api/super/agent/approve/${id}`;
+    } else {
+      console.error("Invalid role for approval:", role);
+      auth.toastError("Invalid role for approval.");
+      return; // Exit the function if the role is invalid
+    }
   
     console.log(`Approving user with ID: ${id} and Role: ${role}`); // Debugging log
   
     try {
-      const response = await axios.put(apiUrl, postData, {
+      const response = await axios.put(apiUrl, { id, role }, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${auth.user?.token || ''}`,
@@ -57,6 +66,9 @@ const SignUpApprove = () => {
             user.id === id ? { ...user, status: "Approved" } : user
           )
         );
+  
+        refetchSignUp();
+  
         auth.toastSuccess("User approved successfully!");
       } else {
         throw new Error("Unexpected response status: " + response.status);
@@ -69,13 +81,23 @@ const SignUpApprove = () => {
   
   
   const handleReject = async (id, role) => {
-    const apiUrl = `https://www.travelta.online/api/super/${role}/reject/${id}`;
-    const postData = { id, role }; // Data to be sent
+    let apiUrl;
+  
+    // Determine the correct API endpoint based on the role
+    if (role === "freelancer" || role === "affiliate") {
+      apiUrl = `https://www.travelta.online/api/super/affiliate/reject/${id}`;
+    } else if (role === "agent" || role === "supplier") {
+      apiUrl = `https://www.travelta.online/api/super/agent/reject/${id}`;
+    } else {
+      console.error("Invalid role for rejection:", role);
+      auth.toastError("Invalid role for rejection.");
+      return; // Exit the function if the role is invalid
+    }
   
     console.log(`Rejecting user with ID: ${id} and Role: ${role}`); // Debugging log
   
     try {
-      const response = await axios.put(apiUrl, postData, {
+      const response = await axios.put(apiUrl, { id, role }, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${auth.user?.token || ''}`,
@@ -83,7 +105,7 @@ const SignUpApprove = () => {
       });
   
       if (response.status === 200) {
-        // Update the user list after a successful request
+        // Remove the user from the state after a successful rejection
         setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
         auth.toastSuccess("User rejected successfully!");
       } else {
@@ -91,11 +113,11 @@ const SignUpApprove = () => {
         throw new Error(`Unexpected response status: ${response.status}`);
       }
     } catch (error) {
-      // Log and display the error
       console.error("Error rejecting user:", error);
       auth.toastError("Failed to reject user. Please try again.");
     }
   };
+  
   
   
 
@@ -150,7 +172,7 @@ const SignUpApprove = () => {
                         loadingUsers[item.id] ? "opacity-50 cursor-not-allowed" : ""
                       }`}
                       onClick={() => handleApprove(  item.id,
-                        item.role === "agent" || item.role === "supplier" ? "agent" : "affiliate")}
+                        (item.role === "agent" || item.role === "supplier") ? "agent" : "affiliate")}
                       disabled={loadingUsers[item.id]}
                     >
                       <FaCheckCircle />
@@ -159,7 +181,7 @@ const SignUpApprove = () => {
                       className={`text-red-500 hover:text-red-700 ${
                         loadingUsers[item.id] ? "opacity-50 cursor-not-allowed" : ""
                       }`}
-                      onClick={() => handleReject(item.id, item.role=="agent" || item.role=="supplier" ? "agent" :"affiliate")}
+                      onClick={() => handleReject(item.id, (item.role==="agent"|| item.role==="supplier") ? "agent" :"affiliate")}
                       disabled={loadingUsers[item.id]}
                     >
                       <FaTrash />

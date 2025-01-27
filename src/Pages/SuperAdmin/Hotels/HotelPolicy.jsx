@@ -30,7 +30,7 @@ const HotelPolicy = ({ onPoliciesChange }) => {
   };
 
   return (
-    <div className="p-6 bg-white mt-6 rounded-lg shadow-lg max-w-4xl mx-auto">
+    <div className="p-6 bg-white mt-6 rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Hotel Policy</h2>
 
       <div className="flex justify-between items-center mb-6">
