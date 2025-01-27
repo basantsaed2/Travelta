@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 import {useChangeState} from '../../../../../../Hooks/useChangeState';
 import { MdPriceChange } from "react-icons/md";
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
-
+import { FaCamera } from "react-icons/fa";
 const RoomPage = ({ refetch, setUpdate }) => {
 
   const { deleteData, loadingDelete, responseDelete } = useDelete();
@@ -214,7 +214,16 @@ const handleToggleDescription = (roomIndex) => {
                 <p className="text-sm text-gray-500">{room.hotel_meal?.meal_name || 'Meal Plan: N/A'}</p>
               </div>
             </div>
-
+            <div className="flex justify-between items-center bg-white py-2 px-3 rounded-lg shadow-md">
+                    <span className="text-lg font-semibold text-gray-700">Room Gallary:</span>
+                      <Link
+                        to={`gallery/${room.id}`}
+                        className="flex items-center gap-3 bg-blue-500 text-white py-2 px-5 rounded-xl shadow-md hover:bg-blue-600 transition-all duration-300 ease-in-out"
+                      >
+                        <FaCamera className="text-lg" />
+                        <span className="text-base font-medium">Gallery</span>
+                      </Link>
+                    </div>
             {/* Tabs */}
             <div className="border-t border-gray-200">
               <div className="mt-5 flex gap-2 justify-center p-1">
