@@ -156,7 +156,7 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6 bg-gradient-to-t from-indigo-100 to-blue-50">
+    <div className="p-6 bg-gradient-to-t bg-white shadow-md rounded-lg">
     {loadingFeature ? (
       <div className="flex justify-center items-center h-64">
         <StaticLoader />

@@ -17,7 +17,7 @@ const AddPlan = () => {
   const [discountValue, setDiscountValue] = useState('');
   const [adminCost, setAdminCost] = useState('');
   const [branchCost, setBranchCost] = useState('');
-  const [type, setType] = useState('affiliate');  // Dropdown for type
+  const [type, setType] = useState('');  // Dropdown for type
   const auth = useAuth()
   const { postData, loadingPost, response } = usePost({ url: `https://www.travelta.online/api/super/plan/add` });
   const navigate = useNavigate()
@@ -104,7 +104,7 @@ const AddPlan = () => {
     setDiscountValue('');
     setAdminCost('');
     setBranchCost('');
-    setType('affiliate'); // Reset to default
+    setType(''); // Reset to default
 
     // Optionally, send the formData to the backend via postData function
     postData(formData,"Plan added successful");
@@ -234,7 +234,7 @@ const AddPlan = () => {
           </TextField>
 
           <TextField
-            label="Type"
+            label="select type"
             select
             value={type}
             onChange={(e) => setType(e.target.value)}

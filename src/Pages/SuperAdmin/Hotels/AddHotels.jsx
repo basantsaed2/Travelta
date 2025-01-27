@@ -508,9 +508,6 @@ console.log("Policies:", policies);
   } finally {
     setIsSubmitting(false); // Stop loading state
   }
-
-
-
   };
 
   const handleAddFacility=(e)=>{
@@ -589,12 +586,90 @@ const resetForm = () => {
         
 
     </div>
-    <form onSubmit={handleSubmit} className="w-full  rounded-lg p-6 shadow-md">
-  <div className="flex flex-wrap flex-col lg:flex-row gap-6 mb-6">
+  <form onSubmit={handleSubmit} className="w-full rounded-lg p-6 shadow-md">
+  <div className="flex flex-wrap grid grid-cols-1  gap-6 mb-6">
     {/* Left Side */}
-    <div className="flex-1">
-  {/* Country Dropdown */}
+    <div className="flex-1 min-w-[300px]">
+
+
+    <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-2">
+  {/* Hotel Name */}
   <div className="mb-6">
+  <TextField
+    fullWidth
+    variant="outlined"
+    value={hotelName}
+    onChange={(e) => setHotelName(e.target.value)}
+    label="Hotel Name"
+    placeholder="Enter hotel name"
+    required
+    className="shadow-sm"
+    InputLabelProps={{
+      className: "text-gray-700 font-semibold",
+    }}
+  />
+</div>
+
+  {/* Email */}
+  <div className="mb-6">
+  <TextField
+    fullWidth
+    variant="outlined"
+    value={email}
+    onChange={(e) => setEmail(e.target.value)}
+    label="Hotel Email"
+    placeholder="Enter hotel name"
+    required
+    className="shadow-sm"
+    InputLabelProps={{
+      className: "text-gray-700 font-semibold",
+    }}
+  />
+</div>
+
+  {/* Phone Number */}
+  <div className="mb-6">
+  <TextField
+    fullWidth
+    variant="outlined"
+    value={phoneNumber}
+    onChange={(e) => setPhoneNumber(e.target.value)}
+    label="Hotel Number"
+    placeholder="Enter hotel number"
+    required
+    className="shadow-sm"
+    InputLabelProps={{
+      className: "text-gray-700 font-semibold",
+    }}
+  />
+</div>
+
+      </div>
+
+
+
+
+     {/* Hotel Logo */}
+     <div className="mb-6">
+        <label className="block text-gray-700 font-semibold mb-2">Hotel Logo</label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageLogoChange}
+          className="w-full px-4 py-3 border bg-transparent border-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        />
+        {hotelLogo && (
+          <div className="mt-4">
+            <img src={hotelLogo} alt="Hotel Logo Preview" className="w-full h-32 object-cover rounded" />
+          </div>
+        )}
+      </div>
+
+
+      <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-2"> 
+    {/* Country Dropdown */}
+    <div className="mb-6">
     <TextField
       select
       fullWidth
@@ -649,82 +724,14 @@ const resetForm = () => {
       ))}
     </TextField>
   </div>
-
-     {/* Hotel Logo */}
-     <div className="mb-6">
-        <label className="block text-gray-700 font-semibold mb-2">Hotel Logo</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageLogoChange}
-          className="w-full px-4 py-3 border bg-transparent border-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
-        {hotelLogo && (
-          <div className="mt-4">
-            <img src={hotelLogo} alt="Hotel Logo Preview" className="w-full h-32 object-cover rounded" />
-          </div>
-        )}
-      </div>
-
-  {/* Hotel Name */}
-  <div className="mb-6">
-    <label className="block text-gray-700 font-semibold mb-2">Hotel Name</label>
-    <input
-      type="text"
-      value={hotelName}
-      onChange={(e) => setHotelName(e.target.value)}
-      className="w-full px-4 py-3 border bg-transparent border-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      placeholder="Enter hotel name"
-      required
-    />
   </div>
 
-  {/* Email */}
-  <div className="mb-6">
-    <label className="block text-gray-700 font-semibold mb-2">Email</label>
-    <input
-      type="email"
-      value={email}
-      onChange={(e) => setEmail(e.target.value)}
-      className="w-full px-4 py-3 border bg-transparent border-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      placeholder="Enter email"
-      required
-    />
-  </div>
 
-  {/* Phone Number */}
-  <div className="mb-6">
-    <label className="block text-gray-700 font-semibold mb-2">Phone Number</label>
-    <input
-      type="tel"
-      value={phoneNumber}
-      onChange={(e) => setPhoneNumber(e.target.value)}
-      className="w-full px-4 py-3 border bg-transparent border-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      placeholder="Enter phone number"
-      required
-    />
-  </div>
 
-  {/* Rating */}
-  <div className="mb-6">
-    <label className="block text-gray-700 font-semibold mb-2">Rating</label>
-    <input
-      type="number"
-      value={rating}
-      onChange={(e) => setRating(e.target.value)}
-      className="w-full px-4 py-3 border bg-transparent border-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      placeholder="Enter rating"
-      required
-      min="0"
-      max="5"
-      step="0.1"
-    />
-  </div>
 
 {/* Image Upload Section */}
 <div className="mb-6">
-  <label htmlFor="images" className="block text-gray-700 font-semibold mb-2">Upload Images</label>
+  <label htmlFor="images" className="block text-gray-700 font-semibold mb-2">Upload Images Hotel</label>
   <div className="space-y-4">
     {Array.from({ length: inputCount }).map((_, index) => (
       <div key={index} className="mt-3">
@@ -740,12 +747,36 @@ const resetForm = () => {
   <button
     type="button"
     onClick={addImageInput}
-    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200"
+    className="mt-4 px-4 py-2 bg-mainColor text-white rounded-lg hover:bg-blue-600 transition duration-200"
   >
     Add Another Image
   </button>
 </div>
 
+  {/* Rating */}
+  <div className="mb-6">
+  <TextField
+    fullWidth
+    variant="outlined"
+    value={rating}
+    onChange={(e) => setRating(e.target.value)}
+    label="Rating"
+    placeholder="Enter rating"
+    required
+    type="number"
+    inputProps={{
+      min: 0,
+      max: 5,
+      step: 0.1,
+    }}
+    className="shadow-sm"
+    InputLabelProps={{
+      className: "text-gray-700 font-semibold",
+    }}
+  />
+</div>
+
+<div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
   {/* Check-In */}
   <div className="mb-6">
     <label className="block text-gray-700 font-semibold mb-2">Check-In</label>
@@ -774,41 +805,57 @@ const resetForm = () => {
     />
   </div>
 
+
+  
+  </div>
+
+  <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-3">
   {/* Hotel Video */}
   <div className="mb-6">
-    <label className="block text-gray-700 font-semibold mb-2">Hotel Video</label>
-    <input
-      type="text"
-      value={video}
-      onChange={(e) => setVideo(e.target.value)}
-      className="w-full px-4 py-3 border bg-transparent border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      placeholder="Enter video URL"
-      required
-    />
-  </div>
+  <TextField
+    fullWidth
+    variant="outlined"
+    value={video}
+    onChange={(e) => setVideo(e.target.value)}
+    label="Hotel Video Link"
+    placeholder="Enter hotel video link"
+    required
+    className="shadow-sm"
+    InputLabelProps={{
+      className: "text-gray-700 font-semibold",
+    }}
+  />
+</div>
 
   {/* Hotel Website */}
   <div className="mb-6">
-    <label className="block text-gray-700 font-semibold mb-2">Hotel Website</label>
-    <input
-      type="text"
-      value={webSite}
-      onChange={(e) => setWebSite(e.target.value)}
-      className="w-full px-4 py-3 border bg-transparent border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      placeholder="Enter website URL"
-      required
-    />
-  </div>
+  <TextField
+    fullWidth
+    variant="outlined"
+    value={webSite}
+    onChange={(e) => setWebSite(e.target.value)}
+    label="Hotel Website Link"
+    placeholder="Enter hotel website link"
+    required
+    className="shadow-sm"
+    InputLabelProps={{
+      className: "text-gray-700 font-semibold",
+    }}
+  />
+</div>
+
+</div>
+
 
   {/* <HotelPolicy policies={policies} setPolicies={setPolicies} /> */}
-  <HotelPolicy onPoliciesChange={handlePoliciesUpdate} />
+
 
 </div>
 
 
     {/* Right Side */}
-    <div>
-      {/* Hotel Facilities */}
+    <div className="flex-1 "> 
+      <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-3">{/* Hotel Facilities */}
       {isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white rounded-lg p-6 w-80 relative">
@@ -1188,49 +1235,19 @@ const resetForm = () => {
   <Button className="mt-4" onClick={togglePopupCard}>+ New Hotel Accepted Cards</Button>
   
 </div>
+</div>
+ 
 
 
 {/* Hotel Theme */}
-
+<div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-3">
+  <HotelPolicy onPoliciesChange={handlePoliciesUpdate} />
 <Feature selectedFeatures={selectedFeatures} setSelectedFeatures={setSelectedFeatures}/>
+</div>
+
 
       {/* Feature Image */}
-      <div className="p-6 max-w-lg mx-auto font-sans">
-      <h3 className="text-xl font-semibold mb-4 text-gray-800">Upload Features as Images</h3>
-      <label
-        htmlFor="file-upload"
-        className="block w-fit cursor-pointer px-4 py-2 bg-blue-500 text-white font-medium rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
-      >
-        Select Images
-      </label>
-      <input
-        id="file-upload"
-        type="file"
-        accept="image/*"
-        multiple
-        className="hidden"
-        onChange={handleImageFeatureChange}
-      />
 
-      {/* Preview Section */}
-      <div className="mt-4 grid grid-cols-3 gap-4">
-        {previewUrls.map((url, index) => (
-          <div key={index} className="relative group">
-            <img
-              src={url}
-              alt={`Preview ${index}`}
-              className="w-full h-24 object-cover rounded-md border border-gray-300"
-            />
-            <button
-              onClick={() => removeImage(index + 1)} // Remove by index
-              className="absolute top-0 right-0 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-lg transform translate-x-1/2 -translate-y-1/2 group-hover:opacity-100 opacity-0 transition duration-300"
-            >
-              ×
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
 
     {/* <Feature selectedFeatures={selectedFeatures} setSelectedFeatures={setSelectedFeatures}/> */}
     </div>
