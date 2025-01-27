@@ -504,7 +504,7 @@ export const router = createBrowserRouter([
                             ]
                           },
                           {
-                            path:"gallery",
+                            path:"gallery/:galleryId",
                             element:<RoomGalleryLayout/>,
                           },
                     ]

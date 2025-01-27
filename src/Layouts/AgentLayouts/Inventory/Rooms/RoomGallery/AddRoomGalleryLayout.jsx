@@ -9,9 +9,7 @@ const AddRoomGalleryLayout = () => {
         <>
         <div className='flex justify-between items-center'>
         <TitlePage text={'Room Gallery'} />
-            <Link to='add'>
-            <AddButton />
-            </Link>
+          
         </div>
         <AddRoomGalleryPage update={update} setUpdate={setUpdate}/>
         </>
