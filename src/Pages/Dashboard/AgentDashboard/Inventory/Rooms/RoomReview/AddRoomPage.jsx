@@ -1,5 +1,5 @@
 import React, { useState ,useEffect ,useRef} from 'react';
-import { TextField, MenuItem, Checkbox, InputAdornment ,Switch, Button,FormControlLabel,RadioGroup,Radio  } from "@mui/material";
+import { TextField, MenuItem, Checkbox, InputAdornment,ListItemText,Switch, Button,FormControlLabel,RadioGroup,Radio  } from "@mui/material";
 import { useGet } from '../../../../../../Hooks/useGet';
 import { usePost } from '../../../../../../Hooks/usePostJson';
 import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
@@ -812,12 +812,20 @@ const AddRoomPage = ({ update, setUpdate }) => {
                             renderValue: (selected) => selected.map((id) => taxes.find((tax) => tax.id === id).name).join(', ')  // Display selected tax names
                         }}
                         >
-                        {taxes.map((tax) => (
+                        {taxes.length > 0 ? (
+                          taxes.map((tax) => (
                             <MenuItem key={tax.id} value={tax.id}>
-                            {tax.name}
+                            <Checkbox checked={selectedTax.includes(tax.id)} />{" "}
+                            <ListItemText primary={tax.name} />{" "}
+                            {/* {tax.name} */}
                             </MenuItem>
-                        ))}
+                             ))) : (
+                              <MenuItem value="" disabled>
+                                  No Taxes available
+                              </MenuItem>              
+                              )}
                     </TextField> 
+
                     <TextField
                         select
                         fullWidth
@@ -841,12 +849,27 @@ const AddRoomPage = ({ update, setUpdate }) => {
                             onChange={(e) => setSelectedExceptTaxe(e.target.value)} // Update the selected service                }
                             label="Select Excepted Tax"
                             className="mb-6"
+                            SelectProps={{
+                              multiple: true,  // Enable multi-select
+                              renderValue: (selected) => selected.map((id) => taxes.find((tax) => tax.id === id).name).join(', ')  // Display selected tax names
+                          }}
                             >
-                            {taxes.map((tax) => (
+                            {/* {taxes.map((tax) => (
                                 <MenuItem key={tax.id} value={tax.id}>
                                 {tax.name}
                                 </MenuItem>
-                            ))}
+                            ))} */}
+                            {taxes.length > 0 ? (
+                              taxes.map((tax) => (
+                                <MenuItem key={tax.id} value={tax.id}>
+                                <Checkbox checked={selectedExceptTax.includes(tax.id)} />{" "}
+                                <ListItemText primary={tax.name} />{" "}
+                                </MenuItem>
+                                ))) : (
+                                  <MenuItem value="" disabled>
+                                      No Taxes available
+                                  </MenuItem>              
+                            )}
                         </TextField>
                     )
                     }

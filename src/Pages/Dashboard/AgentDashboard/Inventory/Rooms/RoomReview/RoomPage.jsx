@@ -11,7 +11,7 @@ import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
 import { PiWarningCircle } from "react-icons/pi";
 import { Link } from 'react-router-dom';
 import {useChangeState} from '../../../../../../Hooks/useChangeState';
-import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
+import { MdPriceChange } from "react-icons/md";
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 
 const RoomPage = ({ refetch, setUpdate }) => {
@@ -321,22 +321,27 @@ const handleToggleDescription = (roomIndex) => {
                         </div>
                 </div>
                 )}
-
+                {/* Pricing Info */}
                 { activeTabs[room.id] === 1 && (
                 <div className="flex flex-col gap-3">
                     {/* Price Section */}
-                    <div className="bg-white p-4 rounded-lg shadow-md">
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center bg-white p-4 rounded-lg shadow-md">
                         <span className="text-lg font-semibold text-gray-700">Price:</span>
                         <div className="flex items-center space-x-2">
                         <FaDollarSign className="text-green-500" />
                         <span className="text-xl font-bold text-gray-900">{room.price}</span>
                         </div>
                     </div>
-                    {/* <div className="flex justify-between mb-4">
-                        <span className="text-sm text-gray-500">Price Type:</span>
-                        <span className="text-sm text-gray-600">{room.price_type || 'N/A'}</span>
-                    </div> */}
+
+                    <div className="flex justify-between items-center bg-white py-2 px-3 rounded-lg shadow-md">
+                    <span className="text-lg font-semibold text-gray-700">Room Pricing:</span>
+                      <Link
+                        to={`pricing/${room.id}`}
+                        className="flex items-center gap-3 bg-blue-500 text-white py-2 px-5 rounded-xl shadow-md hover:bg-blue-600 transition-all duration-300 ease-in-out"
+                      >
+                        <MdPriceChange className="text-lg" />
+                        <span className="text-base font-medium">Pricing</span>
+                      </Link>
                     </div>
 
                     {/* Markup for B2B, B2C, B2E */}
@@ -483,7 +488,6 @@ const handleToggleDescription = (roomIndex) => {
                     )}
                 </div>
                 )}
-
                 {/* Policies */}
                 { activeTabs[room.id] === 2 && (
                     <div>
@@ -532,7 +536,6 @@ const handleToggleDescription = (roomIndex) => {
                         )}
                     </div>
                 )}
-
                 {/* Supplements */}
                 { activeTabs[room.id] === 3 && (
                   <div>

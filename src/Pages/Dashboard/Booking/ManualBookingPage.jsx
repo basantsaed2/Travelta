@@ -800,7 +800,7 @@ const ManualBooking = () => {
       formData.append("travel_date", visaTravelDate);
       formData.append("appointment_date", visaAppointmentDate);
       formData.append("number", visaNumber);
-      formData.append("customers", JSON.stringify(visaCustomers)); // Serialize array to JSON
+      // formData.append("customers", JSON.stringify(visaCustomers)); // Serialize array to JSON
       formData.append("notes", visaNotes);
       formData.append('childreen', visaChildrenNumber);
       formData.append('adults', visaAdultsNumber);
