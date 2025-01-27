@@ -111,7 +111,7 @@ const handleToggleDescription = (roomIndex) => {
     const response = await changeState(
             ` https://travelta.online/agent/room/status/${id}`,
             `${name} Changed Status.`,
-            { status } // Pass status as an object if changeState expects an object
+            // { status } // Pass status as an object if changeState expects an object
     );
     if (response) {
       // Update categories only if changeState succeeded
