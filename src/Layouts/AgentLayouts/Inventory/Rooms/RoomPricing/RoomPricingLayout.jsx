@@ -11,7 +11,7 @@ const RoomPricingLayout = () => {
         <TitlePage text={'Room Pricing'} />
         <AddRoomPricingPage update={update} setUpdate={setUpdate}/>
         <TitleSection text={'Pricing Table'} />
-        <RoomPricingPage refetch={update} />
+        <RoomPricingPage refetch={update} setUpdate={setUpdate}/>
         </>
     );
     }

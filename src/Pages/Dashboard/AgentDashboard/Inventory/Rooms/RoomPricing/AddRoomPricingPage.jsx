@@ -72,14 +72,25 @@ const AddRoomPricingPage =({ update, setUpdate })=>{
         formData.append('price', price);
         formData.append('currency_id', selectedCurrency);
         formData.append('pricing_data_id', selectedPricingData);
-        // Append selected groups
-        selectedGroup.forEach((id) => {
-            formData.append('groups_id[]', id);
-        });    
-        // Append selected nationalities
-        selectedNationality.forEach((id) => {
-            formData.append('nationality_id[]', id);
-        });
+        
+        if(nationalityType === 'nationality&group'){
+            selectedGroup.forEach((id) => {
+                formData.append('groups_id[]', id);
+            });    
+            selectedNationality.forEach((id) => {
+                formData.append('nationality_id[]', id);
+            });
+        }
+        else if(nationalityType === 'nationality'){
+            selectedGroup.forEach((id) => {
+                formData.append('groups_id[]', id);
+            });  
+        }
+        else if (nationalityType === 'group'){
+            selectedGroup.forEach((id) => {
+                formData.append('groups_id[]', id);
+            }); 
+        }
         postData(formData, 'Pricing Room Added Success');
     };
 

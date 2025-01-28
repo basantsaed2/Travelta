@@ -7,12 +7,7 @@ const EditRoomPricingLayout = () => {
     const [update, setUpdate] = useState(false)
     return (
         <>
-        <div className='flex justify-between items-center'>
-        <TitlePage text={'Room Pricing'} />
-            <Link to='add'>
-            <AddButton />
-            </Link>
-        </div>
+        <TitlePage text={'Edit Room Pricing'} />
         <EditRoomPricingPage update={update} setUpdate={setUpdate}/>
         </>
     );

@@ -62,96 +62,6 @@ const RoomPricingPage = ({ refetch}) => {
 
 
   return (
-    // <div className="w-full pb-28 flex flex-wrap gap-6 justify-start items-start">
-    //   {loadingPricing ? (
-    //     <div className="w-full h-56 flex justify-center items-center">
-    //       <StaticLoader />
-    //     </div>
-    //   ) : (
-    //     pricingRooms.length === 0 ? (
-    //       <div className="w-full text-center text-xl text-mainColor font-TextFontMedium">
-    //         Not find Rooms Pricing
-    //       </div>
-    //     ) : (
-    //       pricingRooms.map((room, index) => (
-    //         <div
-    //           key={index}
-    //           className="min-w-[320px] max-w-sm p-6 border border-gray-200 rounded-2xl shadow-lg flex flex-col gap-6 bg-white transition-transform transform hover:scale-105"
-    //         >
-    //           <div className="flex items-center gap-3">
-    //             <FaBed className="text-mainColor text-xl" />
-    //             <h3 className="text-lg font-bold text-mainColor">
-    //               {room?.name || "Room"} (#{index + 1})
-    //             </h3>
-    //           </div>
-    //           <div className="flex flex-col gap-3">
-    //             <div className="flex items-center gap-2 text-gray-700">
-    //               <FaDollarSign className="text-green-600" />
-    //               <p className="text-sm">
-    //                 <strong>Price:</strong> {room?.price || 0} {room?.currency?.name || "_"}
-    //               </p>
-    //             </div>
-    //             <div className="flex items-center gap-2 text-gray-700">
-    //               <FaCalendarAlt className="text-blue-600" />
-    //               <p className="text-sm">
-    //                 <strong>From:</strong> {room?.from || "_"} <strong>To:</strong> {room?.to || "_"}
-    //               </p>
-    //             </div>
-    //             <div className="flex items-center gap-2 text-gray-700">
-    //               <FaUser className="text-yellow-600" />
-    //               <p className="text-sm">
-    //                 <strong>Adults:</strong> {room?.pricing_data?.adults || "_"} | <strong>Children:</strong> {room?.pricing_data?.children || "_"}
-    //               </p>
-    //             </div>
-    //             <div className="flex items-center gap-2 text-gray-700">
-    //               <FaUtensils className="text-purple-600" />
-    //               <p className="text-sm">
-    //                 <strong>Meal Plan:</strong> {room?.pricing_data?.meal_plan || "_"}
-    //               </p>
-    //             </div>
-    //             <div className="flex items-center gap-2 text-gray-700">
-    //               <FaDoorOpen className="text-red-500" />
-    //               <p className="text-sm">
-    //                 <strong>Room Type:</strong> {room?.pricing_data?.room_type || "Not specified"}
-    //               </p>
-    //             </div>
-    //           </div>
-    
-    //           {/* Nationalities Section */}
-    //           <div className="flex flex-col gap-2 text-gray-700">
-    //             <div className="flex items-center gap-2">
-    //               <FaFlag className="text-red-600" />
-    //               <p className="text-sm font-semibold">Nationalities:</p>
-    //             </div>
-    //             <ul className="list-disc ml-8 text-sm">
-    //               {room?.nationality?.length > 0
-    //                 ? room.nationality.map((n, i) => (
-    //                     <li key={i} className="text-gray-600">{n.name}</li>
-    //                   ))
-    //                 : <li className="text-gray-400">No nationalities listed</li>}
-    //             </ul>
-    //           </div>
-    
-    //           {/* Groups Section */}
-    //           <div className="flex flex-col gap-2 text-gray-700">
-    //             <div className="flex items-center gap-2">
-    //               <FaUsers className="text-indigo-600" />
-    //               <p className="text-sm font-semibold">Groups:</p>
-    //             </div>
-    //             <ul className="list-disc ml-8 text-sm">
-    //               {room?.groups?.length > 0
-    //                 ? room.groups.map((g, i) => (
-    //                     <li key={i} className="text-gray-600">{g.name}</li>
-    //                   ))
-    //                 : <li className="text-gray-400">No groups listed</li>}
-    //             </ul>
-    //           </div>
-    //         </div>
-    //       ))
-    //     )
-    //   )}
-    // </div>
-
       <div className="w-full p-4 flex flex-wrap gap-6 justify-start items-start">
         {loadingPricing ? (
           <div className="w-full h-56 flex justify-center items-center">
@@ -270,13 +180,13 @@ const RoomPricingPage = ({ refetch}) => {
                     <FaCopy />
                     <span className="text-sm font-medium">{isCopied ? 'Copied!' : 'Copy'}</span>
                 </button>
-                <button
+                <Link
                     className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors"
-                    onClick={() => handleEdit(room)}
+                    to={`edit/${room.id}`}
                 >
                     <FaEdit />
                     <span className="text-sm font-medium">Edit</span>
-                </button>
+                </Link>
                 <button
                     className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors"
                     onClick={() => handleOpenDelete(room.id)}
