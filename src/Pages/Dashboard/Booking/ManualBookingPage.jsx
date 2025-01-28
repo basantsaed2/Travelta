@@ -1174,7 +1174,8 @@ const ManualBooking = () => {
 
             {/* Second Dropdown */}
             {secondMenuData.length > 0 || customers > 0 ? (
-              <TextField
+              <>
+                <TextField
                 select
                 fullWidth
                 variant="outlined"
@@ -1197,6 +1198,42 @@ const ManualBooking = () => {
                     </MenuItem>
                   ))}
               </TextField>
+              <Button
+    type="button"
+    variant="contained"
+    color="primary"
+    onClick={() => setShowPopup(true)}
+    size="small"
+    style={{
+      padding: "15px 2px",
+      fontSize: "0.75rem",
+      width: "20%",
+    }}
+  >
+    Add Supplier
+  </Button>
+
+  {showPopup && (
+  <div className="fixed z-50 inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+    <div className="bg-white p-2 rounded-lg shadow-lg max-w-xl">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">Add Supplier</h2>
+        <Button
+          onClick={() => setShowPopup(false)}
+          className="text-red-500"
+        >
+          Close
+        </Button>
+      </div>
+
+      <AddSupplierPage update={update} setUpdate={setUpdate}  />
+    </div>
+  </div>
+)}
+</>
+
+
+            
             ) : (
               <>
                 <TextField
@@ -1208,25 +1245,25 @@ const ManualBooking = () => {
                   disabled
                   className="mb-6 w-[60%]"
                 />
-                {category === "B2B" && (
-                  <Button
-                    type="button"
-                    variant="contained"
-                    color="primary"
-                    onClick={() => setShowPopup(true)}
-                    size="small"
-                    style={{
-                      padding: "15px 2px",
-                      fontSize: "0.75rem",
-                      width: "20%",
-                    }}
-                  >
-                    Add Supplier
-                  </Button>
-                )}
+
+<Button
+    type="button"
+    variant="contained"
+    color="primary"
+    onClick={() => setShowPopup(true)}
+    size="small"
+    style={{
+      padding: "15px 2px",
+      fontSize: "0.75rem",
+      width: "20%",
+    }}
+  >
+    Add Supplier
+  </Button>
+              
                 {showPopup && (
                   <div className="fixed z-50 inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-white p-2 rounded-lg shadow-lg max-w-xl">
+                    <div className="bg-white p-2 rounded-lg shadow-lg max-w-xl w-[500px]">
                       <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xl font-semibold">Add Supplier</h2>
                         <Button
@@ -1237,7 +1274,7 @@ const ManualBooking = () => {
                         </Button>
                       </div>
 
-                      <AddSupplierPage />
+                      <AddSupplierPage update={update} setUpdate={setUpdate}/>
                     </div>
                   </div>
                 )}
