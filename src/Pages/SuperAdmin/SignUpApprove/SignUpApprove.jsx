@@ -4,6 +4,7 @@ import { useGet } from "../../../Hooks/useGet";
 import { usePost } from "../../../Hooks/usePostJson";
 import axios from 'axios';
 import { useAuth } from "../../../Context/Auth";
+import StaticLoader from "../../../Components/StaticLoader";
 const SignUpApprove = () => {
   const [users, setUsers] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState({});
@@ -26,7 +27,7 @@ const SignUpApprove = () => {
       const combinedData = [
         ...affilates.map((item) => ({ ...item, role: "affiliate" })),
         ...freelancers.map((item) => ({ ...item, role: "freelancer" })),
-        ...agency.map((item) => ({ ...item, role: "agency" })),
+        ...agency.map((item) => ({ ...item, role: "agent" })),
         ...supplier.map((item) => ({ ...item, role: "supplier" })),
       ];
 
@@ -124,9 +125,13 @@ const SignUpApprove = () => {
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Combined User Data</h1>
-
-      <div className="overflow-x-auto">
+    
+    {loadingSignUp ? (
+    <div className="w-full h-56 flex justify-center items-center">
+      <StaticLoader />
+    </div>
+  ) : (  <div className="overflow-x-auto">
+    <h2 className="text-3xl text-mainColor mb-5">Data SignUp</h2>
         <table className="min-w-full bg-white border border-gray-200 shadow-sm">
           <thead className="bg-gray-100">
             <tr className="bg-mainColor">
@@ -201,7 +206,8 @@ const SignUpApprove = () => {
             )}
           </tbody>
         </table>
-      </div>
+      </div>)
+}
     </div>
   );
 };
