@@ -494,11 +494,10 @@ console.log("Policies:", policies);
   try {
     // Simulate an API call
     postData(formData, 'Hotel Account Added Success');
-   
 
     // Reset all fields
 
-    resetForm();
+    // resetForm();
 
     // // Navigate back
 
@@ -561,6 +560,7 @@ const resetForm = () => {
   setSelectedTheme([]);
   setHotelLogo("");
   setImageFile(null);
+
   setNameFacility("");
   setNameTheme("");
   setIsOpen(false);
@@ -1266,7 +1266,7 @@ const resetForm = () => {
       : "bg-blue-600 hover:bg-blue-700 hover:scale-105"
   }`}
 >
-  {isSubmitting ? "Submitting..." : "Submit"}
+  {loadingPost ? "Submitting..." : "Submit"}
 </button>
     <button
       type="button"

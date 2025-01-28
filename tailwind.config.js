@@ -16,6 +16,9 @@ export default {
         thirdColor: "#6B6A6A",
         AddText: "#5E5E5E",
       },
+      boxShadow: {
+        '4xl': '0 10px 30px rgba(0, 0, 0, 0.5)', // Customize this as needed
+      },
       backgroundColor: {
         mainBgColor: "#E5E5E5",
         secoundBgColor: "#F5F5F5",

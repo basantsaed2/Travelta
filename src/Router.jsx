@@ -67,6 +67,9 @@ import AddCurrency from "./Pages/SuperAdmin/Settings/Tabs/Currency/AddCurrency";
 import UpdateCurrency from "./Pages/SuperAdmin/Settings/Tabs/Currency/UpdateCurrency";
 import PaymentMethodLayout from "./Layouts/SuperAdminLayouts/SettingLayout/PaymentMethodLayout";
 import AddPaymentMethod from "./Pages/SuperAdmin/Settings/Tabs/PaymentMethod/AddPaymentMethod";
+import RequestListLayout from "./Layouts/AgentLayouts/Requests/RequestListLayout";
+import NewRequestLayout from "./Layouts/AgentLayouts/Requests/NewRequestLayout";
+import WorkStationLayout from "./Layouts/AgentLayouts/Requests/WorkStationLayout";
 
 
 const AppLayoutAgent = () => (
@@ -97,6 +100,12 @@ const BookingLayout = () => (
   </>
 );
 const BookingListLayout = () => (
+  <>
+  <Outlet />
+  </>
+);
+
+const RequestsApp = () => (
   <>
   <Outlet />
   </>
@@ -513,6 +522,25 @@ export const router = createBrowserRouter([
 
               }
             ]
+              },
+
+              {
+                path: 'requests',
+                element: <RequestsApp />,
+                children: [
+                  {
+                    path: 'request_list',
+                    element: <RequestListLayout />,
+                  },
+                  {
+                    path: 'new_request',
+                    element: <NewRequestLayout />,
+                  },
+                  {
+                    path: 'work_station',
+                    element: <WorkStationLayout />,
+                  },
+                ]
               },
             ],
       },
