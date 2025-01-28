@@ -16,7 +16,7 @@ import { MdAttachMoney } from "react-icons/md";
 import { FiPercent } from "react-icons/fi";
 import { AddSupplierPage } from "../../AllPages";
 import { Link, useNavigate } from 'react-router-dom';
-
+import {AddSupplierLayout}  from "../../../Layouts/AllLayouts";
 const ManualBooking = () => {
   const {
     refetch: refetchBookingList,
@@ -47,26 +47,10 @@ const ManualBooking = () => {
   const [update, setUpdate] = useState(false);
 
   const [selectedService, setSelectedService] = useState(""); // Selected service
-  const {
-    refetch: refetchCustomerServices,
-    loading: loadingCustomerServices,
-    data: customerServicesData,
-  } = useGet({
-    url: selectedService
-      ? `https://travelta.online/agent/manual_booking/service_supplier?service_id=${selectedService.id}`
-      : "",
-  });
+  const {postData:postCustomerServices,loading:loadingPostCustomerServices,response:responseCustomerServicesData,} = usePost({url:`https://travelta.online/agent/manual_booking/service_supplier`});
 
   const [selectedCountry, setSelectedCountry] = useState(""); // Selected service
-  const {
-    refetch: refetchTaxes,
-    loading: loadingTaxes,
-    data: taxesData,
-  } = useGet({
-    url: selectedCountry
-      ? `https://travelta.online/agent/manual_booking/taxes?country_id=${selectedCountry}`
-      : "",
-  });
+  const {postData: postTaxes,loading: loadingPostTaxes,response:responseTaxesData,} = usePost({url:`https://travelta.online/agent/manual_booking/taxes`});
 
   const [title, setTitle] = useState([]);
   const [selectedTitle, setSelectedTitle] = useState("");
@@ -623,45 +607,47 @@ const ManualBooking = () => {
 
   useEffect(() => {
     if (selectedService) {
-      // Call the refetch function when selectedService is available
-      refetchCustomerServices();
+      postCustomerServices({ service_id: selectedService.id });
     } else {
       setCustomerServices([]); // Clear customer services if no service is selected
     }
-  }, [selectedService, refetchCustomerServices]);
+  }, [selectedService,update]);
 
   useEffect(() => {
     if (selectedCountry) {
-      refetchTaxes();
+      postTaxes({ country_id: selectedCountry});
     } else {
       setTaxes([]); // Clear customer services if no service is selected
     }
-  }, [selectedCountry, refetchTaxes]);
+  }, [selectedCountry]);
 
   useEffect(() => {
-    if (selectedService && !loadingCustomerServices && customerServicesData) {
-      console.log("Response Data Supplier service:", customerServicesData);
-      if (customerServicesData.supplier) {
-        setCustomerServices(customerServicesData.supplier); // Update the customers list
+    if (selectedService && !loadingPostCustomerServices) {
+      console.log("Response Data Supplier service:", responseCustomerServicesData.data.supplier);
+      if (responseCustomerServicesData.data.supplier) {
+        setCustomerServices(responseCustomerServicesData.data.supplier); // Update the customers list
       }
     }
-  }, [loadingCustomerServices, customerServicesData]); // Runs when data or loading state changes
+  }, [responseCustomerServicesData]); // Runs when data or loading state changes
 
   useEffect(() => {
-    if (selectedCountry && !loadingTaxes && taxesData) {
-      console.log("Response Data Country Taxes:", taxesData);
-      if (taxesData.taxes) {
-        setTaxes(taxesData.taxes); // Update the customers list
+    if (selectedCountry && !loadingPostTaxes) {
+      console.log("Response Data Country Taxes:", responseTaxesData.data.taxes);
+      if (responseTaxesData?.data?.taxes) {
+        setTaxes(responseTaxesData?.data?.taxes); // Update the customers list
+      }
+      else{
+        setTaxes([])
       }
     }
-  }, [loadingTaxes, taxesData]); // Runs when data or loading state changes
+  }, [responseTaxesData]); // Runs when data or loading state changes
 
   // const [visibleSection, setVisibleSection] = useState('');
   // const toggleSection = (section) => {
   //   setVisibleSection(visibleSection === section ? '' : section);
   // };
 
-  const selectedTaxes = taxes.filter((tax) => selectedTaxId.includes(tax.id));
+  // const selectedTaxes = taxes.filter((tax) => selectedTaxId.includes(tax.id));
 
   useEffect(() => {
     // Parse cost and markupValue as floats, fallback to 0 if not set
@@ -678,7 +664,7 @@ const ManualBooking = () => {
     // Calculate total tax amount
     let totalTaxAmount = 0;
     selectedTaxId.forEach((id) => {
-      const tax = taxes.find((tax) => tax.id === id); // Find tax object by ID
+      const tax = taxes?.find((tax) => tax.id === id); // Find tax object by ID
       if (tax) {
         if (tax.type === "precentage") {
           totalTaxAmount += (parseFloat(tax.amount) / 100); // Apply percentage tax
@@ -980,6 +966,33 @@ const ManualBooking = () => {
                 </MenuItem>
               )}
             </TextField>
+            <Button
+              type="button"
+              variant="contained"
+              color="primary"
+              onClick={() => setShowPopup(true)}
+              size="small"
+              className="w-full"
+            >
+            Add Supplier
+            </Button>                           
+            {showPopup && (
+             <div className="w-full fixed p-4 inset-0 z-50 bg-gray-600 bg-opacity-50 overflow-y-auto">
+                <div className="bg-white p-4 rounded-lg shadow-lg w-full overflow-y-auto max-w-4xl">
+                  <div className="flex justify-between items-center mt-4">
+                    <h2 className="text-xl font-semibold">Add Supplier</h2>
+                    <Button
+                      onClick={() => setShowPopup(false)}
+                      className="text-red-500"
+                    >
+                      Close
+                    </Button>
+                  </div>
+
+                  <AddSupplierPage update={update} setUpdate={setUpdate} />
+                </div>
+              </div>
+            )}
             <TextField
               select
               fullWidth
@@ -1082,14 +1095,14 @@ const ManualBooking = () => {
                 multiple: true,
                 renderValue: (selected) =>
                   selected
-                    .map((id) => taxes.find((tax) => tax.id === id)?.name) // Get the tax names based on selected IDs
+                    .map((id) => taxes?.find((tax) => tax.id === id)?.name) // Get the tax names based on selected IDs
                     .join(" , "), // Join the selected tax names with a comma
               }}
               variant="outlined"
             className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
             >
-              {taxes.length > 0 ? (
-                taxes.map((tax) => (
+              {taxes?.length > 0 ? (
+                taxes?.map((tax) => (
                   <MenuItem key={tax.id} value={tax.id}>
                     <Checkbox checked={selectedTaxId.includes(tax.id)} />{" "}
                     {/* Check if the tax is selected */}
@@ -1148,7 +1161,6 @@ const ManualBooking = () => {
             </div>
           </div>
         )}
-
         {/* To Section */}
         <button
           type="button"
@@ -1175,7 +1187,7 @@ const ManualBooking = () => {
             {/* Second Dropdown */}
             {secondMenuData.length > 0 || customers > 0 ? (
               <>
-                <TextField
+              <TextField
                 select
                 fullWidth
                 variant="outlined"
@@ -1190,7 +1202,7 @@ const ManualBooking = () => {
                   }
                 }}
               >
-                {secondMenuData
+              {secondMenuData
                   .filter((supplier) => supplier.id !== selectedFromSupplier)
                   .map((supplier) => (
                     <MenuItem key={supplier.id} value={supplier.id}>
@@ -1199,41 +1211,38 @@ const ManualBooking = () => {
                   ))}
               </TextField>
               <Button
-    type="button"
-    variant="contained"
-    color="primary"
-    onClick={() => setShowPopup(true)}
-    size="small"
-    style={{
-      padding: "15px 2px",
-      fontSize: "0.75rem",
-      width: "20%",
-    }}
-  >
-    Add Supplier
-  </Button>
+                type="button"
+                variant="contained"
+                color="primary"
+                onClick={() => setShowPopup(true)}
+                size="small"
+                style={{
+                  padding: "15px 2px",
+                  fontSize: "0.75rem",
+                  width: "20%",
+                }}
+              >
+                Add Supplier
+              </Button>
+              {showPopup && (
+              <div className="w-full fixed p-4 inset-0 z-50 bg-gray-600 bg-opacity-50 overflow-y-auto">
+                  <div className="bg-white p-4 rounded-lg shadow-lg w-full overflow-y-auto max-w-4xl">
+                    <div className="flex justify-between items-center mt-4">
+                      <h2 className="text-xl font-semibold">Add Supplier</h2>
+                      <Button
+                        onClick={() => setShowPopup(false)}
+                        className="text-red-500"
+                      >
+                        Close
+                      </Button>
+                    </div>
 
-  {showPopup && (
-  <div className="fixed z-50 inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-    <div className="bg-white p-2 rounded-lg shadow-lg max-w-xl">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Add Supplier</h2>
-        <Button
-          onClick={() => setShowPopup(false)}
-          className="text-red-500"
-        >
-          Close
-        </Button>
-      </div>
+                    <AddSupplierPage update={update} setUpdate={setUpdate} />
+                  </div>
+                </div>
+              )}
 
-      <AddSupplierPage update={update} setUpdate={setUpdate}  />
-    </div>
-  </div>
-)}
-</>
-
-
-            
+              </>      
             ) : (
               <>
                 <TextField
@@ -1245,26 +1254,24 @@ const ManualBooking = () => {
                   disabled
                   className="mb-6 w-[60%]"
                 />
-
-<Button
-    type="button"
-    variant="contained"
-    color="primary"
-    onClick={() => setShowPopup(true)}
-    size="small"
-    style={{
-      padding: "15px 2px",
-      fontSize: "0.75rem",
-      width: "20%",
-    }}
-  >
-    Add Supplier
-  </Button>
-              
+                <Button
+                    type="button"
+                    variant="contained"
+                    color="primary"
+                    onClick={() => setShowPopup(true)}
+                    size="small"
+                    style={{
+                      padding: "15px 2px",
+                      fontSize: "0.75rem",
+                      width: "20%",
+                    }}
+                  >
+                    Add Supplier
+                </Button>                           
                 {showPopup && (
-                  <div className="fixed z-50 inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-white p-2 rounded-lg shadow-lg max-w-xl w-[500px]">
-                      <div className="flex justify-between items-center mb-4">
+                <div className="w-full fixed p-4 inset-0 z-50 bg-gray-600 bg-opacity-50 overflow-y-auto">
+                    <div className="bg-white p-4 rounded-lg shadow-lg w-full overflow-y-auto max-w-4xl">
+                      <div className="flex justify-between items-center mt-4">
                         <h2 className="text-xl font-semibold">Add Supplier</h2>
                         <Button
                           onClick={() => setShowPopup(false)}
@@ -1274,15 +1281,15 @@ const ManualBooking = () => {
                         </Button>
                       </div>
 
-                      <AddSupplierPage update={update} setUpdate={setUpdate}/>
+                      <AddSupplierPage update={update} setUpdate={setUpdate} />
                     </div>
                   </div>
                 )}
+
               </>
             )}
           </div>
         )}
-
         {/* Details Section */}
         <button
           type="button"
@@ -1464,136 +1471,127 @@ const ManualBooking = () => {
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-6">
+                      {/* Adult Details Inputs */}
+                      {adultsHotelNumber>0 && 
+                        <div className="flex-1 shadow-md p-6 rounded-lg bg-white">
+                        <h2 className="text-xl font-semibold text-gray-700 mb-4">Adults</h2>
+                        {hotelAdults.map((adult, index) => (
+                          <div
+                            key={index}
+                            className="mb-6 w-full shadow-md p-6 rounded-lg bg-gray-50"
+                          >
+                            <h1 className="text-lg font-semibold text-gray-700">
+                              Adult {index + 1} 
+                            </h1>
+                            <div className="w-full flex flex-col md:flex-row gap-4">     <div className="mb-4">
+                              <TextField
+                                select
+                                label={`Title for Adult ${index + 1}`}
+                                variant="outlined"
+                                fullWidth
+                                value={adult.title}
+                                className="w-full"
+                                onChange={(e) =>
+                                  handleAdultHotelChange(index, "title", e.target.value)
+                                }
+                              >
+                                {title.map((title, idx) => (
+                                  <MenuItem key={idx} value={title}>
+                                    {title}
+                                  </MenuItem>
+                                ))}
+                              </TextField>
+                            </div>
 
+                            <div className="mb-4">
+                              <TextField
+                                label={`First Name for Adult ${index + 1}`}
+                                variant="outlined"
+                                fullWidth
+                                className="w-full"
+                                value={adult.firstName}
+                                onChange={(e) =>
+                                  handleAdultHotelChange(index, "firstName", e.target.value)
+                                }
+                              />
+                            </div>
 
-  {/* Adult Details Inputs */}
-{
-  adultsHotelNumber>0 && 
-  <div className="flex-1 shadow-md p-6 rounded-lg bg-white">
-  <h2 className="text-xl font-semibold text-gray-700 mb-4">Adults</h2>
-  {hotelAdults.map((adult, index) => (
-    <div
-      key={index}
-      className="mb-6 w-full shadow-md p-6 rounded-lg bg-gray-50"
-    >
-      <h1 className="text-lg font-semibold text-gray-700">
-        Adult {index + 1} 
-      </h1>
-      <div className="w-full flex flex-col md:flex-row gap-4">     <div className="mb-4">
-        <TextField
-          select
-          label={`Title for Adult ${index + 1}`}
-          variant="outlined"
-          fullWidth
-          value={adult.title}
-          className="w-full"
-          onChange={(e) =>
-            handleAdultHotelChange(index, "title", e.target.value)
-          }
-        >
-          {title.map((title, idx) => (
-            <MenuItem key={idx} value={title}>
-              {title}
-            </MenuItem>
-          ))}
-        </TextField>
-      </div>
+                            <div className="mb-4">
+                              <TextField
+                                label={`Last Name for Adult ${index + 1}`}
+                                variant="outlined"
+                                fullWidth
+                                className="w-full"
+                                value={adult.lastName}
+                                onChange={(e) =>
+                                  handleAdultHotelChange(index, "lastName", e.target.value)
+                                }
+                              />
+                            </div>
+                            </div>
 
-      <div className="mb-4">
-        <TextField
-          label={`First Name for Adult ${index + 1}`}
-          variant="outlined"
-          fullWidth
-          className="w-full"
-          value={adult.firstName}
-          onChange={(e) =>
-            handleAdultHotelChange(index, "firstName", e.target.value)
-          }
-        />
-      </div>
+                      
+                          </div>
+                        ))}
+                      </div>
+                      }
+                      {/* Children Details Inputs */}
+                      {childrenHotelNumber>0 && 
+                        <div className="flex-1 shadow-md p-6 rounded-lg bg-white">
+                        <h2 className="text-xl font-semibold text-gray-700 mb-4">Children</h2>
+                        {hotelChildren.map((child, index) => (
+                          <div
+                            key={index}
+                            className="mb-6 w-full shadow-md p-6 rounded-lg bg-gray-50"
+                          >
+                            <h1 className="text-lg font-semibold text-gray-700">
+                              Child {index + 1} 
+                            </h1>
+                            <div className="w-full flex flex-col md:flex-row gap-4">       <div className="mb-4">
+                              <TextField
+                                label={`Age for Child ${index + 1}`}
+                                variant="outlined"
+                                fullWidth
+                                className="w-full"
+                                value={child.age}
+                                onChange={(e) =>
+                                  handleChildHotelChange(index, "age", e.target.value)
+                                }
+                              />
+                            </div>
 
-      <div className="mb-4">
-        <TextField
-          label={`Last Name for Adult ${index + 1}`}
-          variant="outlined"
-          fullWidth
-          className="w-full"
-          value={adult.lastName}
-          onChange={(e) =>
-            handleAdultHotelChange(index, "lastName", e.target.value)
-          }
-        />
-      </div>
-       </div>
+                            <div className="mb-4">
+                              <TextField
+                                label={`First Name for Child ${index + 1}`}
+                                variant="outlined"
+                                fullWidth
+                                className="w-full"
+                                value={child.firstName}
+                                onChange={(e) =>
+                                  handleChildHotelChange(index, "firstName", e.target.value)
+                                }
+                              />
+                            </div>
 
- 
-    </div>
-  ))}
-</div>
-}
+                            <div className="mb-4">
+                              <TextField
+                                label={`Last Name for Child ${index + 1}`}
+                                variant="outlined"
+                                fullWidth
+                                className="w-full"
+                                value={child.lastName}
+                                onChange={(e) =>
+                                  handleChildHotelChange(index, "lastName", e.target.value)
+                                }
+                              />
+                            </div>
+                            </div>
 
-    {/* Children Details Inputs */}
-{
-  childrenHotelNumber>0 && 
-  <div className="flex-1 shadow-md p-6 rounded-lg bg-white">
-  <h2 className="text-xl font-semibold text-gray-700 mb-4">Children</h2>
-  {hotelChildren.map((child, index) => (
-    <div
-      key={index}
-      className="mb-6 w-full shadow-md p-6 rounded-lg bg-gray-50"
-    >
-      <h1 className="text-lg font-semibold text-gray-700">
-        Child {index + 1} 
-      </h1>
-      <div className="w-full flex flex-col md:flex-row gap-4">       <div className="mb-4">
-        <TextField
-          label={`Age for Child ${index + 1}`}
-          variant="outlined"
-          fullWidth
-          className="w-full"
-          value={child.age}
-          onChange={(e) =>
-            handleChildHotelChange(index, "age", e.target.value)
-          }
-        />
-      </div>
-
-      <div className="mb-4">
-        <TextField
-          label={`First Name for Child ${index + 1}`}
-          variant="outlined"
-          fullWidth
-          className="w-full"
-          value={child.firstName}
-          onChange={(e) =>
-            handleChildHotelChange(index, "firstName", e.target.value)
-          }
-        />
-      </div>
-
-      <div className="mb-4">
-        <TextField
-          label={`Last Name for Child ${index + 1}`}
-          variant="outlined"
-          fullWidth
-          className="w-full"
-          value={child.lastName}
-          onChange={(e) =>
-            handleChildHotelChange(index, "lastName", e.target.value)
-          }
-        />
-      </div>
-       </div>
-
-    </div>
-  ))}
-</div>
-}
-</div>
-
-
-
-
+                          </div>
+                        ))}
+                      </div>
+                      }
+                    </div>
                   </div>
                   )}
                 </div>
@@ -1757,130 +1755,128 @@ const ManualBooking = () => {
                   )}
                 </div>
                 <div className="flex flex-col md:flex-row gap-6">
-  {/* Adult Details Inputs */}
-  {busAdultsNumber>0 && <div className="flex-1 shadow-md p-6 rounded-lg bg-white">
-    <h2 className="text-xl font-semibold text-gray-700 mb-4">Adults</h2>
-    {busAdults.map((adult, index) => (
-      <div
-        key={index}
-        className="mb-6 w-full shadow-md p-6 rounded-lg bg-gray-50"
-      >
-        <h1 className="text-lg font-semibold text-gray-700">
-          Adult {index + 1}
-        </h1>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">   <div className="mb-4">
-          <TextField
-            select
-            label={`Title for Adult ${index + 1}`}
-            variant="outlined"
-            fullWidth
-            value={adult.selectedTitle}
-            onChange={(e) =>
-              handleAdultChangeBus(index, "selectedTitle", e.target.value)
-            }
-            className="w-full"
-          >
-            {title.map((title, idx) => (
-              <MenuItem key={idx} value={title}>
-                {title}
-              </MenuItem>
-            ))}
-          </TextField>
-        </div>
+                    {/* Adult Details Inputs */}
+                    {busAdultsNumber>0 && <div className="flex-1 shadow-md p-6 rounded-lg bg-white">
+                      <h2 className="text-xl font-semibold text-gray-700 mb-4">Adults</h2>
+                      {busAdults.map((adult, index) => (
+                        <div
+                          key={index}
+                          className="mb-6 w-full shadow-md p-6 rounded-lg bg-gray-50"
+                        >
+                          <h1 className="text-lg font-semibold text-gray-700">
+                            Adult {index + 1}
+                          </h1>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">   <div className="mb-4">
+                            <TextField
+                              select
+                              label={`Title for Adult ${index + 1}`}
+                              variant="outlined"
+                              fullWidth
+                              value={adult.selectedTitle}
+                              onChange={(e) =>
+                                handleAdultChangeBus(index, "selectedTitle", e.target.value)
+                              }
+                              className="w-full"
+                            >
+                              {title.map((title, idx) => (
+                                <MenuItem key={idx} value={title}>
+                                  {title}
+                                </MenuItem>
+                              ))}
+                            </TextField>
+                          </div>
 
-        <div className="mb-4">
-          <TextField
-            label={`First Name for Adult ${index + 1}`}
-            variant="outlined"
-            fullWidth
-            value={adult.firstName}
-            onChange={(e) =>
-              handleAdultChangeBus(index, "firstName", e.target.value)
-            }
-          />
-        </div>
+                          <div className="mb-4">
+                            <TextField
+                              label={`First Name for Adult ${index + 1}`}
+                              variant="outlined"
+                              fullWidth
+                              value={adult.firstName}
+                              onChange={(e) =>
+                                handleAdultChangeBus(index, "firstName", e.target.value)
+                              }
+                            />
+                          </div>
 
-        <div className="mb-4">
-          <TextField
-            label={`Last Name for Adult ${index + 1}`}
-            variant="outlined"
-            fullWidth
-            value={adult.lastName}
-            onChange={(e) =>
-              handleAdultChangeBus(index, "lastName", e.target.value)
-            }
-          />
-        </div>
-        </div>
-     
-      </div>
-    ))}
-  </div>
-  }
- 
+                          <div className="mb-4">
+                            <TextField
+                              label={`Last Name for Adult ${index + 1}`}
+                              variant="outlined"
+                              fullWidth
+                              value={adult.lastName}
+                              onChange={(e) =>
+                                handleAdultChangeBus(index, "lastName", e.target.value)
+                              }
+                            />
+                          </div>
+                          </div>
+                      
+                        </div>
+                      ))}
+                    </div>
+                    }
+                  
 
-  {/* Children Details Inputs */}
-  {busChildrenNumber >0 &&  <div className="flex-1 shadow-md p-6 rounded-lg bg-white">
-    <h2 className="text-xl font-semibold text-gray-700 mb-4">Children</h2>
-    {busChildren.map((child, index) => (
-      <div
-        key={index}
-        className="mb-6 w-full shadow-md p-6 rounded-lg bg-gray-50"
-      >
-        <h1 className="text-lg font-semibold text-gray-700">
-          Child {index + 1}
-        </h1>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">  <div className="mb-4">
-          <TextField
-            label={`Age for Child ${index + 1}`}
-            type="number"
-            variant="outlined"
-            fullWidth
-            value={child.age}
-            onChange={(e) =>
-              handleChildChangeBus(index, "age", e.target.value)
-            }
-            className="w-full"
-          />
-        </div>
+                    {/* Children Details Inputs */}
+                    {busChildrenNumber >0 &&  <div className="flex-1 shadow-md p-6 rounded-lg bg-white">
+                      <h2 className="text-xl font-semibold text-gray-700 mb-4">Children</h2>
+                      {busChildren.map((child, index) => (
+                        <div
+                          key={index}
+                          className="mb-6 w-full shadow-md p-6 rounded-lg bg-gray-50"
+                        >
+                          <h1 className="text-lg font-semibold text-gray-700">
+                            Child {index + 1}
+                          </h1>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">  <div className="mb-4">
+                            <TextField
+                              label={`Age for Child ${index + 1}`}
+                              type="number"
+                              variant="outlined"
+                              fullWidth
+                              value={child.age}
+                              onChange={(e) =>
+                                handleChildChangeBus(index, "age", e.target.value)
+                              }
+                              className="w-full"
+                            />
+                          </div>
 
-        <div className="mb-4">
-          <TextField
-            label={`First Name for Child ${index + 1}`}
-            variant="outlined"
-            fullWidth
-            value={child.firstName}
-            onChange={(e) =>
-              handleChildChangeBus(index, "firstName", e.target.value)
-            }
-            className="w-full"
-          />
-        </div>
+                          <div className="mb-4">
+                            <TextField
+                              label={`First Name for Child ${index + 1}`}
+                              variant="outlined"
+                              fullWidth
+                              value={child.firstName}
+                              onChange={(e) =>
+                                handleChildChangeBus(index, "firstName", e.target.value)
+                              }
+                              className="w-full"
+                            />
+                          </div>
 
-        <div className="mb-4">
-          <TextField
-            label={`Last Name for Child ${index + 1}`}
-            variant="outlined"
-            fullWidth
-            value={child.lastName}
-            onChange={(e) =>
-              handleChildChangeBus(index, "lastName", e.target.value)
-            }
-            className="w-full"
-          />
-        </div>
-        </div>
-      
-      </div>
-    ))}
-  </div>}
- 
-</div>
-
+                          <div className="mb-4">
+                            <TextField
+                              label={`Last Name for Child ${index + 1}`}
+                              variant="outlined"
+                              fullWidth
+                              value={child.lastName}
+                              onChange={(e) =>
+                                handleChildChangeBus(index, "lastName", e.target.value)
+                              }
+                              className="w-full"
+                            />
+                          </div>
+                          </div>
+                        
+                        </div>
+                      ))}
+                    </div>}
+                  
+                  </div>
                 </div>
             
               )}
-
               {/* Visa Details */}
               {selectedService.service_name === "Visa" && (
                 <div className="border rounded-lg overflow-hidden shadow-lg">
@@ -2025,156 +2021,144 @@ const ManualBooking = () => {
                           />
                         </div>
                       ))}
-
-
-
-
-
-
-
-
                     </div>
                     <div className="flex flex-col md:flex-row gap-6">
-  {/* Adults Section */}
-{visaAdultsNumber >0 && 
-  <div className="w-full md:w-1/2 shadow-md p-6 rounded-lg bg-white">
-  <h2 className="text-xl font-semibold text-gray-700 mb-4">Adults</h2>
-  {visaAdults.map((adult, index) => (
-    <div
-      key={index}
-      className="mb-6 w-full flex flex-col gap-4 shadow-md p-6 rounded-lg bg-gray-50"
-    >
-      <h1 className="text-lg font-semibold text-gray-700">
-        Adult {index + 1}
-      </h1>
+                          {/* Adults Section */}
+                        {visaAdultsNumber >0 && 
+                          <div className="w-full md:w-1/2 shadow-md p-6 rounded-lg bg-white">
+                          <h2 className="text-xl font-semibold text-gray-700 mb-4">Adults</h2>
+                          {visaAdults.map((adult, index) => (
+                            <div
+                              key={index}
+                              className="mb-6 w-full flex flex-col gap-4 shadow-md p-6 rounded-lg bg-gray-50"
+                            >
+                              <h1 className="text-lg font-semibold text-gray-700">
+                                Adult {index + 1}
+                              </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Title */}
-        <div className="mb-4">
-          <TextField
-            select
-            label="Title"
-            variant="outlined"
-            fullWidth
-            value={adult.selectedTitle}
-            onChange={(e) =>
-              handleAdulVisaChange(index, "selectedTitle", e.target.value)
-            }
-            className="w-full"
-          >
-            {title.map((title, idx) => (
-              <MenuItem key={idx} value={title}>
-                {title}
-              </MenuItem>
-            ))}
-          </TextField>
-        </div>
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {/* Title */}
+                                <div className="mb-4">
+                                  <TextField
+                                    select
+                                    label="Title"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={adult.selectedTitle}
+                                    onChange={(e) =>
+                                      handleAdulVisaChange(index, "selectedTitle", e.target.value)
+                                    }
+                                    className="w-full"
+                                  >
+                                    {title.map((title, idx) => (
+                                      <MenuItem key={idx} value={title}>
+                                        {title}
+                                      </MenuItem>
+                                    ))}
+                                  </TextField>
+                                </div>
 
-        {/* First Name */}
-        <div className="mb-4">
-          <TextField
-            label="First Name"
-            variant="outlined"
-            fullWidth
-            value={adult.firstName}
-            onChange={(e) =>
-              handleAdulVisaChange(index, "firstName", e.target.value)
-            }
-            className="w-full"
-          />
-        </div>
+                                {/* First Name */}
+                                <div className="mb-4">
+                                  <TextField
+                                    label="First Name"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={adult.firstName}
+                                    onChange={(e) =>
+                                      handleAdulVisaChange(index, "firstName", e.target.value)
+                                    }
+                                    className="w-full"
+                                  />
+                                </div>
 
-        {/* Last Name */}
-        <div className="mb-4">
-          <TextField
-            label="Last Name"
-            variant="outlined"
-            fullWidth
-            value={adult.lastName}
-            onChange={(e) =>
-              handleAdulVisaChange(index, "lastName", e.target.value)
-            }
-            className="w-full"
-          />
-        </div>
-      </div>
-    </div>
-  ))}
-</div>
-}
+                                {/* Last Name */}
+                                <div className="mb-4">
+                                  <TextField
+                                    label="Last Name"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={adult.lastName}
+                                    onChange={(e) =>
+                                      handleAdulVisaChange(index, "lastName", e.target.value)
+                                    }
+                                    className="w-full"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        }
 
-  {/* Children Section */}
-{visaChildrenNumber >0 &&
-  <div className="w-full md:w-1/2 shadow-md p-6 rounded-lg bg-white">
-  <h2 className="text-xl font-semibold text-gray-700 mb-4">Children</h2>
-  {visaChildren.map((child, index) => (
-    <div
-      key={index}
-      className="mb-6 w-full flex flex-col gap-4 shadow-md p-6 rounded-lg bg-gray-50"
-    >
-      <h1 className="text-lg font-semibold text-gray-700">
-        Child {index + 1}
-      </h1>
+                          {/* Children Section */}
+                        {visaChildrenNumber >0 &&
+                          <div className="w-full md:w-1/2 shadow-md p-6 rounded-lg bg-white">
+                          <h2 className="text-xl font-semibold text-gray-700 mb-4">Children</h2>
+                          {visaChildren.map((child, index) => (
+                            <div
+                              key={index}
+                              className="mb-6 w-full flex flex-col gap-4 shadow-md p-6 rounded-lg bg-gray-50"
+                            >
+                              <h1 className="text-lg font-semibold text-gray-700">
+                                Child {index + 1}
+                              </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Age */}
-        <div className="mb-4">
-          <TextField
-            label="Age"
-            type="number"
-            variant="outlined"
-            fullWidth
-            value={child.age}
-            onChange={(e) =>
-              handleChildVisaChange(index, "age", e.target.value)
-            }
-            inputProps={{ min: 0 }} // Prevents negative values
-            className="w-full"
-          />
-        </div>
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {/* Age */}
+                                <div className="mb-4">
+                                  <TextField
+                                    label="Age"
+                                    type="number"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={child.age}
+                                    onChange={(e) =>
+                                      handleChildVisaChange(index, "age", e.target.value)
+                                    }
+                                    inputProps={{ min: 0 }} // Prevents negative values
+                                    className="w-full"
+                                  />
+                                </div>
 
-        {/* First Name */}
-        <div className="mb-4">
-          <TextField
-            label="First Name"
-            variant="outlined"
-            fullWidth
-            value={child.firstName}
-            onChange={(e) =>
-              handleChildVisaChange(index, "firstName", e.target.value)
-            }
-            className="w-full"
-          />
-        </div>
+                                {/* First Name */}
+                                <div className="mb-4">
+                                  <TextField
+                                    label="First Name"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={child.firstName}
+                                    onChange={(e) =>
+                                      handleChildVisaChange(index, "firstName", e.target.value)
+                                    }
+                                    className="w-full"
+                                  />
+                                </div>
 
-        {/* Last Name */}
-        <div className="mb-4">
-          <TextField
-            label="Last Name"
-            variant="outlined"
-            fullWidth
-            value={child.lastName}
-            onChange={(e) =>
-              handleChildVisaChange(index, "lastName", e.target.value)
-            }
-            className="w-full"
-          />
-        </div>
-      </div>
-    </div>
-  ))}
-</div>
-}
-</div>
-
-
+                                {/* Last Name */}
+                                <div className="mb-4">
+                                  <TextField
+                                    label="Last Name"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={child.lastName}
+                                    onChange={(e) =>
+                                      handleChildVisaChange(index, "lastName", e.target.value)
+                                    }
+                                    className="w-full"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        }
+                        </div>
                     </div>
-                   
-                    
+          
                   )}
                 </div>
               )}
-
               {/* Flight  Details */}
               {selectedService.service_name === "Flight" && (
                 <div className="flex flex-col gap-6">
@@ -2374,35 +2358,6 @@ const ManualBooking = () => {
                           inputProps={{ min: 0 }} // Prevent typing values below 0
                         />
                       </div>
-                       {/* Customer Names */}
-
-                       {/* {flightCustomers.map((customer, index) => (
-                        <div
-                          className="mb-6 w-full flex flex-col shadow-md p-4 rounded-lg bg-white"
-                          key={index}
-                        >
-                          <h1 className="text-lg font-semibold mb-2 text-gray-700">
-                            Customer {index + 1}
-                          </h1>
-                          <TextField
-                            label="Customer Name"
-                            variant="outlined"
-                            fullWidth
-                            className="w-full"
-                            value={customer}
-                            onChange={(e) =>
-                              handleFlightCustomerNameChange(
-                                index,
-                                e.target.value
-                              )
-                            }
-                            placeholder={`Enter name for customer ${index + 1}`}
-                          />
-                        </div>
-                      ))} */}
-
-
-
 
                       {/* Infants */}
                       <div className="mb-4">
@@ -2507,131 +2462,126 @@ const ManualBooking = () => {
                 </div>
 
                 <div className="flex flex-col md:flex-row gap-6">
-  {/* Adults Section */}
- {flightAdultsNumber >0 && 
-  <div className="w-full md:w-1/2 shadow-lg p-6 rounded-lg bg-white">
-  <h2 className="text-xl font-semibold text-gray-700 mb-4">Adults</h2>
-  {flightAdults.map((adult, index) => (
-    <div
-      key={index}
-      className="mb-6 w-full flex flex-col gap-4 shadow-md p-6 rounded-lg bg-gray-50"
-    >
-      {/* Header */}
-      <h1 className="text-lg font-semibold text-gray-800">
-        Adult {index + 1}
-      </h1>
+                  {/* Adults Section */}
+                  {flightAdultsNumber >0 && 
+                  <div className="w-full md:w-1/2 shadow-lg p-6 rounded-lg bg-white">
+                    <h2 className="text-xl font-semibold text-gray-700 mb-4">Adults</h2>
+                    {flightAdults.map((adult, index) => (
+                      <div
+                        key={index}
+                        className="mb-6 w-full flex flex-col gap-4 shadow-md p-6 rounded-lg bg-gray-50"
+                      >
+                        {/* Header */}
+                        <h1 className="text-lg font-semibold text-gray-800">
+                          Adult {index + 1}
+                        </h1>
 
-      {/* Form Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Title */}
-        <TextField
-          select
-          label="Title"
-          variant="outlined"
-          fullWidth
-          value={adult.selectedTitle}
-          onChange={(e) =>
-            handleAdultChange(index, "selectedTitle", e.target.value)
-          }
-          className="w-full"
-        >
-          {title.map((title, idx) => (
-            <MenuItem key={idx} value={title}>
-              {title}
-            </MenuItem>
-          ))}
-        </TextField>
+                        {/* Form Row */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          {/* Title */}
+                          <TextField
+                            select
+                            label="Title"
+                            variant="outlined"
+                            fullWidth
+                            value={adult.selectedTitle}
+                            onChange={(e) =>
+                              handleAdultChange(index, "selectedTitle", e.target.value)
+                            }
+                            className="w-full"
+                          >
+                            {title.map((title, idx) => (
+                              <MenuItem key={idx} value={title}>
+                                {title}
+                              </MenuItem>
+                            ))}
+                          </TextField>
 
-        {/* First Name */}
-        <TextField
-          label="First Name"
-          variant="outlined"
-          fullWidth
-          value={adult.firstName}
-          onChange={(e) =>
-            handleAdultChange(index, "firstName", e.target.value)
-          }
-          className="w-full"
-        />
+                          {/* First Name */}
+                          <TextField
+                            label="First Name"
+                            variant="outlined"
+                            fullWidth
+                            value={adult.firstName}
+                            onChange={(e) =>
+                              handleAdultChange(index, "firstName", e.target.value)
+                            }
+                            className="w-full"
+                          />
 
-        {/* Last Name */}
-        <TextField
-          label="Last Name"
-          variant="outlined"
-          fullWidth
-          value={adult.lastName}
-          onChange={(e) =>
-            handleAdultChange(index, "lastName", e.target.value)
-          }
-          className="w-full"
-        />
-      </div>
-    </div>
-  ))}
-</div>
- }
+                          {/* Last Name */}
+                          <TextField
+                            label="Last Name"
+                            variant="outlined"
+                            fullWidth
+                            value={adult.lastName}
+                            onChange={(e) =>
+                              handleAdultChange(index, "lastName", e.target.value)
+                            }
+                            className="w-full"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  }
 
-  {/* Children Section */}
-{flightChildrenNumber>0 &&
-  <div className="w-full md:w-1/2 shadow-lg p-6 rounded-lg bg-white">
-  
-  <h2 className="text-xl font-semibold text-gray-700 mb-4">Children</h2>
-  {flightChildren.map((child, index) => (
-    <div
-      key={index}
-      className="mb-6 w-full flex flex-col gap-6 shadow-md p-6 rounded-lg bg-gray-50"
-    >
-      {/* Header */}
-      <h1 className="text-lg font-semibold text-gray-800">
-        Child {index + 1}
-      </h1>
+                  {/* Children Section */}
+                  {flightChildrenNumber>0 &&
+                  <div className="w-full md:w-1/2 shadow-lg p-6 rounded-lg bg-white">
+                    
+                    <h2 className="text-xl font-semibold text-gray-700 mb-4">Children</h2>
+                    {flightChildren.map((child, index) => (
+                      <div
+                        key={index}
+                        className="mb-6 w-full flex flex-col gap-6 shadow-md p-6 rounded-lg bg-gray-50"
+                      >
+                        {/* Header */}
+                        <h1 className="text-lg font-semibold text-gray-800">
+                          Child {index + 1}
+                        </h1>
 
-      {/* Form Fields */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Age */}
-        <TextField
-          label="Age"
-          type="number"
-          variant="outlined"
-          fullWidth
-          value={child.age}
-          onChange={(e) => handleChildChange(index, "age", e.target.value)}
-          inputProps={{ min: 0 }}
-          className="w-full"
-        />
+                        {/* Form Fields */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          {/* Age */}
+                          <TextField
+                            label="Age"
+                            type="number"
+                            variant="outlined"
+                            fullWidth
+                            value={child.age}
+                            onChange={(e) => handleChildChange(index, "age", e.target.value)}
+                            inputProps={{ min: 0 }}
+                            className="w-full"
+                          />
 
-        {/* First Name */}
-        <TextField
-          label="First Name"
-          variant="outlined"
-          fullWidth
-          value={child.firstName}
-          onChange={(e) => handleChildChange(index, "firstName", e.target.value)}
-          className="w-full"
-        />
+                          {/* First Name */}
+                          <TextField
+                            label="First Name"
+                            variant="outlined"
+                            fullWidth
+                            value={child.firstName}
+                            onChange={(e) => handleChildChange(index, "firstName", e.target.value)}
+                            className="w-full"
+                          />
 
-        {/* Last Name */}
-        <TextField
-          label="Last Name"
-          variant="outlined"
-          fullWidth
-          value={child.lastName}
-          onChange={(e) => handleChildChange(index, "lastName", e.target.value)}
-          className="w-full"
-        />
-      </div>
-    </div>
-  ))}
-</div>}
-</div>
-
-
-
-                
-                </div>
-                
+                          {/* Last Name */}
+                          <TextField
+                            label="Last Name"
+                            variant="outlined"
+                            fullWidth
+                            value={child.lastName}
+                            onChange={(e) => handleChildChange(index, "lastName", e.target.value)}
+                            className="w-full"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  }
+                </div>           
+                </div>            
               )}
-
               {/* Tour  Details */}
               {selectedService.service_name === "Tour" && (
                 <div className="border rounded-lg overflow-hidden shadow-lg">
@@ -2739,176 +2689,171 @@ const ManualBooking = () => {
                             inputProps={{ min: 0 }} // Prevent typing values below 0
                           />
                         </div>
-
-
-
-
-
                       </div>
                       <div className="flex flex-col md:flex-row  gap-6">
-                      {/* Adults Children */}
-{tourAdultsNumber >0 &&
-  <div className="w-full md:w-1/2 shadow-lg p-6 rounded-lg bg-white">
-    <h2 className="text-xl font-semibold text-gray-700 mb-4">Adults</h2>
-    {tourAdults.map((adult, index) => (
-      <div
-  key={index}
-  className="mb-6 w-full flex flex-col shadow-lg p-3 rounded-lg bg-white hover:shadow-xl transition-shadow duration-300"
->
-  {/* Adult Title */}
-  <h2 className="text-xl font-semibold mb-2 text-gray-700">
-    Adult {index + 1}
-  </h2>
+                        {/* Adults Children */}
+                        {tourAdultsNumber >0 &&
+                          <div className="w-full md:w-1/2 shadow-lg p-6 rounded-lg bg-white">
+                            <h2 className="text-xl font-semibold text-gray-700 mb-4">Adults</h2>
+                            {tourAdults.map((adult, index) => (
+                              <div
+                          key={index}
+                          className="mb-6 w-full flex flex-col shadow-lg p-3 rounded-lg bg-white hover:shadow-xl transition-shadow duration-300"
+                        >
+                          {/* Adult Title */}
+                          <h2 className="text-xl font-semibold mb-2 text-gray-700">
+                            Adult {index + 1}
+                          </h2>
 
-  {/* Input Fields Container */}
-  <div className="w-full flex flex-col md:flex-row gap-3"> {/* Switch to flex-col on small screens */}
-    
-    {/* Title */}
-    <div className="flex-1 mb-3"> 
-      <TextField
-        select
-        label="Title"
-        variant="outlined"
-        fullWidth
-        value={adult.selectedTitle}
-        onChange={(e) =>
-          handleAdulTourChange(index, "selectedTitle", e.target.value)
-        }
-        className="w-full"
-        InputLabelProps={{
-          style: { fontWeight: "500", color: "#4a4a4a" },
-        }}
-        InputProps={{
-          style: { padding: "8px 10px", borderRadius: "6px" },
-        }}
-      >
-        {title.map((title, idx) => (
-          <MenuItem key={idx} value={title}>
-            {title}
-          </MenuItem>
-        ))}
-      </TextField>
-    </div>
+                          {/* Input Fields Container */}
+                          <div className="w-full flex flex-col md:flex-row gap-3"> {/* Switch to flex-col on small screens */}
+                            
+                            {/* Title */}
+                            <div className="flex-1 mb-3"> 
+                              <TextField
+                                select
+                                label="Title"
+                                variant="outlined"
+                                fullWidth
+                                value={adult.selectedTitle}
+                                onChange={(e) =>
+                                  handleAdulTourChange(index, "selectedTitle", e.target.value)
+                                }
+                                className="w-full"
+                                InputLabelProps={{
+                                  style: { fontWeight: "500", color: "#4a4a4a" },
+                                }}
+                                InputProps={{
+                                  style: { padding: "8px 10px", borderRadius: "6px" },
+                                }}
+                              >
+                                {title.map((title, idx) => (
+                                  <MenuItem key={idx} value={title}>
+                                    {title}
+                                  </MenuItem>
+                                ))}
+                              </TextField>
+                            </div>
 
-    {/* First Name */}
-    <div className="flex-1 mb-3">
-      <TextField
-        label="First Name"
-        variant="outlined"
-        fullWidth
-        value={adult.firstName}
-        onChange={(e) =>
-          handleAdulTourChange(index, "firstName", e.target.value)
-        }
-        className="w-full"
-        InputLabelProps={{
-          style: { fontWeight: "500", color: "#4a4a4a" },
-        }}
-        InputProps={{
-          style: { padding: "8px 10px", borderRadius: "6px" },
-        }}
-      />
-    </div>
+                            {/* First Name */}
+                            <div className="flex-1 mb-3">
+                              <TextField
+                                label="First Name"
+                                variant="outlined"
+                                fullWidth
+                                value={adult.firstName}
+                                onChange={(e) =>
+                                  handleAdulTourChange(index, "firstName", e.target.value)
+                                }
+                                className="w-full"
+                                InputLabelProps={{
+                                  style: { fontWeight: "500", color: "#4a4a4a" },
+                                }}
+                                InputProps={{
+                                  style: { padding: "8px 10px", borderRadius: "6px" },
+                                }}
+                              />
+                            </div>
 
-    {/* Last Name */}
-    <div className="flex-1 mb-3">
-      <TextField
-        label="Last Name"
-        variant="outlined"
-        fullWidth
-        value={adult.lastName}
-        onChange={(e) =>
-          handleAdulTourChange(index, "lastName", e.target.value)
-        }
-        className="w-full"
-        InputLabelProps={{
-          style: { fontWeight: "500", color: "#4a4a4a" },
-        }}
-        InputProps={{
-          style: { padding: "8px 10px", borderRadius: "6px" },
-        }}
-      />
-    </div>
+                            {/* Last Name */}
+                            <div className="flex-1 mb-3">
+                              <TextField
+                                label="Last Name"
+                                variant="outlined"
+                                fullWidth
+                                value={adult.lastName}
+                                onChange={(e) =>
+                                  handleAdulTourChange(index, "lastName", e.target.value)
+                                }
+                                className="w-full"
+                                InputLabelProps={{
+                                  style: { fontWeight: "500", color: "#4a4a4a" },
+                                }}
+                                InputProps={{
+                                  style: { padding: "8px 10px", borderRadius: "6px" },
+                                }}
+                              />
+                            </div>
 
-  </div>
-</div>
+                          </div>
+                        </div>
 
- 
-  
-    
-    ))}
-  </div>
-  }
+                        
+                          
+                            
+                            ))}
+                          </div>
+                        }
 
-  {/* Children Section */}
- {tourChildrenNumber >0 && 
-  <div className="w-full md:w-1/2 shadow-lg p-6 rounded-lg bg-white">
-  <h2 className="text-xl font-semibold text-gray-700 mb-4">Children</h2>
-  {tourChildren.map((child, index) => (
-    <div
-    key={index}
-    className="mb-6 w-full flex flex-col shadow-lg p-6 rounded-lg bg-white hover:shadow-xl transition-shadow duration-300"
-    >
-    {/* Child Title */}
-    <h2 className="text-xl font-semibold mb-4 text-gray-700"> {/* Reduced margin-bottom */}
-      Child {index + 1}
-    </h2>
+                        {/* Children Section */}
+                        {tourChildrenNumber >0 && 
+                        <div className="w-full md:w-1/2 shadow-lg p-6 rounded-lg bg-white">
+                          <h2 className="text-xl font-semibold text-gray-700 mb-4">Children</h2>
+                          {tourChildren.map((child, index) => (
+                            <div
+                            key={index}
+                            className="mb-6 w-full flex flex-col shadow-lg p-6 rounded-lg bg-white hover:shadow-xl transition-shadow duration-300"
+                            >
+                            {/* Child Title */}
+                            <h2 className="text-xl font-semibold mb-4 text-gray-700"> {/* Reduced margin-bottom */}
+                              Child {index + 1}
+                            </h2>
 
-    {/* Input Fields Container */}
-    <div className="w-full flex flex-col md:flex-row gap-4"> {/* Switch to flex-col on small screens */}
+                            {/* Input Fields Container */}
+                            <div className="w-full flex flex-col md:flex-row gap-4"> {/* Switch to flex-col on small screens */}
 
-      {/* Age */}
-  <div className="flex-1 mb-3"> {/* Reduced margin-bottom */}
-    <TextField
-      label="Age"
-      type="number"
-      variant="outlined"
-      fullWidth
-      value={child.age}
-      onChange={(e) =>
-        handleChildTourChange(index, "age", e.target.value)
-      }
-      inputProps={{ min: 0 }} // Prevents negative values
-      className="w-full"
-    />
-  </div>
+                              {/* Age */}
+                          <div className="flex-1 mb-3"> {/* Reduced margin-bottom */}
+                            <TextField
+                              label="Age"
+                              type="number"
+                              variant="outlined"
+                              fullWidth
+                              value={child.age}
+                              onChange={(e) =>
+                                handleChildTourChange(index, "age", e.target.value)
+                              }
+                              inputProps={{ min: 0 }} // Prevents negative values
+                              className="w-full"
+                            />
+                          </div>
 
-  {/* First Name */}
-  <div className="flex-1 mb-3"> {/* Reduced margin-bottom */}
-    <TextField
-      label="First Name"
-      variant="outlined"
-      fullWidth
-      value={child.firstName}
-      onChange={(e) =>
-        handleChildTourChange(index, "firstName", e.target.value)
-      }
-      className="w-full"
-    />
-  </div>
+                          {/* First Name */}
+                          <div className="flex-1 mb-3"> {/* Reduced margin-bottom */}
+                            <TextField
+                              label="First Name"
+                              variant="outlined"
+                              fullWidth
+                              value={child.firstName}
+                              onChange={(e) =>
+                                handleChildTourChange(index, "firstName", e.target.value)
+                              }
+                              className="w-full"
+                            />
+                          </div>
 
-  {/* Last Name */}
-  <div className="flex-1 mb-3"> {/* Reduced margin-bottom */}
-    <TextField
-      label="Last Name"
-      variant="outlined"
-      fullWidth
-      value={child.lastName}
-      onChange={(e) =>
-        handleChildTourChange(index, "lastName", e.target.value)
-      }
-      className="w-full"
-    />
-  </div>
+                          {/* Last Name */}
+                          <div className="flex-1 mb-3"> {/* Reduced margin-bottom */}
+                            <TextField
+                              label="Last Name"
+                              variant="outlined"
+                              fullWidth
+                              value={child.lastName}
+                              onChange={(e) =>
+                                handleChildTourChange(index, "lastName", e.target.value)
+                              }
+                              className="w-full"
+                            />
+                          </div>
 
-</div>
-</div>
+                        </div>
+                        </div>
 
 
-  ))}
-</div>
- }
-</div>
+                          ))}
+                        </div>
+                        }
+                      </div>
                       {/* Hotel Inputs */}
                       {hotels.map((hotel, index) => (
                         <div key={index} className="p-4 bg-gray-50">
@@ -3037,33 +2982,32 @@ const ManualBooking = () => {
                           </h1>
                           <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                           <TextField
-  select
-  label="Transportation"
-  value={bus.transportation}
-  onChange={(e) => handleBusChange(index, "transportation", e.target.value)}
-  fullWidth
-  className="mb-2"
->
-  {/* Dropdown options */}
-  <MenuItem value="bus">Bus</MenuItem>
-  <MenuItem value="flight">Flight</MenuItem>
-</TextField>
+                            select
+                            label="Transportation"
+                            value={bus.transportation}
+                            onChange={(e) => handleBusChange(index, "transportation", e.target.value)}
+                            fullWidth
+                            className="mb-2"
+                          >
+                            {/* Dropdown options */}
+                            <MenuItem value="bus">Bus</MenuItem>
+                            <MenuItem value="flight">Flight</MenuItem>
+                          </TextField>
+                            {/* Conditionally render the date input */}
+                            {bus.transportation === "flight" && (
+                              <TextField
+                                type="datetime-local"
+                                label="Departure Date & Time"
+                                value={transportationDeparture}
+                                onChange={(e) => setTransportationDeparture(e.target.value)}
+                                placeholder="Enter Departure Date & Time"
+                                className="w-full"
+                                variant="outlined"
+                                fullWidth
+                                InputLabelProps={{ shrink: true }}
+                              />
 
-    {/* Conditionally render the date input */}
-    {bus.transportation === "flight" && (
-    <TextField
-      type="datetime-local"
-      label="Departure Date & Time"
-      value={transportationDeparture}
-      onChange={(e) => setTransportationDeparture(e.target.value)}
-      placeholder="Enter Departure Date & Time"
-      className="w-full"
-      variant="outlined"
-      fullWidth
-      InputLabelProps={{ shrink: true }}
-    />
-
-  )}
+                            )}
                             <TextField
                               label="Seats"
                               type="number"
@@ -3144,7 +3088,6 @@ const ManualBooking = () => {
             </div>
           </div>
         )}
-
         {/* Submit Button */}
         <div className="mt-6 text-center">
           <Link to="/dashboard_agent/checkOut_process" type="submit" onClick={handleSubmit} className="bg-blue-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-600">
