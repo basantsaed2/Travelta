@@ -107,6 +107,15 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     stateLink.isActiveRequests ?? false
   );
 
+  const [isActiveRequestList, setIsActiveRequestList] =
+  useState(stateLink.isActiveRequestList ?? false);
+const [isActiveNewRequest, setIsActiveNewRequest] = useState(
+  stateLink.isActiveNewRequest ?? false
+);
+const [isActiveWorkStation, setIsActiveWorkStation] = useState(
+  stateLink.isActiveWorkStation ?? false
+);
+
   // Inventory
 
   const [isOpenInventory, setIsOpenInventory] = useState(
@@ -216,6 +225,9 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
       isActiveRequests,
       isActiveRequestsIcon,
       isOpenRequests,
+      isActiveRequestList,
+      isActiveNewRequest,
+      isActiveWorkStation,
 
       isActiveInventory,
       isActiveInventoryIcon,
@@ -275,6 +287,10 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     isActiveRequests,
     isActiveRequestsIcon,
     isOpenRequests,
+    isActiveRequestList,
+    isActiveNewRequest,
+    isActiveWorkStation,
+
 
     isActiveInventory,
     isActiveInventoryIcon,
@@ -337,6 +353,10 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     isActiveRequests,
     isActiveRequestsIcon,
     isOpenRequests,
+    isActiveRequestList,
+    isActiveNewRequest,
+    isActiveWorkStation,
+
 
     isActiveInventory,
     isActiveInventoryIcon,
@@ -395,9 +415,13 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     setIsActiveOperationIcon(false);
     setIsActiveOperation(false);
     setIsActiveWallet(false);
+
     setIsActiveRequests(false);
     setIsActiveRequestsIcon(false);
     setIsOpenRequests(false);
+    setIsActiveRequestList(false);
+    setIsActiveNewRequest(false);
+    setIsActiveWorkStation(false);
 
     setIsActiveInventory(false);
     setIsActiveInventoryIcon(false);
@@ -671,18 +695,77 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     setIsOpenRequests(true);
     setIsActiveRequestsIcon(true);
     setIsActiveRequests(true);
+    setIsActiveNewRequest(true);
   }, []);
   useEffect(() => {
     const part = pathName.split("/");
     const result = part.slice(0, 3).join("/");
 
     // Only navigate if on `/dashboard/setting` but not already on any sub-route
-    if (result === "/dashboard_agent/IncomingPage") {
-      handleClickRequests();
-      
+    if (
+      result === "/dashboard_agent/requests" &&
+      ![
+        "/dashboard_agent/requests/request_list",
+        "/dashboard_agent/requests/new_request",
+        "/dashboard_agent/requests/work_station",
+      ].some((path) => pathName.startsWith(path))
+    ) {
+      handleClickBookingList();
+      navigate("/dashboard_agent/requests/request_list");
     }
     console.log("result", result);
   }, [location]);
+
+    /* RequestList */
+    const handleClickRequestList = useCallback(() => {
+      handleStateLinks();
+  
+      setIsOpenRequests(true);
+      setIsActiveRequestsIcon(true);
+      setIsActiveRequests(true);
+      setIsActiveRequestList(true);
+    }, []);
+    useEffect(() => {
+      const part = pathName.split("/");
+      const result = part.slice(0, 4).join("/");
+      if (result == "/dashboard_agent/requests/request_list") {
+        handleClickRequestList();
+      }
+    }, [location]);
+  
+    /* New Request */
+    const handleClickNewRequest = useCallback(() => {
+      handleStateLinks();
+  
+      setIsOpenRequests(true);
+      setIsActiveRequestsIcon(true);
+      setIsActiveRequests(true);
+      setIsActiveNewRequest(true);
+    }, []);
+    useEffect(() => {
+      const part = pathName.split("/");
+      const result = part.slice(0, 4).join("/");
+      if (result == "/dashboard_agent/requests/new_request") {
+        handleClickNewRequest();
+      }
+    }, [location]);
+  
+    /* Work station */
+    const handleClickWorkStation = useCallback(() => {
+      handleStateLinks();
+  
+      setIsOpenRequests(true);
+      setIsActiveRequestsIcon(true);
+      setIsActiveRequests(true);
+      setIsActiveWorkStation(true);
+    }, []);
+    useEffect(() => {
+      const part = pathName.split("/");
+      const result = part.slice(0, 4).join("/");
+      if (result == "/dashboard_agent/requests/work_station") {
+        handleClickWorkStation();
+      }
+    }, [location]);
 
   // Inventory
   const handleClickInventory = useCallback(() => {
@@ -1199,7 +1282,7 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
 
       {/* Requests */}    
       <Link
-        to="IncomingPage"
+        to="requests/request_list"
         onMouseMove={() => setIsActiveRequestsIcon(true)}
         onMouseOut={() => setIsActiveRequestsIcon(false)}
         onClick={handleClickRequests}
@@ -1235,6 +1318,68 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
           />
         )}
       </Link>
+      <div
+        className={`${
+          isOpenRequests && !isSidebarCollapsed ? "h-17" : "h-0 "
+        } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+      >
+        <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
+          <Link
+            to={"requests/request_list"}
+            onClick={() => {
+              handleClickRequestList();
+              onLinkClick();
+            }}
+          >
+            <li
+              className={`${
+                isActiveRequestList
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Request List 
+            </li>
+          </Link>
+          <Link
+            to={"requests/new_request"}
+            onClick={() => {
+              handleClickNewRequest();
+              onLinkClick();
+            }}
+          >
+            <li
+              className={`${
+                isActiveNewRequest
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              New Request
+            </li>
+          </Link>
+          <Link
+            to={"requests/work_station"}
+            onClick={() => {
+              handleClickWorkStation();
+              onLinkClick();
+            }}
+          >
+            <li
+              className={`${
+                isActiveWorkStation
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Work Station
+            </li>
+          </Link>
+        </ul>
+      </div>
 
       {/* Inventory */}      
       <div
