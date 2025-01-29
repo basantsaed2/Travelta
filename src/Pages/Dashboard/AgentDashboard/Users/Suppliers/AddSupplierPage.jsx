@@ -3,13 +3,15 @@ import { TextField, MenuItem, Select, Checkbox, ListItemText, Button } from "@mu
 import { usePost } from '../../../../../Hooks/usePostJson';
 import { useGet } from '../../../../../Hooks/useGet';
 import { FaPlus } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const AddSupplierPage = ({ update, setUpdate }) => {
     const { refetch: refetchSupplier, loading: loadingSupplier, data: dataSupplier } = useGet({url:'https://travelta.online/agent/supplier'});
     const { postData, loadingPost, response } = usePost({ url:'https://travelta.online/agent/supplier/add'});
     const [suppliersServices, setSupplierServices] = useState([])
     const [selectedServices, setSelectedServices] = useState([]); // Holds the selected service ID
-    
+    const navigate = useNavigate();
+
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
 
@@ -17,7 +19,6 @@ const AddSupplierPage = ({ update, setUpdate }) => {
     const [email, setEmail] = useState("")
     const [additionalPhones, setAdditionalPhones] = useState([]);
     const [additionalEmails, setAdditionalEmails] = useState([]);
-    ;
     const [adminName, setAdminName] = useState("");
     const [adminPhone, setAdminPhone] = useState("");
     const [adminEmail, setAdminEmail] = useState("");
@@ -39,9 +40,8 @@ const AddSupplierPage = ({ update, setUpdate }) => {
     const handleReset = () => {
         setName('')
         setPhone('')
-
-        // setAlternatePhone('')
-
+        setAdditionalPhones([])
+        setAdditionalEmails([])
         setEmail('')
         setAdminName('')
         setAdminPhone('')
@@ -49,24 +49,23 @@ const AddSupplierPage = ({ update, setUpdate }) => {
         setSelectedServices([])
     }
 
-     useEffect(() => {
-        if (!loadingPost) {
-                handleReset()
-                setUpdate(!update)
+    //  useEffect(() => {
+    //     if (!loadingPost) {
+    //             handleReset()
+    //             setUpdate(!update)
                 
-            }
-    }, [response])
+    //         }
+    // }, [response])
 
+     useEffect(() => {
+          if (!loadingPost && response) {
+                setUpdate(!update);
+                navigate(-1, { replace: true });
+          }
+      }, [response]);
 
     const handleSubmitSupplier = async (e) => {
     e.preventDefault();
-
-    // const newSupplier = {
-    //   name, phone, alternatePhone, email, adminName, adminPhone, adminEmail, selectedServices 
-    // };
-
-    // // Call the onSubmit function passed from the parent, passing the new supplier data
-    // onSubmit(newSupplier);
 
     if (!name) {
            auth.toastError('please Enter Name')
@@ -114,7 +113,7 @@ const AddSupplierPage = ({ update, setUpdate }) => {
   
     console.log('formData', formData)
 
-    postData(formData, 'Lead Added Success');
+    postData(formData, 'Supplier Added Success');
     }
 
 
@@ -364,9 +363,9 @@ const AddSupplierPage = ({ update, setUpdate }) => {
         </div>
         </div>
           <div className="w-full flex items-center gap-x-4">
-            {/* <div className="">
-                <StaticButton text={'Reset'} handleClick={handleReset} bgColor='bg-transparent' Color='text-mainColor' border={'border-2'} borderColor={'border-mainColor'} rounded='rounded-full' />
-            </div> */}
+             <div className="">
+                  <Button text={'Reset'} onClick={handleReset} className="bg-mainColor hover:bg-blue-600 hover:text-white">Reset</Button>
+              </div>
             <div className="">
                 <Button
                 type="submit"
@@ -380,9 +379,6 @@ const AddSupplierPage = ({ update, setUpdate }) => {
             </div>
         </div>
     </form>
-
-
-
     </>
   );
 };

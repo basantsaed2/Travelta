@@ -4,9 +4,10 @@ import { usePost } from '../../../../../Hooks/usePostJson';
 import { useGet } from '../../../../../Hooks/useGet';
 import IconButton from '@mui/material/IconButton';
 import { IoMdPersonAdd } from "react-icons/io";
+import { useNavigate } from 'react-router-dom';
 
 const AddLeadPage = ({ update, setUpdate }) => {
-    const { postData:postNewLead, loadingPost:loadingNewLead, response:responseNewLead } = usePost({ url: 'https://travelta.online/agent/leads/add' });
+    const { postData:postNewLead, loadingPost:loadingNewLead, response:responseNewLead} = usePost({ url: 'https://travelta.online/agent/leads/add' });
     const { postData:postLeadList, loadingPost:loadingLeadList, response:responseLeadList } = usePost({ url: 'https://travelta.online/agent/leads/add_lead' });
     const { refetch: refetchLead, loading: loadingLead, data: dataLead } = useGet({ url: 'https://travelta.online/agent/leads/leads_search' });
     const [leads, setLeads] = useState([]);
@@ -19,6 +20,8 @@ const AddLeadPage = ({ update, setUpdate }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [filteredLeads,SetfilteredLeads] = useState([])
+    const navigate = useNavigate();
+    
     useEffect(() => {
         refetchLead();
     }, [refetchLead,update]);
@@ -36,13 +39,24 @@ const AddLeadPage = ({ update, setUpdate }) => {
         setGender('');
         setAlternatePhone('')
     };
+    const handleGoBack = () => {
+      navigate(-1, { replace: true });
+    };
+
+    // useEffect(() => {
+    //     if (!loadingNewLead || !loadingLeadList) {
+    //         handleReset();
+    //         setUpdate(!update);
+    //     }
+    // }, [responseNewLead, responseLeadList]);
 
     useEffect(() => {
-        if (!loadingNewLead || !loadingLeadList) {
-            handleReset();
+      if ((!loadingNewLead && responseNewLead) || (!loadingLeadList && responseLeadList)) {
             setUpdate(!update);
-        }
-    }, [responseNewLead, responseLeadList]);
+            navigate(-1, { replace: true });
+      }
+  }, [responseNewLead,responseLeadList]);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -152,7 +166,6 @@ const AddLeadPage = ({ update, setUpdate }) => {
             />
           </div>
           <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
-              {/* <span className="text-xl font-TextFontRegular text-thirdColor">Name:</span> */}
               <TextField
               label="Email"
               variant="outlined"
@@ -182,9 +195,9 @@ const AddLeadPage = ({ update, setUpdate }) => {
           </div>
           </div>
           <div className="w-full flex items-center gap-x-4">
-            {/* <div className="">
-                <StaticButton text={'Reset'} handleClick={handleReset} bgColor='bg-transparent' Color='text-mainColor' border={'border-2'} borderColor={'border-mainColor'} rounded='rounded-full' />
-            </div> */}
+            <div className="">
+                <Button text={'Reset'} onClick={handleReset} className="bg-mainColor hover:bg-blue-600 hover:text-white">Reset</Button>
+            </div>
             <div className="">
                 <Button
                 type="submit"
@@ -224,64 +237,52 @@ const AddLeadPage = ({ update, setUpdate }) => {
            </div>
 
       
-   {filteredLeads.length === 0 ?
-    <p className="text-center py-4 text-lg text-mainColor"></p>
-   :
-      <TableContainer className="overflow-x-auto bg-white shadow-md rounded-lg">
-        <Table className="min-w-full">
-          <thead className="w-full bg-gray-100">
-            <tr className="border-b-2 border-gray-300">
-              <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Name</th>
-              <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Email</th>
-              <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Phone</th>
-              <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Gender</th>
-              <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Action</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white">
-            {filteredLeads.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="text-center py-3 text-xl text-mainColor font-TextFontMedium">
-                  No Leads List Found
-                </td>
-              </tr>
-            ) : (
-              filteredLeads
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((lead, index) => (
-                  <tr key={index} className="border-b border-gray-200 hover:bg-gray-50">
-                    <td className="py-2 text-center text-thirdColor">{lead.name || '-'}</td>
-                    <td className="py-2 text-center text-thirdColor">{lead.email || '-'}</td>
-                    <td className="py-2 text-center text-thirdColor">{lead.phone || '-'}</td>
-                    <td className="py-2 text-center text-thirdColor">{lead.gender || '-'}</td>
-                    <td className="py-2 text-center flex justify-center items-center">
-                      <button
-                        onClick={() => handleAddLead(lead.id)}
-                        className="flex gap-1 justify-center items-center text-mainColor font-bold hover:text-blue-600"
-                      >
-                        <IoMdPersonAdd /> Add Lead
-                      </button>
-                    </td>
+            {/* {filteredLeads.length === 0 ?
+              <p className="text-center py-4 text-lg text-mainColor">No Lead Available For This Search</p>
+            : */}
+            <TableContainer className="overflow-x-auto bg-white shadow-md rounded-lg">
+              <Table className="min-w-full">
+                <thead className="w-full bg-gray-100">
+                  <tr className="border-b-2 border-gray-300">
+                    <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Name</th>
+                    <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Email</th>
+                    <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Phone</th>
+                    <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Gender</th>
+                    <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Action</th>
                   </tr>
-                ))
-            )}
-          </tbody>
-        </Table>
-      </TableContainer>}
+                </thead>
+                <tbody className="bg-white">
+                  {filteredLeads.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="text-center py-3 text-xl text-mainColor font-TextFontMedium">
+                        No Leads List Found
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredLeads
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((lead, index) => (
+                        <tr key={index} className="border-b border-gray-200 hover:bg-gray-50">
+                          <td className="py-2 text-center text-thirdColor">{lead.name || '-'}</td>
+                          <td className="py-2 text-center text-thirdColor">{lead.email || '-'}</td>
+                          <td className="py-2 text-center text-thirdColor">{lead.phone || '-'}</td>
+                          <td className="py-2 text-center text-thirdColor">{lead.gender || '-'}</td>
+                          <td className="py-2 text-center flex justify-center items-center">
+                            <button
+                              onClick={() => handleAddLead(lead.id)}
+                              className="flex gap-1 justify-center items-center text-mainColor font-bold hover:text-blue-600"
+                            >
+                              <IoMdPersonAdd /> Add Lead
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                  )}
+                </tbody>
+              </Table>
+            </TableContainer>
+            {/* } */}
 
-
-
-
-            {/* <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={filteredLeads.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={(e, newPage) => setPage(newPage)}
-                onRowsPerPageChange={(e) => setRowsPerPage(parseInt(e.target.value, 10))}
-                className="mt-4"
-            /> */}
         </div>
        </>
     );
