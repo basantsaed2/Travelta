@@ -20,7 +20,7 @@ const CustomerPage = ({ refetch, setUpdate }) => {
   const headers = ['SL', 'Name','Email', 'Phone',"Gender",];
 
   return (
-    <div className="w-full pb-28 flex items-start justify-start overflow-x-scroll scrollSection">
+    <div className="w-full pb-5 flex items-start justify-start overflow-x-scroll scrollSection">
       {loadingCustomer  ? (
         <div className="w-full h-56 flex justify-center items-center">
           <StaticLoader />

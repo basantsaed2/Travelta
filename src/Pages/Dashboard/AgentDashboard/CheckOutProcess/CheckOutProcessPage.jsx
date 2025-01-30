@@ -24,6 +24,7 @@ const CheckOutProcessPage = () => {
     const [paymentAmount, setPaymentAmount] = useState(0);
     const [remainingBalance, setRemainingBalance] = useState(0);
     const [payments, setPayments] = useState([]); 
+    const [finalPrice, setFinalPrice] = useState(0); 
 
     // Get the current date in 'YYYY-MM-DD' format
     const currentDate = new Date().toISOString().split('T')[0];
@@ -63,6 +64,17 @@ const CheckOutProcessPage = () => {
         }
         console.log(payments)
     }, [amountPaid, payments, totalPrice]);
+
+    useEffect(() => {
+        if (paymentType === 'Full') {
+            setFinalPrice(totalPrice);
+        } else if (paymentType === 'Partial') {
+            setFinalPrice(amountPaid);
+        } 
+        // else if (type === 'Later') {
+        //     setFinalPrice(totalPrice);
+        // }
+    },[paymentType,totalPrice,amountPaid])
 
     // Function to handle the addition of a new payment
     const handleAddPayment = () => {
@@ -129,6 +141,46 @@ const CheckOutProcessPage = () => {
         postData(formData, "Booking Checkout Added Successfully");
 
     };
+
+
+const [selectedPaymentMethods, setSelectedPaymentMethods] = useState([]);
+const [remainingAmount, setRemainingAmount] = useState(finalPrice);
+
+const handleSelectMethod = (method) => {
+  if (!selectedPaymentMethods.some((item) => item.id === method.id)) {
+    setSelectedPaymentMethods([...selectedPaymentMethods, { ...method, amount: 0 }]);
+  }
+};
+
+const handleAmountChange = (id, value) => {
+  const amount = parseFloat(value) || 0;
+  let updatedMethods = selectedPaymentMethods.map((item) =>
+    item.id === id ? { ...item, amount } : item
+  );
+
+  const totalAssigned = updatedMethods.reduce((sum, item) => sum + item.amount, 0);
+
+  if (totalAssigned <= finalPrice) {
+    setSelectedPaymentMethods(updatedMethods);
+    setRemainingAmount(finalPrice - totalAssigned);
+  }
+};
+
+const removeMethod = (id) => {
+  const updatedMethods = selectedPaymentMethods.filter((item) => item.id !== id);
+  const totalAssigned = updatedMethods.reduce((sum, item) => sum + item.amount, 0);
+
+  setSelectedPaymentMethods(updatedMethods);
+  setRemainingAmount(finalPrice - totalAssigned);
+};
+
+const handlePayment = () => {
+  if (remainingAmount === 0) {
+    console.log("Payment processed", selectedPaymentMethods);
+    // Proceed with API request
+  }
+};
+
       
     return (
         <div className="w-full overflow-x-scroll scrollSection">
@@ -205,7 +257,7 @@ const CheckOutProcessPage = () => {
                                     <div className="space-y-3">
                                         <div className="flex items-center">
                                         <i className="fas fa-passport text-[#0D47A1] mr-3"></i>
-                                        <p><strong>Country Visa:</strong> {cartDetails.visa.country_visa}</p>
+                                        <p><strong>Visa Country:</strong> {cartDetails.visa.country_visa}</p>
                                         </div>
                                         <div className="flex items-center">
                                         <i className="fas fa-calendar-day text-[#0D47A1] mr-3"></i>
@@ -280,6 +332,10 @@ const CheckOutProcessPage = () => {
                                     <div className="space-y-3">
                                     <div className="flex items-center">
                                         <i className="fas fa-dollar-sign text-[#0D47A1] mr-3"></i>
+                                        <p><strong>Currency:</strong> {cartDetails.currency}</p>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <i className="fas fa-dollar-sign text-[#0D47A1] mr-3"></i>
                                         <p><strong>Cost:</strong> {formatPrice(cartDetails.cost)}</p>
                                     </div>
 
@@ -334,7 +390,6 @@ const CheckOutProcessPage = () => {
                                 </div>
                             </div>
                         )}
-
                         {/* Step 2: Payment Type */}
                         {currentStep === 2 && (
                             <div className='p-8 space-y-8'>
@@ -535,12 +590,12 @@ const CheckOutProcessPage = () => {
                             </div>
                         )}
                         {/* Step 3: Payment Method */}
-                        {currentStep === 3 && (
+                        {/* {currentStep === 3 && (
                         <div className="p-6 space-y-6">
                         <h2 className="text-3xl font-bold text-[#0D47A1] text-center mb-6">Select Payment Method</h2>
                         
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <h1>${totalPrice || amount}</h1>
+                            <h1>${finalPrice}</h1>
                             {paymentMethod.map((method, index) => (
                             <div
                                 key={index}
@@ -558,7 +613,116 @@ const CheckOutProcessPage = () => {
                         </div>
                         </div>
                         
-                        )}
+                        )} */}
+
+
+
+{currentStep === 3 && (
+  <div className="p-6 space-y-6">
+    <h2 className="text-3xl font-bold text-[#0D47A1] text-center mb-6">
+      Select Payment Method
+    </h2>
+
+    {/* Total Price & Remaining Amount */}
+    <div className="flex justify-between items-center bg-gray-100 p-4 rounded-lg shadow">
+      <h3 className="text-xl font-semibold text-gray-700">Total: ${finalPrice}</h3>
+      <h3 className="text-xl font-semibold text-[#D32F2F]">
+        Remaining: ${remainingAmount}
+      </h3>
+    </div>
+
+    {/* Payment Methods Selection Grid */}
+    {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {paymentMethod.map((method, index) => (
+        <div
+          key={index}
+          className={`cursor-pointer border-2 ${
+            selectedPaymentMethods.some((item) => item.id === method.id)
+              ? "border-green-500 bg-green-100"
+              : "border-[#0D47A1] bg-white"
+          } p-6 rounded-lg flex flex-col items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105`}
+          onClick={() => handleSelectMethod(method)}
+        >
+          <img
+            src={method.image_link}
+            alt={method.name}
+            className="w-24 h-24 mb-4 object-contain"
+          />
+          <span className="text-xl font-semibold text-[#0D47A1]">
+            {method.name}
+          </span>
+        </div>
+      ))}
+    </div> */}
+
+<div className="space-y-4">
+  {paymentMethod.map((method, index) => (
+    <label
+      key={index}
+      className={`flex items-center gap-4 p-4 border-2 rounded-lg shadow-sm transition-all cursor-pointer`}
+    >
+      <input
+        type="radio"
+        name="paymentMethod"
+        className="w-5 h-5 accent-[#0D47A1]"
+        checked={selectedPaymentMethods.some((item) => item.id === method.id)}
+        onChange={() => handleSelectMethod(method)}
+      />
+      <img
+        src={method.image_link}
+        alt={method.name}
+        className="w-12 h-12 object-contain"
+      />
+      <span className="text-lg font-semibold text-[#0D47A1]">{method.name}</span>
+    </label>
+  ))}
+</div>
+
+
+    {/* Selected Payment Methods & Input Fields */}
+    {selectedPaymentMethods.length > 0 && (
+      <div className="space-y-4">
+        {selectedPaymentMethods.map((method, index) => (
+          <div
+            key={index}
+            className="flex justify-between items-center bg-gray-50 p-4 border border-gray-300 rounded-lg shadow"
+          >
+            <div className="flex items-center space-x-4">
+              <img src={method.image_link} className="w-12 h-12 object-contain" />
+              <span className="text-lg font-semibold">{method.name}</span>
+            </div>
+            <input
+              type="number"
+              min="1"
+              max={remainingAmount + (method.amount || 0)}
+              value={method.amount || ""}
+              onChange={(e) => handleAmountChange(method.id, e.target.value)}
+              className="w-24 p-2 border rounded text-center"
+            />
+            <button
+              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+              onClick={() => removeMethod(method.id)}
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+      </div>
+    )}
+
+    {/* Confirmation Button */}
+    <button
+      className={`w-full py-3 mt-4 text-lg font-semibold rounded-lg text-white ${
+        remainingAmount === 0 ? "bg-[#0D47A1] hover:bg-[#08357C]" : "bg-gray-400 cursor-not-allowed"
+      }`}
+      disabled={remainingAmount !== 0}
+      onClick={handlePayment}
+    >
+      Confirm Payment
+    </button>
+  </div>
+)}
+
                     </div>
 
                     {/* Buttons */}

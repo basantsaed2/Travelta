@@ -12,7 +12,7 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
   const [upcomingHotelList, setUpcomingHotelList] = useState([]);
   const [upcomingTourList, setUpcomingTourList] = useState([]);
   const [upcomingVisaList, setUpcomingVisaList] = useState([]);
-  const [activeTab, setActiveTab] = useState("Hotel");
+  const [activeTab, setActiveTab] = useState("Flight");
 
   useEffect(() => {
     refetchUpcoming();
@@ -29,7 +29,8 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
     }
   }, [upcomingData]);
 
-  const headers = ['SL', 'Client Name','Client Phone','Client Alternate','Client Email','Agent', 'Check In', 'Check Out', 'Total Price'];
+  const headers = ['SL', 'Client Name','Client Phone','Client Email','Agent', 'Check In', 'Check Out', 'Total Price'];
+  const headersFlight = ['SL','Code','Client Name','Client Phone','Agent','Flight Type','Direction', 'Check In', 'Check Out', 'Total Price'];
 
   const tabLists = {
     Hotel: upcomingHotelList,
@@ -118,112 +119,66 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
       </div>
     );
 
-    
-
     const renderFlightCards = () => (
-      <div className="flex flex-wrap mt-4 gap-6">
-        {upcomingFlightList.map((item, index) => (
-          <div
-            key={index}
-            className="w-[500px] p-6 transition-all"
-          >
-            <div className="bg-white rounded-xl border border-gray-200 ">
-              {/* Flight Info Section */}
-              <div className="p-6 space-y-4 text-gray-800">
-                
-                {/* Flight Type */}
-                <div className="flex items-center gap-2">
-                  <FaPlaneDeparture className="text-blue-500" />
-                  <p><strong>Flight Type:</strong> {item.flight?.type || "N/A"}</p>
-                </div>
-                
-                {/* Direction */}
-                <div className="flex items-center gap-2">
-                  <FaArrowRight className="text-green-500" />
-                  <p><strong>Direction:</strong> {item.flight?.direction || "N/A"}</p>
-                </div>
-                
-                {/* Departure Date */}
-                <div className="flex items-center gap-2">
-                  <FaCalendarDay className="text-orange-500" />
-                  <p>
-                    <strong>Departure Date:</strong>
-                    {item.flight?.departure
-                      ? new Date(item.flight.departure).toLocaleString()
-                      : "N/A"}
-                  </p>
-                </div>
-    
-                {/* Adult and Children Section */}
-                <div className="flex gap-6">
-                  <div className="flex flex-col">
-                    <div className="flex items-center gap-2">
-                      <FaUser className="text-purple-500" />
-                      <p><strong>Adult:</strong> {item.flight?.adults || "N/A"}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <FaDollarSign className="text-yellow-500" />
-                      <p><strong>Adult Price:</strong> {item.flight?.adult_price || "N/A"}</p>
-                    </div>
-                  </div>
-    
-                  <div className="flex flex-col">
-                    <div className="flex items-center gap-2">
-                      <FaChild className="text-teal-500" />
-                      <p><strong>Children:</strong> {item.flight?.childreen || "N/A"}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <FaDollarSign className="text-yellow-500" />
-                      <p><strong>Children Price:</strong> {item.flight?.child_price || "N/A"}</p>
-                    </div>
-                  </div>
-                </div>
-    
-                {/* Class */}
-                <div className="flex items-center gap-2">
-                  <FaCogs className="text-indigo-500" />
-                  <p><strong>Class:</strong> {item.flight?.class || "N/A"}</p>
-                </div>
-    
-                {/* Airline */}
-                <div className="flex items-center gap-2">
-                  <FaPlane className="text-red-500" />
-                  <p><strong>Airline:</strong> {item.flight?.airline || "N/A"}</p>
-                </div>
-    
-                {/* Ref PNR and Ticket Number */}
-                <div className="flex gap-6">
-                  <div className="flex items-center gap-2">
-                    <FaIdBadge className="text-gray-500" />
-                    <p><strong>Ref PNR:</strong> {item.flight?.ref_pnr || "N/A"}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <FaTicketAlt className="text-blue-500" />
-                    <p><strong>Ticket Number:</strong> {item.flight?.ticket_number || "N/A"}</p>
-                  </div>
-                </div>
-    
-                {/* From and To Information */}
-                <div className="flex gap-6">
-                  <div className="flex items-center gap-2">
-                    <FaMapMarkerAlt className="text-purple-600" />
-                    <p><strong>From:</strong> {item.flight?.from_to[0]?.from || "N/A"}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <FaMapMarkerAlt className="text-teal-600" />
-                    <p><strong>To:</strong> {item.flight?.from_to[0]?.to || "N/A"}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+         <table className="w-full sm:min-w-0">
+          <thead className="w-full">
+            <tr className="w-full border-b-2">
+              {headersFlight.map((name, index) => (
+                <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3" key={index}>
+                  {name}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="w-full">
+            {upcomingFlightList.length === 0 ? (
+              <tr>
+                <td colSpan={12} className='text-center text-xl text-mainColor font-TextFontMedium  '>Not find Flight Booking</td>
+              </tr>
+            ) : (
+                upcomingFlightList.map((flight, index) => ( 
+                <tr className="w-full border-b-2" key={index}>
+                  <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                    {index + 1}
+                  </td>
+                  <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                    {flight?.code|| '-'}
+                  </td>
+                  <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                    {flight?.to_client?.name|| '-'}
+                  </td>
+                  <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                    {flight?.to_client?.emails[0] ||flight?.to_client?.emails || '-'}
+                  </td>
+                  <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                    {flight?.to_client?.phones[0] || flight?.to_client?.phones|| '-'}
+                  </td>
+                  <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                    {flight?.to_client?.agent || '-'}
+                  </td>
+                  <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                    {flight?.flight?.type || '-'}
+                  </td>
+                  <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                    {flight?.flight?.direction || '-'}
+                  </td>
+                  <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                    {flight.start_date? flight.start_date.split(" ")[0] : '-'}
+                  </td>
+                  <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                    {flight.end_date? flight.end_date.split(" ")[0] : '-'}
+                  </td>
+                  <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                    {flight?.price || '-'}
+                  </td>
+                </tr>
+              ))
+
+            )}
+          </tbody>
+        </table>
     );
-    
-    
-    
-    
+      
     const renderTourCards = () => (
       <div className="flex flex-wrap mt-4 gap-6">
         {upcomingTourList.map((item, index) => (
@@ -301,11 +256,7 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
         ))}
       </div>
     );
-    
-    
-    
-    
-  
+
     const renderVisaCards = () => (
       <div className="flex flex-wrap gap-6 mt-4">
         {upcomingVisaList.map((item, index) => (
@@ -422,9 +373,6 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
       </div>
     );
     
-    
-    
-  
     const renderActiveTabContent = () => {
       switch (activeTab) {
         case 'Bus':
@@ -442,19 +390,10 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
       }
     };
   
-  
-
   return (
     <>
-  
-    <div className="w-full mt-5 flex flex-col items-start justify-start overflow-x-scroll scrollSection">
 
-      {loadingUpcoming ? (
-        <div className="w-full h-56 flex justify-center items-center">
-          <StaticLoader />
-        </div>
-      ) : (  <div>
-        <div className="flex space-x-4">
+        <div className="w-full tabs flex gap-1 lg:gap-4 mb-5">
           <button
             onClick={() => setActiveTab('Hotel')}
             className={`py-2 px-4 rounded ${activeTab === 'Hotel' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}
@@ -486,11 +425,18 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
             Visa
           </button>
         </div>
-       
-       <div className="overflow-x-auto mt-5">
-       {renderActiveTabContent()}
-       </div>
-      </div>)}
+  
+      <div className="w-full mt-5 flex flex-col items-start justify-start overflow-x-scroll scrollSection">
+
+      {loadingUpcoming ? (
+        <div className="w-full h-56 flex justify-center items-center">
+          <StaticLoader />
+        </div>
+      ) : (   
+      <div className='max-w-full flex scrollSection overflow-x-scroll'>
+        {renderActiveTabContent()}
+      </div>
+      )}
     </div>
     </>
   );

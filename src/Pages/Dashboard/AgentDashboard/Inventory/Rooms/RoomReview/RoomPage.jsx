@@ -50,7 +50,7 @@ const RoomPage = ({ refetch, setUpdate }) => {
 
   const [expandedIndex, setExpandedIndex] = useState(0);
   const [activeTabs, setActiveTabs] = useState(
-    rooms.reduce((acc, room) => {
+    rooms?.reduce((acc, room) => {
       acc[room.id] = 0; // Default active tab for each room is 0 (General Info)
       return acc;
     }, {})
@@ -111,7 +111,7 @@ const handleToggleDescription = (roomIndex) => {
     const response = await changeState(
             ` https://travelta.online/agent/room/status/${id}`,
             `${name} Changed Status.`,
-            // { status } // Pass status as an object if changeState expects an object
+            { status } // Pass status as an object if changeState expects an object
     );
     if (response) {
       // Update categories only if changeState succeeded
@@ -181,7 +181,7 @@ const handleToggleDescription = (roomIndex) => {
             <StaticLoader />
           </div>
         ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
         {rooms.map((room, roomIndex) => (
             <div
             key={room.id}

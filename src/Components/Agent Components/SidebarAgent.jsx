@@ -6,7 +6,7 @@ import Logo from "../../Assets/Images/Logo";
 const SidebarAgent = ({ isSidebarCollapsed, onToggleSidebar, isSidebarVisible ,  onLinkClick}) => {
   return (
     <aside
-      className={`fixed z-50 lg:relative top-0 left-0 min-h-screen bg-mainColor text-white transition-all duration-300 
+      className={`fixed z-50 lg:relative custom-scrollbar overflow-y-auto top-0 left-0 max-h-screen bg-mainColor text-white transition-all duration-300 
       ${isSidebarCollapsed ? "lg:w-20" : "lg:w-64"} w-64 ${isSidebarVisible ? "block" : "hidden"}`}
     >
       {/* Sidebar Header */}

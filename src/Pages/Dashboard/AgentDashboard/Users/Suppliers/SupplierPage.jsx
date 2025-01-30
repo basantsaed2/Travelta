@@ -50,7 +50,7 @@ const SupplierPage = ({ refetch, setUpdate }) => {
   const headers = ['SL', 'Name','Email', 'Phone',"Admin Name","Admin Email","Admin Phone","Action"];
 
   return (
-    <div className="w-full pb-28 flex items-start justify-start overflow-x-scroll scrollSection">
+    <div className="w-full pb-5 flex items-start justify-start overflow-x-scroll scrollSection">
       {loadingSupplier  ? (
         <div className="w-full h-56 flex justify-center items-center">
           <StaticLoader />
@@ -81,10 +81,10 @@ const SupplierPage = ({ refetch, setUpdate }) => {
                     {supplier?.agent|| '-'}
                   </td>
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                    {supplier?.emails[0] || '-'}
+                    {supplier?.emails[0] ||supplier?.emails|| '-'}
                   </td>
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                    {supplier?.phones[0] || '-'}
+                    {supplier?.phones[0] ||supplier?.phones ||'-'}
                   </td>
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
                     {supplier?.admin_name || '-'}

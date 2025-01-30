@@ -186,7 +186,7 @@ const FinancialAccountPage = ({ refetch, setUpdate }) => {
                      <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 overflow-hidden">
                         <div className="flex justify-center">
                             <img src={account.logo_link}
-                                  className="rounded-full min-w-14 min-h-14 max-w-14 max-h-14"
+                                  className="rounded-md min-h-14 max-w-14 max-h-14"
                                   alt="Logo"
                             />
                         </div>

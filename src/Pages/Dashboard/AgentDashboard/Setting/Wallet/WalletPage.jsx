@@ -129,7 +129,7 @@ const Wallet = () => {
               </div>
               {/* Currency Name */}
               <h3 className="text-2xl font-semibold mb-3 text-gray-800 text-start">
-                {card.currancy.currancy_name}
+                {card.currancy?.currancy_name}
               </h3>
               {/* Currency Amount */}
               <span className="block text-4xl font-bold text-mainColor mb-5 text-start">
@@ -215,7 +215,7 @@ const Wallet = () => {
               <div className="text-center mt-6">
                 <span
                   onClick={() =>
-                    handleDelete(card.id, card.currancy.currancy_name)
+                    handleDelete(card.id, card.currancy?.currancy_name)
                   }
                   className="flex items-center justify-center gap-2 text-red-500  cursor-pointer hover:underline transition-all duration-300"
                 >

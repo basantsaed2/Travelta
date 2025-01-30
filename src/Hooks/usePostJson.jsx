@@ -33,8 +33,15 @@ export const usePost = ({ url, login = false, type = false }) => {
                             // auth.toastSuccess(name)
                      }
               } catch (error) {
-                     auth.toastError(error.message)
+                     // auth.toastError(error.message)
                      console.error('error post Json', error);
+                     if (error?.response?.data?.errors) {
+                            Object.entries(error?.response?.data?.errors).forEach(([field, messages]) => {
+                              messages.forEach(message => {
+                                   auth.toastError(`${message}`); // Display the error messages
+                              });
+                            });
+                          }
               } finally {
                      setLoadingPost(false);
               }
