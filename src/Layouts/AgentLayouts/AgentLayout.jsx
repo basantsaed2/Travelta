@@ -38,7 +38,7 @@ const AgentLayout = () => {
         onLinkClick={handleLinkClick} // Pass the link click handler
       />
       </div>
-      <div className={`flex flex-col w-full min-h-screen overflow-hidden ${isSidebarCollapsed ? "md:ml-20" : "md:ml-64"} `}>
+      <div className={`flex flex-col w-full min-h-screen overflow-hidden ${isSidebarCollapsed ? "lg:ml-20" : "lg:ml-64"} `}>
         <Navbar onToggleSidebar={handleToggleSidebar} />
         <main className={`flex-1 bg-gray-100 p-2 xl:p-6`}>
           <Outlet />

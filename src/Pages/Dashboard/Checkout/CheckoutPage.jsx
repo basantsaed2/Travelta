@@ -237,7 +237,7 @@ const CheckoutPage = ({ refetch, setUpdate }) => {
         </div>
       )}
   </div>
-))}
+      ))}
 
 
               
