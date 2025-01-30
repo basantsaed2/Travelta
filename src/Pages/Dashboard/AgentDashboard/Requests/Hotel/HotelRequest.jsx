@@ -1,11 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Current from './Current';
 import History from './History';
+import { useGet } from '../../../../../Hooks/useGet';
 
 const HotelRequest = () => {
   // State to track which tab is selected
   const [selectedTab, setSelectedTab] = useState('Current');
+  const {refetch: refetchHotel,loading: loadingHotel,data: Hotel,} = useGet({ url: "https://travelta.online/agent/request"});
+  const [dataHotel,setDataList] = useState([])
+  const [dataCurrent,setDataCurrent] = useState([])
+  const [dataHistory,setDataHistory] = useState([])
+  useEffect(() => {
+    refetchHotel()
+  }, [refetchHotel])
 
+  useEffect(() => {
+    if(Hotel){
+      setDataList(Hotel)
+      setDataCurrent(Hotel.current.hotels)
+      setDataHistory(Hotel.history.hotels)
+    }
+    console.log('data ',Hotel)
+  }, [Hotel])
   return (
     <div>
       {/* Tab buttons */}
@@ -29,9 +45,9 @@ const HotelRequest = () => {
       {/* Display content based on selected tab */}
       <div className="p-4">
         {selectedTab === 'Current' ? (
-          <><Current/></>
+          <><Current data={dataCurrent} loading={loadingHotel}/></>
         ) : (
-          <><History/></>
+          <><History data ={dataHistory}/></>
         )}
       </div>
     </div>

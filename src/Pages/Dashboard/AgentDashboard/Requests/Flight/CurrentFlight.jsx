@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useGet } from '../../../../../Hooks/useGet';
 import StaticLoader from '../../../../../Components/StaticLoader';
 
-const Current = ({ data, loading }) => {
+const CurrentFlight = ({ data, loading }) => {
   const [dataCurrent, setDataCurrent] = useState([]);
   const [search, setSearch] = useState("");
   const [filteredData, setFilteredData] = useState([]);
@@ -53,21 +53,21 @@ const Current = ({ data, loading }) => {
   }
 
   return (
-    <div className="w-full p-4 bg-gray-50">
+    <div className="w-full p-4">
       {/* Search Input */}
       <input
         type="text"
         placeholder="Search..."
         value={search}
         onChange={handleSearch}
-        className="w-full p-3 mb-4 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="w-full p-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
 
       {/* Rows to Display Dropdown */}
       <select
         value={rowsToDisplay}
         onChange={handleRowsToDisplayChange}
-        className="p-3 mb-4 border-2 border-gray-300 rounded-md"
+        className="p-2 mb-4 border border-gray-300 rounded-md"
       >
         {[5, 10, 15, 20, 100].map((num) => (
           <option key={num} value={num}>
@@ -83,18 +83,28 @@ const Current = ({ data, loading }) => {
           <thead>
             <tr className="bg-mainColor text-white text-sm sm:text-base">
               {[
-                "Agent", "Check-In", "Check-Out", "Currency", "Hotel Name", 
-                "Adults", "Children", "Nights", "Priority", "Revenue", 
-                "Room Type", "Service", "Stages", "To Name", "To Phone"
+                "Agent",
+                "Arrival",
+                "Departure",
+                "Currency",
+                "Flight Class",
+                "Adults",
+                "Children",
+                "Infants",
+                "Priority",
+                "Revenue",
+                "Service",
+                "Stages",
+                "To Name",
+                "To Phone",
               ].map((heading) => (
                 <th
                   key={heading}
-                  className="p-3 border border-gray-300 text-left whitespace-nowrap cursor-pointer hover:bg-blue-500"
+                  className="p-3 border border-gray-300 text-left whitespace-nowrap cursor-pointer"
                   onClick={() => handleSort(heading.toLowerCase().replace(/\s+/g, '_'))}
                 >
                   {heading}
-                  {sortedColumn === heading.toLowerCase().replace(/\s+/g, '_') && 
-                    (sortOrder === 'asc' ? ' ↑' : ' ↓')}
+                  {sortedColumn === heading.toLowerCase().replace(/\s+/g, '_') && (sortOrder === 'asc' ? ' ↑' : ' ↓')}
                 </th>
               ))}
             </tr>
@@ -104,30 +114,26 @@ const Current = ({ data, loading }) => {
           <tbody>
             {filteredData.length > 0 ? (
               filteredData.slice(0, rowsToDisplay).map((row, index) => (
-                <tr 
-                  key={index} 
-                  className={`even:bg-gray-100 text-sm sm:text-base hover:bg-gray-200`}
-                >
-                  <td className="p-1 border border-gray-300">{row.agent}</td>
-                  <td className="p-1 border border-gray-300">{row.check_in || "N/A"}</td>
-                  <td className="p-1 border border-gray-300">{row.check_out || "N/A"}</td>
-                  <td className="p-1 border border-gray-300">{row.currecy}</td>
-                  <td className="p-1 border border-gray-300">{row.hotel_name || "N/A"}</td>
-                  <td className="p-1 border border-gray-300">{row.no_adults}</td>
-                  <td className="p-1 border border-gray-300">{row.no_children}</td>
-                  <td className="p-1 border border-gray-300">{row.no_nights || "N/A"}</td>
-                  <td className="p-1 border border-gray-300">{row.priority}</td>
-                  <td className="p-1 border border-gray-300">{row.revenue}</td>
-                  <td className="p-1 border border-gray-300">{row.room_type || "N/A"}</td>
-                  <td className="p-1 border border-gray-300">{row.service}</td>
-                  <td className="p-1 border border-gray-300">{row.stages}</td>
-                  <td className="p-1 border border-gray-300">{row.to_name}</td>
-                  <td className="p-1 border border-gray-300">{row.to_phone}</td>
+                <tr key={index} className="even:bg-gray-100 text-sm sm:text-base">
+                  <td className="p-3 border border-gray-300">{row.agent}</td>
+                  <td className="p-3 border border-gray-300">{row.arrival || "N/A"}</td>
+                  <td className="p-3 border border-gray-300">{row.depature || "N/A"}</td>
+                  <td className="p-3 border border-gray-300">{row.currecy}</td>
+                  <td className="p-3 border border-gray-300">{row.flight_class || "N/A"}</td>
+                  <td className="p-3 border border-gray-300">{row.adults_no}</td>
+                  <td className="p-3 border border-gray-300">{row.children_no}</td>
+                  <td className="p-3 border border-gray-300">{row.infants_no || "N/A"}</td>
+                  <td className="p-3 border border-gray-300">{row.priority}</td>
+                  <td className="p-3 border border-gray-300">{row.revenue}</td>
+                  <td className="p-3 border border-gray-300">{row.service}</td>
+                  <td className="p-3 border border-gray-300">{row.stages}</td>
+                  <td className="p-3 border border-gray-300">{row.to_name}</td>
+                  <td className="p-3 border border-gray-300">{row.to_phone}</td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="15" className="p-4 text-center text-gray-500">
+                <td colSpan="14" className="p-4 text-center text-gray-500">
                   No data found.
                 </td>
               </tr>
@@ -139,4 +145,4 @@ const Current = ({ data, loading }) => {
   );
 };
 
-export default Current;
+export default CurrentFlight;
