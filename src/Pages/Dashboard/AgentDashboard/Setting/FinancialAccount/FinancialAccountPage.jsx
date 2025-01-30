@@ -9,14 +9,27 @@ import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
 import { MdDelete } from "react-icons/md";
 import { PiWarningCircle } from "react-icons/pi";
 import { FaEdit } from "react-icons/fa";
+import { FaExchangeAlt } from "react-icons/fa";
+import { TextField, MenuItem, Select, InputLabel, FormControl, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
+import { useAuth } from '../../../../../Context/Auth';
+import { usePost } from '../../../../../Hooks/usePostJson';
 
 const FinancialAccountPage = ({ refetch, setUpdate }) => {
     const { refetch: refetchFinancialAccount, loading: loadingFinancialAccount, data: financialAccountData } = useGet({url:'https://travelta.online/agent/financial'});
+      const { postData, loadingPost, response } = usePost({
+        url: `https://travelta.online/agent/financial/transfer`,
+      });
     const [financialAccount, setFinancialAccount] = useState([])
+    const [modalOpen, setModalOpen] = useState(false);
+    const [fromPaymentMethod, setFromPaymentMethod] = useState(null); // Store selected payment method from "From"
+    const [toPaymentMethods, setToPaymentMethods] = useState([]);
+    const [amount, setAmount] = useState("");
     const { changeState, loadingChange, responseChange } = useChangeState();
     const { deleteData, loadingDelete, responseDelete } = useDelete();
     const [openDelete, setOpenDelete] = useState(null);
-
+    const [currancy,setCurrancy] = useState([])
+    const [selectedCurrency, setSelectedCurrency] = useState([]); // Stores filtered payment methods for "To Payment Method"
+    const auth = useAuth()
     useEffect(() => {
         refetchFinancialAccount();
     }, [refetchFinancialAccount, refetch]);
@@ -25,8 +38,23 @@ const FinancialAccountPage = ({ refetch, setUpdate }) => {
         if (financialAccountData && financialAccountData.financials) {
                 console.log("Financial Account Data:", financialAccountData);
                 setFinancialAccount(financialAccountData.financials);
+                setCurrancy(financialAccountData.currencies)
         }
     }, [financialAccountData]); // Only run this effect when `data` changes\
+
+
+    const handleFromPaymentChange = (e) => {
+      const selectedFromPayment = financialAccount.find(pm => pm.id === e.target.value);
+      setFromPaymentMethod(selectedFromPayment);
+    
+      // Now filter the "To" payment methods based on the currency_id of the selected "From" payment method
+      const filteredToPaymentMethods = financialAccount.filter(pm => pm.currency_id === selectedFromPayment.currency_id);
+      setToPaymentMethods(filteredToPaymentMethods);
+    };
+    
+  
+
+
 
     // Change coupon status 
     const handleChangeStaus = async (id, name, status) => {
@@ -67,6 +95,60 @@ const FinancialAccountPage = ({ refetch, setUpdate }) => {
                 );
             }
     };
+
+    
+
+    
+  
+    const handleOpenPopup = () => {
+      if (fromPaymentMethod) {
+        // Filter the "To" payment methods based on the selected "From" payment method's currency_id
+        const filteredToPaymentMethods = financialAccount.filter(
+          (pm) => pm.currency_id === fromPaymentMethod.currency_id
+        );
+        setToPaymentMethods(filteredToPaymentMethods); // Update "To" payment methods
+      }
+      
+      setModalOpen(true); // Open the modal
+    };
+  
+    // Handle closing the popup
+    const handleClosePopup = () => {
+      setModalOpen(false);
+      setFromPaymentMethod(null); // Reset "From Payment Method"
+      setToPaymentMethods([]); // Clear "To Payment Methods"
+      setAmount(""); // Reset the amount field
+    };
+  
+    // Handle submit for transfer
+    const handleTransferSubmit = () => {
+      if (!fromPaymentMethod) {
+        auth.toastError("From payment method invalid");
+      }
+      if (!toPaymentMethods) {
+        auth.toastError("To payment method invalid");
+      }
+      if (!amount) {
+        auth.toastError("Amount invalid");
+      }
+    
+      const formData = new FormData();
+    
+      formData.append("from_financial_id", fromPaymentMethod.id);
+      formData.append("to_financial_id", toPaymentMethods.id);
+      formData.append("amount", amount);
+    
+      postData(formData, "Data transferred successfully");
+    
+      console.log("Transferred Amount: ", amount, "From Payment Method: ", fromPaymentMethod, "To Payment Method: ", toPaymentMethod);
+      handleClosePopup();
+    };
+    
+  
+    // Filter available "To" payment methods based on selected "From" payment methods
+    // const selectedCurrency = financialAccount?.filter(
+    //   (pm) => fromPaymentMethods.includes(pm.currency_id)
+    // );
 
   const headers = ['SL', 'Account Name','Logo', 'Balance',"Currancy","Status", "Action"];
 
@@ -125,8 +207,87 @@ const FinancialAccountPage = ({ refetch, setUpdate }) => {
                         />
                     </td>
                     <td className="px-4 py-3 text-center">
-                        <div className="flex items-center justify-center gap-2">
+                        <div className="flex items-center justify-center gap-3">
+
+                                <button
+                                    type="button"
+                                    onClick={handleOpenPopup}
+                                >
+                                    <FaExchangeAlt className='text-mainColor' size="24"/>
+                                </button>
+     {/* Modal */}
+     {modalOpen && (
+  <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+    <div className="bg-white p-5 rounded-lg shadow-lg max-w-sm w-full">
+      <h2 className="text-lg font-semibold mb-3">Transfer Funds</h2>
+
+      {/* From Payment Method */}
+      <FormControl fullWidth margin="normal">
+        <InputLabel id="from-payment-label">From Payment Method</InputLabel>
+        <Select
+          labelId="from-payment-label"
+          id="from-payment"
+          value={fromPaymentMethod ? fromPaymentMethod.id : ""}
+          onChange={handleFromPaymentChange}
+          label="From Payment Method"
+        >
+          {financialAccount.map((pm) => (
+            <MenuItem key={pm.id} value={pm.id}>{pm.name}</MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      {/* To Payment Method(s) (Filtered based on From Payment Method) */}
+      <FormControl fullWidth margin="normal">
+  <InputLabel id="to-currency-label">To Payment Method</InputLabel>
+  <Select
+    labelId="to-currency-label"
+    id="to-currency"
+    value={toPaymentMethods ? toPaymentMethods.id : ""}
+    onChange={(e) => setToPaymentMethods(financialAccount.find(pm => pm.id === e.target.value))}
+    label="To Payment Method"
+    disabled={!fromPaymentMethod}
+  >
+    {toPaymentMethods.map((pm) => (
+      <MenuItem key={pm.id} value={pm.id}>
+        {pm.name}
+      </MenuItem>
+    ))}
+  </Select>
+</FormControl>
+
+      {/* Amount Input */}
+      <TextField
+        fullWidth
+        margin="normal"
+        label="Amount"
+        type="number"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+        placeholder="Enter amount"
+      />
+
+      {/* Buttons */}
+      <div className="flex justify-between mt-4">
+        <Button
+          onClick={handleClosePopup}
+          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+        >
+          Close
+        </Button>
+        <Button
+          onClick={handleTransferSubmit}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Transfer
+        </Button>
+      </div>
+    </div>
+  </div>
+)}
+
                                 <Link to={`edit/${account.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
+                               
                                 <button
                                     type="button"
                                     onClick={() => handleOpenDelete(account.id)}

@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HotelRequest from './Hotel/HotelRequest';
-import BusesRequest from './BusesRequest';
-import TourRequest from './TourRequest';
+import BusesRequest from './Bus/BusesRequest';
+import TourRequest from './Tour/TourRequest';
+import VisaRequest from './Visa/VisaRequest';
+import FlightRequest from './Flight/FlightRequest';
+import { useGet } from '../../../../Hooks/useGet';
 
 const RequestList = () => {
   const [selectedTab, setSelectedTab] = useState('Hotels');
+
+
 
   const navigate = useNavigate();
   const handleNavigate = () =>{
@@ -16,6 +21,8 @@ const RequestList = () => {
     Hotels: <HotelRequest/>,
     Buses: <BusesRequest/>,
     Tour: <TourRequest/>,
+    Visa: <VisaRequest/>,
+    Flight: <FlightRequest/>,
   };
 
   return (
@@ -27,17 +34,18 @@ const RequestList = () => {
       </button> 
    </div>
 
-      {/* Tabs Section */}
-      <div className="flex gap-4 mb-4 mt-10 border-b border-gray-300">
-  {/* Tab buttons on the left */}
-  <div className="flex gap-4">
-    {['Hotels', 'Buses', 'Tour'].map((tab) => (
+{/* Tabs Section */}
+<div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-300 pb-3 mt-10">
+
+  {/* Tab buttons */}
+  <div className="flex flex-wrap gap-3">
+    {['Hotels', 'Buses', 'Tour', 'Visa', 'Flight'].map((tab) => (
       <button
         key={tab}
-        className={`py-2 px-4 rounded-lg w-32 text-center transition-all duration-300 
+        className={`py-2 px-5 rounded-full text-lg font-medium transition-all duration-300 shadow-sm
           ${selectedTab === tab
-            ? 'bg-mainColor text-white border-b-4 border-mainColor'
-            : 'bg-gray-200 text-gray-700'}
+            ? 'bg-mainColor text-white shadow-md scale-105'
+            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}
         `}
         onClick={() => setSelectedTab(tab)}
       >
@@ -46,12 +54,15 @@ const RequestList = () => {
     ))}
   </div>
 
-  {/* Add New Request Button on the right */}
-  <button className="ml-auto mb-2 p-4 bg-mainColor text-white rounded-xl text-xl" onClick={handleNavigate}>
-    
-    + Add New Request
+  {/* Add New Request Button */}
+  <button 
+    className="p-3 px-5 bg-mainColor text-white rounded-full text-lg font-semibold shadow-md transition-transform duration-300 hover:scale-105 flex items-center gap-2"
+    onClick={handleNavigate}
+  >
+    <span className="text-2xl">+</span> Add New Request
   </button>
 </div>
+
 
 
       {/* Display Content based on selected tab */}

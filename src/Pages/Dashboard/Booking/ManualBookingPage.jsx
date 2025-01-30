@@ -864,6 +864,7 @@ const ManualBooking = () => {
         buses.map((bus) => ({
           transportation: bus.transportation,
           seats: bus.seats,
+          departure:bus.transportationDeparture,
         }))
       );
       const adults_data = tourAdults.map((adult) => ({
