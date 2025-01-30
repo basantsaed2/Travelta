@@ -126,7 +126,7 @@ const CheckOutProcessPage = () => {
 
         if(paymentType === "Full"){
             formData.append('payment_type', 'full');
-            // formData.append('amount', totalPrice);
+            formData.append('total_cart', totalPrice);
         }
         else if (paymentType === "Partial"){
             formData.append('payment_type', 'partial');
@@ -631,29 +631,7 @@ const handlePayment = () => {
       </h3>
     </div>
 
-    {/* Payment Methods Selection Grid */}
-    {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {paymentMethod.map((method, index) => (
-        <div
-          key={index}
-          className={`cursor-pointer border-2 ${
-            selectedPaymentMethods.some((item) => item.id === method.id)
-              ? "border-green-500 bg-green-100"
-              : "border-[#0D47A1] bg-white"
-          } p-6 rounded-lg flex flex-col items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105`}
-          onClick={() => handleSelectMethod(method)}
-        >
-          <img
-            src={method.image_link}
-            alt={method.name}
-            className="w-24 h-24 mb-4 object-contain"
-          />
-          <span className="text-xl font-semibold text-[#0D47A1]">
-            {method.name}
-          </span>
-        </div>
-      ))}
-    </div> */}
+
 
 <div className="space-y-4">
   {paymentMethod.map((method, index) => (
