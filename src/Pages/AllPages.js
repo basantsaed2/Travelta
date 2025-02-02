@@ -54,6 +54,10 @@ export { default as EditRoomPricingPage } from "./Dashboard/AgentDashboard/Inven
 export { default as RoomGalleryPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomGallery/RoomGalleryPage";
 export { default as AddRoomGalleryPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomGallery/AddRoomGalleryPage";
 export { default as EditRoomGalleryPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomGallery/EditRoomGalleryPage";
+//Room Availability
+export { default as RoomAvailabilityPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomAvailability/RoomAvailabilityPage";
+export { default as AddRoomAvailabilityPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomAvailability/AddRoomAvailabilityPage";
+export { default as EditRoomAvailabilityPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomAvailability/EditRoomAvailabilityPage";
 //CheckOutProcess
 export { default as CheckOutProcessPage } from "./Dashboard/AgentDashboard/CheckOutProcess/CheckOutProcessPage"; 
 //Setting 
