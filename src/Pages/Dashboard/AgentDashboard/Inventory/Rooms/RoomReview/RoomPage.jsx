@@ -353,6 +353,17 @@ const handleToggleDescription = (roomIndex) => {
                       </Link>
                     </div>
 
+                    <div className="flex justify-between items-center bg-white py-2 px-3 rounded-lg shadow-md">
+                    <span className="text-lg font-semibold text-gray-700">Room Availability:</span>
+                      <Link
+                        to={`availability/${room.id}`}
+                        className="flex items-center gap-3 bg-blue-500 text-white py-2 px-5 rounded-xl shadow-md hover:bg-blue-600 transition-all duration-300 ease-in-out"
+                      >
+                        <MdPriceChange className="text-lg" />
+                        <span className="text-base font-medium">Availability</span>
+                      </Link>
+                    </div>
+
                     {/* Markup for B2B, B2C, B2E */}
                     {(room.b2b_markup || room.b2c_markup || room.b2e_markup) && (
                         <div className="bg-white p-4 rounded-lg shadow-md">
