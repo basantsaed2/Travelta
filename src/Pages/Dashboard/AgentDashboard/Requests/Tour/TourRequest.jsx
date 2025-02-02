@@ -44,9 +44,9 @@ const TourRequest = () => {
     {/* Display content based on selected tab */}
     <div className="p-4">
       {selectedTab === 'Current' ? (
-        <><CurrentTour data={dataCurrent} loading={loadingTour}/></>
+        <><CurrentTour data={dataCurrent} loading={loadingTour} refetch={refetchTour}/></>
       ) : (
-        <><HistoryTour data ={dataHistory}/></>
+        <><HistoryTour data ={dataHistory} loading={loadingTour} refetch={refetchTour}/></>
       )}
     </div>
   </div>

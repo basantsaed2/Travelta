@@ -44,9 +44,9 @@ const FlightRequest = () => {
     {/* Display content based on selected tab */}
     <div className="p-4">
       {selectedTab === 'Current' ? (
-        <><CurrentFlight data={dataCurrent} loading={loadingFlight}/></>
+        <><CurrentFlight data={dataCurrent} loading={loadingFlight} refetch={refetchFlight}/></>
       ) : (
-        <><HistoryFlight data ={dataHistory}/></>
+        <><HistoryFlight data ={dataHistory} loading={loadingFlight} refetch={refetchFlight}/></>
       )}
     </div>
   </div>

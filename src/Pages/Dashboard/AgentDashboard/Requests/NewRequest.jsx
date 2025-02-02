@@ -461,7 +461,7 @@ const NewRequest = () => {
       formData.append("notes", notes);
       formData.append("adult_data", JSON.stringify(bookingData.adult_data));
       formData.append("child_data", JSON.stringify(bookingData.child_data));
-      postDataHotel(formData, "Hotel Added successful");
+      postDataHotel(formData, "Hotel Added successful").then(() => resetForm());
     } else if (selectedService?.service_name.toLowerCase() === "bus") {
       formData.append("from", from);
       formData.append("to", to);
@@ -479,7 +479,7 @@ const NewRequest = () => {
       formData.append("notes", notesBus);
       formData.append("adult_data", JSON.stringify(bookingDataBus.adult_data));
       formData.append("child_data", JSON.stringify(bookingDataBus.child_data));
-      postDataBus(formData, "Bus Added successful");
+      postDataBus(formData, "Bus Added successful").then(() => resetForm());
     } else if (selectedService?.service_name.toLowerCase() === "visa") {
       formData.append("country", country);
       formData.append("travel_date", travelDate);
@@ -490,7 +490,7 @@ const NewRequest = () => {
 
       formData.append("adult_data", JSON.stringify(bookingDataVisa.adult_data));
       formData.append("child_data", JSON.stringify(bookingDataVisa.child_data));
-      postDataVisa(formData, "Visa Added successful");
+      postDataVisa(formData, "Visa Added successful").then(() => resetForm());
     } else if (selectedService?.service_name.toLowerCase() === "flight") {
       formData.append("type", typeFlight);
       formData.append("direction", directionFlight);
@@ -520,19 +520,106 @@ const NewRequest = () => {
         "child_data",
         JSON.stringify(bookingDataFlight.child_data)
       );
-      postDataFlight(formData, "Flight Added successful");
+      postDataFlight(formData, "Flight Added successful").then(() => resetForm());
     } else if (selectedService?.service_name.toLowerCase() === "tour") {
       formData.append("tour", tour);
       formData.append("type ", typeTour);
-      formData.append("flight_date", flightDate);
-      formData.append("notes", notesFlight);
-
-      formData.append("adult_price", tourAdultPrice);
-      formData.append("child_price ", tourChildPrice);
-
+      // formData.append("flight_date", flightDate);
       formData.append("notes", notesTour);
-      formData.append("notes", notesFlight);
+      
+      formData.append('departure', transportationDeparture);
+      formData.append("adult_price", tourAdultPrice);
+      formData.append("child_price", tourChildPrice);
+      formData.append("adults", bookingDataTour.adults);
+      formData.append("childreen", bookingDataTour.children);
+      formData.append("adult_data", JSON.stringify(bookingDataTour.adult_data));
+      formData.append("child_data", JSON.stringify(bookingDataTour.child_data));
+
+      const formattedBuses = JSON.stringify(
+        buses.map((bus) => ({
+          transportation: bus.transportation,
+          seats: bus.seats,
+          departure:bus.transportationDeparture,
+        }))
+      );
+      formData.append("tour_bus", formattedBuses);
+          // Format and append tour_hotels as a JSON string
+          const formattedHotels = JSON.stringify(
+            tourHotels.map((hotel) => ({
+              destination: hotel.destination,
+              hotel_name: hotel.hotel_name,
+              room_type: hotel.room_type,
+              check_in: hotel.check_in,
+              check_out: hotel.check_out,
+              nights: hotel.nights,
+            }))
+          );
+          formData.append("tour_hotels", formattedHotels);
+      formData.append("notes", notesTour);
+      postDataTour(formData,'data added successful').then(() => resetForm());
     }
+  };
+
+  const resetForm = () => {
+    setCustomerId("");
+    setAdminAgentId("");
+    setCurrencyId("");
+    setServiceId("");
+    setExpectedRevenue("");
+    setPriority("");
+    setStage("");
+  
+    setCheckIn("");
+    setCheckOut("");
+    setNights("");
+    setHotelName("");
+    setRoomType("");
+    setRoomQuantity("");
+    setBookingData({ adults: 0, children: 0, adult_data: [], child_data: [] });
+    setNotes("");
+  
+    setFrom("");
+    setTo("");
+    setDeparture("");
+    setArrival("");
+    setBookingDataBus({ adults: 0, children: 0, adult_data: [], child_data: [] });
+    setAdultPrice("");
+    setChildPrice("");
+    setBus("");
+    setBusNumber("");
+    setDriverPhone("");
+    setNotesBus("");
+  
+    setCountry("");
+    setTravelDate("");
+    setAppointmentDate("");
+    setNotesVisa("");
+    setBookingDataVisa({ adults: 0, children: 0, adult_data: [], child_data: [] });
+  
+    setTypeFlight("");
+    setDirectionFlight("");
+    setFromToFlight([]);
+    setDepartureFlight("");
+    setArrivalFlight("");
+    setFlightClass("");
+    setInfantsFlight("");
+    setAirlineFlight("");
+    setTicketNumberFlight("");
+    setAdultPriceFlight("");
+    setChildPriceFlight("");
+    setRefPnrFlight("");
+    setNotesFlight("");
+    setBookingDataFlight({ adults: 0, children: 0, adult_data: [], child_data: [] });
+  
+    setTour("");
+    setTypeTour("");
+    setNotesTour("");
+    setTransportationDeparture("");
+    setTourAdultPrice("");
+    setTourChildPrice("");
+    setBookingDataTour({ adults: 0, children: 0, adult_data: [], child_data: [] });
+    setBuses([]);
+    setTourHotels([]);
   };
 
   return (
@@ -1497,7 +1584,7 @@ const NewRequest = () => {
           onChange={(e) => setTour(e.target.value)}
           margin="normal"
         />
-        <TextField
+        {/* <TextField
           fullWidth
           label="Flight Date"
           type="datetime-local"
@@ -1505,7 +1592,7 @@ const NewRequest = () => {
           onChange={(e) => setFlightDate(e.target.value)}
           margin="normal"
           InputLabelProps={{ shrink: true }}
-        />
+        /> */}
       </div>
     </div>
 
@@ -1623,7 +1710,7 @@ const NewRequest = () => {
               value={hotel.room_type}
               onChange={(e) => handleHotelChange(index, "room_type", e.target.value)}
               fullWidth
-              className="mb-2"
+              margin="normal"
             />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1634,7 +1721,7 @@ const NewRequest = () => {
               onChange={(e) => handleHotelChange(index, "check_in", e.target.value)}
               fullWidth
               InputLabelProps={{ shrink: true }}
-              className="mb-2"
+             margin="normal"
             />
             <TextField
               label="Check-Out Date"
@@ -1643,7 +1730,7 @@ const NewRequest = () => {
               onChange={(e) => handleHotelChange(index, "check_out", e.target.value)}
               fullWidth
               InputLabelProps={{ shrink: true }}
-              className="mb-2"
+             margin="normal"
             />
           </div>
           <TextField
@@ -1652,7 +1739,7 @@ const NewRequest = () => {
             value={hotel.nights}
             onChange={(e) => handleHotelChange(index, "nights", e.target.value)}
             fullWidth
-            className="mb-2"
+            margin="normal"
           />
           <div className="flex justify-between mt-2">
             {index !== 0 && tourHotels.length > 1 && (
@@ -1689,44 +1776,51 @@ const NewRequest = () => {
         onChange={handleAdultsTourChange}
         margin="normal"
       />
-      {bookingDataTour.adults > 0 &&
-        bookingDataTour.adult_data.map((adult, index) => (
-          <div key={index} className="p-4 bg-gray-50 rounded-lg my-4">
-            <h4 className="font-semibold">Adult {index + 1}</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <TextField
-                select
-                fullWidth
-                label="Title"
-                value={adult.title}
-                onChange={(e) => {
-                  const updatedAdults = [...bookingDataTour.adult_data];
-                  updatedAdults[index].title = e.target.value;
-                  setBookingDataTour({ ...prevData, adult_data: updatedAdults });
-                }}
-              >
-                <MenuItem value="Mr">Mr</MenuItem>
-                <MenuItem value="Mrs">Mrs</MenuItem>
-                <MenuItem value="Ms">Ms</MenuItem>
-              </TextField>
+{bookingDataTour.adults > 0 &&
+  bookingDataTour.adult_data.map((adult, index) => (
+    <div key={index} className="p-4 bg-gray-50 rounded-lg my-4">
+      <h4 className="font-semibold">Adult {index + 1}</h4>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <TextField
+          select
+          fullWidth
+          label="Title"
+          value={adult.title}
+          margin="normal"
+          onChange={(e) => {
+            setBookingDataTour((prevData) => {
+              const updatedAdults = [...prevData.adult_data];
+              updatedAdults[index] = { ...updatedAdults[index], title: e.target.value };
+              return { ...prevData, adult_data: updatedAdults };
+            });
+          }}
+        >
+          <MenuItem value="Mr">Mr</MenuItem>
+          <MenuItem value="Mrs">Mrs</MenuItem>
+          <MenuItem value="Ms">Ms</MenuItem>
+        </TextField>
               <TextField
                 fullWidth
                 label="First Name"
                 value={adult.first_name}
+                margin="normal"
                 onChange={(e) => {
-                  const updatedAdults = [...bookingDataTour.adult_data];
+                  setBookingDataTour((prevData)=>{  const updatedAdults = [...bookingDataTour.adult_data];
                   updatedAdults[index].first_name = e.target.value;
-                  setBookingDataTour({ ...prevData, adult_data: updatedAdults });
+                  return{ ...prevData, adult_data: updatedAdults };})
                 }}
               />
               <TextField
                 fullWidth
                 label="Last Name"
+                margin="normal"
                 value={adult.last_name}
                 onChange={(e) => {
-                  const updatedAdults = [...bookingDataTour.adult_data];
+                  setBookingDataTour((prevData)=>{const updatedAdults = [...bookingDataTour.adult_data];
                   updatedAdults[index].last_name = e.target.value;
-                  setBookingDataTour({ ...prevData, adult_data: updatedAdults });
+                  return({ ...prevData, adult_data: updatedAdults });}
+                )
+             
                 }}
               />
             </div>
@@ -1745,44 +1839,67 @@ const NewRequest = () => {
         bookingDataTour.child_data.map((child, index) => (
           <div key={index} className="p-4 bg-gray-50 rounded-lg my-4">
             <h4 className="font-semibold">Child {index + 1}</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <TextField
-                select
-                fullWidth
-                label="Title"
-                value={child.title}
-                onChange={(e) => {
-                  const updatedChildren = [...bookingDataTour.child_data];
-                  updatedChildren[index].title = e.target.value;
-                  setBookingDataTour({ ...prevData, child_data: updatedChildren });
-                }}
-              >
-                <MenuItem value="Master">Master</MenuItem>
-                <MenuItem value="Miss">Miss</MenuItem>
-              </TextField>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <TextField
+                    fullWidth
+                    label="Age"
+                    type="number"
+                    margin="normal"
+                    value={child.age}
+                    onChange={(e) => {
+                      const updatedChildren = [...bookingDataTour.child_data];
+                      updatedChildren[index].age = e.target.value;
+                      setBookingDataTour({
+                        ...bookingDataTour,
+                        child_data: updatedChildren,
+                      });
+                    }}
+                   
+                  />
+             
               <TextField
                 fullWidth
                 label="First Name"
                 value={child.first_name}
+                margin="normal"
                 onChange={(e) => {
-                  const updatedChildren = [...bookingDataTour.child_data];
+                  setBookingDataTour((prevData)=>{
+                     const updatedChildren = [...bookingDataTour.child_data];
                   updatedChildren[index].first_name = e.target.value;
-                  setBookingDataTour({ ...prevData, child_data: updatedChildren });
+                  return({ ...prevData, child_data: updatedChildren });
+                  })
+                 
                 }}
               />
               <TextField
                 fullWidth
                 label="Last Name"
+                margin="normal"
                 value={child.last_name}
                 onChange={(e) => {
-                  const updatedChildren = [...bookingDataTour.child_data];
+                  setBookingDataTour((prevData)=>{  const updatedChildren = [...bookingDataTour.child_data];
                   updatedChildren[index].last_name = e.target.value;
-                  setBookingDataTour({ ...prevData, child_data: updatedChildren });
+                  return({ ...prevData, child_data: updatedChildren });})
+                
                 }}
               />
+
+           
             </div>
+          
           </div>
+              
         ))}
+               {/* Notes */}
+               <TextField
+                fullWidth
+                label="Notes"
+                multiline
+                rows={3}
+                value={notesTour}
+                onChange={(e) => setNotesTour(e.target.value)}
+                margin="normal"
+              />
     </div>
   </div>
 )}
@@ -2035,7 +2152,8 @@ const NewRequest = () => {
             type="submit"
             className="bg-mainColor text-white py-2 px-8 rounded-md"
           >
-            Submit
+            {loadingPostTour || loadingPostFlight || loadingPostVisa || loadingPostBus || loadingPostHotel ? "Sumbiting...":"Submit"}
+            
           </button>
         </div>
       </form>
