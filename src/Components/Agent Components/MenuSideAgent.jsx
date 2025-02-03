@@ -193,6 +193,13 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     stateLink.isActiveWallet ?? false
   );
 
+  const [isActiveCurrency, setIsActiveCurrency] = useState(
+    stateLink.isActiveCurrency ?? false
+  );
+  const [isActiveTax, setIsActiveTax] = useState(
+    stateLink.isActiveTax ?? false
+  );
+
   // Helper function to save the current active links state
   const saveActiveLinksState = useCallback(() => {
     const activeLinks = {
@@ -241,6 +248,9 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       isActiveAccounting,
       isActiveAccountingIcon,
       isOpenAccounting,
+
+      isActiveCurrency,
+      isActiveTax,
 
       isOpenInventoryRoom,
       isActiveInventoryRoom,
@@ -301,6 +311,8 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isOpenSetting,
     isActiveFinancialAccount,
     isActiveWallet,
+    isActiveCurrency,
+    isActiveTax,
     isActiveAccounting,
     isActiveAccountingIcon,
     isOpenAccounting,
@@ -367,6 +379,9 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isOpenSetting,
     isActiveFinancialAccount,
     isActiveWallet,
+    isActiveCurrency,
+    isActiveTax,
+
 
     isActiveAccounting,
     isActiveAccountingIcon,
@@ -415,6 +430,8 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActiveOperationIcon(false);
     setIsActiveOperation(false);
     setIsActiveWallet(false);
+    setIsActiveCurrency(false)
+    setIsActiveTax(false)
 
     setIsActiveRequests(false);
     setIsActiveRequestsIcon(false);
@@ -880,6 +897,8 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActiveSetting(true);
     setIsActiveFinancialAccount(true)
     setIsActiveWallet(true)
+    setIsActiveCurrency(true)
+    setIsActiveTax(true)
   }, []);
   useEffect(() => {
     const part = pathName.split("/");
@@ -891,6 +910,10 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
         "/dashboard_agent/setting/financial_account",
       ].some((path) => pathName.startsWith(path)) && ![
         "/dashboard_agent/setting/wallet",
+      ].some((path) => pathName.startsWith(path)) && ![
+        "/dashboard_agent/setting/currency",
+      ].some((path) => pathName.startsWith(path)) && ![
+        "/dashboard_agent/setting/tax",
       ].some((path) => pathName.startsWith(path))
     ) {
       handleClickSetting();
@@ -929,6 +952,40 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     const result = part.slice(0, 4).join("/");
     if (result == "/dashboard_agent/setting/wallet") {
       handleClickWallet();
+    }
+  }, [location]);
+
+  const handleClickCurrency = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenSetting(true);
+    setIsActiveSettingIcon(true);
+    setIsActiveSetting(true);
+    
+    setIsActiveCurrency(true)
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 4).join("/");
+    if (result == "/dashboard_agent/setting/currency") {
+      handleClickCurrency();
+    }
+  }, [location]);
+
+  const handleClickTax = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenSetting(true);
+    setIsActiveSettingIcon(true);
+    setIsActiveSetting(true);
+    
+    setIsActiveTax(true)
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 4).join("/");
+    if (result == "/dashboard_agent/setting/tax") {
+      handleClickTax();
     }
   }, [location]);
 
@@ -1712,6 +1769,44 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
             >
               Wallet
+            </li>
+          </Link>
+
+          <Link
+            to={"setting/currency"}
+            onClick={() => {
+              handleClickCurrency();
+              onLinkClick();
+            }}
+          >
+            <li
+              className={`${
+                isActiveCurrency
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Currency
+            </li>
+          </Link>
+
+          <Link
+            to={"setting/tax"}
+            onClick={() => {
+              handleClickTax();
+              onLinkClick();
+            }}
+          >
+            <li
+              className={`${
+                isActiveTax
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Tax
             </li>
           </Link>
          
