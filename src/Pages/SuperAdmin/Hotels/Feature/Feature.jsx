@@ -25,6 +25,7 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
   const [newFeature, setNewFeature] = useState({ name: "", description: "", image: "" });
   const [showPopup, setShowPopup] = useState(false);
   const [error, setError] = useState(""); // For error handling
+  const [showAddFeature, setShowAddFeature] = useState(false);
 
   useEffect(() => {
     refetchFeature();
@@ -164,69 +165,83 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
     ) : (
       <div className="space-y-8">
         {/* Feature Cards */}
-        <div className="flex flex-col gap-8">
-          {dataFeature.map((feature, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between bg-white rounded-lg shadow-lg hover:shadow-xl overflow-auto p-6 border border-gray-300 transform transition-all duration-300"
-            >
-              <div className="flex items-center gap-4">
-                {/* Feature Checkbox */}
-                <input
-                  type="checkbox"
-                  checked={selectedFeatures.find((f) => f.id === feature.id)}
-                  onChange={() => handleFeatureSelect(feature)}
-                  className="h-5 w-5"
-                />
-  
-                {/* Feature Image */}
-                <img
-                  src={feature.image_url}
-                  alt={feature.name}
-                  className="w-16 h-16 object-cover rounded-full border-4 border-indigo-500 cursor-pointer"
-                  onClick={() => handleFeatureSelect(feature)}
-                />
-              </div>
-  
-              {/* Feature Details */}
-              <div className="flex-1 ml-4">
-                <h3 className="text-xl font-semibold text-indigo-600 mb-2">{feature.name}</h3>
-                <p className="text-sm text-gray-600">{feature.description}</p>
-              </div>
-  
-              {/* Buttons */}
-              <div className="flex gap-4 ml-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setNewFeature({
-                      name: feature.name,
-                      description: feature.description,
-                      image: feature.image_url,
-                    });
-                    setSelectedFeatures([feature]);
-                    setShowPopup(true);
-                  }}
-                  className="px-4 py-2 bg-yellow-600 text-white rounded-md"
-                >
-                  Update
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleDelete(feature.id, feature.name)}
-                  className="px-4 py-2 bg-red-600 text-white rounded-md"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+        <div className="flex flex-col gap-6">
+  {dataFeature.map((feature, index) => (
+    <div
+      key={index}
+      className="flex flex-col md:flex-row items-center justify-between bg-white rounded-lg shadow-lg hover:shadow-xl overflow-hidden p-4 md:p-6 border border-gray-300 transform transition-all duration-300"
+    >
+      <div className="flex items-center gap-4 mb-4 md:mb-0">
+        {/* Feature Checkbox */}
+        <input
+          type="checkbox"
+          checked={selectedFeatures.find((f) => f.id === feature.id)}
+          onChange={() => handleFeatureSelect(feature)}
+          className="h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500"
+        />
+
+        {/* Feature Image */}
+        <img
+          src={feature.image_url}
+          alt={feature.name}
+          className="w-16 h-16 object-cover rounded-full border-4 border-indigo-500 cursor-pointer"
+          onClick={() => handleFeatureSelect(feature)}
+        />
+      </div>
+
+      {/* Feature Details */}
+      <div className="flex-1 ml-0 md:ml-4 mb-4 md:mb-0 text-center md:text-left">
+        <h3 className="text-lg font-semibold text-indigo-600 mb-2">{feature.name}</h3>
+        <p className="text-sm text-gray-600 line-clamp-2 hover:line-clamp-none transition-all duration-200">
+          {feature.description}
+        </p>
+      </div>
+
+      {/* Buttons */}
+      <div className="flex gap-4">
+        <button
+          type="button"
+          onClick={() => {
+            setNewFeature({
+              name: feature.name,
+              description: feature.description,
+              image: feature.image_url,
+            });
+            setSelectedFeatures([feature]);
+            setShowPopup(true);
+          }}
+          className="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition"
+        >
+          Update
+        </button>
+        <button
+          type="button"
+          onClick={() => handleDelete(feature.id, feature.name)}
+          className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
+
+
   
         {error && <p className="text-red-600 text-sm mt-4">{error}</p>}
   
         {/* Add Feature Form */}
-        <div className="mt-8">
+<div className=""> 
+<div
+        onClick={() => setShowAddFeature(!showAddFeature)}
+        className="cursor-pointer text-xl font-semibold text-indigo-600 mb-4 flex items-center gap-2"
+      >
+        <span>Add Feature</span>
+        <span>{showAddFeature ? "▲" : "▼"}</span>
+      </div>
+  
+        {showAddFeature &&
+         <div className="mt-8">
           <h2 className="text-2xl font-semibold text-indigo-600 mb-4">Add New Feature</h2>
           <input
             type="text"
@@ -257,7 +272,9 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
             {loadingPost ? "Adding..." : "Add Feature"}
           </button>
         </div>
-  
+        }
+        </div>
+
         {/* Update Feature Form (Popup) */}
         {showPopup && selectedFeatures.length > 0 && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">

@@ -260,19 +260,21 @@ useEffect(() => {
               }, [DataImage])          
 
     // Handle image file input change
-  const handleImageChange = (e, index) => {
-    const newImages = [...images]; // Copy current images state
-    const file = e.target.files[0]; // Get the selected file
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        newImages[index] = { image: reader.result }; // Add image to the array
-        setImages(newImages); // Update state with the new array of images
-      };
-      reader.readAsDataURL(file); // Convert the file to a base64 string
-    }
-  };
+    const handleImageChange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImages([...images, { image: reader.result }]);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    
+    const removeImageselect = (index) => {
+      const newImages = images.filter((_, i) => i !== index);
+      setImages(newImages);
+    };
 
 
 
@@ -363,6 +365,7 @@ useEffect(() => {
   if (!loadingPost) {
     if (response) {
       navigate(-1); // Navigate back only when the response is successful
+      resetForm()
     } else {
       console.error("Response does not indicate success:", response);
     }
@@ -544,32 +547,27 @@ console.log("Policies:", policies);
     postDataCard(formData, "Accepted Card Add Successful")
   }
 
-const resetForm = () => {
-  setHotelName("");
-  setCountryId("");
-  setCityId("");
-  setZoneId("");
-  setEmail("");
-  setPhoneNumber("");
-  setRating("");
-  setVideo("");
-  setWebSite("");
-  setImages([]);
-  setPolicies([]);
-  setSelectedFacilities([]);
-  setSelectedTheme([]);
-  setHotelLogo("");
-  setImageFile(null);
-
-  setNameFacility("");
-  setNameTheme("");
-  setIsOpen(false);
-  setIsOpenTheme(false);
-  setSelectedFeatures([]);
-  setPreviewUrls([]);
-  setCheckInDate("");
-  setCheckOutDate("");
-};
+  const resetForm = () => {
+    setHotelName("");
+    setCountryId("");
+    setCityId("");
+    setZoneId("");
+    setEmail("");
+    setPhoneNumber("");
+    setRating("");
+    setCheckInDate("");
+    setCheckOutDate("");
+    setVideo("");
+    setWebSite("");
+    setPolicies([]);
+    setSelectedFacilities([]);
+    setSelectedTheme([]);
+    setSelectedCard([]);
+    setSelectedFeatures([]);
+    setHotelLogo(null);
+    setImages([]);
+  };
+  
 
 
   return (
@@ -731,26 +729,41 @@ const resetForm = () => {
 
 {/* Image Upload Section */}
 <div className="mb-6">
-  <label htmlFor="images" className="block text-gray-700 font-semibold mb-2">Upload Images Hotel</label>
-  <div className="space-y-4">
-    {Array.from({ length: inputCount }).map((_, index) => (
-      <div key={index} className="mt-3">
-        <input
-          id={`image-${index}`}
-          type="file"
-          onChange={(e) => handleImageChange(e, index)}
-          className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
+  <label className="block text-gray-700 font-semibold mb-2">Upload Hotel Images</label>
+  
+  {/* Upload Button */}
+  <div className="relative w-full max-w-md">
+    <input
+      id="image-upload"
+      type="file"
+      onChange={(e) => handleImageChange(e)}
+      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+    />
+    <div className="px-4 py-3 bg-indigo-600 text-white text-center rounded-lg cursor-pointer hover:bg-indigo-700 transition duration-200">
+      Click to Upload Image
+    </div>
+  </div>
+
+  {/* Display Uploaded Images */}
+  <div className="mt-4 flex flex-wrap gap-4">
+    {images.map((img, index) => (
+      <div key={index} className="relative w-24 h-24">
+        <img
+          src={img.image}
+          alt={`Uploaded ${index}`}
+          className="w-full h-full object-cover rounded-lg shadow-md"
         />
+        {/* Remove Button */}
+        <button
+          type="button"
+          onClick={() => removeImageselect(index)}
+          className="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-full hover:bg-red-600 transition duration-200"
+        >
+          ✕
+        </button>
       </div>
     ))}
   </div>
-  <button
-    type="button"
-    onClick={addImageInput}
-    className="mt-4 px-4 py-2 bg-mainColor text-white rounded-lg hover:bg-blue-600 transition duration-200"
-  >
-    Add Another Image
-  </button>
 </div>
 
   {/* Rating */}

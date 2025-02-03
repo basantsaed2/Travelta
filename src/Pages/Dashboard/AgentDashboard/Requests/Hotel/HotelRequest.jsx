@@ -45,9 +45,9 @@ const HotelRequest = () => {
       {/* Display content based on selected tab */}
       <div className="p-4">
         {selectedTab === 'Current' ? (
-          <><Current data={dataCurrent} loading={loadingHotel}/></>
+          <><Current data={dataCurrent} loading={loadingHotel} refetch={refetchHotel}/></>
         ) : (
-          <><History data ={dataHistory}/></>
+          <><History data ={dataHistory} loading={loadingHotel} refetch={refetchHotel}/></>
         )}
       </div>
     </div>

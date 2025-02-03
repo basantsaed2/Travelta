@@ -44,9 +44,9 @@ const BusesRequest = () => {
     {/* Display content based on selected tab */}
     <div className="p-4">
       {selectedTab === 'Current' ? (
-        <><CurrenctBus data={dataCurrent} loading={loadingBus}/></>
+        <><CurrenctBus data={dataCurrent} loading={loadingBus} refetch={refetchBus}/></>
       ) : (
-        <><HistoryBus data ={dataHistory}/></>
+        <><HistoryBus data ={dataHistory} loading={loadingBus} refetch={refetchBus}/></>
       )}
     </div>
   </div>

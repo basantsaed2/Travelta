@@ -44,9 +44,9 @@ const VisaRequest = () => {
     {/* Display content based on selected tab */}
     <div className="p-4">
       {selectedTab === 'Current' ? (
-        <><CurrentVisa data={dataCurrent} loading={loadingVisa} /></>
+        <><CurrentVisa data={dataCurrent} loading={loadingVisa} refetch={refetchVisa} /></>
       ) : (
-        <><HistoryVisa data ={dataHistory}/></>
+        <><HistoryVisa data ={dataHistory} loading={loadingVisa} refetch={refetchVisa}/></>
       )}
     </div>
   </div>

@@ -21,7 +21,8 @@ const FinancialAccountPage = ({ refetch, setUpdate }) => {
       });
     const [financialAccount, setFinancialAccount] = useState([])
     const [modalOpen, setModalOpen] = useState(false);
-    const [fromPaymentMethod, setFromPaymentMethod] = useState(null); // Store selected payment method from "From"
+    const [fromPaymentMethod, setFromPaymentMethod] = useState(null);
+    const [toPaymentMethod, setToPaymentMethod] = useState(null);
     const [toPaymentMethods, setToPaymentMethods] = useState([]);
     const [amount, setAmount] = useState("");
     const { changeState, loadingChange, responseChange } = useChangeState();
@@ -43,14 +44,14 @@ const FinancialAccountPage = ({ refetch, setUpdate }) => {
     }, [financialAccountData]); // Only run this effect when `data` changes\
 
 
-    const handleFromPaymentChange = (e) => {
-      const selectedFromPayment = financialAccount.find(pm => pm.id === e.target.value);
-      setFromPaymentMethod(selectedFromPayment);
+    // const handleFromPaymentChange = (e) => {
+    //   const selectedFromPayment = financialAccount.find(pm => pm.id === e.target.value);
+    //   setFromPaymentMethod(selectedFromPayment);
     
-      // Now filter the "To" payment methods based on the currency_id of the selected "From" payment method
-      const filteredToPaymentMethods = financialAccount.filter(pm => pm.currency_id === selectedFromPayment.currency_id);
-      setToPaymentMethods(filteredToPaymentMethods);
-    };
+    //   // Now filter the "To" payment methods based on the currency_id of the selected "From" payment method
+    //   const filteredToPaymentMethods = financialAccount.filter(pm => pm.currency_id === selectedFromPayment.currency_id);
+    //   setToPaymentMethods(filteredToPaymentMethods);
+    // };
     
   
 
@@ -97,29 +98,57 @@ const FinancialAccountPage = ({ refetch, setUpdate }) => {
     };
 
     
-
+    const handleFromPaymentChange = (event) => {
+      const selectedFromPayment = financialAccount?.find(
+        (pm) => pm.id === parseInt(event.target.value)
+      );
     
-  
-    const handleOpenPopup = () => {
-      if (fromPaymentMethod) {
-        // Filter the "To" payment methods based on the selected "From" payment method's currency_id
-        const filteredToPaymentMethods = financialAccount.filter(
-          (pm) => pm.currency_id === fromPaymentMethod.currency_id
-        );
-        setToPaymentMethods(filteredToPaymentMethods); // Update "To" payment methods
+      setFromPaymentMethod(selectedFromPayment);
+    
+      if (!selectedFromPayment) {
+        setToPaymentMethods([]);
+        setToPaymentMethod(null);
+        return;
       }
+    
+      // Filter based on the selected "From" currency
+      const filteredToPaymentMethods = financialAccount?.filter(
+        (pm) => pm.currency_id === selectedFromPayment.currency_id
+      );
+    
+      setToPaymentMethods(filteredToPaymentMethods);
+      setToPaymentMethod(null); // Reset "To" payment if "From" changes
+    };
+    
+    const handleToPaymentChange = (event) => {
+      const selectedToPayment = financialAccount?.find(
+        (pm) => pm.id === parseInt(event.target.value)
+      );
+      setToPaymentMethod(selectedToPayment);
+    };
+    
+    const handleOpenPopup = (account) => {
+      setFromPaymentMethod(account); // Store the full object
       
+      // Filter "To Payment Methods" based on the selected "From" currency_id
+      const filteredToPaymentMethods = financialAccount.filter(
+        (pm) => pm.currency_id === account.currency_id && pm.id !== account.id // Prevent selecting the same account
+      );
+    
+      setToPaymentMethods(filteredToPaymentMethods);
+      setToPaymentMethod(null); // Reset "To" selection
       setModalOpen(true); // Open the modal
     };
-  
-    // Handle closing the popup
-    const handleClosePopup = () => {
-      setModalOpen(false);
-      setFromPaymentMethod(null); // Reset "From Payment Method"
-      setToPaymentMethods([]); // Clear "To Payment Methods"
-      setAmount(""); // Reset the amount field
-    };
-  
+
+    
+// Handle closing the popup
+const handleClosePopup = () => {
+  setModalOpen(false);
+  setFromPaymentMethod(null); // Reset "From Payment Method"
+  setToPaymentMethod(null); // Reset "To Payment Method"
+  setToPaymentMethods([]); // Clear "To Payment Methods"
+  setAmount(""); // Reset the amount field
+};
     // Handle submit for transfer
     const handleTransferSubmit = () => {
       if (!fromPaymentMethod) {
@@ -135,13 +164,14 @@ const FinancialAccountPage = ({ refetch, setUpdate }) => {
       const formData = new FormData();
     
       formData.append("from_financial_id", fromPaymentMethod.id);
-      formData.append("to_financial_id", toPaymentMethods.id);
+      formData.append("to_financial_id", toPaymentMethod.id);
       formData.append("amount", amount);
     
-      postData(formData, "Data transferred successfully");
+      postData(formData, "Data transferred successfully").then(()=>refetchFinancialAccount());
     
       console.log("Transferred Amount: ", amount, "From Payment Method: ", fromPaymentMethod, "To Payment Method: ", toPaymentMethod);
       handleClosePopup();
+      
     };
     
   
@@ -211,50 +241,43 @@ const FinancialAccountPage = ({ refetch, setUpdate }) => {
 
                                 <button
                                     type="button"
-                                    onClick={handleOpenPopup}
+                                    onClick={()=>handleOpenPopup(account)}
                                 >
                                     <FaExchangeAlt className='text-mainColor' size="24"/>
                                 </button>
-     {/* Modal */}
-     {modalOpen && (
+{/* Modal */}
+{modalOpen && (
   <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
     <div className="bg-white p-5 rounded-lg shadow-lg max-w-sm w-full">
       <h2 className="text-lg font-semibold mb-3">Transfer Funds</h2>
 
-      {/* From Payment Method */}
+      {/* From Payment Method (Read Only) */}
       <FormControl fullWidth margin="normal">
-        <InputLabel id="from-payment-label">From Payment Method</InputLabel>
-        <Select
-          labelId="from-payment-label"
-          id="from-payment"
-          value={fromPaymentMethod ? fromPaymentMethod.id : ""}
-          onChange={handleFromPaymentChange}
+        <TextField
           label="From Payment Method"
+          value={fromPaymentMethod ? fromPaymentMethod.name : ""}
+          InputProps={{ readOnly: true }}
+        />
+      </FormControl>
+
+      {/* To Payment Method (Dropdown - Filtered) */}
+      <FormControl fullWidth margin="normal">
+        <InputLabel id="to-payment-label">To Payment Method</InputLabel>
+        <Select
+          labelId="to-payment-label"
+          id="to-payment"
+          value={toPaymentMethod ? toPaymentMethod.id : ""}
+          onChange={handleToPaymentChange}
+          label="To Payment Method"
+          disabled={!fromPaymentMethod} // Disabled if no "From Payment" is selected
         >
-          {financialAccount.map((pm) => (
-            <MenuItem key={pm.id} value={pm.id}>{pm.name}</MenuItem>
+          {toPaymentMethods.map((pm) => (
+            <MenuItem key={pm.id} value={pm.id}>
+              {pm.name}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>
-
-      {/* To Payment Method(s) (Filtered based on From Payment Method) */}
-      <FormControl fullWidth margin="normal">
-  <InputLabel id="to-currency-label">To Payment Method</InputLabel>
-  <Select
-    labelId="to-currency-label"
-    id="to-currency"
-    value={toPaymentMethods ? toPaymentMethods.id : ""}
-    onChange={(e) => setToPaymentMethods(financialAccount.find(pm => pm.id === e.target.value))}
-    label="To Payment Method"
-    disabled={!fromPaymentMethod}
-  >
-    {toPaymentMethods.map((pm) => (
-      <MenuItem key={pm.id} value={pm.id}>
-        {pm.name}
-      </MenuItem>
-    ))}
-  </Select>
-</FormControl>
 
       {/* Amount Input */}
       <TextField
@@ -278,6 +301,7 @@ const FinancialAccountPage = ({ refetch, setUpdate }) => {
         <Button
           onClick={handleTransferSubmit}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          disabled={!fromPaymentMethod || !toPaymentMethod || !amount} // Prevent empty submissions
         >
           Transfer
         </Button>
@@ -285,6 +309,7 @@ const FinancialAccountPage = ({ refetch, setUpdate }) => {
     </div>
   </div>
 )}
+
 
                                 <Link to={`edit/${account.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
                                
