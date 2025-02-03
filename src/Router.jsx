@@ -70,6 +70,10 @@ import AddPaymentMethod from "./Pages/SuperAdmin/Settings/Tabs/PaymentMethod/Add
 import RequestListLayout from "./Layouts/AgentLayouts/Requests/RequestListLayout";
 import NewRequestLayout from "./Layouts/AgentLayouts/Requests/NewRequestLayout";
 import WorkStationLayout from "./Layouts/AgentLayouts/Requests/WorkStationLayout";
+import AddCurrencyLayout from "./Layouts/AgentLayouts/Setting/Currency/AddCurrencyLayout";
+import TaxLayout from "./Layouts/AgentLayouts/Setting/Tax/TaxLayout";
+import AddTaxLayout from "./Layouts/AgentLayouts/Setting/Tax/AddTaxLayout";
+import CurrencyLayoutPage from "./Layouts/AgentLayouts/Setting/Currency/CurrencyLayoutPage";
 
 
 const AppLayoutAgent = () => (
@@ -121,6 +125,17 @@ const AppFinancialAccount= () => (
   </>
 );
 const AppWalletLayout= () => (
+  <>
+  <Outlet />
+  </>
+);
+
+const AppCurrencyLayout= () => (
+  <>
+  <Outlet />
+  </>
+);
+const AppTaxLayout= () => (
   <>
   <Outlet />
   </>
@@ -431,6 +446,43 @@ export const router = createBrowserRouter([
                     ]
     
                   },
+
+                  {
+                    path: 'currency',
+                    element: <AppCurrencyLayout/>,
+                    children:[
+                      {
+                        path: "",
+                        element: <CurrencyLayoutPage/>,
+                      },
+                      {
+                        path: "add",
+                        element: <AddCurrencyLayout/>,
+                      },
+
+                    ]
+    
+                  },
+
+                  {
+                    path: 'tax',
+                    element: <AppTaxLayout/>,
+                    children:[
+                      {
+                        path: "",
+                        element: <TaxLayout/>,
+                      },
+                      {
+                        path: "add",
+                        element: <AddTaxLayout/>,
+                      },
+
+                    ]
+    
+                  },
+
+                  
+
                 ]
               },
 
