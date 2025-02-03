@@ -5,7 +5,7 @@ import { usePost } from '../../../../../Hooks/usePostJson';
 import { useAuth } from '../../../../../Context/Auth';
 import { useNavigate } from 'react-router-dom';
 
-const AddCurrency = () => {
+const AddCurrency = ({update,setUpdate}) => {
   const { refetch: refetchCurrecy, loading: loadingCurrecy, data: Currency } = useGet({
     url: 'https://travelta.online/agent/settings/currency',
   });
@@ -22,6 +22,12 @@ const AddCurrency = () => {
     refetchCurrecy();
   }, [refetchCurrecy]);
 
+    useEffect(() => {
+                    if (!loadingCurrency) {
+                      setUpdate(!update);
+                    }
+                  }, [responseCurrency]);
+
   useEffect(() => {
     if (Currency) {
       setCurrency(Currency.currencies);
@@ -29,16 +35,16 @@ const AddCurrency = () => {
     console.log('data currency', Currency);
   }, [Currency]);
 
-  useEffect(() => {
+//   useEffect(() => {
   
-    if (!loadingCurrency) {
-      if (responseCurrency) {
-        navigate(-1); // Navigate back only when the response is successful
-      } else {
-        console.error("Response does not indicate success:", responseCurrency);
-      }
-    }
-  }, [loadingCurrency, responseCurrency, navigate]);
+//     if (!loadingCurrency) {
+//       if (responseCurrency) {
+//         navigate(-1); // Navigate back only when the response is successful
+//       } else {
+//         console.error("Response does not indicate success:", responseCurrency);
+//       }
+//     }
+//   }, [loadingCurrency, responseCurrency, navigate]);
 
 
   const handleCurrencyChange = (e) => {
@@ -61,8 +67,20 @@ const AddCurrency = () => {
     formData.append('currancy_id', currencyId);
     formData.append('name', currencyName);
 
-    postCurrency(formData, 'Currency added successfully');
-  };
+    postCurrency(formData, 'Currency added successfully')
+                  .then(() => {
+                    handleReset(); // Now correctly calling the reset function
+                  })
+                  .catch((error) => {
+                    console.error('Error during submission:', error);
+                  });
+              };
+              
+              const handleReset = () => {
+                setCurrencyName('');
+                setCurrencyId('');
+              
+              };
 
   return (
     <div>

@@ -74,6 +74,8 @@ import AddCurrencyLayout from "./Layouts/AgentLayouts/Setting/Currency/AddCurren
 import TaxLayout from "./Layouts/AgentLayouts/Setting/Tax/TaxLayout";
 import AddTaxLayout from "./Layouts/AgentLayouts/Setting/Tax/AddTaxLayout";
 import CurrencyLayoutPage from "./Layouts/AgentLayouts/Setting/Currency/CurrencyLayoutPage";
+import GroupLayout from "./Layouts/AgentLayouts/Setting/Group/GroupLayout";
+import AddGroupLayout from "./Layouts/AgentLayouts/Setting/Group/AddGroupLayout";
 
 
 const AppLayoutAgent = () => (
@@ -136,6 +138,11 @@ const AppCurrencyLayout= () => (
   </>
 );
 const AppTaxLayout= () => (
+  <>
+  <Outlet />
+  </>
+);
+const AppGroupLayout= () => (
   <>
   <Outlet />
   </>
@@ -475,6 +482,23 @@ export const router = createBrowserRouter([
                       {
                         path: "add",
                         element: <AddTaxLayout/>,
+                      },
+
+                    ]
+    
+                  },
+
+                  {
+                    path: 'group',
+                    element: <AppGroupLayout/>,
+                    children:[
+                      {
+                        path: "",
+                        element: <GroupLayout/>,
+                      },
+                      {
+                        path: "add",
+                        element: <AddGroupLayout/>,
                       },
 
                     ]
