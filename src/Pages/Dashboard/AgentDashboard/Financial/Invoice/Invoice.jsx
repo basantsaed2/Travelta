@@ -86,7 +86,7 @@ const Invoice = ({ update }) => {
              {tottalPrice}
               </td>
               <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                {isAllowDatePassed ? "Allow Date Passed" : "Allow Date Not Passed"}
+                {isAllowDatePassed ? "Date Passed" : "Date Not Passed"}
               </td>
             </tr>
           ) : (

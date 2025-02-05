@@ -19,7 +19,7 @@ const CustomerPage = ({ refetch, setUpdate }) => {
         }
     }, [dataCustomer]); // Only run this effect when `data` changes
 
-  const headers = ['SL', 'Name','Email', 'Phone',"Gender","Action"];
+  const headers = ['SL', 'Name','Email', 'Phone',"Gender","Profile"];
 
   return (
     <div className="w-full pb-5 flex items-start justify-start overflow-x-scroll scrollSection">

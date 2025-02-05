@@ -88,6 +88,7 @@ import HotelProfileLayout from "./Layouts/BookingListLayout/Upcoming/HotelProfil
 import ProfileLayout from "./Layouts/AgentLayouts/Users/Leads/ProfileLayout";
 import ProfileSupplierLayout from "./Layouts/AgentLayouts/Users/Suppliers/ProfileSupplierLayout";
 import ProfileCustomerLayout from "./Layouts/AgentLayouts/Users/Customers/ProfileLayout";
+import EditLeadLayout from "./Layouts/AgentLayouts/Users/Leads/EditLeadLayout";
 
 
 const AppLayoutAgent = () => (
@@ -418,7 +419,10 @@ export const router = createBrowserRouter([
                       },
                       {path: 'profilee/:id',
                         element: <ProfileLayout/>
-                      }
+                      },
+                      {path: 'edit/:leadId',
+                        element: <EditLeadLayout/>
+                      },
                     ]
                   },
                   {

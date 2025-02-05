@@ -34,7 +34,7 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
   }, [upcomingData]);
 
   const headers = ['SL', 'To Name','To Phone','Client Email','Agent', 'Check In', 'Check Out', 'Total Price'];
-  const headersFlight = ['SL','Code','To Name','To Phone', 'To Email','To Role','Flight Type','Direction', 'Status', 'Total Price' ,"Profile"];
+  const headersFlight = ['SL','Code','To Name','To Phone', 'To Email','To Role','Flight Type','Direction', 'Status', 'Total Price' ,"Details"];
 
   const tabLists = {
     Hotel: upcomingHotelList,
@@ -44,83 +44,50 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
     Visa: upcomingVisaList,
   };
 
-    const renderBusCards = () => (
-      <div className="flex flex-wrap flex-col lg:flex-row mt-4 gap-6">
-        {upcomingBusList.map((item, index) => (
-          <div
-            key={index}
-            className="w-[500px] p-6 transition-all duration-300 transform hover:shadow-xl rounded-lg border border-gray-200"
-          >
-            <div className="bg-gradient-to-r from-white to-white text-white rounded-lg shadow-lg overflow-auto">
-              {/* Header Section */}
-              <div className="bg-gradient-to-r from-indigo-600 to-blue-800 text-white p-6 flex items-center justify-between">
-                <div>
-                  <h3 className="text-2xl font-semibold">{item.bus_name}</h3>
-                  <p className="text-lg">{item.country}</p>
-                </div>
-                <FaBus className="text-white text-3xl" />
-              </div>
-    
-              {/* Bus Info Section */}
-              <div className="p-6 space-y-4 text-gray-800">
-                <div className="flex items-center gap-2">
-                  <FaCalendarAlt className="text-indigo-600" size={18} />
-                  <p><strong className="text-gray-700">Departure:</strong> {item.depature}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <FaBusAlt className="text-green-500" size={18} />
-                  <p><strong className="text-gray-700">Bus No.:</strong> {item.bus_no}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <FaMapMarkerAlt className="text-yellow-500" size={18} />
-                  <p><strong className="text-gray-700">From:</strong> {item.from}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <FaMapPin className="text-red-500" size={18} />
-                  <p><strong className="text-gray-700">To:</strong> {item.to}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <FaClock className="text-purple-500" size={18} />
-                  <p><strong className="text-gray-700">Arrival:</strong> {item.arrival}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <FaDollarSign className="text-teal-600" size={18} />
-                  <p><strong className="text-gray-700">Price:</strong> ${item.total_price}</p>
-                </div>
-              </div>
-    
-              {/* Supplier Info Section */}
-              <div className="border-t border-gray-200 p-6 space-y-4">
-                <div className="flex items-center gap-2">
-                  <FaPhoneAlt className="text-gray-700" size={18} />
-                  <p><strong className="text-gray-700">Supplier Phone:</strong> {item.supplier_from_phone || 'N/A'}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <FaEnvelope className="text-gray-700" size={18} />
-                  <p><strong className="text-gray-700">Supplier Email:</strong> {item.supplier_from_email || 'N/A'}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <FaPhoneAlt className="text-gray-700" size={18} />
-                  <p><strong className="text-gray-700">Driver Phone:</strong> {item.driver_phone}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <FaUser className="text-gray-700" size={18} />
-                  <p><strong className="text-gray-700">To Name:</strong> {item.to_name}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <FaPhoneAlt className="text-gray-700" size={18} />
-                  <p><strong className="text-gray-700">To Phone:</strong> {item.to_phone}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <FaBriefcase className="text-gray-700" size={18} />
-                  <p><strong className="text-gray-700">To Role:</strong> {item.to_role}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
+  const renderBusTable = () => (
+    <div className="overflow-x-auto mt-4">
+     <table className="w-full sm:min-w-0">
+          <thead className="w-full">
+            <tr className="w-full border-b-2">
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">SL</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Code</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Name</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Phone</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Email</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Role</th>
+           
+            
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Price</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Country</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          {upcomingBusList.map((item, index) => (
+            <tr key={index} className="border-t border-gray-200 hover:bg-gray-100">
+              <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{index+1}</td>
+              <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.code}</td>
+              <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_name}</td>
+              <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_phone}</td>
+              <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_email}</td>
+              <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_role}</td>
+             
+             
+              <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">${item.total_price}</td>
+              <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.country}</td>
+              <td className="min-w-[150px] flex items-center justify-center sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+      <FaEllipsis 
+        className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
+        onClick={() => navigate(`/dashboard_agent/booking_list/upcoming_booking/bus_profile/${item?.id}`)}
+      />
+    </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+  
 
     const renderFlightCards = () => (
          <table className="w-full sm:min-w-0">
@@ -187,212 +154,203 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
         </table>
     );
       
-    const renderTourCards = () => (
-      <div className="flex flex-wrap mt-4 gap-6">
-        {upcomingTourList.map((item, index) => (
-          <div
-            key={index}
-            className="w-[500px] p-6 transition-transform duration-300 transform hover:scale-105"
-          >
-            <div className="bg-white shadow-lg rounded-xl overflow-y-auto border border-gray-200 hover:shadow-xl h-[450px]">
-              {/* Header Section */}
-              <div className="bg-mainColor text-white p-6 rounded-t-lg flex items-center justify-between">
-                <div>
-                  <h3 className="text-2xl font-semibold">{item.tour_name}</h3>
-                  <p className="text-lg">{item.tour_type}</p>
-                </div>
-              </div>
-    
-              {/* Tour Info Section */}
-              <div className="p-6 space-y-4">
-                <p><strong className="text-gray-700">Price:</strong> ${item.total_price}</p>
-                <p><strong className="text-gray-700">Adults No.:</strong> {item.adults_no}</p>
-                <p><strong className="text-gray-700">Children No.:</strong> {item.children_no}</p>
-                <p><strong className="text-gray-700">Country:</strong> {item.country}</p>
-              </div>
-    
-              {/* Supplier Info Section */}
-              <div className="border-t border-gray-200 p-6 space-y-4">
-                <p><strong className="text-gray-700">Supplier Name:</strong> {item.supplier_from_name}</p>
-                <div className="flex items-center">
-                  <FaPhoneAlt className="text-gray-700 mr-2" />
-                  <p><strong className="text-gray-700">Supplier Phone:</strong> {item.supplier_from_phone || 'N/A'}</p>
-                </div>
-                <div className="flex items-center">
-                  <FaEnvelope className="text-gray-700 mr-2" />
-                  <p><strong className="text-gray-700">Supplier Email:</strong> {item.supplier_from_email || 'N/A'}</p>
-                </div>
-              </div>
-    
-              {/* To Info Section */}
-              <div className="border-t border-gray-200 p-6 space-y-4">
-                <p><strong className="text-gray-700">To Name:</strong> {item.to_name}</p>
-                <p><strong className="text-gray-700">To Role:</strong> {item.to_role}</p>
-                <div className="flex items-center">
-                  <FaPhoneAlt className="text-gray-700 mr-2" />
-                  <p><strong className="text-gray-700">To Phone:</strong> {item.to_phone || 'N/A'}</p>
-                </div>
-                <div className="flex items-center">
-                  <FaEnvelope className="text-gray-700 mr-2" />
-                  <p><strong className="text-gray-700">To Email:</strong> {item.to_email || 'N/A'}</p>
-                </div>
-              </div>
-    
-              {/* Tour Buses & Hotels Section */}
-              <div className="border-t border-gray-200 p-6 space-y-4">
-                <div>
-                  <p><strong className="text-gray-700">Tour Buses:</strong></p>
-                  {item.tour_buses.map((bus, idx) => (
-                    <div key={idx} className="flex items-center">
-                      <FaBus className="text-gray-700 mr-2" />
-                      <p>{bus.transportation}: {bus.seats} seats</p>
-                    </div>
-                  ))}
-                </div>
-                <div>
-                  <p><strong className="text-gray-700">Tour Hotels:</strong></p>
-                  {item.tour_hotels.map((hotel, idx) => (
-                    <div key={idx} className="flex items-center">
-                      <FaHotel className="text-gray-700 mr-2" />
-                      <p>{hotel.hotel_name} ({hotel.room_type} room, Check-in: {hotel.check_in}, Check-out: {hotel.check_out})</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
+    const renderTourTable = () => (
+      <div className="overflow-x-auto mt-4">
+          <table className="w-full sm:min-w-0">
+          <thead className="w-full">
+            <tr className="w-full border-b-2">
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">SL</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Code</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Name</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Phone</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Email</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Role</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Children No.</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Country</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Details</th>
 
-    const renderVisaCards = () => (
-      <div className="flex flex-wrap gap-6 mt-4">
-        {upcomingVisaList.map((item, index) => (
-          <div
-            key={index}
-            className="w-[500px] p-6 transition-transform duration-300 transform hover:scale-105"
-          >
-            <div className="bg-white shadow-lg rounded-xl overflow-y-auto border border-gray-200 hover:shadow-xl h-[450px]">
-              {/* Header Section */}
-              <div className="bg-mainColor text-white p-6 rounded-t-lg flex items-center justify-between">
-                <div>
-                  <h3 className="text-2xl font-semibold">{item.visa_name}</h3>
-                </div>
-              </div>
-    
-              {/* Visa Info Section */}
-              <div className="p-6 space-y-4">
-                <p><strong className="text-gray-700">Appointment Date:</strong> {item.appointment}</p>
-                <p><strong className="text-gray-700">Travel Date:</strong> {item.travel_date}</p>
-                <p><strong className="text-gray-700">Price:</strong> ${item.total_price}</p>
-                <p><strong className="text-gray-700">Country:</strong> {item.country}</p>
-                <p><strong className="text-gray-700">Country Name:</strong> {item.country_name}</p>
-                <p><strong className="text-gray-700">Adults No.:</strong> {item.no_adults}</p>
-                <p><strong className="text-gray-700">Children No.:</strong> {item.no_children}</p>
-                <p><strong className="text-gray-700">Notes:</strong> {item.notes}</p>
-              </div>
-    
-              {/* Supplier Info Section */}
-              <div className="border-t border-gray-200 p-6 space-y-4">
-                <p><strong className="text-gray-700">Supplier From:</strong> {item.supplier_from_name}</p>
-                <div className="flex items-center">
-                  <FaPhoneAlt className="text-gray-700 mr-2" />
-                  <p><strong className="text-gray-700">Supplier From Phone:</strong> {item.supplier_from_phone || 'N/A'}</p>
-                </div>
-                <div className="flex items-center">
-                  <FaEnvelope className="text-gray-700 mr-2" />
-                  <p><strong className="text-gray-700">Supplier From Email:</strong> {item.supplier_from_email || 'N/A'}</p>
-                </div>
-              </div>
-    
-              {/* To Info Section */}
-              <div className="border-t border-gray-200 p-6 space-y-4">
-                <p><strong className="text-gray-700">Supplier To:</strong> {item.to_name}</p>
-                <p><strong className="text-gray-700">Supplier To Role:</strong> {item.to_role}</p>
-                <div className="flex items-center">
-                  <FaPhoneAlt className="text-gray-700 mr-2" />
-                  <p><strong className="text-gray-700">Supplier To Phone:</strong> {item.to_phone || 'N/A'}</p>
-                </div>
-                <div className="flex items-center">
-                  <FaEnvelope className="text-gray-700 mr-2" />
-                  <p><strong className="text-gray-700">Supplier To Email:</strong> {item.to_email || 'N/A'}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+            </tr>
+          </thead>
+          <tbody>
+            {upcomingTourList.map((item, index) => (
+              <tr key={index} className="border-t border-gray-200 hover:bg-gray-100">
+               <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{index+1}</td>
+               <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.code}</td>
+               <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_name}</td>
+               <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_phone}</td>
+               <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">${item.to_email}</td>
+               <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_role}</td>
+               <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.children_no}</td>
+               <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.country?item.country:"-"}</td>
+
+               <td className="min-w-[150px] flex items-center justify-center sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+      <FaEllipsis 
+        className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
+        onClick={() => navigate(`/dashboard_agent/booking_list/upcoming_booking/tour_profile/${item?.id}`)}
+      />
+    </td>
+
+
+                {/* <td className="p-3">
+                  {item.tour_buses.map((bus, idx) => (
+                    <div key={idx}>{bus.transportation}: {bus.seats} seats</div>
+                  ))}
+                </td>
+                <td className="p-3">
+                  {item.tour_hotels.map((hotel, idx) => (
+                    <div key={idx}>{hotel.hotel_name} ({hotel.room_type} room, Check-in: {hotel.check_in}, Check-out: {hotel.check_out})</div>
+                  ))}
+                </td> */}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     );
     
-    const renderHotelCards = () => (
-      <div className="flex flex-wrap gap-6 mt-4">
-        {upcomingHotelList.map((item, index) => (
-          <div
-            key={index}
-            className="w-[500px] p-6 transition-transform duration-300 transform hover:scale-105"
-          >
-            <div className="bg-white border border-gray-200 shadow-lg rounded-xl overflow-y-auto hover:shadow-xl h-[450px]">
-              {/* Header Section */}
-              <div className="bg-mainColor text-white p-6 rounded-t-lg">
-                <h3 className="text-2xl font-semibold">{item.hotel_name}</h3>
-              </div>
-    
-              {/* Hotel Info Section */}
-              <div className="p-6 space-y-4">
-                <p><strong className="text-gray-700">Check-in Date:</strong> {item.check_in}</p>
-                <p><strong className="text-gray-700">Check-out Date:</strong> {item.check_out}</p>
-                <p><strong className="text-gray-700">Price:</strong> ${item.total_price}</p>
-                <p><strong className="text-gray-700">Country:</strong> {item.country}</p>
-                <p><strong className="text-gray-700">Room Type:</strong> {item.room_type}</p>
-                <p><strong className="text-gray-700">Adults No.:</strong> {item.no_adults}</p>
-                <p><strong className="text-gray-700">Children No.:</strong> {item.no_children}</p>
-                <p><strong className="text-gray-700">Nights No.:</strong> {item.no_nights}</p>
-              </div>
-    
-              {/* Supplier Info Section */}
-              <div className="border-t border-gray-200 p-6 space-y-4">
-                <p><strong className="text-gray-700">Supplier From:</strong> {item.supplier_from_name}</p>
-                <div className="flex items-center">
-                  <FaPhoneAlt className="text-gray-700 mr-2" />
-                  <p><strong className="text-gray-700">Supplier From Phone:</strong> {item.supplier_from_phone || 'N/A'}</p>
-                </div>
-                <div className="flex items-center">
-                  <FaEnvelope className="text-gray-700 mr-2" />
-                  <p><strong className="text-gray-700">Supplier From Email:</strong> {item.supplier_from_email || 'N/A'}</p>
-                </div>
-              </div>
-    
-              {/* To Info Section */}
-              <div className="border-t border-gray-200 p-6 space-y-4">
-                <p><strong className="text-gray-700">Supplier To:</strong> {item.to_name}</p>
-                <p><strong className="text-gray-700">Supplier To Role:</strong> {item.to_role}</p>
-                <div className="flex items-center">
-                  <FaPhoneAlt className="text-gray-700 mr-2" />
-                  <p><strong className="text-gray-700">Supplier To Phone:</strong> {item.to_phone || 'N/A'}</p>
-                </div>
-                <div className="flex items-center">
-                  <FaEnvelope className="text-gray-700 mr-2" />
-                  <p><strong className="text-gray-700">Supplier To Email:</strong> {item.to_email || 'N/A'}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+    const renderVisaTable = () => (
+      <div className="overflow-x-auto mt-4">
+        <table className="w-full sm:min-w-0">
+          <thead className="w-full">
+            <tr className="w-full border-b-2">
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">SL</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Code</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Name</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Phone</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Email</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Role</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Appointment Date</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Travel Date</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Price</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Country</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Details</th>
+            {/* <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Country Name</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Adults No.</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Children No.</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Notes</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Supplier From</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Supplier From Phone</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Supplier From Email</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Supplier To</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Supplier To Role</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Supplier To Phone</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Supplier To Email</th> */}
+            </tr>
+          </thead>
+          <tbody>
+            {upcomingVisaList.map((item, index) => (
+              <tr key={index} className="border-t border-gray-200 hover:bg-gray-100">
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{index+1}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.code}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_name}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_phone}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_email}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_role}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.appointment}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.travel_date}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">${item.total_price}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.country}</td>
+                {/* <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.country_name}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.no_adults}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.no_children}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.notes}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.supplier_from_name}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.supplier_from_phone[0] || 'N/A'}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.supplier_from_email[0] || 'N/A'}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_name}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_role}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_phone || 'N/A'}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_email || 'N/A'}</td> */}
+                                  <td className="min-w-[150px] flex items-center justify-center sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+      <FaEllipsis 
+        className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
+        onClick={() => navigate(`/dashboard_agent/booking_list/upcoming_booking/visa_profile/${item?.id}`)}
+      />
+    </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     );
+    
+    
+    const renderHotelTable = () => (
+      <div className="overflow-x-auto mt-4">
+        <table className="min-w-full rounded-lg">
+          <thead>
+            <tr>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">SL</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Code</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Name</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Phone</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Email</th>
+            <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Role</th>
+              <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Price</th>
+              <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Country</th>
+              <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Room Type</th>
+              <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Adults No.</th>
+              <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Children No.</th>
+              <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Nights No.</th>
+              <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Details</th>
+              {/* <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Supplier Name</th>
+              <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Supplier Phone</th>
+              <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Supplier Email</th>
+              <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Name</th>
+              <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Role</th>
+              <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Phone</th>
+              <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">To Email</th> */}
+            </tr>
+          </thead>
+          <tbody>
+            {upcomingHotelList.map((item, index) => (
+              <tr key={index} className="border-t border-gray-200 hover:bg-gray-100">
+                                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{index+1}</td>
+                                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.code}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_name}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_phone}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_email}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.to_role}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.total_price}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.country?item.country:"-"}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.room_type}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.no_adults}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.no_children}</td>
+                <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.no_nights}</td>
+
+                                               <td className="min-w-[150px] flex items-center justify-center sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+      <FaEllipsis 
+        className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
+        onClick={() => navigate(`/dashboard_agent/booking_list/upcoming_booking/hotel_profile/${item?.id}`)}
+      />
+    </td>
+                {/* <td className="p-3">{item.supplier_from_name}</td>
+                <td className="p-3">{item.supplier_from_phone || 'N/A'}</td>
+                <td className="p-3">{item.supplier_from_email || 'N/A'}</td>
+                <td className="p-3">{item.to_name}</td>
+                <td className="p-3">{item.to_role}</td>
+                <td className="p-3">{item.to_phone || 'N/A'}</td>
+                <td className="p-3">{item.to_email || 'N/A'}</td> */}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+    
     
     const renderActiveTabContent = () => {
       switch (activeTab) {
         case 'Bus':
-          return renderBusCards();
+          return renderBusTable();
         case 'Flight':
           return renderFlightCards();
         case 'Tour':
-          return renderTourCards();
+          return renderTourTable();
         case 'Visa':
-          return renderVisaCards();
+          return renderVisaTable();
         case 'Hotel':
-          return renderHotelCards();
+          return renderHotelTable();
         default:
           return null;
       }

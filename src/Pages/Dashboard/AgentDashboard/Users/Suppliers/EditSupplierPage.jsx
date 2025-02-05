@@ -4,6 +4,7 @@ import { usePost } from '../../../../../Hooks/usePostJson';
 import { useGet } from '../../../../../Hooks/useGet';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa';
+import { useAuth } from "../../../../../Context/Auth";
 
 const EditSupplierPage = ({ update, setUpdate }) => {
     const { supplierId } = useParams();
@@ -13,7 +14,7 @@ const EditSupplierPage = ({ update, setUpdate }) => {
     const [suppliersServices, setSupplierServices] = useState([])
     const [selectedServices, setSelectedServices] = useState([]); // Holds the selected service ID
     const navigate = useNavigate();
-
+    const auth= useAuth()
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("")
@@ -132,7 +133,7 @@ const EditSupplierPage = ({ update, setUpdate }) => {
           
     
       console.log('formData', formData)
-  
+      
       postData(formData, 'Supplier Updated Success');
       }
 

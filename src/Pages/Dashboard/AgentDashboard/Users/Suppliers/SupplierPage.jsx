@@ -47,7 +47,7 @@ const SupplierPage = ({ refetch, setUpdate }) => {
         console.log('data Suppliers', suppliers)
       };
 
-  const headers = ['SL', 'Name','Email', 'Phone',"Admin Name","Admin Email","Admin Phone","Action"];
+  const headers = ['SL', 'Name','Email', 'Phone',"Admin Name","Admin Email","Admin Phone","Profile","Action"];
 
   return (
     <div className="w-full pb-5 flex items-start justify-start overflow-x-scroll scrollSection">
@@ -95,6 +95,16 @@ const SupplierPage = ({ refetch, setUpdate }) => {
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
                     {supplier?.admin_phone || '-'}
                   </td>
+                  <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                  <button
+                                             type="button"
+                                           >
+                                                 <FaUserCircle
+                                                   className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
+                                                   onClick={() => navigate(`/dashboard_agent/users/suppliers/profile/${supplier?.id}`)}
+                                                 />
+                                               </button>
+                  </td>
                   <td className="px-4 py-3 text-center">
                     <div className="flex items-center justify-center gap-1">
                     <Link to={`edit/${supplier.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
@@ -105,14 +115,7 @@ const SupplierPage = ({ refetch, setUpdate }) => {
                         <MdDelete color='#D01025' size="24"/>
                       </button>
 
-                                        <button
-                                             type="button"
-                                           >
-                                                 <FaUserCircle
-                                                   className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
-                                                   onClick={() => navigate(`/dashboard_agent/users/suppliers/profile/${supplier?.id}`)}
-                                                 />
-                                               </button>
+                                   
                       
                       {openDelete === supplier.id && (
                         <Dialog

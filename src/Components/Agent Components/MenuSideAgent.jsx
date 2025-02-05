@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../Context/Auth";
-import { FaHome } from "react-icons/fa";
+import { FaFileArchive, FaHome } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
 import { MdFlightTakeoff } from "react-icons/md";
@@ -1410,7 +1410,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
         hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
       >
         <div className="flex font-semibold text-xl items-center gap-x-2">
-          <RiCheckDoubleLine
+          <FaFileArchive
             className={`${
               isActiveFinancialIcon || isActiveFinancial
                 ? "text-mainColor"

@@ -5,10 +5,10 @@ import { useDelete } from '../../../../../Hooks/useDelete';
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
 import { MdDelete } from "react-icons/md";
 import { PiWarningCircle } from "react-icons/pi";
-import { FaUserCircle } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { FaEdit, FaUserCircle } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
 
-const LeadPage = ({ refetch, setUpdate }) => {
+const LeadPage = ({ update, setUpdate }) => {
     const { refetch: refetchLead, loading: loadingLead, data: dataLead } = useGet({url:'https://travelta.online/agent/leads'});
     const [leads, setLeads] = useState([])
     const { deleteData, loadingDelete, responseDelete } = useDelete();
@@ -16,7 +16,7 @@ const LeadPage = ({ refetch, setUpdate }) => {
     const navigate= useNavigate()
     useEffect(() => {
         refetchLead();
-    }, [refetchLead, refetch]);
+    }, [refetchLead, update]);
 
     useEffect(() => {
         if (dataLead && dataLead.leads) {
@@ -47,7 +47,7 @@ const LeadPage = ({ refetch, setUpdate }) => {
         console.log('data leads', leads)
       };
 
-  const headers = ['SL', 'Name','Email', 'Phone',"Gender","Action"];
+  const headers = ['SL', 'Name','Email', 'Phone',"Gender","Profile","Action"];
 
   return (
     <div className="w-full pb-5 flex items-start justify-start overflow-x-scroll scrollSection">
@@ -89,16 +89,8 @@ const LeadPage = ({ refetch, setUpdate }) => {
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
                     {lead?.gender || '-'}
                   </td>
-
-                  <td className="px-4 py-3 text-center">
-                    <div className="flex items-center justify-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => handleOpenDelete(lead.id)}
-                      >
-                        <MdDelete color='#D01025' size="24"/>
-                      </button>
-                      <button
+                  <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                  <button
                         type="button"
                       >
                             <FaUserCircle
@@ -106,6 +98,18 @@ const LeadPage = ({ refetch, setUpdate }) => {
                               onClick={() => navigate(`/dashboard_agent/users/leads/profilee/${lead?.id}`)}
                             />
                           </button>
+                  </td>
+
+                  <td className="px-4 py-3 text-center">
+                    <div className="flex items-center justify-center gap-2">
+                    <Link to={`edit/${lead.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
+                      <button
+                        type="button"
+                        onClick={() => handleOpenDelete(lead.id)}
+                      >
+                        <MdDelete color='#D01025' size="24"/>
+                      </button>
+                  
                       {openDelete === lead.id && (
                         <Dialog
                           open={true}
