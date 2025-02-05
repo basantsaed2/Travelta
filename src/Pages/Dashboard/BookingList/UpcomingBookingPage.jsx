@@ -5,8 +5,12 @@ import { useGet } from '../../../Hooks/useGet';
 import { FaPhoneAlt, FaEnvelope, FaBus,FaPlane,FaHotel  } from 'react-icons/fa';
 import { FaMapMarkerAlt, FaDollarSign, FaClock, FaUser, FaBriefcase, FaCalendarAlt, FaBusAlt,FaMapPin } from 'react-icons/fa';
 import { FaPlaneDeparture, FaArrowRight, FaCalendarDay, FaChild, FaCogs, FaIdBadge, FaTicketAlt } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { FaUserCircle } from "react-icons/fa";
+import { FaEllipsis } from 'react-icons/fa6';
 const UpcomingBookingPage = ({ refetch, setUpdate }) => {
-  const { refetch: refetchUpcoming, loading: loadingUpcoming, data: upcomingData } = useGet({ url: 'https://travelta.online/agent/booking/upcoming' });
+  const { refetch: refetchUpcoming, loading: loadingUpcoming, data: upcomingData } = useGet({ url: 'https://travelta.online/agent/booking' });
+  const navigate = useNavigate();
   const [upcomingBusList, setUpcomingBusList] = useState([]);
   const [upcomingFlightList, setUpcomingFlightList] = useState([]);
   const [upcomingHotelList, setUpcomingHotelList] = useState([]);
@@ -21,16 +25,16 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
   useEffect(() => {
     if (upcomingData) {
       console.log("Upcoming List:", upcomingData);
-      setUpcomingBusList(upcomingData.bus || []);
-      setUpcomingFlightList(upcomingData.flight || []);
-      setUpcomingHotelList(upcomingData.hotel || []);
-      setUpcomingTourList(upcomingData.tour || []);
-      setUpcomingVisaList(upcomingData.visa || []);
+      setUpcomingBusList(upcomingData.upcoming.buses || []);
+      setUpcomingFlightList(upcomingData.upcoming.flights || []);
+      setUpcomingHotelList(upcomingData.upcoming.hotels || []);
+      setUpcomingTourList(upcomingData.upcoming.tours || []);
+      setUpcomingVisaList(upcomingData.upcoming.visas || []);
     }
   }, [upcomingData]);
 
-  const headers = ['SL', 'Client Name','Client Phone','Client Email','Agent', 'Check In', 'Check Out', 'Total Price'];
-  const headersFlight = ['SL','Code','Client Name','Client Phone','Agent','Flight Type','Direction', 'Check In', 'Check Out', 'Total Price'];
+  const headers = ['SL', 'To Name','To Phone','Client Email','Agent', 'Check In', 'Check Out', 'Total Price'];
+  const headersFlight = ['SL','Code','To Name','To Phone', 'To Email','To Role','Flight Type','Direction', 'Status', 'Total Price' ,"Profile"];
 
   const tabLists = {
     Hotel: upcomingHotelList,
@@ -40,7 +44,6 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
     Visa: upcomingVisaList,
   };
 
-    
     const renderBusCards = () => (
       <div className="flex flex-wrap flex-col lg:flex-row mt-4 gap-6">
         {upcomingBusList.map((item, index) => (
@@ -145,32 +148,37 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
                     {flight?.code|| '-'}
                   </td>
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                    {flight?.to_client?.name|| '-'}
+                    {flight?.to_name|| '-'}
                   </td>
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                    {flight?.to_client?.emails[0] ||flight?.to_client?.emails || '-'}
+                    {flight?.to_phone|| '-'}
                   </td>
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                    {flight?.to_client?.phones[0] || flight?.to_client?.phones|| '-'}
+                    {flight?.to_email|| '-'}
                   </td>
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                    {flight?.to_client?.agent || '-'}
+                    {flight?.to_role || '-'}
                   </td>
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                    {flight?.flight?.type || '-'}
+                    {flight?.flight_type || '-'}
                   </td>
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                    {flight?.flight?.direction || '-'}
+                    {flight?.flight_direction|| '-'}
                   </td>
+
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                    {flight.start_date? flight.start_date.split(" ")[0] : '-'}
+                    {flight?.status|| '-'}
                   </td>
+              
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                    {flight.end_date? flight.end_date.split(" ")[0] : '-'}
+                    {flight?.total_price || '-'}
                   </td>
-                  <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                    {flight?.price || '-'}
-                  </td>
+                  <td className="min-w-[150px] flex items-center justify-center sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+      <FaEllipsis 
+        className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
+        onClick={() => navigate(`/dashboard_agent/booking_list/upcoming_booking/flight_profile/${flight?.id}`)}
+      />
+    </td>
                 </tr>
               ))
 

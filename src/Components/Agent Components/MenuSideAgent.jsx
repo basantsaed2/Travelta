@@ -84,6 +84,21 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     stateLink.isActivePastBookingList ?? false
   );
 
+  // Financial
+    const [isOpenFinancial, setIsOpenFinancial] = useState(
+      stateLink.isOpenFinancial ?? false
+    );
+    const [isActiveFinancialIcon, setIsActiveFinancialIcon] = useState(
+      stateLink.isActiveFinancialIcon ?? false
+    );
+    const [isActiveFinancial, setIsActiveFinancial] = useState(
+      stateLink.isActiveFinancial ?? false
+    );
+    const [isActiveInvoice, setIsActiveInvoice] = useState(
+      stateLink.isActiveInvoice ?? false
+    );
+
+
   // Operation
   const [isOpenOperation, setIsOpenOperation] = useState(
     stateLink.isOpenOperation ?? false
@@ -229,6 +244,11 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       isActiveCurrentBookingList,
       isActivePastBookingList,
 
+      isOpenFinancial,
+      isActiveFinancialIcon,
+      isActiveFinancial,
+      isActiveInvoice,
+
       isOpenOperation,
       isActiveOperationIcon,
       isActiveOperation,
@@ -294,6 +314,11 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveUpcomingBookingList,
     isActiveCurrentBookingList,
     isActivePastBookingList,
+
+    isOpenFinancial,
+    isActiveFinancialIcon,
+    isActiveFinancial,
+    isActiveInvoice,
 
     isOpenOperation,
     isActiveOperationIcon,
@@ -364,6 +389,11 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveCurrentBookingList,
     isActivePastBookingList,
 
+    isOpenFinancial,
+    isActiveFinancialIcon,
+    isActiveFinancial,
+    isActiveInvoice,
+
     isOpenOperation,
     isActiveOperationIcon,
     isActiveOperation,
@@ -432,6 +462,11 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActiveUpcomingBookingList(false);
     setIsActiveCurrentBookingList(false);
     setIsActivePastBookingList(false);
+
+    setIsOpenFinancial(false);
+    setIsActiveFinancial(false);
+    setIsActiveInvoice(false);
+    setIsActiveFinancialIcon(false);
 
     setIsOpenOperation(false);
     setIsActiveOperationIcon(false);
@@ -693,6 +728,41 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       handleClickPastBooking();
     }
   }, [location]);
+
+  // Function to handle financial section click
+  const handleClickFinancial = useCallback(() => {
+    setIsOpenFinancial(true);
+    setIsActiveFinancial(true);
+    setIsActiveFinancialIcon(true);
+    setIsActiveInvoice(true);
+  }, []);
+
+  // Function to handle invoice link click
+  const handleClickInvoice = useCallback(() => {
+    handleStateLinks();
+    setIsOpenFinancial(true);
+    setIsActiveFinancial(true);
+    setIsActiveFinancialIcon(true);
+    setIsActiveInvoice(true);
+  }, [handleStateLinks]);
+
+  // Ensure correct state when visiting financial section
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 3).join("/");
+
+    if (result === "/dashboard_agent/financial" && pathName === "/dashboard_agent/financial") {
+      handleClickFinancial();
+      navigate("/dashboard_agent/financial/invoice", { replace: true });
+    }
+  }, [pathName, navigate, handleClickFinancial]);
+
+  // Ensure correct state when on the invoice page
+  useEffect(() => {
+    if (pathName === "/dashboard_agent/financial/invoice") {
+      handleClickInvoice();
+    }
+  }, [pathName, handleClickInvoice]);
 
   // Operation
   const handleClickOperation = useCallback(() => {
@@ -1322,6 +1392,77 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
               Past
             </li>
           </Link>
+        </ul>
+      </div>
+
+        {/* Financial List */}
+        <Link
+        to="financial"
+        onMouseMove={() => setIsActiveFinancialIcon(true)}
+        onMouseOut={() => setIsActiveFinancialIcon(false)}
+        onClick={() => {
+          handleClickFinancial();
+        }}
+        className={`
+          ${isActiveFinancial ? "active" : ""}
+         flex items-center 
+         ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
+        hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+      >
+        <div className="flex font-semibold text-xl items-center gap-x-2">
+          <RiCheckDoubleLine
+            className={`${
+              isActiveFinancialIcon || isActiveFinancial
+                ? "text-mainColor"
+                : "text-white"
+            }`}
+          />
+          {!isSidebarCollapsed && (
+            <span
+              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
+                isActiveFinancial ? "text-mainColor" : "text-white"
+              }`}
+            >
+              Financial
+            </span>
+          )}
+        </div>
+        {!isSidebarCollapsed && (
+          <IoIosArrowForward
+            className={`${
+              isActiveFinancial
+                ? "text-mainColor rotate-90"
+                : "text-white rotate-0"
+            } text-xl transition-all duration-300 group-hover:text-mainColor`}
+          />
+        )}
+      </Link>
+      <div
+        className={`${
+          isOpenFinancial && !isSidebarCollapsed ? "h-17" : "h-0 "
+        } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+      >
+        <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
+          <Link
+            to={"/dashboard_agent/financial/invoice"}
+            onClick={() => {
+              handleClickInvoice();
+              onLinkClick();
+            }}
+          >
+            <li
+              className={`${
+                isActiveInvoice
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Invoice
+            </li>
+          </Link>
+      
+       
         </ul>
       </div>
 

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useAuth } from '../../Context/Auth';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaHome } from "react-icons/fa";
+import { FaFileArchive, FaHome } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
 import { MdFlightTakeoff } from "react-icons/md";
@@ -173,6 +173,21 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
   const [isActiveSignUp, setIsActiveSignUp] = useState(
     stateLink.isActiveSignUp ?? false
   );
+
+  
+    // Financial
+    const [isOpenFinancial, setIsOpenFinancial] = useState(
+      stateLink.isOpenFinancial ?? false
+    );
+    const [isActiveFinancialIcon, setIsActiveFinancialIcon] = useState(
+      stateLink.isActiveFinancialIcon ?? false
+    );
+    const [isActiveFinancial, setIsActiveFinancial] = useState(
+      stateLink.isActiveFinancial ?? false
+    );
+    const [isActiveInvoice, setIsActiveInvoice] = useState(
+      stateLink.isActiveInvoice ?? false
+    );
   
 
   
@@ -207,6 +222,10 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
         // isActiveTourismIcon,
         // isActiveTourism,
        
+        isOpenFinancial,
+        isActiveFinancialIcon,
+        isActiveFinancial,
+        isActiveInvoice,
   
         isOpenPendingPayment,
         isActivePendingPaymentIcon,
@@ -247,6 +266,10 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
         // isActiveTourismIcon,
         // isActiveTourism,
        
+        isOpenFinancial,
+        isActiveFinancialIcon,
+        isActiveFinancial,
+        isActiveInvoice,
   
         isOpenPendingPayment,
         isActivePendingPaymentIcon,
@@ -320,6 +343,11 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
         // isActiveTourismIcon,
         // isActiveTourism,
        
+
+        isOpenFinancial,
+        isActiveFinancialIcon,
+        isActiveFinancial,
+        isActiveInvoice,
   
         isOpenPendingPayment,
         isActivePendingPaymentIcon,
@@ -360,6 +388,11 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
       // setIsOpenTourism(false);
       // setIsActiveTourismIcon(false);
       // setIsActiveTourism(false);
+
+      setIsOpenFinancial(false);
+      setIsActiveFinancial(false);
+      setIsActiveInvoice(false);
+      setIsActiveFinancialIcon(false);
      
   
       setIsOpenHotels(false);
@@ -637,7 +670,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
               || result === "/super_admin/settings/zone" || result === "/super_admin/settings/currency" || result === "/super_admin/settings/payment_method"
             ) {
                 handleClickSettings();
-            
+               
             }
             console.log("result", result);
           }, [location]);                      
@@ -659,7 +692,39 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
     }
   }, [location]);
   
+  // Function to handle financial section click
+  const handleClickFinancial = useCallback(() => {
+    setIsOpenFinancial(true);
+    setIsActiveFinancial(true);
+    setIsActiveFinancialIcon(true);
+  }, []);
 
+  // Function to handle invoice link click
+  const handleClickInvoice = useCallback(() => {
+    handleStateLinks();
+    setIsOpenFinancial(true);
+    setIsActiveFinancial(true);
+    setIsActiveFinancialIcon(true);
+    setIsActiveInvoice(true);
+  }, [handleStateLinks]);
+
+  // Ensure correct state when visiting financial section
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 3).join("/");
+
+    if (result === "/super_admin/financial" && pathName === "/super_admin/financial") {
+      handleClickFinancial();
+      navigate("/super_admin/financial/invoice", { replace: true });
+    }
+  }, [pathName, navigate, handleClickFinancial]);
+
+  // Ensure correct state when on the invoice page
+  useEffect(() => {
+    if (pathName === "/super_admin/financial/invoice") {
+      handleClickInvoice();
+    }
+  }, [pathName, handleClickInvoice]);
   
  
   
@@ -705,7 +770,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                   {!isSidebarCollapsed && (
                     <span
                       className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
-                        isActiveHome ? "text-mainColor" : "text-white"
+                      isActiveHome ? "text-mainColor" : "text-white"
                       }`}
                     >
                       Home
@@ -1236,7 +1301,73 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                 )} */}
               </Link>       
 
+              {/* Settings */}
+                  <Link
+                 to="/super_admin/financial"
+                 onMouseMove={() => setIsActiveFinancialIcon(true)}
+                 onMouseOut={() => setIsActiveFinancialIcon(false)}
+                 onClick={handleClickFinancial}
+                 className={`
+                   ${isActiveFinancial? "active" : ""}
+                  flex items-center 
+                  ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
+                 hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+               >
+                 <div className="flex font-semibold text-xl items-center gap-x-2">
+                   <FaFileArchive  
+                     className={`${
+                       isActiveFinancialIcon || isActiveFinancial
+                         ? "text-mainColor"
+                         : "text-white"
+                     }`}
+                   />
+                   {!isSidebarCollapsed && (
+                     <span
+                       className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
+                         isActiveFinancial ? "text-mainColor" : "text-white"
+                       }`}
+                     >
+                       Financial
+                     </span>
+                   )}
+                 </div>
+                 {!isSidebarCollapsed && (
+                   <IoIosArrowForward
+                     className={`${
+                       isActiveFinancial ? "text-mainColor rotate-90" : "text-white rotate-0"
+                     } text-xl transition-all duration-300 group-hover:text-mainColor`}
+                   />
+                 )}
+               </Link>
+               <div
+                 className={`${
+                   isOpenFinancial && !isSidebarCollapsed ? "h-17" : "h-0 "
+                 } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+               >
+                 <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
+                   <Link
+                     to={"/super_admin/financial/invoice"}
+                     onClick={() => {
+                       handleClickInvoice();
+                       onLinkClick();
+                     }}
+                   >
+                     <li
+                       className={`${
+                         isActiveInvoice
+                           ? "rounded-xl bg-white text-mainColor"
+                           : "text-white"
+                       }
+                                   text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+                     >
+                       Invoices
+                     </li>
+                   </Link>
          
+               
+                  
+                 </ul>
+               </div>
          
         
        

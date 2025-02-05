@@ -1,11 +1,13 @@
 import React, { useEffect,useState } from 'react';
 import StaticLoader from '../../../../../Components/StaticLoader';
 import { useGet } from '../../../../../Hooks/useGet';
+import { FaUserCircle } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const CustomerPage = ({ refetch, setUpdate }) => {
     const { refetch: refetchCustomer, loading: loadingCustomer, data: dataCustomer } = useGet({url:'https://travelta.online/agent/customer'});
     const [customers, setCustomers] = useState([])
-
+    const navigate = useNavigate()
     useEffect(() => {
         refetchCustomer();
     }, [refetchCustomer, refetch]);
@@ -17,7 +19,7 @@ const CustomerPage = ({ refetch, setUpdate }) => {
         }
     }, [dataCustomer]); // Only run this effect when `data` changes
 
-  const headers = ['SL', 'Name','Email', 'Phone',"Gender",];
+  const headers = ['SL', 'Name','Email', 'Phone',"Gender","Action"];
 
   return (
     <div className="w-full pb-5 flex items-start justify-start overflow-x-scroll scrollSection">
@@ -58,6 +60,16 @@ const CustomerPage = ({ refetch, setUpdate }) => {
                   </td>
                   <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
                     {customer?.gender || '-'}
+                  </td>
+                  <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                  <button
+                        type="button"
+                      >
+                            <FaUserCircle
+                              className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
+                              onClick={() => navigate(`/dashboard_agent/users/customers/profiles/${customer?.id}`)}
+                            />
+                          </button>
                   </td>
                 </tr>
               ))

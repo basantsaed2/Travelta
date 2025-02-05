@@ -76,6 +76,18 @@ import AddTaxLayout from "./Layouts/AgentLayouts/Setting/Tax/AddTaxLayout";
 import CurrencyLayoutPage from "./Layouts/AgentLayouts/Setting/Currency/CurrencyLayoutPage";
 import GroupLayout from "./Layouts/AgentLayouts/Setting/Group/GroupLayout";
 import AddGroupLayout from "./Layouts/AgentLayouts/Setting/Group/AddGroupLayout";
+import InvoiceLayout from "./Layouts/SuperAdminLayouts/FinancialLayout/InvoiceLayout/InvoiceLayout";
+import AddInvoiceLayout from "./Layouts/SuperAdminLayouts/FinancialLayout/InvoiceLayout/AddInvoiceLayout";
+import InvoiceAgentLayout from "./Layouts/AgentLayouts/Financial/Invoice/InvoiceAgentLayout";
+import AddInvoiceAgentLayout from "./Layouts/AgentLayouts/Financial/Invoice/AddInvoiceAgentLayout";
+import FlightProfileLayout from "./Layouts/BookingListLayout/Upcoming/FlightProfileLayout";
+import VisaProfileLayout from "./Layouts/BookingListLayout/Upcoming/VisaProfileLayout";
+import TourProfileLayout from "./Layouts/BookingListLayout/Upcoming/TourProfileLayout";
+import BusProfileLayout from "./Layouts/BookingListLayout/Upcoming/BusProfileLayout";
+import HotelProfileLayout from "./Layouts/BookingListLayout/Upcoming/HotelProfileLayout";
+import ProfileLayout from "./Layouts/AgentLayouts/Users/Leads/ProfileLayout";
+import ProfileSupplierLayout from "./Layouts/AgentLayouts/Users/Suppliers/ProfileSupplierLayout";
+import ProfileCustomerLayout from "./Layouts/AgentLayouts/Users/Customers/ProfileLayout";
 
 
 const AppLayoutAgent = () => (
@@ -283,7 +295,38 @@ const AppCurrency= () => (
   <Outlet />
   </>
 );
+const AppFinancial= () => (
+  <>
+  <Outlet />
+  </>
+);
+const AppInvoice= () => (
+  <>
+  <Outlet />
+  </>
+);
 
+const AppFinancialagent= () => (
+  <>
+  <Outlet />
+  </>
+);
+const AppInvoiceAgent= () => (
+  <>
+  <Outlet />
+  </>
+);
+
+const AppUpcomingBooking= () => (
+  <>
+  <Outlet />
+  </>
+);
+const AppCustomer= () => (
+  <>
+  <Outlet />
+  </>
+);
 export const router = createBrowserRouter([
 
     {
@@ -353,8 +396,16 @@ export const router = createBrowserRouter([
                 children: [
                   {
                     path: 'customers',
-                    element: <CustomersLayout />,
-                  },
+                    element: <AppCustomer />,
+                    children: [
+                    {path: '',
+                      element: <CustomersLayout/>
+                    },
+                    {path: 'profiles/:id',
+                      element: <ProfileCustomerLayout/>
+                    }
+                  ]
+                },
                   {
                     path: 'leads',
                     element: <AppLeadLayout />,
@@ -364,6 +415,9 @@ export const router = createBrowserRouter([
                       },
                       {path: 'add',
                         element: <AddLeadLayout/>
+                      },
+                      {path: 'profilee/:id',
+                        element: <ProfileLayout/>
                       }
                     ]
                   },
@@ -379,6 +433,9 @@ export const router = createBrowserRouter([
                       },
                       {path: 'edit/:supplierId',
                         element: <EditSupplierLayout/>
+                      },
+                      {path: 'profile/:id',
+                        element: <ProfileSupplierLayout/>
                       }
                     ]
                   },
@@ -410,10 +467,73 @@ export const router = createBrowserRouter([
                   },
                   {
                     path: 'upcoming_booking',
-                    element: <UpcomingBookingLayout />,
+                    element: <AppUpcomingBooking />,
+                    children:[
+                     {
+                      path:"",
+                      element:<UpcomingBookingLayout/>
+                     },
+                     {
+                      path:"flight_profile/:id",
+                      element:<FlightProfileLayout/>
+                     },
+                     {
+                      path:"visa_profile/:id",
+                      element:<VisaProfileLayout/>
+                     }
+                     ,
+                     {
+                      path:"tour_profile/:id",
+                      element:<TourProfileLayout/>
+                     }
+                     ,
+                     {
+                      path:"bus_profile/:id",
+                      element:<BusProfileLayout/>
+                     }
+                     ,
+                     {
+                      path:"Hotel_profile/:id",
+                      element:<HotelProfileLayout/>
+                     }
+
+                    ]
+
+                    
                   },
                 ]
               },
+
+              {
+                path: "financial",
+                element: <AppFinancialagent/>,
+                children:[
+                  {
+                    path: "invoice",
+                    element: <AppInvoiceAgent/>,
+                    children:[
+                        {
+                          path: "",
+                          element: <InvoiceAgentLayout/>,
+                        },       
+                        {
+                          path: "add",
+                          element: <AddInvoiceAgentLayout/>,
+                        },
+                        {
+                        path: "edit/:accountId",
+                        element: <EditFinancialAccountLayout/>,
+                        },
+                    ]
+                  },
+           
+
+
+                  
+
+                ]
+              },
+
 
               {
                 path: "setting",
@@ -509,6 +629,7 @@ export const router = createBrowserRouter([
 
                 ]
               },
+
 
               {
                 path: "checkOut_process",
@@ -1325,6 +1446,40 @@ export const router = createBrowserRouter([
                 element: <SignApproveLayout/>
 
               },
+
+              {
+                path: "financial",
+                element: <AppFinancial/>,
+                children:[
+                  {
+                    path: "invoice",
+                    element: <AppInvoice/>,
+                    children:[
+                        {
+                          path: "",
+                          element: <InvoiceLayout/>,
+                        },       
+                        {
+                          path: "add",
+                          element: <AddInvoiceLayout/>,
+                        },
+                        {
+                        path: "edit/:accountId",
+                        element: <EditFinancialAccountLayout/>,
+                        },
+                    ]
+                  },
+           
+
+
+                  
+
+                ]
+              },
+
+              
+
+              
 
             ]
           },

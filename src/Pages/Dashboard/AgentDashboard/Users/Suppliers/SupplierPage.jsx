@@ -5,15 +5,15 @@ import { useDelete } from '../../../../../Hooks/useDelete';
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
 import { MdDelete } from "react-icons/md";
 import { PiWarningCircle } from "react-icons/pi";
-import { FaEdit } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { FaEdit, FaUserCircle } from "react-icons/fa";
+import { Link, useNavigate } from 'react-router-dom';
 
 const SupplierPage = ({ refetch, setUpdate }) => {
     const { refetch: refetchSupplier, loading: loadingSupplier, data: dataSupplier } = useGet({url:'https://travelta.online/agent/supplier'});
     const [suppliers, setSuppliers] = useState([])
     const { deleteData, loadingDelete, responseDelete } = useDelete();
     const [openDelete, setOpenDelete] = useState(null);
-
+    const navigate = useNavigate()
     useEffect(() => {
         refetchSupplier();
     }, [refetchSupplier, refetch]);
@@ -104,6 +104,16 @@ const SupplierPage = ({ refetch, setUpdate }) => {
                       >
                         <MdDelete color='#D01025' size="24"/>
                       </button>
+
+                                        <button
+                                             type="button"
+                                           >
+                                                 <FaUserCircle
+                                                   className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
+                                                   onClick={() => navigate(`/dashboard_agent/users/suppliers/profile/${supplier?.id}`)}
+                                                 />
+                                               </button>
+                      
                       {openDelete === supplier.id && (
                         <Dialog
                           open={true}

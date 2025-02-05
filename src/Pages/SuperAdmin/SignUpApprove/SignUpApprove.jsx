@@ -155,30 +155,30 @@ const closeModal = () => {
   ) : (  <div className="overflow-x-auto">
     <h2 className="text-3xl text-mainColor mb-5">Data SignUp</h2>
     <div className="overflow-x-auto">
-  <table className="w-full min-w-[800px] bg-white border border-gray-200 shadow-sm">
-    <thead className="bg-gray-100">
-      <tr className="bg-mainColor text-white">
-        <th className="px-4 py-4 border text-left text-sm font-medium">ID</th>
-        <th className="px-4 py-2 border text-left text-sm font-medium">Name</th>
-        <th className="px-4 py-2 border text-left text-sm font-medium">Email</th>
-        <th className="px-4 py-2 border text-left text-sm font-medium">Phone</th>
-        <th className="px-4 py-2 border text-left text-sm font-medium">Role</th>
-        <th className="px-4 py-2 border text-left text-sm font-medium">Status</th>
-        <th className="px-4 py-2 border text-left text-sm font-medium">Legal Papers</th>
-        <th className="px-4 py-2 border text-center text-sm font-medium">Actions</th>
+    <table className="w-full sm:min-w-0">
+    <thead className="w-full">
+    <tr className="w-full border-b-2">
+    <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">ID</th>
+    <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Name</th>
+    <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Email</th>
+    <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Phone</th>
+    <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Role</th>
+    <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Status</th>
+    <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Legal Papers</th>
+    <th className="min-w-[120px] sm:w-[8%] lg:w-[5%] text-mainColor text-center font-TextFontLight sm:text-sm lg:text-base xl:text-lg pb-3">Actions</th>
       </tr>
     </thead>
     <tbody>
       {users.length > 0 ? (
         users.map((item, index) => (
           <tr key={index} className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"}`}>
-            <td className="px-4 py-2 border text-md text-gray-800">{item.id || "N/A"}</td>
-            <td className="px-4 py-2 border text-md text-gray-800">{item.name || "N/A"}</td>
-            <td className="px-4 py-2 border text-md text-gray-800">{item.email || "N/A"}</td>
-            <td className="px-4 py-2 border text-md text-gray-800">{item.phone || "N/A"}</td>
-            <td className="px-4 py-2 border text-md text-gray-800">{item.role || "N/A"}</td>
-            <td className="px-4 py-2 border text-md text-gray-800">{item.status || "Pending"}</td>
-            <td className="px-4 py-2 border text-md text-gray-800">
+            <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.id || "N/A"}</td>
+            <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.name || "N/A"}</td>
+            <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.email || "N/A"}</td>
+            <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.phone || "N/A"}</td>
+            <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.role || "N/A"}</td>
+            <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">{item.status || "Pending"}</td>
+            <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
               {item.legal_papers?.length ? (
                 <div className="flex items-center gap-2">
                   <img
@@ -199,7 +199,7 @@ const closeModal = () => {
                 "No Documents"
               )}
             </td>
-            <td className="px-4 py-2 border text-center text-sm">
+            <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
               <button
                 className={`text-green-500 hover:text-green-700 mr-4 ${
                   loadingUsers[item.id] ? "opacity-50 cursor-not-allowed" : ""

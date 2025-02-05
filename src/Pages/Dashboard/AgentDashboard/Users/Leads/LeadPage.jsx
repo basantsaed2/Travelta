@@ -5,13 +5,15 @@ import { useDelete } from '../../../../../Hooks/useDelete';
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
 import { MdDelete } from "react-icons/md";
 import { PiWarningCircle } from "react-icons/pi";
+import { FaUserCircle } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const LeadPage = ({ refetch, setUpdate }) => {
     const { refetch: refetchLead, loading: loadingLead, data: dataLead } = useGet({url:'https://travelta.online/agent/leads'});
     const [leads, setLeads] = useState([])
     const { deleteData, loadingDelete, responseDelete } = useDelete();
     const [openDelete, setOpenDelete] = useState(null);
-
+    const navigate= useNavigate()
     useEffect(() => {
         refetchLead();
     }, [refetchLead, refetch]);
@@ -96,6 +98,14 @@ const LeadPage = ({ refetch, setUpdate }) => {
                       >
                         <MdDelete color='#D01025' size="24"/>
                       </button>
+                      <button
+                        type="button"
+                      >
+                            <FaUserCircle
+                              className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
+                              onClick={() => navigate(`/dashboard_agent/users/leads/profilee/${lead?.id}`)}
+                            />
+                          </button>
                       {openDelete === lead.id && (
                         <Dialog
                           open={true}
