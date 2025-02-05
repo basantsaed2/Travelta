@@ -30,7 +30,7 @@ const AgentLayout = () => {
 
   return (
     <div className=" relative flex ">
-      <div className="fixed max-h-screen z-50">
+      <div className="fixed min-h-screen z-50">
       <SidebarAgent
         isSidebarCollapsed={isSidebarCollapsed}
         isSidebarVisible={isSidebarVisible}
