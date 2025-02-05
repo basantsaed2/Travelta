@@ -17,7 +17,7 @@ const NewRequest = () => {
   const [service, setService] = useState("");
   const [priority, setPriority] = useState("");
 
-  const [stage, setStage] = useState("");
+  // const [stage, setStage] = useState("");
 
   const [customerId, setCustomerId] = useState("");
   const [adminAgentId, setAdminAgentId] = useState("");
@@ -446,7 +446,7 @@ const NewRequest = () => {
     formData.append("service_id", serviceId);
     formData.append("expected_revenue", expectedRevenue);
     formData.append("priority", priority);
-    formData.append("stages", stage);
+    // formData.append("stages", stage);
     // hotel
     if (selectedService?.service_name.toLowerCase() === "hotel") {
       formData.append("check_in", checkIn);
@@ -770,9 +770,8 @@ const NewRequest = () => {
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row sm:flex-col lg:items-center md:items-start sm:items-start gap-4">
+        {/* <div className="flex flex-col lg:flex-row sm:flex-col lg:items-center md:items-start sm:items-start gap-4">
           <label className="text-lg font-medium w-1/4">Stage:</label>
-          {/* Priority Dropdown */}
           <div className="w-full">
             <TextField
               select
@@ -797,7 +796,7 @@ const NewRequest = () => {
               )}
             </TextField>
           </div>
-        </div>
+        </div> */}
 
         {/* Service */}
         <div className="flex flex-col lg:flex-row sm:flex-col lg:items-center  md:items-start sm:items-start gap-4">

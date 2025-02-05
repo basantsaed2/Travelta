@@ -667,7 +667,7 @@ const ManualBooking = () => {
       const tax = taxes?.find((tax) => tax.id === id); // Find tax object by ID
       if (tax) {
         if (tax.type === "precentage") {
-          totalTaxAmount += (parseFloat(tax.amount) * 100); // Apply percentage tax
+          totalTaxAmount += (parseFloat(tax.amount) / 100); // Apply percentage tax
         } else if (tax.type === "value") {
           totalTaxAmount += parseFloat(tax.amount || 0); // Apply fixed value tax
         }
