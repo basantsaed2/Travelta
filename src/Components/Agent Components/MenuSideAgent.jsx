@@ -200,6 +200,10 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     stateLink.isActiveTax ?? false
   );
 
+  const [isActiveGroup, setIsActiveGroup] = useState(
+    stateLink.isActiveGroup ?? false
+  );
+
   // Helper function to save the current active links state
   const saveActiveLinksState = useCallback(() => {
     const activeLinks = {
@@ -251,6 +255,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
 
       isActiveCurrency,
       isActiveTax,
+      isActiveGroup,
 
       isOpenInventoryRoom,
       isActiveInventoryRoom,
@@ -313,6 +318,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveWallet,
     isActiveCurrency,
     isActiveTax,
+    isActiveGroup,
     isActiveAccounting,
     isActiveAccountingIcon,
     isOpenAccounting,
@@ -381,6 +387,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveWallet,
     isActiveCurrency,
     isActiveTax,
+    isActiveGroup,
 
 
     isActiveAccounting,
@@ -432,6 +439,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActiveWallet(false);
     setIsActiveCurrency(false)
     setIsActiveTax(false)
+    setIsActiveGroup(false)
 
     setIsActiveRequests(false);
     setIsActiveRequestsIcon(false);
@@ -914,6 +922,8 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
         "/dashboard_agent/setting/currency",
       ].some((path) => pathName.startsWith(path)) && ![
         "/dashboard_agent/setting/tax",
+      ].some((path) => pathName.startsWith(path)) && ![
+        "/dashboard_agent/setting/group",
       ].some((path) => pathName.startsWith(path))
     ) {
       handleClickSetting();
@@ -986,6 +996,23 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     const result = part.slice(0, 4).join("/");
     if (result == "/dashboard_agent/setting/tax") {
       handleClickTax();
+    }
+  }, [location]);
+
+  const handleClickGroup = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenSetting(true);
+    setIsActiveSettingIcon(true);
+    setIsActiveSetting(true);
+    
+    setIsActiveGroup(true)
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 4).join("/");
+    if (result == "/dashboard_agent/setting/group") {
+      handleClickGroup();
     }
   }, [location]);
 
@@ -1807,6 +1834,24 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
             >
               Tax
+            </li>
+          </Link>
+          <Link
+            to={"setting/group"}
+            onClick={() => {
+              handleClickGroup();
+              onLinkClick();
+            }}
+          >
+            <li
+              className={`${
+                isActiveGroup
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Group
             </li>
           </Link>
          

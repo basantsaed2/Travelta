@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import TitlePage from '../../../../Components/TitlePage'
 import { AddWalletPage } from '../../../../Pages/AllPages'
 import AddTax from '../../../../Pages/Dashboard/AgentDashboard/Setting/Tax/AddTax'
+import AddGroup from '../../../../Pages/Dashboard/AgentDashboard/Setting/Group/AddGroup'
+import { useNavigate } from 'react-router-dom'
 import { IconButton } from '@mui/material'
 import { IoArrowBack } from 'react-icons/io5'
-import { useNavigate } from 'react-router-dom'
 
-const AddTaxLayout = () => {
+const AddGroupLayout = () => {
   const [update, setUpdate] = useState(false)
   const navigate = useNavigate()
   const handleGoBack=()=>{
@@ -14,15 +15,15 @@ const AddTaxLayout = () => {
   }
   return (
     <>
-          <div className="flex mb-5 mt-4">
-      {/* <IconButton onClick={handleGoBack} color="primary">
+         <div className="flex mb-5 mt-4">
+      <IconButton onClick={handleGoBack} color="primary">
           <IoArrowBack />
         </IconButton>
-      <TitlePage text={'Add Tax'} /> */}
+      <TitlePage text={'Add Group'} />
       </div>
-      <AddTax update={update} />
+      <AddGroup update={update} setUpdate={setUpdate}/>
     </>
   )
 }
 
-export default AddTaxLayout
+export default AddGroupLayout
