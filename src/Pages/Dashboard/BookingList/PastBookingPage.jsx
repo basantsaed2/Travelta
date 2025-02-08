@@ -1,16 +1,18 @@
 import React, { useEffect,useState } from 'react';
 import StaticLoader from '../../../Components/StaticLoader';
 import { useGet } from '../../../Hooks/useGet';
+import { FaEllipsis } from 'react-icons/fa6';
+import { useNavigate } from 'react-router-dom';
 
 const PastBookingPage = ({ refetch, setUpdate }) => {
-    const { refetch: refetchPast, loading: loadingPast, data: pastData } = useGet({url:'https://travelta.online/agent/booking/past'});
+    const { refetch: refetchPast, loading: loadingPast, data: pastData } = useGet({url:'https://travelta.online/agent/booking'});
     const [pastBusList, setPastBusList] = useState([])
     const [pastFlightList, setPastFlightList] = useState([])
     const [pastHotelList, setPastHotelList] = useState([])
     const [pastTourList, setPastTourList] = useState([])
     const [pastVisaList, setPastVisaList] = useState([])
     const [activeTab, setActiveTab] = useState("Hotel");
-
+    const navigate = useNavigate()
     useEffect(() => {
         refetchPast();
     }, [refetchPast, refetch]);
@@ -18,15 +20,15 @@ const PastBookingPage = ({ refetch, setUpdate }) => {
     useEffect(() => {
         if (pastData) {
                 console.log("Past List:", pastData);
-                setPastBusList(pastData.bus);
-                setPastFlightList(pastData.flight);
-                setPastHotelList(pastData.hotel);
-                setPastTourList(pastData.tour);
-                setPastVisaList(pastData.visa);
+                setPastBusList(pastData.past.buses);
+                setPastFlightList(pastData.past.flights);
+                setPastHotelList(pastData.past.hotels);
+                setPastTourList(pastData.past.tours);
+                setPastVisaList(pastData.past.visas);
         }
     }, [pastData]); // Only run this effect when `data` changes
 
-    const headers = ['SL', 'Client Name','Client Phone','Client Alternate','Client Email','Agent', 'Check In', 'Check Out', 'Total Price'];
+    const headers = ['SL', 'Code ','To Name','To Phone','To Email','To role', 'Status','Details'];
 
     const tabLists = {
       Hotel: pastHotelList,
@@ -80,20 +82,29 @@ const PastBookingPage = ({ refetch, setUpdate }) => {
                   {index + 1}
                 </td>
                 <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                  {item?.name|| '-'}
+                  {item?.code|| '-'}
                 </td>
                 <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                  {item?.to_client?.name || '-'}
+                  {item?.to_name|| '-'}
                 </td>
                 <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                {item?.[activeTab.toLowerCase()]?.departure?.split(" ")[0] || '-'}
+                  {item?.to_phone || '-'}
                 </td>
                 <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                {item?.[activeTab.toLowerCase()]?.arrival?.split(" ")[0] || '-'}
+                {item?.to_email || '-'}
                 </td>
                 <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                  {item?.total_price|| '-'}
+                {item?.to_role || '-'}
                 </td>
+                <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                  {item?.status|| '-'}
+                </td>
+                                                               <td className="min-w-[150px] flex items-center justify-center sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                      <FaEllipsis 
+                        className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
+                        onClick={() => navigate(`/dashboard_agent/booking_list/past_booking/details_past/${item?.id}`,{ state: { type: "hotels" } })}
+                      />
+                    </td>
               </tr>
               ))
             )}

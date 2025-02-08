@@ -17,10 +17,10 @@ export const useGet = ({ url }) => {
             const response = await axios.get(url, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${auth.user?.token|| ''}`,
+                    'Authorization': `Bearer ${auth.token|| ''}`,
                 },
             });
-            if (response.status === 200) {
+            if (response.status === 200 ||response.status === 201) {
                 console.log('response', response.data);
                 setData(response.data);
             }
@@ -29,7 +29,7 @@ export const useGet = ({ url }) => {
         } finally {
             setLoading(false);
         }
-    }, [url, auth.user?.token]);
+    }, [url, auth.token]);
 
     useEffect(() => {
         fetchData();

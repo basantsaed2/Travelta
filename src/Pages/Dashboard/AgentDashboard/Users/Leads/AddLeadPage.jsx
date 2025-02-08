@@ -5,7 +5,7 @@ import { useGet } from '../../../../../Hooks/useGet';
 import IconButton from '@mui/material/IconButton';
 import { IoMdPersonAdd } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
-
+import { FaArrowLeft } from "react-icons/fa";
 const AddLeadPage = ({ update, setUpdate }) => {
     const { postData:postNewLead, loadingPost:loadingNewLead, response:responseNewLead} = usePost({ url: 'https://travelta.online/agent/leads/add' });
     const { postData:postLeadList, loadingPost:loadingLeadList, response:responseLeadList } = usePost({ url: 'https://travelta.online/agent/leads/add_lead' });
@@ -124,7 +124,14 @@ const AddLeadPage = ({ update, setUpdate }) => {
           className="w-full flex flex-col gap-5 p-6"
           onSubmit={handleSubmit}
           >
-          <h1 className="flex justify-center font-semibold text-mainColor text-xl">Add New Lead</h1>
+          
+ 
+
+      {/* <h2 className="f font-semibold text-mainColor text-xl">back</h2> */}
+    
+      <h1 className="flex justify-center font-semibold text-mainColor text-xl">
+        Add New Lead
+      </h1>
           <div
               className="w-full flex sm:flex-col lg:flex-row flex-wrap items-start justify-start gap-5"
           >

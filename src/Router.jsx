@@ -80,15 +80,28 @@ import InvoiceLayout from "./Layouts/SuperAdminLayouts/FinancialLayout/InvoiceLa
 import AddInvoiceLayout from "./Layouts/SuperAdminLayouts/FinancialLayout/InvoiceLayout/AddInvoiceLayout";
 import InvoiceAgentLayout from "./Layouts/AgentLayouts/Financial/Invoice/InvoiceAgentLayout";
 import AddInvoiceAgentLayout from "./Layouts/AgentLayouts/Financial/Invoice/AddInvoiceAgentLayout";
-import FlightProfileLayout from "./Layouts/BookingListLayout/Upcoming/FlightProfileLayout";
-import VisaProfileLayout from "./Layouts/BookingListLayout/Upcoming/VisaProfileLayout";
-import TourProfileLayout from "./Layouts/BookingListLayout/Upcoming/TourProfileLayout";
-import BusProfileLayout from "./Layouts/BookingListLayout/Upcoming/BusProfileLayout";
-import HotelProfileLayout from "./Layouts/BookingListLayout/Upcoming/HotelProfileLayout";
+import FlightProfileLayout from "./Layouts/BookingListLayout/Upcoming/FlightDeatilsLayout";
+import VisaProfileLayout from "./Layouts/BookingListLayout/Upcoming/VisaDetailsLayout";
+import TourProfileLayout from "./Layouts/BookingListLayout/Upcoming/TourDetailsLayout";
+import BusProfileLayout from "./Layouts/BookingListLayout/Upcoming/BusDetailsLayout";
+import HotelProfileLayout from "./Layouts/BookingListLayout/Upcoming/HotelDetailsLayout";
 import ProfileLayout from "./Layouts/AgentLayouts/Users/Leads/ProfileLayout";
 import ProfileSupplierLayout from "./Layouts/AgentLayouts/Users/Suppliers/ProfileSupplierLayout";
 import ProfileCustomerLayout from "./Layouts/AgentLayouts/Users/Customers/ProfileLayout";
 import EditLeadLayout from "./Layouts/AgentLayouts/Users/Leads/EditLeadLayout";
+import FlightLayout from "./Layouts/BookingListLayout/past/FlightLayout";
+import VisaLayout from "./Layouts/BookingListLayout/past/VisaLayout";
+import TourLayout from "./Layouts/BookingListLayout/past/TourLayout";
+import BusLayout from "./Layouts/BookingListLayout/past/BusLayout";
+import HotelLayout from "./Layouts/BookingListLayout/past/HotelLayout";
+import FlightDeatilsLayout from "./Layouts/BookingListLayout/Current/FlightDeatilsLayout";
+import VisaDetailsLayout from "./Layouts/BookingListLayout/Current/VisaDetailsLayout";
+import TourDeatilsLayout from "./Layouts/BookingListLayout/Current/TourDeatilsLayout";
+import BusDetailsLayout from "./Layouts/BookingListLayout/Current/BusDetailsLayout";
+import HotelDetailsLayout from "./Layouts/BookingListLayout/Current/HotelDetailsLayout";
+import DetailsCurrentLayout from "./Layouts/BookingListLayout/DetailsCurrentLayout";
+import DetailsPastLayout from "./Layouts/BookingListLayout/DetailsPastLayout";
+import DetailsUpcomingLayout from "./Layouts/BookingListLayout/DetailsUpcomingLayout";
 
 
 const AppLayoutAgent = () => (
@@ -323,6 +336,16 @@ const AppUpcomingBooking= () => (
   <Outlet />
   </>
 );
+const AppPastBooking= () => (
+  <>
+  <Outlet />
+  </>
+);
+const AppCurrentBooking= () => (
+  <>
+  <Outlet />
+  </>
+);
 const AppCustomer= () => (
   <>
   <Outlet />
@@ -463,11 +486,76 @@ export const router = createBrowserRouter([
                 children: [
                   {
                     path: 'current_booking',
-                    element: <CurrentBookingLayout />,
+                    element: <AppCurrentBooking />,
+                    children:[
+                      {
+                       path:"",
+                       element:<CurrentBookingLayout/>
+                      },
+                      {
+                        path:"details/:current_id",
+                        element:<DetailsCurrentLayout/>
+                       },
+                      // {
+                      //  path:"flight_details/:current_id",
+                      //  element:<FlightDeatilsLayout/>
+                      // },
+                      // {
+                      //  path:"visa_details/:current_id",
+                      //  element:<VisaDetailsLayout/>
+                      // }
+                      // ,
+                      // {
+                      //  path:"tour_details/:current_id",
+                      //  element:<TourDeatilsLayout/>
+                      // }
+                      // ,
+                      // {
+                      //  path:"bus_details/:current_id",
+                      //  element:<BusDetailsLayout/>
+                      // }
+                      // ,
+                      // {
+                      //  path:"Hotel_details/:current_id",
+                      //  element:<HotelDetailsLayout/>
+                      // }
+ 
+                     ]
                   },
                   {
                     path: 'past_booking',
-                    element: <PastBookingLayout />,
+                    element: <AppPastBooking />,
+                    children:[
+                      {
+                       path:"",
+                       element:<PastBookingLayout/>
+                      },
+                      {
+                       path:"details_past/:past_id",
+                       element:<DetailsPastLayout/>
+                      },
+
+                      // {
+                      //  path:"visa_details/:id",
+                      //  element:<VisaLayout/>
+                      // }
+                      // ,
+                      // {
+                      //  path:"tour_details/:id",
+                      //  element:<TourLayout/>
+                      // }
+                      // ,
+                      // {
+                      //  path:"bus_deatils/:id",
+                      //  element:<BusLayout/>
+                      // }
+                      // ,
+                      // {
+                      //  path:"Hotel_details/:id",
+                      //  element:<HotelLayout/>
+                      // }
+ 
+                     ]
                   },
                   {
                     path: 'upcoming_booking',
@@ -478,28 +566,28 @@ export const router = createBrowserRouter([
                       element:<UpcomingBookingLayout/>
                      },
                      {
-                      path:"flight_profile/:id",
-                      element:<FlightProfileLayout/>
+                      path:"details_upcoming/:upcoming_id",
+                      element:<DetailsUpcomingLayout/>
                      },
-                     {
-                      path:"visa_profile/:id",
-                      element:<VisaProfileLayout/>
-                     }
-                     ,
-                     {
-                      path:"tour_profile/:id",
-                      element:<TourProfileLayout/>
-                     }
-                     ,
-                     {
-                      path:"bus_profile/:id",
-                      element:<BusProfileLayout/>
-                     }
-                     ,
-                     {
-                      path:"Hotel_profile/:id",
-                      element:<HotelProfileLayout/>
-                     }
+                    //  {
+                    //   path:"visa_profile/:id",
+                    //   element:<VisaProfileLayout/>
+                    //  }
+                    //  ,
+                    //  {
+                    //   path:"tour_profile/:id",
+                    //   element:<TourProfileLayout/>
+                    //  }
+                    //  ,
+                    //  {
+                    //   path:"bus_profile/:id",
+                    //   element:<BusProfileLayout/>
+                    //  }
+                    //  ,
+                    //  {
+                    //   path:"Hotel_profile/:id",
+                    //   element:<HotelProfileLayout/>
+                    //  }
 
                     ]
 

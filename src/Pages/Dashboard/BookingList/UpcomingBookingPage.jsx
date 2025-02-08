@@ -78,7 +78,7 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
               <td className="min-w-[150px] flex items-center justify-center sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
       <FaEllipsis 
         className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
-        onClick={() => navigate(`/dashboard_agent/booking_list/upcoming_booking/bus_profile/${item?.id}`)}
+        onClick={() => navigate(`/dashboard_agent/booking_list/upcoming_booking/details_upcoming/${item?.id}`, { state: { type: "buses" } })}
       />
     </td>
             </tr>
@@ -143,7 +143,7 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
                   <td className="min-w-[150px] flex items-center justify-center sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
       <FaEllipsis 
         className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
-        onClick={() => navigate(`/dashboard_agent/booking_list/upcoming_booking/flight_profile/${flight?.id}`)}
+        onClick={() => navigate(`/dashboard_agent/booking_list/upcoming_booking/details_upcoming/${flight?.id}`,{ state: { type: "flights" } })}
       />
     </td>
                 </tr>
@@ -186,7 +186,7 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
                <td className="min-w-[150px] flex items-center justify-center sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
       <FaEllipsis 
         className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
-        onClick={() => navigate(`/dashboard_agent/booking_list/upcoming_booking/tour_profile/${item?.id}`)}
+        onClick={() => navigate(`/dashboard_agent/booking_list/upcoming_booking/details_upcoming/${item?.id}`,{ state: { type: "tours" } })}
       />
     </td>
 
@@ -264,7 +264,7 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
                                   <td className="min-w-[150px] flex items-center justify-center sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
       <FaEllipsis 
         className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
-        onClick={() => navigate(`/dashboard_agent/booking_list/upcoming_booking/visa_profile/${item?.id}`)}
+        onClick={() => navigate(`/dashboard_agent/booking_list/upcoming_booking/details_upcoming/${item?.id}`,{ state: { type: "visas" } })}
       />
     </td>
               </tr>
@@ -321,7 +321,7 @@ const UpcomingBookingPage = ({ refetch, setUpdate }) => {
                                                <td className="min-w-[150px] flex items-center justify-center sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
       <FaEllipsis 
         className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
-        onClick={() => navigate(`/dashboard_agent/booking_list/upcoming_booking/hotel_profile/${item?.id}`)}
+        onClick={() => navigate(`/dashboard_agent/booking_list/upcoming_booking/details_upcoming/${item?.id}`,{ state: { type: "hotels" } })}
       />
     </td>
                 {/* <td className="p-3">{item.supplier_from_name}</td>
