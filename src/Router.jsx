@@ -102,6 +102,8 @@ import HotelDetailsLayout from "./Layouts/BookingListLayout/Current/HotelDetails
 import DetailsCurrentLayout from "./Layouts/BookingListLayout/DetailsCurrentLayout";
 import DetailsPastLayout from "./Layouts/BookingListLayout/DetailsPastLayout";
 import DetailsUpcomingLayout from "./Layouts/BookingListLayout/DetailsUpcomingLayout";
+import ManualBookingLayoutSuper from "./Layouts/SuperAdminLayouts/PendingPaymetLayout/ManualBookingLayoutSuper";
+import WalletLayoutSuper from "./Layouts/SuperAdminLayouts/PendingPaymetLayout/WalletLayoutSuper";
 
 
 const AppLayoutAgent = () => (
@@ -1340,10 +1342,26 @@ export const router = createBrowserRouter([
                 element: <AppPendingLayOut/>,
 
                 children:[
+
+                 
+
                   {
                     path: "",
                     element: <PendingPaymentLayout/>,
                   },
+
+                  {
+                    path: "manualBooking_Pending",
+                    element: <ManualBookingLayoutSuper/>,
+                  },
+
+                  {
+                    path: "wallet_super",
+                    element: <WalletLayoutSuper/>,
+                  },
+
+
+
                   {
                     path: "add",
                     element: <AddPending/>,
