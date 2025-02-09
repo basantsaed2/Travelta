@@ -49,7 +49,7 @@ const SignUpApprove = () => {
   };
   const handleApprove = async (id, role) => {
     let apiUrl;
-  
+    
     // Determine the correct API endpoint based on the role
     if (role === "freelancer" || role === "affilate") {
       apiUrl = `https://www.travelta.online/api/super/affilate/approve/${id}`;
