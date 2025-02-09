@@ -120,6 +120,13 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
           const [isActivePendingPayment, setIsActivePendingPayment] = useState(
             stateLink.isActivePendingPayment ?? false
           );
+
+            const [isActiveManual, setIsActiveManual] =
+              useState(stateLink.isActiveManual ?? false);
+            const [isActiveWallet, setIsActiveWallet] = useState(
+              stateLink.isActiveWallet ?? false
+            );
+           
         
                              /* Plans */
          const [isOpenPlans, setIsOpenPlans] = useState(
@@ -230,6 +237,8 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
         isOpenPendingPayment,
         isActivePendingPaymentIcon,
         isActivePendingPayment,
+        isActiveManual,
+        isActiveWallet,
     
   
         isOpenPlans,
@@ -274,6 +283,8 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
         isOpenPendingPayment,
         isActivePendingPaymentIcon,
         isActivePendingPayment,
+        isActiveManual,
+        isActiveWallet,
     
         isOpenHotels,
         isActiveHotelsIcon,
@@ -352,7 +363,8 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
         isOpenPendingPayment,
         isActivePendingPaymentIcon,
         isActivePendingPayment,
-    
+        isActiveManual,
+        isActiveWallet,
   
         isOpenPlans,
         isActivePlansIcon,
@@ -416,6 +428,8 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
       setIsOpenPendingPayment(false);
       setIsActivePendingPaymentIcon(false);
       setIsActivePendingPayment(false);
+      setIsActiveWallet(false);
+      setIsActiveManual(false);
 
       setIsOpenPlans(false);
       setIsActivePlansIcon(false);
@@ -579,19 +593,59 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
             setIsOpenPendingPayment(true);
             setIsActivePendingPaymentIcon(true);
             setIsActivePendingPayment(true);
+            setIsActiveManual(true);
             
           }, []);
           useEffect(() => {
             const part = pathName.split("/");
             const result = part.slice(0, 3).join("/");
             if (
-              result === "/super_admin/pending_payment"
+              result === "/super_admin/pending_payment" &&
+              ![
+                "/super_admin/pending_payment/manualBooking_Pending",
+                "/super_admin/pending_payment/wallet_super",
+              ].some((path) => pathName.startsWith(path))
             ) {
-                handleClickPendingPayment();
+              handleClickPendingPayment();
+              navigate("/super_admin/pending_payment/manualBooking_Pending");
             
             }
             console.log("result", result);
           }, [location]);
+
+           /* Current Booking */
+            const handleClickManual = useCallback(() => {
+              handleStateLinks();
+          
+              setIsOpenPendingPayment(true);
+              setIsActivePendingPaymentIcon(true);
+              setIsActivePendingPayment(true);
+              setIsActiveManual(true);
+            }, []);
+            useEffect(() => {
+              const part = pathName.split("/");
+              const result = part.slice(0, 4).join("/");
+              if (result == "/super_admin/pending_payment/manualBooking_Pending") {
+                handleClickManual();
+              }
+            }, [location]);
+          
+            /* Upcoming Booking */
+            const handleClickWallet = useCallback(() => {
+              handleStateLinks();
+          
+              setIsOpenPendingPayment(true);
+              setIsActivePendingPaymentIcon(true);
+              setIsActivePendingPayment(true);
+              setIsActiveWallet(true);
+            }, []);
+            useEffect(() => {
+              const part = pathName.split("/");
+              const result = part.slice(0, 4).join("/");
+              if (result == "/super_admin/pending_payment/wallet_super") {
+                handleClickWallet();
+              }
+            }, [location]);
 
          /* Plans */
          const handleClickPlans = useCallback(() => {
@@ -629,7 +683,6 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
               result === "/super_admin/ticketing_system"
             ) {
                 handleClickTicket();
-            
             }
             console.log("result", result);
           }, [location]);            
@@ -1079,7 +1132,52 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                     } text-xl transition-all duration-300 group-hover:text-mainColor`}
                   />
                 )} */}
-              </Link>   
+              </Link>
+                <div
+                      className={`${
+                        isOpenPendingPayment && !isSidebarCollapsed ? "h-17" : "h-0 "
+                      } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+                    >
+                      <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
+                        <Link
+                          to={"pending_payment/manualBooking_Pending"}
+                          onClick={() => {
+                            handleClickManual();
+                            onLinkClick();
+                          }}
+                        >
+                          <li
+                            className={`${
+                              isActiveManual
+                                ? "rounded-xl bg-white text-mainColor"
+                                : "text-white"
+                            }
+                                        text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+                          >
+                            Manual Booking
+                          </li>
+                        </Link>
+                        <Link
+                          to={"pending_payment/wallet_super"}
+                          onClick={() => {
+                            handleClickWallet();
+                            onLinkClick();
+                          }}
+                        >
+                          <li
+                            className={`${
+                              isActiveWallet
+                                ? "rounded-xl bg-white text-mainColor"
+                                : "text-white"
+                            }
+                                        text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+                          >
+                            Charge Wallet
+                          </li>
+                        </Link>
+                    
+                      </ul>
+                    </div>   
 
                                {/* Plans*/}
        <Link
