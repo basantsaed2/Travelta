@@ -68,3 +68,5 @@ export { default as EditFinancialAccountPage } from "./Dashboard/AgentDashboard/
 //Wallet
 export { default as WalletPage } from "./Dashboard/AgentDashboard/Setting/Wallet/WalletPage"; 
 export { default as AddWalletPage } from "./Dashboard/AgentDashboard/Setting/Wallet/AddWalletPage"; 
+//BookingPayment
+export {default as BookingPaymentPage} from './Dashboard/AgentDashboard/BookingPayments/BookingPaymentPage'

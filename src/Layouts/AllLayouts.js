@@ -66,3 +66,6 @@ export { default as EditFinancialAccountLayout } from "./AgentLayouts/Setting/Fi
 //Wallet
 export { default as WalletLayout } from "./AgentLayouts/Setting/Wallet/WalletLayout"; 
 export { default as AddWalletLayout } from "./AgentLayouts/Setting/Wallet/AddWalletLayout";
+//BookingPaymentLayout
+export { default as BookingPaymentLayout } from "./AgentLayouts/BookingPayments/BookingPaymentLayout";
+
