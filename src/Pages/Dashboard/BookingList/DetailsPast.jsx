@@ -3,13 +3,14 @@ import { useLocation, useParams } from "react-router-dom";
 import { useGet } from "../../../Hooks/useGet";
 import StaticLoader from "../../../Components/StaticLoader";
 import ActionPast from "./ActionPast";
+import RequestPast from "./RequestPast";
 
 const tabs = [
   "Booking Info",
   "Passenger",
   "Voucher",
   "Invoice",
-  "Notes",
+  "Special Request",
   "Payments",
   "Actions",
 ];
@@ -53,6 +54,7 @@ const DetailsPast = () => {
   const [data, setData] = useState([]);
   const [dataInvoice, setDataInvoice] = useState([]);
   const [currentList, setCurrentList] = useState([]);
+  
   useEffect(() => {
     refetchDetails();
     refetchCurrent();
@@ -931,12 +933,9 @@ const DetailsPast = () => {
             </div>
           )}
 
-          {activeTab === "Notes" && (
+          {activeTab === "Special Request" && (
             <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-3">
-                Notes
-              </h2>
-              <p className="text-gray-600">No notes available.</p>
+          <RequestPast id ={past_id}/>
             </div>
           )}
 

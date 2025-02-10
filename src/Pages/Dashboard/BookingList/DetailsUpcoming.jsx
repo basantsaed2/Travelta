@@ -3,13 +3,16 @@ import { useLocation, useParams } from "react-router-dom";
 import { useGet } from "../../../Hooks/useGet";
 import StaticLoader from "../../../Components/StaticLoader";
 import ActionUpcoming from "./ActionUpcoming";
+import RequestPast from "./RequestPast";
+import RequestUpcoming from "./Profile/RequestUpcoming";
+import { useAuth } from "../../../Context/Auth";
 
 const tabs = [
   "Booking Info",
   "Passenger",
   "Voucher",
   "Invoice",
-  "Notes",
+  "Special Request",
   "Payments",
   "Actions",
 ];
@@ -52,7 +55,10 @@ const DetailsUpcoming = () => {
   const [activeTab, setActiveTab] = useState("Booking Info");
   const [data, setData] = useState([]);
   const [dataInvoice, setDataInvoice] = useState([]);
+  const [specialRequest, setSpecialRequest] = useState(item?.special_request || "");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentList, setCurrentList] = useState([]);
+  const auth = useAuth()
   useEffect(() => {
     refetchDetails();
     refetchCurrent();
@@ -90,6 +96,35 @@ const DetailsUpcoming = () => {
 //   if(currentData){
 //     return(<>{<StaticLoader/>}</>)
 //   }
+
+const handleUpdateRequest = async () => {
+  if (!item?.id) {
+    alert("Invalid booking ID!");
+    return;
+  }
+
+  try {
+    const response = await fetch(`https://travelta.online/agent/booking/special_request/${upcoming_id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${auth.user?.token || ''}`,
+      },
+      body: JSON.stringify({ special_request: specialRequest }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update special request");
+    }
+
+    console.log("Updated Special Request:", specialRequest);
+    auth.toastSuccess("Special request added successful")
+    setIsModalOpen(false);
+  } catch (error) {
+    console.error("Error updating request:", error);
+    auth.toastError("Failed to update special request. Try again.");
+  } 
+};
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen flex justify-center">
@@ -192,6 +227,18 @@ const DetailsUpcoming = () => {
         </ul>
       </div>
 
+          {/* Special Request Section */}
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold text-gray-800 border-b pb-1">📝 Special Request</h3>
+            {specialRequest && 
+            <p 
+            className="cursor-pointer text-blue-600 underline hover:text-blue-800 mt-2"
+            onClick={() => setIsModalOpen(true)}
+          >
+            {specialRequest || "no special request"}
+          </p>}
+          </div>
+
       {/* Status Tag */}
       <div className="mt-4">
         <span
@@ -206,6 +253,36 @@ const DetailsUpcoming = () => {
           {item.status}
         </span>
       </div>
+
+                {/* Modal Popup */}
+                {isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+              <h3 className="text-lg font-semibold mb-3">Update Special Request</h3>
+              <input
+                type="text"
+                value={specialRequest}
+                onChange={(e) => setSpecialRequest(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mainColor"
+                placeholder="Enter your request..."
+              />
+              <div className="flex justify-end mt-4">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg mr-2 hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleUpdateRequest}
+                  className="px-4 py-2 bg-mainColor text-white rounded-lg hover:bg-blue-700"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
     </div>
   </>
 )}
@@ -277,6 +354,17 @@ const DetailsUpcoming = () => {
           ))}
         </ul>
       </div>
+          {/* Special Request Section */}
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold text-gray-800 border-b pb-1">📝 Special Request</h3>
+            {specialRequest && 
+            <p 
+            className="cursor-pointer text-blue-600 underline hover:text-blue-800 mt-2"
+            onClick={() => setIsModalOpen(true)}
+          >
+            {specialRequest || "no special request"}
+          </p>}
+          </div>
 
       {/* Status Tag */}
       <div className="mt-4">
@@ -292,6 +380,35 @@ const DetailsUpcoming = () => {
           {item.status}
         </span>
       </div>
+                {/* Modal Popup */}
+                {isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+              <h3 className="text-lg font-semibold mb-3">Update Special Request</h3>
+              <input
+                type="text"
+                value={specialRequest}
+                onChange={(e) => setSpecialRequest(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mainColor"
+                placeholder="Enter your request..."
+              />
+              <div className="flex justify-end mt-4">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg mr-2 hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleUpdateRequest}
+                  className="px-4 py-2 bg-mainColor text-white rounded-lg hover:bg-blue-700"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
     </div>
   </>
 )}
@@ -342,6 +459,18 @@ const DetailsUpcoming = () => {
         </p>
       </div>
 
+          {/* Special Request Section */}
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold text-gray-800 border-b pb-1">📝 Special Request</h3>
+            {specialRequest && 
+            <p 
+            className="cursor-pointer text-blue-600 underline hover:text-blue-800 mt-2"
+            onClick={() => setIsModalOpen(true)}
+          >
+            {specialRequest || "no special request"}
+          </p>}
+          </div>
+
       {/* From-To Details */}
       <div className="mt-4">
         <h3 className="text-lg font-semibold text-gray-800 border-b pb-1">
@@ -384,6 +513,35 @@ const DetailsUpcoming = () => {
           </>
         )}
       </div>
+                {/* Modal Popup */}
+                {isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+              <h3 className="text-lg font-semibold mb-3">Update Special Request</h3>
+              <input
+                type="text"
+                value={specialRequest}
+                onChange={(e) => setSpecialRequest(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mainColor"
+                placeholder="Enter your request..."
+              />
+              <div className="flex justify-end mt-4">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg mr-2 hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleUpdateRequest}
+                  className="px-4 py-2 bg-mainColor text-white rounded-lg hover:bg-blue-700"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
     </div>
   </>
 )}
@@ -518,6 +676,46 @@ const DetailsUpcoming = () => {
           {item.status}
         </span>
       </div>
+          {/* Special Request Section */}
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold text-gray-800 border-b pb-1">📝 Special Request</h3>
+            {specialRequest && 
+            <p 
+            className="cursor-pointer text-blue-600 underline hover:text-blue-800 mt-2"
+            onClick={() => setIsModalOpen(true)}
+          >
+            {specialRequest || "no special request"}
+          </p>}
+          </div>
+                    {/* Modal Popup */}
+                    {isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+              <h3 className="text-lg font-semibold mb-3">Update Special Request</h3>
+              <input
+                type="text"
+                value={specialRequest}
+                onChange={(e) => setSpecialRequest(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mainColor"
+                placeholder="Enter your request..."
+              />
+              <div className="flex justify-end mt-4">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg mr-2 hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleUpdateRequest}
+                  className="px-4 py-2 bg-mainColor text-white rounded-lg hover:bg-blue-700"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
     </div>
   </>
 )}
@@ -581,6 +779,17 @@ const DetailsUpcoming = () => {
           ))}
         </ul>
       </div>
+          {/* Special Request Section */}
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold text-gray-800 border-b pb-1">📝 Special Request</h3>
+            {specialRequest && 
+            <p 
+            className="cursor-pointer text-blue-600 underline hover:text-blue-800 mt-2"
+            onClick={() => setIsModalOpen(true)}
+          >
+            {specialRequest || "no special request"}
+          </p>}
+          </div>
 
       {/* Payment & Status */}
       <div className="mt-4">
@@ -599,6 +808,35 @@ const DetailsUpcoming = () => {
           {item.status}
         </span>
       </div>
+                {/* Modal Popup */}
+                {isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+              <h3 className="text-lg font-semibold mb-3">Update Special Request</h3>
+              <input
+                type="text"
+                value={specialRequest}
+                onChange={(e) => setSpecialRequest(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mainColor"
+                placeholder="Enter your request..."
+              />
+              <div className="flex justify-end mt-4">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg mr-2 hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleUpdateRequest}
+                  className="px-4 py-2 bg-mainColor text-white rounded-lg hover:bg-blue-700"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
     </div>
   </>
 )}
@@ -664,12 +902,9 @@ const DetailsUpcoming = () => {
             </div>
           )}
 
-          {activeTab === "Notes" && (
+          {activeTab === "Special Request" && (
             <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-3">
-                Notes
-              </h2>
-              <p className="text-gray-600">No notes available.</p>
+             <RequestUpcoming id ={upcoming_id}/>
             </div>
           )}
 
