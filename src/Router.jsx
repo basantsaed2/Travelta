@@ -104,6 +104,8 @@ import DetailsPastLayout from "./Layouts/BookingListLayout/DetailsPastLayout";
 import DetailsUpcomingLayout from "./Layouts/BookingListLayout/DetailsUpcomingLayout";
 import ManualBookingLayoutSuper from "./Layouts/SuperAdminLayouts/PendingPaymetLayout/ManualBookingLayoutSuper";
 import WalletLayoutSuper from "./Layouts/SuperAdminLayouts/PendingPaymetLayout/WalletLayoutSuper";
+import TourTypeLayout from "./Layouts/SuperAdminLayouts/SettingLayout/ToutTypeLayout";
+import AddTourType from "./Pages/SuperAdmin/Settings/Tabs/TourType/AddTourType";
 
 
 const AppLayoutAgent = () => (
@@ -349,6 +351,12 @@ const AppCurrentBooking= () => (
   </>
 );
 const AppCustomer= () => (
+  <>
+  <Outlet />
+  </>
+);
+
+const AppTour= () => (
   <>
   <Outlet />
   </>
@@ -1550,6 +1558,25 @@ export const router = createBrowserRouter([
                         path: "edit/:currencyId",
                         element: <UpdateCurrency />, // Edit existing payment
                       },
+                    ],
+                  },
+
+                  {
+                    path: "tour_type",
+                    element: <AppTour />,
+                    children: [
+                      {
+                        path: "",
+                        element: <TourTypeLayout />, // Default zone list page
+                      },
+                      {
+                        path: "add",
+                        element: <AddTourType />, // Add new zone (without tabs)
+                      },
+                      // {
+                      //   path: "edit/:zoneId",
+                      //   element: <UpdateZone />, // Edit existing zone
+                      // },
                     ],
                   },
                 ],

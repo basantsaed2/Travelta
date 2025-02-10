@@ -2,18 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useGet } from "../../../Hooks/useGet";
 import StaticLoader from "../../../Components/StaticLoader";
+import ActionPast from "./ActionPast";
+import RequestPast from "./RequestPast";
 
 const tabs = [
   "Booking Info",
   "Passenger",
   "Voucher",
   "Invoice",
-  "Notes",
+  "Special Request",
   "Payments",
   "Actions",
 ];
 
-const DetailsUpcoming = () => {
+const DetailsPast = () => {
   const { past_id } = useParams();
   const {
     refetch: refetchDetails,
@@ -47,15 +49,23 @@ const DetailsUpcoming = () => {
 
   const location = useLocation();
   const type = location.state?.type || "No data passed";
+  const item = location.state?.data || "No data passed";
   const [activeTab, setActiveTab] = useState("Booking Info");
   const [data, setData] = useState([]);
   const [dataInvoice, setDataInvoice] = useState([]);
   const [currentList, setCurrentList] = useState([]);
+  
   useEffect(() => {
     refetchDetails();
     refetchCurrent();
     refetchInvoice();
   }, []);
+  
+  useEffect(() => {
+    console.log("Location State:", location.state);
+    console.log("Type:", type);
+  }, [type]);
+
 
   useEffect(() => {
     if (dataDetails) {
@@ -74,7 +84,7 @@ const DetailsUpcoming = () => {
     if (currentData) {
       setCurrentList(currentData.current || []);
     }
-    console.log(currentData?.current[type]);
+    // console.log(currentData?.current[type]);
   }, [currentData, type]);
 
 //   if(dataDetails){
@@ -91,17 +101,22 @@ const DetailsUpcoming = () => {
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen flex justify-center">
-      <div className="w-full bg-white shadow-lg rounded-lg flex p-6">
+     <div className="w-full bg-white shadow-lg rounded-lg flex flex-col p-4">
 {/* Sidebar (Vertical Tabs) */}
-<div className="w-1/4 border-r border-gray-300 p-5 bg-gray-50 rounded-lg shadow-md">
-  <h2 className="text-2xl font-bold text-mainColor mb-6">Booking Details</h2>
-  <ul className="space-y-3">
+<div className="border-b border-gray-300 p-4 bg-gray-50 rounded-lg shadow-md flex flex-col md:flex-col md:items-center gap-2">
+<h2 className="text-2xl font-bold text-mainColor mb-4 md:mb-0 py-3 truncate overflow-hidden whitespace-nowrap w-full">Booking Details</h2>
+<div className="w-full  bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl shadow-lg p-3 overflow-x-scroll scrollSection">
+<ul className="flex flex-row md:space-x-4 space-x-2 w-max md:w-full md:justify-center "> 
+
     {tabs.map((tab) => (
       <li
         key={tab}
-        className={`flex items-center gap-3 p-4 text-lg font-medium cursor-pointer rounded-lg transition-all duration-300 ${
+        className={`flex items-center gap-3 px-5 py-3
+          text-sm sm:text-base md:text-base lg:text-base font-semibold cursor-pointer
+          rounded-full transition-all duration-300 whitespace-nowrap
+          shadow-md transform hover:scale-105 hover:shadow-xl ${
           activeTab === tab
-            ? "bg-mainColor text-white shadow-md scale-105"
+          ? "bg-gradient-to-r from-mainColor to-blue-500 text-white shadow-lg scale-105"
             : "text-gray-700 hover:bg-gray-200"
         }`}
         onClick={() => setActiveTab(tab)}
@@ -111,11 +126,12 @@ const DetailsUpcoming = () => {
       </li>
     ))}
   </ul>
+  </div>
 </div>
 
 
         {/* Main Content */}
-        <div className="w-3/4 pl-6">
+        <div className="w-3/4 pl-6 mt-6">
           {activeTab === "Booking Info" && (
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-3">
@@ -884,7 +900,7 @@ const DetailsUpcoming = () => {
           )}
 
           {activeTab === "Voucher" && (
-            <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
+            <div className="max-w-3xl w-full bg-white shadow-lg rounded-lg p-6">
               <h2 className="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">
                 🎟️ Voucher Details
               </h2>
@@ -917,12 +933,9 @@ const DetailsUpcoming = () => {
             </div>
           )}
 
-          {activeTab === "Notes" && (
+          {activeTab === "Special Request" && (
             <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-3">
-                Notes
-              </h2>
-              <p className="text-gray-600">No notes available.</p>
+          <RequestPast id ={past_id}/>
             </div>
           )}
 
@@ -1100,33 +1113,7 @@ const DetailsUpcoming = () => {
           )}
 
           {activeTab === "Actions" && (
-            <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-3">
-                Actions
-              </h2>
-              <div className="mt-2 space-y-2">
-                <div className="p-3 bg-red-100 border-l-4 border-red-500 rounded">
-                  <p>
-                    <strong>Canceled Reason:</strong>{" "}
-                    {dataDetails?.actions?.canceled?.[0]?.cancelation_reason ||
-                      "N/A"}
-                  </p>
-                </div>
-                <div className="p-3 bg-green-100 border-l-4 border-green-500 rounded">
-                  <p>
-                    <strong>Confirmed:</strong>{" "}
-                    {dataDetails?.actions?.confirmed?.length > 0 ? "Yes" : "No"}
-                  </p>
-                </div>
-                <div className="p-3 bg-blue-100 border-l-4 border-blue-500 rounded">
-                  <p>
-                    <strong>Vouchered:</strong>{" "}
-                    {dataDetails?.actions?.vouchered?.[0]?.confirmation_num ||
-                      "N/A"}
-                  </p>
-                </div>
-              </div>
-            </div>
+           <ActionPast id={past_id} item={item}/>
           )}
         </div>
       </div>
@@ -1134,4 +1121,4 @@ const DetailsUpcoming = () => {
   );
 };
 
-export default DetailsUpcoming;
+export default DetailsPast;

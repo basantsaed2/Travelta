@@ -720,7 +720,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
             const result = part.slice(0, 4).join("/");
             if (
               result === "/super_admin/settings/countries" ||result === "/super_admin/settings/city" || result === "/super_admin/settings/zone" || result === "/super_admin/settings/payment"
-              || result === "/super_admin/settings/zone" || result === "/super_admin/settings/currency" || result === "/super_admin/settings/payment_method"
+              || result === "/super_admin/settings/zone" || result === "/super_admin/settings/currency" || result === "/super_admin/settings/payment_method"|| result === "/super_admin/settings/tour_type"
             ) {
                 handleClickSettings();
                

@@ -17,7 +17,7 @@ const SettingLayout = () => {
       {!isSubPage && (
         <div className= "border-b overflow-x-auto mt-10 border-gray-200 mb-4">
           <nav className="flex justify-between text-lg">
-            {['countries', 'city', 'zone', 'payment','payment_method','currency'].map((tab) => (
+            {['countries', 'city', 'zone', 'payment','payment_method','currency','tour_type'].map((tab) => (
               <Link key={tab} to={`/super_admin/settings/${tab}`}>
                 <button
                   className={`px-4 py-2 text-xl font-medium ${
