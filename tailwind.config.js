@@ -23,6 +23,7 @@ export default {
         mainBgColor: "#E5E5E5",
         secoundBgColor: "#F5F5F5",
         thirdBgColor: "#9D9D9D",
+        fourthColor:'#E7F1F8',
         AddButton: "#ffffff",
       },
       screens: {
