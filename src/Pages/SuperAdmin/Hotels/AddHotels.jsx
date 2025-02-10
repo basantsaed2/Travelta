@@ -265,11 +265,13 @@ useEffect(() => {
       if (file) {
         const reader = new FileReader();
         reader.onloadend = () => {
-          setImages([...images, { image: reader.result }]);
+          const base64String = reader.result; // Keep full Base64 string
+          setImages((prevImages) => [...prevImages, { image: base64String }]); 
         };
         reader.readAsDataURL(file);
       }
     };
+    
     
     const removeImageselect = (index) => {
       const newImages = images.filter((_, i) => i !== index);
@@ -491,7 +493,7 @@ console.log("Policies:", policies);
    // Append each image to FormData
    
    images.forEach(image => {
-    formData.append("images[]",JSON.stringify(image)); // 'images[]' for array of images
+    formData.append("images[]",image) // 'images[]' for array of images
   });
 
   try {
@@ -736,7 +738,7 @@ console.log("Policies:", policies);
     <input
       id="image-upload"
       type="file"
-      onChange={(e) => handleImageChange(e)}
+      onChange={handleImageChange}
       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
     />
     <div className="px-4 py-3 bg-indigo-600 text-white text-center rounded-lg cursor-pointer hover:bg-indigo-700 transition duration-200">

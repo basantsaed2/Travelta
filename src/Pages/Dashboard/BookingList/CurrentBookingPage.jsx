@@ -79,7 +79,7 @@ const CurrentBookingPage = ({ update, setUpdate }) => {
                  <td className="min-w-[150px] flex items-center justify-center sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
       <FaEllipsis 
         className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
-        onClick={() => navigate(`/dashboard_agent/booking_list/current_booking/details/${item?.id}`, { state: { type: "buses" } })}
+        onClick={() => navigate(`/dashboard_agent/booking_list/current_booking/details/${item?.id}`, { state: { type: "buses" , data :item } })}
       />
     </td>
                 {/* <td className="p-3 border">${item.total_price}</td>
@@ -124,7 +124,7 @@ const CurrentBookingPage = ({ update, setUpdate }) => {
         className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
         onClick={() => navigate(
           `/dashboard_agent/booking_list/current_booking/details/${item?.id || ''}`, 
-          { state: { type: "flights" } }
+          { state: { type: "flights" , data :item } }
         )}
       />
     </td>
@@ -194,7 +194,7 @@ const CurrentBookingPage = ({ update, setUpdate }) => {
                  <td className="min-w-[150px] flex items-center justify-center sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
       <FaEllipsis 
         className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
-        onClick={() => navigate(`/dashboard_agent/booking_list/current_booking/details/${item?.id}`, { state: { type: "tours" } })}
+        onClick={() => navigate(`/dashboard_agent/booking_list/current_booking/details/${item?.id}`, { state: { type: "tours" , data :item  } })}
       />
     </td>
                 {/* <td className="border p-3">{item.supplier_from_phone || 'N/A'}</td>
@@ -273,7 +273,7 @@ const CurrentBookingPage = ({ update, setUpdate }) => {
                  <td className="min-w-[150px] flex items-center justify-center sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
       <FaEllipsis 
         className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
-        onClick={() => navigate(`/dashboard_agent/booking_list/current_booking/details/${item?.id}`,{ state: { type: "visas" } })}
+        onClick={() => navigate(`/dashboard_agent/booking_list/current_booking/details/${item?.id}`,{ state: { type: "visas", data :item  } })}
       />
     </td>
                 {/* <td className="p-4">{item.no_children}</td>
@@ -334,7 +334,7 @@ const CurrentBookingPage = ({ update, setUpdate }) => {
                                <td className="min-w-[150px] flex items-center justify-center sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
       <FaEllipsis 
         className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
-        onClick={() => navigate(`/dashboard_agent/booking_list/current_booking/details/${item?.id}`, { state: { type: "hotels" } })}
+        onClick={() => navigate(`/dashboard_agent/booking_list/current_booking/details/${item?.id}`, { state: { type: "hotels",data :item  } })}
       />
     </td>
                 {/* <td className="p-4">{item.no_children}</td>
