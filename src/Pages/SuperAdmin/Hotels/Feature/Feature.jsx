@@ -27,6 +27,7 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [error, setError] = useState(""); // For error handling
   const [showAddFeature, setShowAddFeature] = useState(false);
+  const [selectedFileName, setSelectedFileName] = useState("");
 
   useEffect(() => {
     refetchFeature();
@@ -51,6 +52,7 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
     };
     if (file) {
       reader.readAsDataURL(file); // Convert file to Base64
+      setSelectedFileName(file.name); // Store the file name
     }
   };
 
@@ -259,12 +261,16 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
             placeholder="Feature Description"
             className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
           />
-         <label className="flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-md mb-4 w-full cursor-pointer bg-gray-100 hover:bg-gray-200 transition">
-  <FaCloudUploadAlt className="text-gray-600 text-2xl" />
-  <span className="text-gray-600 text-sm">Upload File</span>
-  <input type="file" onChange={handleImageChange} className="hidden" />
-  
-</label>
+
+      {/* Upload Input */}
+      <label className="flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-md mb-4 w-full cursor-pointer bg-gray-100 hover:bg-gray-200 transition">
+        <FaCloudUploadAlt className="text-gray-600 text-2xl" />
+        <span className="text-gray-600 text-sm">
+          {selectedFileName ? selectedFileName : "Upload Icon"}
+        </span>
+        <input type="file" onChange={handleImageChange} className="hidden" />
+      </label>
+   
           <button
             type="button"
             onClick={handleAddFeature}

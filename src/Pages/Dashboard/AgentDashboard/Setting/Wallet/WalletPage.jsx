@@ -36,6 +36,15 @@ const Wallet = () => {
     }
   }, [dataWallet]);
 
+  const [openDelete, setOpenDelete] = useState(null);
+  const handleOpenDelete = (item) => {
+    setOpenDelete(item);
+};
+const handleCloseDelete = () => {
+    setOpenDelete(null);
+};
+
+
   const handleRechargeClick = (cardId) => {
     setWalletId(cardId); // Set the wallet ID for the selected card
     setRechargeInputVisible((prev) => ({
@@ -222,6 +231,7 @@ const Wallet = () => {
                   <FiTrash2 />
                   Delete
                 </span>
+                
               </div>
             </div>
           ))}
