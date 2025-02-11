@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../Context/Auth";
-import { FaFileArchive, FaHome } from "react-icons/fa";
+import { FaCreditCard, FaFileArchive, FaHome } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
 import { MdFlightTakeoff } from "react-icons/md";
@@ -82,6 +82,17 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
   );
   const [isActivePastBookingList, setIsActivePastBookingList] = useState(
     stateLink.isActivePastBookingList ?? false
+  );
+
+   /* Booking Payment*/
+   const [isOpenBookingPayment, setIsOpenBookingPayment] = useState(
+    stateLink.isOpenBookingPayment ?? false
+  );
+  const [isActiveBookingPaymentIcon, setIsActiveBookingPaymentIcon] = useState(
+    stateLink.isActiveBookingPaymentIcon ?? false
+  );
+  const [isActiveBookingPayment, setIsActiveBookingPayment] = useState(
+    stateLink.isActiveBookingPayment ?? false
   );
 
   // Financial
@@ -244,6 +255,10 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       isActiveCurrentBookingList,
       isActivePastBookingList,
 
+      isOpenBookingPayment,
+      isActiveBookingPaymentIcon,
+      isActiveBookingPayment,
+
       isOpenFinancial,
       isActiveFinancialIcon,
       isActiveFinancial,
@@ -314,6 +329,10 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveUpcomingBookingList,
     isActiveCurrentBookingList,
     isActivePastBookingList,
+
+    isOpenBookingPayment,
+    isActiveBookingPaymentIcon,
+    isActiveBookingPayment,
 
     isOpenFinancial,
     isActiveFinancialIcon,
@@ -389,6 +408,10 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveCurrentBookingList,
     isActivePastBookingList,
 
+    isOpenBookingPayment,
+    isActiveBookingPaymentIcon,
+    isActiveBookingPayment,
+
     isOpenFinancial,
     isActiveFinancialIcon,
     isActiveFinancial,
@@ -462,6 +485,10 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActiveUpcomingBookingList(false);
     setIsActiveCurrentBookingList(false);
     setIsActivePastBookingList(false);
+
+    setIsOpenBookingPayment(false)
+    setIsActiveBookingPaymentIcon(false)
+    setIsActiveBookingPayment(false)
 
     setIsOpenFinancial(false);
     setIsActiveFinancial(false);
@@ -728,6 +755,33 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       handleClickPastBooking();
     }
   }, [location]);
+
+
+    /* Booking payment */
+    const handleClickBookingPayment = useCallback(() => {
+      handleStateLinks();
+  
+      setIsOpenBookingPayment(true);
+      setIsActiveBookingPaymentIcon(true);
+      setIsActiveBookingPayment(true);
+      // setIsActiveCurrentBookingList(true);
+      // setIsActivePastBookingList(true);
+
+    }, []);
+    useEffect(() => {
+      const part = pathName.split("/");
+      const result = part.slice(0, 3).join("/");
+  
+      // Only navigate if on `/dashboard/setting` but not already on any sub-route
+      if (
+        result === "/dashboard_agent/booking_payments"
+      ) {
+        handleClickBookingPayment();
+
+        // navigate("/dashboard_agent/booking_payments");
+      }
+      console.log("result", result);
+    }, [location]);
 
   // Function to handle financial section click
   const handleClickFinancial = useCallback(() => {
@@ -1394,6 +1448,48 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
           </Link>
         </ul>
       </div>
+ {/* Booking payment */}
+      <Link
+        to="booking_payments"
+        onMouseMove={() => setIsActiveBookingPaymentIcon(true)}
+        onMouseOut={() => setIsActiveBookingPaymentIcon(false)}
+        onClick={() => {
+          handleClickBookingPayment();
+        }}
+        className={`
+          ${isActiveBookingPayment ? "active" : ""}
+         flex items-center 
+         ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
+        hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+      >
+        <div className="flex font-semibold text-xl items-center gap-x-2">
+          <FaCreditCard
+            className={`${
+              isActiveBookingPaymentIcon || isActiveBookingPayment
+                ? "text-mainColor"
+                : "text-white"
+            }`}
+          />
+          {!isSidebarCollapsed && (
+            <span
+              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
+                isActiveBookingPayment ? "text-mainColor" : "text-white"
+              }`}
+            >
+              Booking Payment
+            </span>
+          )}
+        </div>
+        {!isSidebarCollapsed && (
+          <IoIosArrowForward
+            className={`${
+              isActiveBookingPayment
+                ? "text-mainColor rotate-90"
+                : "text-white rotate-0"
+            } text-xl transition-all duration-300 group-hover:text-mainColor`}
+          />
+        )}
+      </Link>
 
         {/* Financial List */}
         <Link
