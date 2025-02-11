@@ -8,16 +8,16 @@ import { FiPercent } from "react-icons/fi";
 import { format } from 'date-fns';
 
 const AddTourPage = ({ update, setUpdate }) => {
-    // const { refetch: refetchList, loading: loadingList, data: listData } = useGet({url:'https://travelta.online/agent/room/lists'});
+    const { refetch: refetchList, loading: loadingList, data: listData } = useGet({url:'https://travelta.online/agent/tour/lists'});
     // const { postData:postHotelId, loadingPost:loadingHotelId , response:responseHotelId} = usePost({url:`https://travelta.online/agent/room/hotel_lists`});
     const { postData, loadingPost, response } = usePost({url: "https://travelta.online/agent/tour/add",});
     const [activeTab, setActiveTab] = useState('General Details');
 
     //General Detalils
-    // const [roomTypes, setRoomTypes] = useState([])
-    // const [selectedRoomType, setSelectedRoomType] = useState('')
-    // const [hotels, setHotels] = useState([])
-    // const [selectedHotel, setSelectedHotel] = useState('')
+    const [countries, setCountries] = useState([])
+    const [selectedCountries, setSelectedCountries] = useState([])
+    const [cities, setCities] = useState([])
+    const [selectedCities, setSelectedCities] = useState([])
     // const [mealPlans, setMealPlans] = useState([])
     // const [selectedMealPlan, setSelectedMealPlan] = useState('')
     // const [priceType, setPriceType] = useState('fixed');
@@ -47,19 +47,17 @@ const AddTourPage = ({ update, setUpdate }) => {
     // ]);
 
 
-    // useEffect(() => {
-    //   refetchList();
-    // }, [refetchList,update]);
+    useEffect(() => {
+      refetchList();
+    }, [refetchList,update]);
       
-    // useEffect(() => {
-    //   if (listData && listData.room_types && listData.hotels && listData.currencies ) {
-    //       console.log("List Data:", listData);
-    //       setRoomTypes(listData.room_types);
-    //       setHotels(listData.hotels);
-    //       setCurrencies(listData.currencies);
-    //       setAmenities(listData.room_amenities)
-    //   }
-    // }, [listData]);
+    useEffect(() => {
+      if (listData && listData.tour_types && listData.countries && listData.cities) {
+          console.log("List Data:", listData);
+        //   setRoomTypes(listData.room_types);
+        //   setHotels(listData.hotels);
+      }
+    }, [listData]);
 
     // useEffect(() => {
     //   if (selectedHotel) {  
