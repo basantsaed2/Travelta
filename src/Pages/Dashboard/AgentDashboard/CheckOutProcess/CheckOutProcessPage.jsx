@@ -283,47 +283,47 @@ const handlePayment = () => {
                                     </div>
                                 )}
                                 {cartDetails.from_service === "Flight" && (
-    <div className="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
-        <h3 className="text-2xl font-semibold text-[#0D47A1] mb-4">Flight Details</h3>
-        <div className="space-y-3">
-            <div className="flex items-center">
-                <i className="fas fa-plane-departure text-[#0D47A1] mr-3"></i>
-                <p><strong>Airline:</strong> {cartDetails.flight.airline}</p>
-            </div>
-            <div className="flex items-center">
-                <i className="fas fa-calendar-day text-[#0D47A1] mr-3"></i>
-                <p><strong>Departure Date:</strong> {formatDate(cartDetails.flight.departure)}</p>
-            </div>
-            <div className="flex items-center">
-                <i className="fas fa-calendar-alt text-[#0D47A1] mr-3"></i>
-                <p><strong>Arrival Date:</strong> {cartDetails.flight.arrival ? formatDate(cartDetails.flight.arrival) : "TBD"}</p>
-            </div>
-            <div className="flex items-center">
-                <i className="fas fa-map-marker-alt text-[#0D47A1] mr-3"></i>
-                <p><strong>From/To:</strong> {cartDetails.flight.from_to[0].from} to {cartDetails.flight.from_to[0].to}</p>
-            </div>
-            <div className="flex items-center">
-                <i className="fas fa-users text-[#0D47A1] mr-3"></i>
-                <p><strong>Number of Adults:</strong> {cartDetails.flight.adults_data.length}</p>
-            </div>
-            <div className="flex items-center">
-                <i className="fas fa-child text-[#0D47A1] mr-3"></i>
-                <p><strong>Number of Children:</strong> {cartDetails.flight.children_data.length}</p>
-            </div>
-            <div className="flex items-center">
-                <i className="fas fa-baby text-[#0D47A1] mr-3"></i>
-                <p><strong>Number of Infants:</strong> {cartDetails.flight.infants}</p>
-            </div>
-            <div className="flex items-center">
-                <i className="fas fa-ticket-alt text-[#0D47A1] mr-3"></i>
-                <p><strong>Ticket Number:</strong> {cartDetails.flight.ticket_number}</p>
-            </div>
-            <div className="flex items-center">
-                <i className="fas fa-sticky-note text-[#0D47A1] mr-3"></i>
-                <p><strong>Notes:</strong> {cartDetails.flight.notes || "No additional notes"}</p>
-            </div>
-        </div>
-    </div>
+                                <div className="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                                    <h3 className="text-2xl font-semibold text-[#0D47A1] mb-4">Flight Details</h3>
+                                    <div className="space-y-3">
+                                        <div className="flex items-center">
+                                            <i className="fas fa-plane-departure text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Airline:</strong> {cartDetails.flight.airline}</p>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <i className="fas fa-calendar-day text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Departure Date:</strong> {formatDate(cartDetails.flight.departure)}</p>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <i className="fas fa-calendar-alt text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Arrival Date:</strong> {cartDetails.flight.arrival ? formatDate(cartDetails.flight.arrival) : "TBD"}</p>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <i className="fas fa-map-marker-alt text-[#0D47A1] mr-3"></i>
+                                            <p><strong>From/To:</strong> {cartDetails.flight.from_to[0].from} to {cartDetails.flight.from_to[0].to}</p>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <i className="fas fa-users text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Number of Adults:</strong> {cartDetails.flight.adults_data.length}</p>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <i className="fas fa-child text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Number of Children:</strong> {cartDetails.flight.children_data.length}</p>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <i className="fas fa-baby text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Number of Infants:</strong> {cartDetails.flight.infants}</p>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <i className="fas fa-ticket-alt text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Ticket Number:</strong> {cartDetails.flight.ticket_number}</p>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <i className="fas fa-sticky-note text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Notes:</strong> {cartDetails.flight.notes || "No additional notes"}</p>
+                                        </div>
+                                    </div>
+                                </div>
                                 )}
 
                                 {/* Price & Costs Card */}

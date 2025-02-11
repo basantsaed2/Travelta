@@ -58,8 +58,20 @@ export { default as EditRoomGalleryPage } from "./Dashboard/AgentDashboard/Inven
 export { default as RoomAvailabilityPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomAvailability/RoomAvailabilityPage";
 export { default as AddRoomAvailabilityPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomAvailability/AddRoomAvailabilityPage";
 export { default as EditRoomAvailabilityPage } from "./Dashboard/AgentDashboard/Inventory/Rooms/RoomAvailability/EditRoomAvailabilityPage";
+
+//Tours
+//Tours Review
+export { default as TourPage } from "./Dashboard/AgentDashboard/Inventory/Tours/TourReview/TourPage";  
+export { default as AddTourPage } from "./Dashboard/AgentDashboard/Inventory/Tours/TourReview/AddTourPage";  
+export { default as EditTourPage } from "./Dashboard/AgentDashboard/Inventory/Tours/TourReview/EditTourPage";  
+
 //CheckOutProcess
 export { default as CheckOutProcessPage } from "./Dashboard/AgentDashboard/CheckOutProcess/CheckOutProcessPage"; 
+
+
+
+
+
 //Setting 
 //FinancialAccount
 export { default as FinancialAccountPage } from "./Dashboard/AgentDashboard/Setting/FinancialAccount/FinancialAccountPage"; 
