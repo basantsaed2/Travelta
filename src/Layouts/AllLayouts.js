@@ -57,6 +57,13 @@ export { default as EditRoomGalleryLayout } from "./AgentLayouts/Inventory/Rooms
 export { default as RoomAvailabilityLayout } from "./AgentLayouts/Inventory/Rooms/RoomAvailability/RoomAvailabilityLayout";
 export { default as AddRoomAvailabilityLayout } from "./AgentLayouts/Inventory/Rooms/RoomAvailability/AddRoomAvailabilityLayout";
 export { default as EditRoomAvailabilityLayout } from "./AgentLayouts/Inventory/Rooms/RoomAvailability/EditRoomAvailabilityLayout";
+
+//Tours
+//Tour Review
+export { default as TourLayout } from "./AgentLayouts/Inventory/Tours/TourReview/TourLayout";
+export { default as AddTourLayout } from "./AgentLayouts/Inventory/Tours/TourReview/AddTourLayout";
+export { default as EditTourLayout } from "./AgentLayouts/Inventory/Tours/TourReview/EditTourLayout";
+
 //CheckOutProcess
 export { default as CheckOutProcessPage } from "./AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 //FinancialAccount

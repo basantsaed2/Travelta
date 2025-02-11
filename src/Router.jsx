@@ -9,7 +9,7 @@ import SignUpAffilate from "./Pages/Authentication/SignUpAffilate"
 import Login from "./Pages/Authentication/Login";
 import AgentLayout from "./Layouts/AgentLayouts/AgentLayout";
 import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";  
-import {AddFinancialAccountLayout, AddLeadLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddWalletLayout, BookingPaymentLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditFinancialAccountLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, FinancialAccountLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
+import {AddFinancialAccountLayout, AddLeadLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddTourLayout, AddWalletLayout, BookingPaymentLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditFinancialAccountLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, EditTourLayout, FinancialAccountLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
 import { LandingPage } from "./Pages/AllPages";
 import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 import InComing from "./Pages/Dashboard/AgentDashboard/ComingSoon/ComingSoon";
@@ -367,6 +367,16 @@ const AppBookingPayment= () => (
   <Outlet />
   </>
 );
+const AppTourLayout= () => (
+  <>
+  <Outlet />
+  </>
+);
+const AppInventoryTour= () => (
+  <>
+  <Outlet />
+  </>
+);
 export const router = createBrowserRouter([
 
     {
@@ -512,30 +522,6 @@ export const router = createBrowserRouter([
                         path:"details/:current_id",
                         element:<DetailsCurrentLayout/>
                        },
-                      // {
-                      //  path:"flight_details/:current_id",
-                      //  element:<FlightDeatilsLayout/>
-                      // },
-                      // {
-                      //  path:"visa_details/:current_id",
-                      //  element:<VisaDetailsLayout/>
-                      // }
-                      // ,
-                      // {
-                      //  path:"tour_details/:current_id",
-                      //  element:<TourDeatilsLayout/>
-                      // }
-                      // ,
-                      // {
-                      //  path:"bus_details/:current_id",
-                      //  element:<BusDetailsLayout/>
-                      // }
-                      // ,
-                      // {
-                      //  path:"Hotel_details/:current_id",
-                      //  element:<HotelDetailsLayout/>
-                      // }
- 
                      ]
                   },
                   {
@@ -550,27 +536,6 @@ export const router = createBrowserRouter([
                        path:"details_past/:past_id",
                        element:<DetailsPastLayout/>
                       },
-
-                      // {
-                      //  path:"visa_details/:id",
-                      //  element:<VisaLayout/>
-                      // }
-                      // ,
-                      // {
-                      //  path:"tour_details/:id",
-                      //  element:<TourLayout/>
-                      // }
-                      // ,
-                      // {
-                      //  path:"bus_deatils/:id",
-                      //  element:<BusLayout/>
-                      // }
-                      // ,
-                      // {
-                      //  path:"Hotel_details/:id",
-                      //  element:<HotelLayout/>
-                      // }
- 
                      ]
                   },
                   {
@@ -585,26 +550,6 @@ export const router = createBrowserRouter([
                       path:"details_upcoming/:upcoming_id",
                       element:<DetailsUpcomingLayout/>
                      },
-                    //  {
-                    //   path:"visa_profile/:id",
-                    //   element:<VisaProfileLayout/>
-                    //  }
-                    //  ,
-                    //  {
-                    //   path:"tour_profile/:id",
-                    //   element:<TourProfileLayout/>
-                    //  }
-                    //  ,
-                    //  {
-                    //   path:"bus_profile/:id",
-                    //   element:<BusProfileLayout/>
-                    //  }
-                    //  ,
-                    //  {
-                    //   path:"Hotel_profile/:id",
-                    //   element:<HotelProfileLayout/>
-                    //  }
-
                     ]
 
                     
@@ -634,11 +579,6 @@ export const router = createBrowserRouter([
                         },
                     ]
                   },
-           
-
-
-                  
-
                 ]
               },
 
@@ -829,7 +769,32 @@ export const router = createBrowserRouter([
                       }
                 ]
 
-              }
+                  },
+                  {
+                    path:"tour",
+                    element:<AppInventoryTour/>,
+                    children:[
+                      {
+                        path:"list",
+                        element:<AppTourLayout/>,
+                        children:[
+                          {
+                            path:"",
+                            element:<TourLayout/>,
+                          },
+                          {
+                            path:"add",
+                            element:<AddTourLayout/>,
+                          },
+                          {
+                            path:"edit/:tourId",
+                            element:<EditTourLayout/>,
+                          },
+                    ]
+                      }
+                ]
+
+                  }
             ]
               },
 
