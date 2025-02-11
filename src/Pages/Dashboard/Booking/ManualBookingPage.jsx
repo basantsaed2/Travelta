@@ -663,18 +663,19 @@ const ManualBooking = () => {
 
     // Calculate total tax amount
     let totalTaxAmount = 0;
+
     selectedTaxId.forEach((id) => {
       const tax = taxes?.find((tax) => tax.id === id); // Find tax object by ID
       if (tax) {
         if (tax.type === "precentage") {
-          totalTaxAmount += (parseFloat(tax.amount) / 100); // Apply percentage tax
+          totalTaxAmount += (parseFloat(tax.amount) / 100) * calculatedPrice; // Apply percentage tax to calculated price
         } else if (tax.type === "value") {
-          totalTaxAmount += parseFloat(tax.amount || 0); // Apply fixed value tax
+          totalTaxAmount += parseFloat(tax.amount || 0); // Add fixed value tax
         }
       }
     });
-
-    const calculatedTotalPrice = calculatedPrice + totalTaxAmount;
+    
+    const calculatedTotalPrice = calculatedPrice + totalTaxAmount;    
 
     // Update the state with calculated values
     setPrice(calculatedPrice.toFixed(2));
