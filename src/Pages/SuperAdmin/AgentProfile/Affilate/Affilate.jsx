@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useGet } from '../../../../Hooks/useGet';
 import { useDelete } from '../../../../Hooks/useDelete';
-import { FaTrashAlt, FaChevronDown, FaChevronUp, FaClipboard, FaFileAlt, FaChartBar, FaUserAlt, FaChartLine, FaBriefcase, FaIdCard } from 'react-icons/fa';
+import { FaTrashAlt, FaChevronDown, FaChevronUp, FaClipboard, FaFileAlt, FaChartBar, FaUserAlt, FaChartLine, FaBriefcase, FaIdCard, FaTrash } from 'react-icons/fa';
 import StaticLoader from '../../../../Components/StaticLoader';
 
 const Affilate = () => {
@@ -72,7 +72,7 @@ const Affilate = () => {
                   onClick={() => handleDelete(a.id, a.name)}
                   disabled={loadingDelete}
                 >
-                  <FaTrashAlt size={22} />
+                  <FaTrash size={22} />
                 </button>
               </div>
               <div className="cursor-pointer text-gray-600" onClick={() => toggleAffilateDetails(a.id)}>

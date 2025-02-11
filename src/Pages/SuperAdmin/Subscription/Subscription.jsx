@@ -81,7 +81,7 @@ const Subscription = () => {
             key={subscription.id}
             className="hover:bg-gray-50"
           >
-            <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.name}</td>
+            <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.name?subscription.name:"NA"}</td>
             <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.email}</td>
             <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.phone}</td>
             <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.plan}</td>

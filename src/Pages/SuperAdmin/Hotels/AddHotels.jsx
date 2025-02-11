@@ -462,7 +462,7 @@ useEffect(() => {
 
 // Ensure selectedFacilities and selectedTheme contain valid data
 // Append policies
-policies.forEach((policy) => formData.append("policies[]", JSON.stringify(policy)));
+policies.forEach((policy) => formData.append("policies[]", policy));
 
 // Append facilities
 selectedFacilities.forEach((facility) =>

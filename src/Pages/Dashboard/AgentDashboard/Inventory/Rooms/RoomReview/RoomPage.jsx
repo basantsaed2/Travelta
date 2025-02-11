@@ -359,7 +359,7 @@ const handleToggleDescription = (roomIndex) => {
                         to={`availability/${room.id}`}
                         className="flex items-center gap-3 bg-blue-500 text-white py-2 px-5 rounded-xl shadow-md hover:bg-blue-600 transition-all duration-300 ease-in-out"
                       >
-                        <MdPriceChange className="text-lg" />
+                        <FaCheckCircle className="text-lg" />
                         <span className="text-base font-medium">Availability</span>
                       </Link>
                     </div>

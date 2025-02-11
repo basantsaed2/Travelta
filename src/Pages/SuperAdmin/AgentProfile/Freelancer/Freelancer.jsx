@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useGet } from '../../../../Hooks/useGet';
 import { useDelete } from '../../../../Hooks/useDelete';
 import StaticLoader from '../../../../Components/StaticLoader';
-import { FaTrashAlt, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaTrashAlt, FaChevronDown, FaChevronUp, FaTrash } from 'react-icons/fa';
 
 const Freelancer = () => {
   const { refetch: refetchFreelancer, loading: loadingFreelancer, data: DataFreelancer } = useGet({
@@ -68,7 +68,7 @@ const Freelancer = () => {
                   onClick={() => handleDelete(freelancer.id, freelancer.f_name)}
                   disabled={loadingDelete}
                 >
-                  <FaTrashAlt size={20} />
+                  <FaTrash size={20} />
                 </button>
               </div>
 

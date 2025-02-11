@@ -9,7 +9,7 @@ const ActionCurrent = ({ id, item }) => {
     url: `https://travelta.online/agent/booking/details/${id}`,
   });
 
-  const [status, setStatus] = useState(item?.status || "pending");
+  const [status, setStatus] = useState("pending");
   const [showConfirm, setShowConfirm] = useState(false);
   const [actionType, setActionType] = useState("");
   const [deposits, setDeposits] = useState([{ deposit: "", date: "" }]);
@@ -20,17 +20,21 @@ const ActionCurrent = ({ id, item }) => {
 
   useEffect(() => {
     refetchDetails();
-  }, [refetchDetails]);
+    console.log("item", item)
+  }, [refetchDetails,item]);
 
   useEffect(() => {
     if (item?.status) {
       setStatus(item.status);
     }
+  
   }, [item?.status]);
+  
 
   const handleAction = (newStatus) => {
     setActionType(newStatus);
     setShowConfirm(true);
+    refetchDetails()
   };
 
   const confirmAction = async () => {
@@ -96,7 +100,6 @@ const ActionCurrent = ({ id, item }) => {
         )}
          {status === "vouchered" && (
           <>
-            
             <button onClick={() => handleAction("canceled")} className="px-4 py-2 bg-red-500 text-white rounded-lg">Cancel</button>
           </>
         )}

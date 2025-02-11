@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useGet } from "../../../Hooks/useGet";
 import StaticLoader from "../../../Components/StaticLoader";
 import ActionUpcoming from "./ActionUpcoming";
 import RequestPast from "./RequestPast";
 import RequestUpcoming from "./Profile/RequestUpcoming";
 import { useAuth } from "../../../Context/Auth";
+import { FaArrowLeft } from "react-icons/fa";
 
 const tabs = [
   "Booking Info",
   "Passenger",
   "Voucher",
   "Invoice",
-  "Special Request",
+  // "Special Request",
   "Payments",
   "Actions",
 ];
@@ -38,7 +39,7 @@ const DetailsUpcoming = () => {
   //   });
 
   const [selectedPaymentId, setSelectedPaymentId] = useState(null); // Store selected payment ID
-
+  const navigate = useNavigate()
   const {
     refetch: refetchInvoice,
     loading: loadingInvoice,
@@ -127,12 +128,21 @@ const handleUpdateRequest = async () => {
 };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen flex justify-center">
-     <div className="w-full bg-white shadow-lg rounded-lg flex flex-col p-4">
+    <div className=" bg-gray-100 min-h-screen flex justify-center">
+     <div className="w-full bg-white shadow-lg rounded-lg flex flex-col ">
 {/* Sidebar (Vertical Tabs) */}
-<div className="border-b border-gray-300 p-4 bg-gray-50 rounded-lg shadow-md flex flex-col md:flex-col md:items-center gap-2">
-<h2 className="text-2xl font-bold text-mainColor mb-4 md:mb-0 py-3 truncate overflow-hidden whitespace-nowrap w-full">Booking Details</h2>
-<div className="w-full  bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl shadow-lg p-3 overflow-x-scroll scrollSection">
+<div className="border-b  p-4 bg-gray-50 rounded-lg shadow-md flex flex-col md:flex-col md:items-start gap-2">
+  <div className="flex gap-1 justify-start items-center">
+  <button
+                                    onClick={() => navigate(-1)}
+                                    className=" top-2 text-mainColor text-2xl cursor-pointer hover:text-blue-500 transition-all"
+                                  >
+                                    <FaArrowLeft/>
+                                  </button>
+  <h2 className="text-2xl font-bold text-mainColor mb-4 md:mb-0 py-3 truncate overflow-hidden whitespace-nowrap w-full">Booking Details</h2>
+  </div>
+
+<div className="w-full  bg-gradient-to-r rounded-xl  p-3 overflow-x-scroll scrollSection">
 <ul className="flex flex-row md:space-x-4 space-x-2 w-max md:w-full md:justify-center "> 
     {tabs.map((tab) => (
       <li
@@ -902,11 +912,11 @@ const handleUpdateRequest = async () => {
             </div>
           )}
 
-          {activeTab === "Special Request" && (
+          {/* {activeTab === "Special Request" && (
             <div>
              <RequestUpcoming id ={upcoming_id}/>
             </div>
-          )}
+          )} */}
 
           {activeTab === "Invoice" &&
             currentDataInvoice &&

@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useGet } from "../../../Hooks/useGet";
 import StaticLoader from "../../../Components/StaticLoader";
 import ActionCurrent from "./ActionCurrent";
 import RequestCurrent from "./RequestCurrent";
 import { useAuth } from "../../../Context/Auth";
+import { FaArrowLeft } from "react-icons/fa";
 
 const tabs = [
   "Booking Info",
   "Passenger",
   "Voucher",
   "Invoice",
-  "Special Request",
+  // "Special Request",
   "Payments",
   "Actions",
 ];
@@ -57,6 +58,7 @@ const DetailsCurrent = () => {
   const [currentList, setCurrentList] = useState([]);
   const [specialRequest, setSpecialRequest] = useState(item?.special_request || "");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate()
   const auth = useAuth();
   useEffect(() => {
     refetchDetails();
@@ -132,11 +134,17 @@ const DetailsCurrent = () => {
     <div className=" bg-gray-100 min-h-screen flex justify-center">
 <div className="w-full bg-white shadow-lg rounded-lg flex flex-col p-4">
   {/* Tabs Navigation */}
-  <div className="border-b border-gray-300 p-4 bg-gray-50 rounded-lg shadow-md flex flex-col md:flex-col md:items-center gap-2">
+  <div className="border-b border-gray-300 p-4 bg-gray-50 rounded-lg shadow-md flex flex-col md:flex-col md:items-start gap-2">
   {/* Truncated Title */}
-  <h2 className="text-2xl font-bold text-mainColor mb-4 md:mb-0 py-3 truncate overflow-hidden whitespace-nowrap w-full">
-    Booking Details
-  </h2>
+  <div className="flex gap-2 justify-start items-center">
+  <button
+                                    onClick={() => navigate(-1)}
+                                    className=" top-2 text-mainColor text-2xl cursor-pointer hover:text-blue-500 transition-all"
+                                  >
+                                    <FaArrowLeft/>
+                                  </button>
+  <h2 className="text-2xl font-bold text-mainColor mb-4 md:mb-0 py-3 truncate overflow-hidden whitespace-nowrap w-full">Booking Details</h2>
+  </div>
   
   <div className="w-full  bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl shadow-lg p-3 overflow-x-scroll scrollSection">
   <ul className="flex flex-row md:space-x-4 space-x-2 w-max md:w-full md:justify-center ">
@@ -218,21 +226,21 @@ const DetailsCurrent = () => {
         {/* Supplier Emails */}
         <p className="font-semibold mt-2">📧 Emails:</p>
         <ul className="list-disc list-inside text-gray-700">
-          {item.supplier_from_email?.map((email, i) => (
-            <li key={i} className="ml-4">
-              {email}
+       
+            <li className="ml-4">
+              {item.supplier_from_email}
             </li>
-          ))}
+          
         </ul>
 
         {/* Supplier Phones */}
         <p className="font-semibold mt-2">📱 Phone Numbers:</p>
         <ul className="list-disc list-inside text-gray-700">
-          {item.supplier_from_phone?.map((phone, i) => (
-            <li key={i} className="ml-4">
-              {phone}
+      
+            <li className="ml-4">
+              {item.supplier_from_phone}
             </li>
-          ))}
+       
         </ul>
       </div>
 
@@ -346,17 +354,17 @@ const DetailsCurrent = () => {
         {/* Supplier Emails */}
         <p className="font-semibold mt-2">📧 Emails:</p>
         <ul className="list-disc list-inside text-gray-700">
-          {item.supplier_from_email?.map((email, i) => (
-            <li key={i} className="ml-4">{email}</li>
-          ))}
+         
+            <li  className="ml-4">{item.supplier_from_email}</li>
+        
         </ul>
 
         {/* Supplier Phones */}
         <p className="font-semibold mt-2">📱 Phone Numbers:</p>
         <ul className="list-disc list-inside text-gray-700">
-          {item.supplier_from_phone?.map((phone, i) => (
-            <li key={i} className="ml-4">{phone}</li>
-          ))}
+         
+            <li className="ml-4">{item.supplier_from_phone}</li>
+       
         </ul>
       </div>
 
@@ -504,17 +512,17 @@ const DetailsCurrent = () => {
         {/* Supplier Emails */}
         <p className="font-semibold mt-2">📧 Emails:</p>
         <ul className="list-disc list-inside text-gray-700">
-          {item.supplier_from_email?.map((email, i) => (
-            <li key={i} className="ml-4">{email}</li>
-          ))}
+         
+            <li className="ml-4">{item.supplier_from_email}</li>
+       
         </ul>
 
         {/* Supplier Phones */}
         <p className="font-semibold mt-2">📱 Phone Numbers:</p>
         <ul className="list-disc list-inside text-gray-700">
-          {item.supplier_from_phone?.map((phone, i) => (
-            <li key={i} className="ml-4">{phone}</li>
-          ))}
+          
+            <li className="ml-4">{item.supplier_from_phone}</li>
+    
         </ul>
       </div>
 
@@ -653,17 +661,17 @@ const DetailsCurrent = () => {
         {/* Supplier Emails */}
         <p className="font-semibold mt-2">📧 Emails:</p>
         <ul className="list-disc list-inside text-gray-700">
-          {item.supplier_from_email?.map((email, i) => (
-            <li key={i} className="ml-4">{email}</li>
-          ))}
+         
+            <li className="ml-4">{item.supplier_from_email}</li>
+        
         </ul>
 
         {/* Supplier Phones */}
         <p className="font-semibold mt-2">📱 Phone Numbers:</p>
         <ul className="list-disc list-inside text-gray-700">
-          {item.supplier_from_phone?.map((phone, i) => (
-            <li key={i} className="ml-4">{phone}</li>
-          ))}
+         
+            <li  className="ml-4">{item.supplier_from_phone}</li>
+   
         </ul>
       </div>
 
@@ -760,17 +768,17 @@ const DetailsCurrent = () => {
         {/* Supplier Emails */}
         <p className="font-semibold mt-2">📧 Emails:</p>
         <ul className="list-disc list-inside text-gray-700">
-          {item.supplier_from_email?.map((email, i) => (
-            <li key={i} className="ml-4">{email}</li>
-          ))}
+         
+            <li className="ml-4">{item.supplier_from_email}</li>
+ 
         </ul>
 
         {/* Supplier Phones */}
         <p className="font-semibold mt-2">📱 Phone Numbers:</p>
         <ul className="list-disc list-inside text-gray-700">
-          {item.supplier_from_phone?.map((phone, i) => (
-            <li key={i} className="ml-4">{phone}</li>
-          ))}
+         
+            <li className="ml-4">{item.supplier_from_phone}</li>
+     
         </ul>
       </div>
 
@@ -898,11 +906,11 @@ const DetailsCurrent = () => {
             </div>
           )}
 
-          {activeTab === "Special Request" && (
+          {/* {activeTab === "Special Request" && (
             <div>
              <RequestCurrent id={current_id}/>
             </div>
-          )}
+          )} */}
 
           {activeTab === "Invoice" &&
             currentDataInvoice &&

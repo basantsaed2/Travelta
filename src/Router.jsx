@@ -106,6 +106,7 @@ import ManualBookingLayoutSuper from "./Layouts/SuperAdminLayouts/PendingPaymetL
 import WalletLayoutSuper from "./Layouts/SuperAdminLayouts/PendingPaymetLayout/WalletLayoutSuper";
 import TourTypeLayout from "./Layouts/SuperAdminLayouts/SettingLayout/ToutTypeLayout";
 import AddTourType from "./Pages/SuperAdmin/Settings/Tabs/TourType/AddTourType";
+import BookingInvoiceLayout from "./Layouts/AgentLayouts/BookingPayments/BookingInvoiceLayout";
 
 
 const AppLayoutAgent = () => (
@@ -357,6 +358,11 @@ const AppCustomer= () => (
 );
 
 const AppTour= () => (
+  <>
+  <Outlet />
+  </>
+);
+const AppBookingPayment= () => (
   <>
   <Outlet />
   </>
@@ -848,7 +854,17 @@ export const router = createBrowserRouter([
 
               {
                 path:'booking_payments',
-                element:<BookingPaymentLayout/>
+                element:<AppBookingPayment/>,
+                children:[
+                  {
+                    path: "",
+                    element: <BookingPaymentLayout/>,
+                  },
+                  {
+                    path: "invoice/:id",
+                    element: <BookingInvoiceLayout/>,
+                  },
+                ]
               }
             ],
       },

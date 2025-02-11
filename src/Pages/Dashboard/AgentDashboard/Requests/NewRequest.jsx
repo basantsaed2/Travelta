@@ -12,6 +12,8 @@ import {
 } from "@mui/material";
 import { useGet } from "../../../../Hooks/useGet";
 import { usePost } from "../../../../Hooks/usePostJson";
+import { useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
 
 const NewRequest = () => {
   const [service, setService] = useState("");
@@ -24,8 +26,8 @@ const NewRequest = () => {
   const [serviceId, setServiceId] = useState("");
   const [currencyId, setCurrencyId] = useState("");
   const [expectedRevenue, setExpectedRevenue] = useState("");
-
-  const {
+  const navigate = useNavigate()
+  const { 
     refetch: refetchList,
     loading: loadingList,
     data: paymentList,
@@ -567,7 +569,7 @@ const NewRequest = () => {
     setServiceId("");
     setExpectedRevenue("");
     setPriority("");
-    setStage("");
+    // setStage("");
   
     setCheckIn("");
     setCheckOut("");
@@ -627,7 +629,15 @@ const NewRequest = () => {
       {/* Header */}
       <div className="mb-6">
         <div className="flex justify-between items-center">
-          <p className="text-2xl mt-4 font-semibold">New Request</p>
+           <div className="flex gap-1 justify-start items-center">
+           <button
+                                             onClick={() => navigate(-1)}
+                                             className=" top-2 text-mainColor text-2xl cursor-pointer hover:text-blue-500 transition-all"
+                                           >
+                                             <FaArrowLeft/>
+                                           </button>
+           <h2 className="text-2xl font-bold text-mainColor mb-4 md:mb-0 py-3 truncate overflow-hidden whitespace-nowrap w-full">New Request</h2>
+           </div>
           <button className="text-white w-[30%] p-3 bg-mainColor py-5 rounded-md font-bold">
             + Add New Lead
           </button>

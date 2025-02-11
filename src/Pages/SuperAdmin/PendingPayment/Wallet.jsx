@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useGet } from "../../../Hooks/useGet";
 import axios from "axios";
 import { useAuth } from "../../../Context/Auth";
+import StaticLoader from "../../../Components/StaticLoader";
 const Wallet = () => {
   const {
     refetch: refetchPaymentMethod,
@@ -92,7 +93,9 @@ const Wallet = () => {
   return (
     <div>
       {loadingPaymentMethod ? (
-        <p>Loading...</p>
+          <div className="w-full h-56 flex justify-center items-center">
+          <StaticLoader />
+        </div>
       ) : (
         <table className="min-w-full border-collapse border border-gray-300">
           <thead>
