@@ -154,44 +154,44 @@ const CheckOutProcessPage = () => {
 
     };
 
-
-const [selectedPaymentMethods, setSelectedPaymentMethods] = useState([]);
-const [remainingAmount, setRemainingAmount] = useState(finalPrice);
-
-const handleSelectMethod = (method) => {
-  if (!selectedPaymentMethods.some((item) => item.id === method.id)) {
-    setSelectedPaymentMethods([...selectedPaymentMethods, { ...method, amount: 0 }]);
-  }
-};
-
-const handleAmountChange = (id, value) => {
-  const amount = parseFloat(value) || 0;
-  let updatedMethods = selectedPaymentMethods.map((item) =>
-    item.id === id ? { ...item, amount } : item
-  );
-
-  const totalAssigned = updatedMethods.reduce((sum, item) => sum + item.amount, 0);
-
-  if (totalAssigned <= finalPrice) {
-    setSelectedPaymentMethods(updatedMethods);
-    setRemainingAmount(finalPrice - totalAssigned);
-  }
-};
-
-const removeMethod = (id) => {
-  const updatedMethods = selectedPaymentMethods.filter((item) => item.id !== id);
-  const totalAssigned = updatedMethods.reduce((sum, item) => sum + item.amount, 0);
-
-  setSelectedPaymentMethods(updatedMethods);
-  setRemainingAmount(finalPrice - totalAssigned);
-};
-
-const handlePayment = () => {
-  if (remainingAmount === 0) {
-    console.log("Payment processed", selectedPaymentMethods);
-    // Proceed with API request
-  }
-};
+    const [selectedPaymentMethods, setSelectedPaymentMethods] = useState([]);
+    const [remainingAmount, setRemainingAmount] = useState(finalPrice);
+    
+    const handleSelectMethod = (method) => {
+        if (!selectedPaymentMethods.some((item) => item.id === method.id)) {
+          // When selecting a method, add it with an initial amount of 0
+          const newSelected = [...selectedPaymentMethods, { ...method, amount: 0 }];
+          setSelectedPaymentMethods(newSelected);
+          // Optionally, update remainingAmount here if needed
+        } else {
+          // When unselecting, remove the method and update the remaining amount
+          const updatedMethods = selectedPaymentMethods.filter((item) => item.id !== method.id);
+          const totalAssigned = updatedMethods.reduce((sum, item) => sum + item.amount, 0);
+          setSelectedPaymentMethods(updatedMethods);
+          setRemainingAmount(finalPrice - totalAssigned);
+        }
+      };
+    const handleAmountChange = (id, value) => {
+      const amount = parseFloat(value) || 0;
+      const updatedMethods = selectedPaymentMethods.map((item) =>
+        item.id === id ? { ...item, amount } : item
+      );
+    
+      const totalAssigned = updatedMethods.reduce((sum, item) => sum + item.amount, 0);
+    
+      if (totalAssigned <= finalPrice) {
+        setSelectedPaymentMethods(updatedMethods);
+        setRemainingAmount(finalPrice - totalAssigned);
+      }
+    };
+    
+    const handlePayment = () => {
+      if (remainingAmount === 0) {
+        console.log("Payment processed", selectedPaymentMethods);
+        // Proceed with API request
+      }
+    };
+    
 
       
     return (
@@ -785,105 +785,68 @@ const handlePayment = () => {
 
                             </div>
                         )}
-                        {currentStep === 3 && (
-                        <div className="p-6 space-y-6">
-                            <h2 className="text-3xl font-bold text-[#0D47A1] text-center mb-6">
-                            Select Payment Method
-                            </h2>
+{currentStep === 3 && (
+  <div className="p-6 space-y-6">
+    <h2 className="text-3xl font-bold text-[#0D47A1] text-center mb-6">
+      Select Payment Method
+    </h2>
 
-                            {/* Total Price & Remaining Amount */}
-                            <div className="flex justify-between items-center bg-gray-100 p-4 rounded-lg shadow">
-                            <h3 className="text-xl font-semibold text-gray-700">Total: ${finalPrice}</h3>
-                            <h3 className="text-xl font-semibold text-[#D32F2F]">
-                                Remaining: ${remainingAmount}
-                            </h3>
-                            </div>
+    {/* Total Price & Remaining Amount */}
+    <div className="flex justify-between items-center bg-gray-100 p-4 rounded-lg shadow">
+      <h3 className="text-xl font-semibold text-gray-700">Total: ${finalPrice}</h3>
+      <h3 className="text-xl font-semibold text-[#D32F2F]">
+        Remaining: ${remainingAmount}
+      </h3>
+    </div>
 
-
-
-                        <div className="space-y-4">
-                        {paymentMethod.map((method, index) => (
-                            <label
-                            key={index}
-                            className={`flex items-center gap-4 p-4 border-2 rounded-lg shadow-sm transition-all cursor-pointer`}
-                            >
-                            <input
-                                type="radio"
-                                name="paymentMethod"
-                                className="w-5 h-5 accent-[#0D47A1]"
-                                checked={selectedPaymentMethods.some((item) => item.id === method.id)}
-                                onChange={() => handleSelectMethod(method)}
-                            />
-                            <img
-                                src={method.image_link}
-                                alt={method.name}
-                                className="w-12 h-12 object-contain"
-                            />
-                            <span className="text-lg font-semibold text-[#0D47A1]">{method.name}</span>
-                            </label>
-                        ))}
-                        </div>
-
-
-                            {/* Selected Payment Methods & Input Fields */}
-                            {selectedPaymentMethods.length > 0 && (
-                                <div className="space-y-6">
-                                    {selectedPaymentMethods.map((method, index) => (
-                                    <div
-                                        key={index}
-                                        className="flex items-center justify-between bg-white p-4 border border-gray-200 rounded-2xl shadow-md transition-all hover:shadow-lg"
-                                    >
-                                        {/* Left Section - Payment Method Icon & Name */}
-                                        <div className="flex items-center space-x-4">
-                                        <div className="w-14 h-14 flex justify-center items-center bg-gray-100 rounded-full shadow-sm">
-                                            <img
-                                            src={method.image_link}
-                                            className="w-10 h-10 object-contain"
-                                            alt={method.name}
-                                            />
-                                        </div>
-                                        <span className="text-lg font-semibold text-gray-800">{method.name}</span>
-                                        </div>
-
-                                        {/* Middle Section - Amount Input */}
-                                        <div className="flex items-center space-x-2">
-                                        <span className="text-gray-500 text-sm">Amount:</span>
-                                        <input
-                                            type="number"
-                                            min="1"
-                                            max={remainingAmount + (method.amount || 0)}
-                                            value={method.amount || ""}
-                                            onChange={(e) => handleAmountChange(method.id, e.target.value)}
-                                            className="w-28 p-2 border border-mainColor rounded-lg text-center text-gray-700 font-semibold focus:ring focus:ring-blue-300 outline-none"
-                                        />
-                                        </div>
-
-                                        {/* Right Section - Remove Button */}
-                                        <button
-                                        className="flex items-center px-4 py-2 bg-red-500 text-white font-medium rounded-lg transition hover:bg-red-600 shadow-sm"
-                                        onClick={() => removeMethod(method.id)}
-                                        >
-                                        <svg
-                                            className="w-5 h-5 mr-2"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-                                        </svg>
-                                        Remove
-                                        </button>
-                                    </div>
-                                    ))}
-                                </div>
-                            )}
-
-                        
-                        </div>
-                        )}
-
+    {/* Payment Methods List with Checkboxes and Amount Input */}
+    <div className="space-y-4">
+      {paymentMethod.map((method, index) => {
+        // Get the selected method object (if exists) to retrieve its updated amount
+        const selectedMethod = selectedPaymentMethods.find(item => item.id === method.id);
+        return (
+          <label
+            key={index}
+            className="flex flex-col md:flex-row gap-4 p-4 border-2 rounded-lg shadow-sm transition-all cursor-pointer"
+          >
+            <div className='flex items-center gap-4'>
+            <input
+              type="checkbox"
+              name="paymentMethod"
+              className="w-5 h-5 accent-[#0D47A1]"
+              checked={selectedPaymentMethods.some((item) => item.id === method.id)}
+              onChange={() => handleSelectMethod(method)}
+            />
+            <img
+              src={method.image_link}
+              alt={method.name}
+              className="w-12 h-12 object-contain"
+            />
+            <span className="text-lg font-semibold text-[#0D47A1]">{method.name}</span>
+            </div>
+            <div className='flex items-center gap-4'>
+            {/* Amount Input for selected payment methods */}
+            {selectedPaymentMethods.some((item) => item.id === method.id) && (
+              <div className="flex items-center space-x-2">
+                <span className="text-gray-500 text-sm">Amount:</span>
+                <input
+                  type="number"
+                  min="1"
+                  // Use the updated amount from the selectedMethod object.
+                  max={remainingAmount + (selectedMethod ? selectedMethod.amount : 0)}
+                  value={selectedMethod ? selectedMethod.amount : ""}
+                  onChange={(e) => handleAmountChange(method.id, e.target.value)}
+                  className="w-28 p-2 border border-mainColor rounded-lg text-center text-gray-700 font-semibold focus:ring focus:ring-blue-300 outline-none"
+                />
+              </div>
+            )}
+            </div>
+          </label>
+        );
+      })}
+    </div>
+  </div>
+)}
                     </div>
 
                     {/* Buttons */}
@@ -915,7 +878,9 @@ const handlePayment = () => {
                                         ? (remainingBalance === 0 || remainingAmount === 0 ? "bg-[#0D47A1] hover:bg-[#08357C]" : "bg-gray-400 cursor-not-allowed")
                                         : (remainingAmount === 0 ? "bg-[#0D47A1] hover:bg-[#08357C]" : "bg-gray-400 cursor-not-allowed")
                                 }`}
-                                disabled={(currentStep === 3 || paymentType === 'Later') ? remainingBalance !== 0 : remainingAmount !== 0}
+                                disabled={remainingAmount !== 0 || remainingBalance !== 0} // Disabled if remainingAmount is not 0
+
+                                // disabled={(currentStep === 3 || paymentType === 'Later') ? remainingBalance !== 0 : remainingAmount !== 0}
                             >
                                 {currentStep === 3 || paymentType === 'Later' ? "Apply" : "Next"}
                         </button>
