@@ -92,6 +92,7 @@ const ManualBooking = () => {
   const [taxes, setTaxes] = useState([]);
   const [countries, setCountries] = useState([]);
   const [selectedTaxId, setSelectedTaxId] = useState([]);
+  const [specialRequest, setSpecialRequest] = useState("");
 
   const handleSwitchChange = () => {
     setIsMarkupPercentage((prev) => (prev === 1 ? 0 : 1)); // Toggle between 1 and 0
@@ -720,6 +721,7 @@ const ManualBooking = () => {
     } else if (category === "B2C") {
       formData.append("to_customer_id", selectedToSupplier);
     }
+    formData.append("special_request", specialRequest);
 
     // Append Hotal fields to FormData
     if (selectedService.service_name === "Hotel") {
@@ -1077,6 +1079,14 @@ const ManualBooking = () => {
                 </MenuItem>
               ))}
             </TextField>
+
+            <TextField
+              label="Special Request"
+              variant="outlined"
+              fullWidth
+              value={specialRequest}
+              onChange={(e) => setSpecialRequest(e.target.value)}
+            />
 
             <TextField
               label="Select Taxes"

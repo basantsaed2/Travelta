@@ -119,23 +119,39 @@ const CheckOutProcessPage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        if (remainingAmount !== 0) {
+            alert("Please complete the payment before proceeding.");
+            return;
+        }
         const formData = new FormData();
         formData.append('cart_id', cartId.cart_id);
-        formData.append('payment_method_id', selectedPaymentMethod);
+        // formData.append('payment_method_id', selectedPaymentMethod);
         formData.append('total_cart', totalPrice);
 
         if(paymentType === "Full"){
             formData.append('payment_type', 'full');
-            formData.append('total_cart', totalPrice);
+            formData.append("payment_methods", JSON.stringify(selectedPaymentMethods.map((method) => ({
+                payment_method_id: method.id,
+                amount: method.amount,
+              }))));
         }
         else if (paymentType === "Partial"){
             formData.append('payment_type', 'partial');
             formData.append('payments', JSON.stringify(payments));
-            formData.append('amount', amountPaid);
+            // formData.append('amount', amountPaid);
+            formData.append("payment_methods", JSON.stringify(selectedPaymentMethods.map((method) => ({
+                payment_method_id: method.id,
+                amount: method.amount,
+              }))));
         }
         else{
             formData.append('payment_type', 'later');
             formData.append('payments', JSON.stringify(payments));
+            formData.append("payment_methods", JSON.stringify(selectedPaymentMethods.map((method) => ({
+                payment_method_id: method.id,
+                amount: method.amount,
+              }))));
         }
 
         postData(formData, "Booking Checkout Added Successfully");
@@ -322,6 +338,45 @@ const handlePayment = () => {
                                             <i className="fas fa-sticky-note text-[#0D47A1] mr-3"></i>
                                             <p><strong>Notes:</strong> {cartDetails.flight.notes || "No additional notes"}</p>
                                         </div>
+                                    </div>
+                                </div>
+                                )}
+                                {cartDetails.from_service === "Hotel" && (
+                                <div className="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                                    <h3 className="text-2xl font-semibold text-[#0D47A1] mb-4">Hotel Details</h3>
+                                    <div className="space-y-3">
+                                    <div className="flex items-center">
+                                        <i className="fas fa-hotel text-[#0D47A1] mr-3"></i>
+                                        <p><strong>Hotel Name:</strong> {cartDetails.hotel.hotel_name}</p>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <i className="fas fa-calendar-day text-[#0D47A1] mr-3"></i>
+                                        <p><strong>Check-in Date:</strong> {formatDate(cartDetails.hotel.check_in)}</p>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <i className="fas fa-calendar-alt text-[#0D47A1] mr-3"></i>
+                                        <p><strong>Check-out Date:</strong> {formatDate(cartDetails.hotel.check_out)}</p>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <i className="fas fa-moon text-[#0D47A1] mr-3"></i>
+                                        <p><strong>Nights:</strong> {cartDetails.hotel.nights}</p>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <i className="fas fa-bed text-[#0D47A1] mr-3"></i>
+                                        <p><strong>Room Type:</strong> {cartDetails.hotel.room_type}</p>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <i className="fas fa-door-closed text-[#0D47A1] mr-3"></i>
+                                        <p><strong>Room Quantity:</strong> {cartDetails.hotel.room_quantity}</p>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <i className="fas fa-users text-[#0D47A1] mr-3"></i>
+                                        <p><strong>Number of Adults:</strong> {cartDetails.hotel.adults}</p>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <i className="fas fa-child text-[#0D47A1] mr-3"></i>
+                                        <p><strong>Number of Children:</strong> {cartDetails.hotel.childreen}</p>
+                                    </div>
                                     </div>
                                 </div>
                                 )}
@@ -659,45 +714,60 @@ const handlePayment = () => {
 
     {/* Selected Payment Methods & Input Fields */}
     {selectedPaymentMethods.length > 0 && (
-      <div className="space-y-4">
-        {selectedPaymentMethods.map((method, index) => (
-          <div
-            key={index}
-            className="flex justify-between items-center bg-gray-50 p-4 border border-gray-300 rounded-lg shadow"
-          >
-            <div className="flex items-center space-x-4">
-              <img src={method.image_link} className="w-12 h-12 object-contain" />
-              <span className="text-lg font-semibold">{method.name}</span>
-            </div>
-            <input
-              type="number"
-              min="1"
-              max={remainingAmount + (method.amount || 0)}
-              value={method.amount || ""}
-              onChange={(e) => handleAmountChange(method.id, e.target.value)}
-              className="w-24 p-2 border rounded text-center"
-            />
-            <button
-              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-              onClick={() => removeMethod(method.id)}
+        <div className="space-y-6">
+            {selectedPaymentMethods.map((method, index) => (
+            <div
+                key={index}
+                className="flex items-center justify-between bg-white p-4 border border-gray-200 rounded-2xl shadow-md transition-all hover:shadow-lg"
             >
-              Remove
-            </button>
-          </div>
-        ))}
-      </div>
+                {/* Left Section - Payment Method Icon & Name */}
+                <div className="flex items-center space-x-4">
+                <div className="w-14 h-14 flex justify-center items-center bg-gray-100 rounded-full shadow-sm">
+                    <img
+                    src={method.image_link}
+                    className="w-10 h-10 object-contain"
+                    alt={method.name}
+                    />
+                </div>
+                <span className="text-lg font-semibold text-gray-800">{method.name}</span>
+                </div>
+
+                {/* Middle Section - Amount Input */}
+                <div className="flex items-center space-x-2">
+                <span className="text-gray-500 text-sm">Amount:</span>
+                <input
+                    type="number"
+                    min="1"
+                    max={remainingAmount + (method.amount || 0)}
+                    value={method.amount || ""}
+                    onChange={(e) => handleAmountChange(method.id, e.target.value)}
+                    className="w-28 p-2 border border-mainColor rounded-lg text-center text-gray-700 font-semibold focus:ring focus:ring-blue-300 outline-none"
+                />
+                </div>
+
+                {/* Right Section - Remove Button */}
+                <button
+                className="flex items-center px-4 py-2 bg-red-500 text-white font-medium rounded-lg transition hover:bg-red-600 shadow-sm"
+                onClick={() => removeMethod(method.id)}
+                >
+                <svg
+                    className="w-5 h-5 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+                Remove
+                </button>
+            </div>
+            ))}
+        </div>
     )}
 
-    {/* Confirmation Button */}
-    <button
-      className={`w-full py-3 mt-4 text-lg font-semibold rounded-lg text-white ${
-        remainingAmount === 0 ? "bg-[#0D47A1] hover:bg-[#08357C]" : "bg-gray-400 cursor-not-allowed"
-      }`}
-      disabled={remainingAmount !== 0}
-      onClick={handlePayment}
-    >
-      Confirm Payment
-    </button>
+   
   </div>
 )}
 
@@ -717,14 +787,24 @@ const handlePayment = () => {
                         )}
 
                         {/* Next / Apply Button */}
-                        <button
-                            onClick={currentStep === 3 ? handleSubmit : handleNextStep} // Conditional to call submit on Step 3
-                            className={`${
-                            currentStep === 3 || paymentType === 'Later' ? 'bg-mainColor' : 'bg-mainColor'
-                            } text-white px-8 py-2 rounded-full font-semibold ml-auto`}
-                        >
-                            {currentStep === 3 || paymentType === 'Later' ? "Apply" : "Next"} {/* Apply on Step 3, Next on other steps */}
-                        </button>
+                        {/* <button
+  onClick={currentStep === 3 ? handleSubmit : handleNextStep} // Step 3 triggers handleSubmit, otherwise handleNextStep
+  className="bg-mainColor text-white px-8 py-2 rounded-full font-semibold ml-auto"
+>
+  {currentStep === 3 || paymentType === 'Later' ? "Apply" : "Next"}
+</button> */}
+
+<button
+  onClick={currentStep === 3 ? handleSubmit : handleNextStep}
+  className={`text-white px-8 py-2 rounded-full font-semibold ml-auto ${
+    remainingAmount === 0 ? "bg-[#0D47A1] hover:bg-[#08357C]" : "bg-gray-400 cursor-not-allowed"
+  }`}
+  disabled={remainingAmount !== 0} // Disabled if remainingAmount is not 0
+>
+  {currentStep === 3 ? "Apply" : "Next"}
+</button>
+
+
                     </div>
 
                 </div>
