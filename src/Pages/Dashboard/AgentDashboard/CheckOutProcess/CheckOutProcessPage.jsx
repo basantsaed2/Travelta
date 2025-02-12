@@ -148,10 +148,6 @@ const CheckOutProcessPage = () => {
         else{
             formData.append('payment_type', 'later');
             formData.append('payments', JSON.stringify(payments));
-            formData.append("payment_methods", JSON.stringify(selectedPaymentMethods.map((method) => ({
-                payment_method_id: method.id,
-                amount: method.amount,
-              }))));
         }
 
         postData(formData, "Booking Checkout Added Successfully");
@@ -299,47 +295,47 @@ const handlePayment = () => {
                                     </div>
                                 )}
                                 {cartDetails.from_service === "Flight" && (
-                                <div className="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
-                                    <h3 className="text-2xl font-semibold text-[#0D47A1] mb-4">Flight Details</h3>
-                                    <div className="space-y-3">
-                                        <div className="flex items-center">
-                                            <i className="fas fa-plane-departure text-[#0D47A1] mr-3"></i>
-                                            <p><strong>Airline:</strong> {cartDetails.flight.airline}</p>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <i className="fas fa-calendar-day text-[#0D47A1] mr-3"></i>
-                                            <p><strong>Departure Date:</strong> {formatDate(cartDetails.flight.departure)}</p>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <i className="fas fa-calendar-alt text-[#0D47A1] mr-3"></i>
-                                            <p><strong>Arrival Date:</strong> {cartDetails.flight.arrival ? formatDate(cartDetails.flight.arrival) : "TBD"}</p>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <i className="fas fa-map-marker-alt text-[#0D47A1] mr-3"></i>
-                                            <p><strong>From/To:</strong> {cartDetails.flight.from_to[0].from} to {cartDetails.flight.from_to[0].to}</p>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <i className="fas fa-users text-[#0D47A1] mr-3"></i>
-                                            <p><strong>Number of Adults:</strong> {cartDetails.flight.adults_data.length}</p>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <i className="fas fa-child text-[#0D47A1] mr-3"></i>
-                                            <p><strong>Number of Children:</strong> {cartDetails.flight.children_data.length}</p>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <i className="fas fa-baby text-[#0D47A1] mr-3"></i>
-                                            <p><strong>Number of Infants:</strong> {cartDetails.flight.infants}</p>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <i className="fas fa-ticket-alt text-[#0D47A1] mr-3"></i>
-                                            <p><strong>Ticket Number:</strong> {cartDetails.flight.ticket_number}</p>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <i className="fas fa-sticky-note text-[#0D47A1] mr-3"></i>
-                                            <p><strong>Notes:</strong> {cartDetails.flight.notes || "No additional notes"}</p>
+                                    <div className="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                                        <h3 className="text-2xl font-semibold text-[#0D47A1] mb-4">Flight Details</h3>
+                                        <div className="space-y-3">
+                                            <div className="flex items-center">
+                                                <i className="fas fa-plane-departure text-[#0D47A1] mr-3"></i>
+                                                <p><strong>Airline:</strong> {cartDetails.flight.airline}</p>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <i className="fas fa-calendar-day text-[#0D47A1] mr-3"></i>
+                                                <p><strong>Departure Date:</strong> {formatDate(cartDetails.flight.departure)}</p>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <i className="fas fa-calendar-alt text-[#0D47A1] mr-3"></i>
+                                                <p><strong>Arrival Date:</strong> {cartDetails.flight.arrival ? formatDate(cartDetails.flight.arrival) : "TBD"}</p>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <i className="fas fa-map-marker-alt text-[#0D47A1] mr-3"></i>
+                                                <p><strong>From/To:</strong> {cartDetails.flight.from_to[0].from} to {cartDetails.flight.from_to[0].to}</p>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <i className="fas fa-users text-[#0D47A1] mr-3"></i>
+                                                <p><strong>Number of Adults:</strong> {cartDetails.flight.adults_data.length}</p>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <i className="fas fa-child text-[#0D47A1] mr-3"></i>
+                                                <p><strong>Number of Children:</strong> {cartDetails.flight.children_data.length}</p>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <i className="fas fa-baby text-[#0D47A1] mr-3"></i>
+                                                <p><strong>Number of Infants:</strong> {cartDetails.flight.infants}</p>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <i className="fas fa-ticket-alt text-[#0D47A1] mr-3"></i>
+                                                <p><strong>Ticket Number:</strong> {cartDetails.flight.ticket_number}</p>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <i className="fas fa-sticky-note text-[#0D47A1] mr-3"></i>
+                                                <p><strong>Notes:</strong> {cartDetails.flight.notes || "No additional notes"}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 )}
                                 {cartDetails.from_service === "Hotel" && (
                                 <div className="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
@@ -380,6 +376,128 @@ const handlePayment = () => {
                                     </div>
                                 </div>
                                 )}
+                                {cartDetails.from_service === "Bus" && (
+                                    <div className="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                                        <h3 className="text-2xl font-semibold text-[#0D47A1] mb-4">Bus Details</h3>
+                                        <div className="space-y-3">
+                                        <div className="flex items-center">
+                                            <i className="fas fa-map-marker-alt text-[#0D47A1] mr-3"></i>
+                                            <p><strong>From:</strong> {cartDetails.bus.from}</p>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <i className="fas fa-map-marker-alt text-[#0D47A1] mr-3"></i>
+                                            <p><strong>To:</strong> {cartDetails.bus.to}</p>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <i className="fas fa-calendar-day text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Departure Date:</strong> {formatDate(cartDetails.bus.departure)}</p>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <i className="fas fa-calendar-alt text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Arrival Date:</strong> {formatDate(cartDetails.bus.arrival)}</p>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <i className="fas fa-bus text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Bus Service:</strong> {cartDetails.bus.bus}</p>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <i className="fas fa-list-ol text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Bus Number:</strong> {cartDetails.bus_number}</p>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <i className="fas fa-phone text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Driver Contact:</strong> {cartDetails.bus.driver_phone}</p>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <i className="fas fa-users text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Adults:</strong> {cartDetails.bus.adults_data.length}</p>
+                                        </div>
+                                        {cartDetails.bus.adults_data.map((adult, index) => (
+                                            <div key={index} className="flex items-center ml-6">
+                                            <i className="fas fa-user text-[#0D47A1] mr-3"></i>
+                                            <p>{adult.title} {adult.first_name} {adult.last_name}</p>
+                                            </div>
+                                        ))}
+                                        <div className="flex items-center">
+                                            <i className="fas fa-child text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Children:</strong> {cartDetails.bus.children_data.length}</p>
+                                        </div>
+                                        </div>
+                                    </div>
+                                )}
+                                {cartDetails.from_service === "Tour" && (
+                                    <div className="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                                        <h3 className="text-2xl font-semibold text-[#0D47A1] mb-4">Tour Details</h3>
+                                        <div className="space-y-3">
+                                        <div className="flex items-center">
+                                            <i className="fas fa-globe text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Tour Name:</strong> {cartDetails.tour.tour}</p>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <i className="fas fa-plane text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Flight Date:</strong> {cartDetails.tour.flight_date ? formatDate(cartDetails.flight_date) : "No flight included"}</p>
+                                        </div>
+                                        
+                                        {/* Transportation Details */}
+                                        <h4 className="text-lg font-semibold text-[#0D47A1] mt-4">Transportation</h4>
+                                        {cartDetails.tour.tour_buses.map((bus, index) => (
+                                            <div key={index} className="flex items-center ml-4">
+                                            <i className={`fas ${bus.transportation === "bus" ? "fa-bus" : "fa-plane"} text-[#0D47A1] mr-3`}></i>
+                                            <p><strong>{bus.transportation.charAt(0).toUpperCase() + bus.transportation.slice(1)}:</strong> {bus.seats} seats</p>
+                                            </div>
+                                        ))}
+
+                                        {/* Hotel Details */}
+                                        <h4 className="text-lg font-semibold text-[#0D47A1] mt-4">Hotel Details</h4>
+                                        {cartDetails.tour.tour_hotels.map((hotel, index) => (
+                                            <div key={index} className="space-y-2 ml-4">
+                                            <div className="flex items-center">
+                                                <i className="fas fa-hotel text-[#0D47A1] mr-3"></i>
+                                                <p><strong>Hotel:</strong> {hotel.hotel_name}</p>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <i className="fas fa-map-marker-alt text-[#0D47A1] mr-3"></i>
+                                                <p><strong>Destination:</strong> {hotel.destination}</p>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <i className="fas fa-door-closed text-[#0D47A1] mr-3"></i>
+                                                <p><strong>Room Type:</strong> {hotel.room_type}</p>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <i className="fas fa-moon text-[#0D47A1] mr-3"></i>
+                                                <p><strong>Nights:</strong> {hotel.nights}</p>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <i className="fas fa-calendar-check text-[#0D47A1] mr-3"></i>
+                                                <p><strong>Check-in:</strong> {formatDate(hotel.check_in)}</p>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <i className="fas fa-calendar-times text-[#0D47A1] mr-3"></i>
+                                                <p><strong>Check-out:</strong> {formatDate(hotel.check_out)}</p>
+                                            </div>
+                                            </div>
+                                        ))}
+
+                                        {/* Travelers */}
+                                        <h4 className="text-lg font-semibold text-[#0D47A1] mt-4">Travelers</h4>
+                                        <div className="flex items-center">
+                                            <i className="fas fa-users text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Adults:</strong> {cartDetails.tour.adults_data.length}</p>
+                                        </div>
+                                        {cartDetails.tour.adults_data.map((adult, index) => (
+                                            <div key={index} className="flex items-center ml-6">
+                                            <i className="fas fa-user text-[#0D47A1] mr-3"></i>
+                                            <p>{adult.title} {adult.first_name} {adult.last_name}</p>
+                                            </div>
+                                        ))}
+                                        <div className="flex items-center">
+                                            <i className="fas fa-child text-[#0D47A1] mr-3"></i>
+                                            <p><strong>Children:</strong> {cartDetails.tour.children_data.length}</p>
+                                        </div>
+                                        </div>
+                                    </div>
+                                )}
+
 
                                 {/* Price & Costs Card */}
                                 <div className="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
@@ -472,7 +590,7 @@ const handlePayment = () => {
                                         </span>
                                     </label>
                                 ))}
-                            </div>
+                                </div>
 
                             {paymentType === 'Full' && (
                                 <div className="p-6 space-y-3">
@@ -524,7 +642,7 @@ const handlePayment = () => {
                                                     />
                                                 </div>
 
-                                                <div className="space-y-2">
+                                                {/* <div className="space-y-2">
                                                     <label className="block text-lg font-medium text-gray-700">Enter Payment Amount:</label>
                                                     <TextField
                                                         label="Payment Amount"
@@ -532,11 +650,29 @@ const handlePayment = () => {
                                                         fullWidth
                                                         required
                                                         type="number"
-                                                        value={paymentAmount}
+                                                        min="1"
+                                                        max={remainingBalance + (paymentAmount || 0)}
+                                                        value={paymentAmount || ''}
                                                         onChange={(e) => setPaymentAmount(Number(e.target.value) || 0)}
                                                         className="w-full border border-[#0D47A1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0D47A1] transition duration-300"
                                                     />
-                                                </div>
+                                                </div> */}
+                                                <TextField
+                                                    label="Payment Amount"
+                                                    variant="outlined"
+                                                    fullWidth
+                                                    required
+                                                    type="number"
+                                                    min="1"
+                                                    max={remainingBalance} // Directly set max to remainingBalance
+                                                    value={paymentAmount || ''}
+                                                    onChange={(e) => {
+                                                        let value = Number(e.target.value) || 0;
+                                                        if (value > remainingBalance) value = remainingBalance; // Prevent exceeding balance
+                                                        setPaymentAmount(value);
+                                                    }}
+                                                    className="w-full border border-[#0D47A1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0D47A1] transition duration-300"
+                                                />          
                                                 <div className="mt-6">
                                                     <button
                                                         onClick={handleAddPayment}
@@ -606,8 +742,13 @@ const handlePayment = () => {
                                                             fullWidth
                                                             required
                                                             type="number"
-                                                            value={paymentAmount}
-                                                            onChange={(e) => setPaymentAmount(Number(e.target.value) || 0)}
+                                                            max={remainingBalance} // Directly set max to remainingBalance
+                                                                value={paymentAmount || ''}
+                                                                onChange={(e) => {
+                                                                    let value = Number(e.target.value) || 0;
+                                                                    if (value > remainingBalance) value = remainingBalance; // Prevent exceeding balance
+                                                                    setPaymentAmount(value);
+                                                                }}
                                                             className="w-full border border-[#0D47A1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0D47A1] transition duration-300"
                                                         />
                                                     </div>
@@ -644,132 +785,104 @@ const handlePayment = () => {
 
                             </div>
                         )}
-                        {/* Step 3: Payment Method */}
-                        {/* {currentStep === 3 && (
+                        {currentStep === 3 && (
                         <div className="p-6 space-y-6">
-                        <h2 className="text-3xl font-bold text-[#0D47A1] text-center mb-6">Select Payment Method</h2>
-                        
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <h1>${finalPrice}</h1>
-                            {paymentMethod.map((method, index) => (
-                            <div
-                                key={index}
-                                className="cursor-pointer border-2 border-[#0D47A1] p-6 rounded-lg flex flex-col items-center justify-center bg-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                                onClick={() => setSelectedPaymentMethod(method.id)} // Handle payment method selection
-                            >
-                                <img
-                                src={method.image_link} // Ensure your API returns a correct URL for the image
-                                alt={method.name}
-                                className="w-24 h-24 mb-4 object-contain"
-                                />
-                                <span className="text-xl font-semibold text-[#0D47A1]">{method.name}</span>
+                            <h2 className="text-3xl font-bold text-[#0D47A1] text-center mb-6">
+                            Select Payment Method
+                            </h2>
+
+                            {/* Total Price & Remaining Amount */}
+                            <div className="flex justify-between items-center bg-gray-100 p-4 rounded-lg shadow">
+                            <h3 className="text-xl font-semibold text-gray-700">Total: ${finalPrice}</h3>
+                            <h3 className="text-xl font-semibold text-[#D32F2F]">
+                                Remaining: ${remainingAmount}
+                            </h3>
                             </div>
-                            ))}
+
+
+
+                        <div className="space-y-4">
+                        {paymentMethod.map((method, index) => (
+                            <label
+                            key={index}
+                            className={`flex items-center gap-4 p-4 border-2 rounded-lg shadow-sm transition-all cursor-pointer`}
+                            >
+                            <input
+                                type="radio"
+                                name="paymentMethod"
+                                className="w-5 h-5 accent-[#0D47A1]"
+                                checked={selectedPaymentMethods.some((item) => item.id === method.id)}
+                                onChange={() => handleSelectMethod(method)}
+                            />
+                            <img
+                                src={method.image_link}
+                                alt={method.name}
+                                className="w-12 h-12 object-contain"
+                            />
+                            <span className="text-lg font-semibold text-[#0D47A1]">{method.name}</span>
+                            </label>
+                        ))}
                         </div>
-                        </div>
+
+
+                            {/* Selected Payment Methods & Input Fields */}
+                            {selectedPaymentMethods.length > 0 && (
+                                <div className="space-y-6">
+                                    {selectedPaymentMethods.map((method, index) => (
+                                    <div
+                                        key={index}
+                                        className="flex items-center justify-between bg-white p-4 border border-gray-200 rounded-2xl shadow-md transition-all hover:shadow-lg"
+                                    >
+                                        {/* Left Section - Payment Method Icon & Name */}
+                                        <div className="flex items-center space-x-4">
+                                        <div className="w-14 h-14 flex justify-center items-center bg-gray-100 rounded-full shadow-sm">
+                                            <img
+                                            src={method.image_link}
+                                            className="w-10 h-10 object-contain"
+                                            alt={method.name}
+                                            />
+                                        </div>
+                                        <span className="text-lg font-semibold text-gray-800">{method.name}</span>
+                                        </div>
+
+                                        {/* Middle Section - Amount Input */}
+                                        <div className="flex items-center space-x-2">
+                                        <span className="text-gray-500 text-sm">Amount:</span>
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            max={remainingAmount + (method.amount || 0)}
+                                            value={method.amount || ""}
+                                            onChange={(e) => handleAmountChange(method.id, e.target.value)}
+                                            className="w-28 p-2 border border-mainColor rounded-lg text-center text-gray-700 font-semibold focus:ring focus:ring-blue-300 outline-none"
+                                        />
+                                        </div>
+
+                                        {/* Right Section - Remove Button */}
+                                        <button
+                                        className="flex items-center px-4 py-2 bg-red-500 text-white font-medium rounded-lg transition hover:bg-red-600 shadow-sm"
+                                        onClick={() => removeMethod(method.id)}
+                                        >
+                                        <svg
+                                            className="w-5 h-5 mr-2"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                        Remove
+                                        </button>
+                                    </div>
+                                    ))}
+                                </div>
+                            )}
+
                         
-                        )} */}
-
-
-
-{currentStep === 3 && (
-  <div className="p-6 space-y-6">
-    <h2 className="text-3xl font-bold text-[#0D47A1] text-center mb-6">
-      Select Payment Method
-    </h2>
-
-    {/* Total Price & Remaining Amount */}
-    <div className="flex justify-between items-center bg-gray-100 p-4 rounded-lg shadow">
-      <h3 className="text-xl font-semibold text-gray-700">Total: ${finalPrice}</h3>
-      <h3 className="text-xl font-semibold text-[#D32F2F]">
-        Remaining: ${remainingAmount}
-      </h3>
-    </div>
-
-
-
-<div className="space-y-4">
-  {paymentMethod.map((method, index) => (
-    <label
-      key={index}
-      className={`flex items-center gap-4 p-4 border-2 rounded-lg shadow-sm transition-all cursor-pointer`}
-    >
-      <input
-        type="radio"
-        name="paymentMethod"
-        className="w-5 h-5 accent-[#0D47A1]"
-        checked={selectedPaymentMethods.some((item) => item.id === method.id)}
-        onChange={() => handleSelectMethod(method)}
-      />
-      <img
-        src={method.image_link}
-        alt={method.name}
-        className="w-12 h-12 object-contain"
-      />
-      <span className="text-lg font-semibold text-[#0D47A1]">{method.name}</span>
-    </label>
-  ))}
-</div>
-
-
-    {/* Selected Payment Methods & Input Fields */}
-    {selectedPaymentMethods.length > 0 && (
-        <div className="space-y-6">
-            {selectedPaymentMethods.map((method, index) => (
-            <div
-                key={index}
-                className="flex items-center justify-between bg-white p-4 border border-gray-200 rounded-2xl shadow-md transition-all hover:shadow-lg"
-            >
-                {/* Left Section - Payment Method Icon & Name */}
-                <div className="flex items-center space-x-4">
-                <div className="w-14 h-14 flex justify-center items-center bg-gray-100 rounded-full shadow-sm">
-                    <img
-                    src={method.image_link}
-                    className="w-10 h-10 object-contain"
-                    alt={method.name}
-                    />
-                </div>
-                <span className="text-lg font-semibold text-gray-800">{method.name}</span>
-                </div>
-
-                {/* Middle Section - Amount Input */}
-                <div className="flex items-center space-x-2">
-                <span className="text-gray-500 text-sm">Amount:</span>
-                <input
-                    type="number"
-                    min="1"
-                    max={remainingAmount + (method.amount || 0)}
-                    value={method.amount || ""}
-                    onChange={(e) => handleAmountChange(method.id, e.target.value)}
-                    className="w-28 p-2 border border-mainColor rounded-lg text-center text-gray-700 font-semibold focus:ring focus:ring-blue-300 outline-none"
-                />
-                </div>
-
-                {/* Right Section - Remove Button */}
-                <button
-                className="flex items-center px-4 py-2 bg-red-500 text-white font-medium rounded-lg transition hover:bg-red-600 shadow-sm"
-                onClick={() => removeMethod(method.id)}
-                >
-                <svg
-                    className="w-5 h-5 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-                Remove
-                </button>
-            </div>
-            ))}
-        </div>
-    )}
-
-   
-  </div>
-)}
+                        </div>
+                        )}
 
                     </div>
 
@@ -786,23 +899,26 @@ const handlePayment = () => {
                             </button>
                         )}
 
-                        {/* Next / Apply Button */}
                         {/* <button
-  onClick={currentStep === 3 ? handleSubmit : handleNextStep} // Step 3 triggers handleSubmit, otherwise handleNextStep
-  className="bg-mainColor text-white px-8 py-2 rounded-full font-semibold ml-auto"
->
-  {currentStep === 3 || paymentType === 'Later' ? "Apply" : "Next"}
-</button> */}
-
-<button
-  onClick={currentStep === 3 ? handleSubmit : handleNextStep}
-  className={`text-white px-8 py-2 rounded-full font-semibold ml-auto ${
-    remainingAmount === 0 ? "bg-[#0D47A1] hover:bg-[#08357C]" : "bg-gray-400 cursor-not-allowed"
-  }`}
-  disabled={remainingAmount !== 0} // Disabled if remainingAmount is not 0
->
-  {currentStep === 3 ? "Apply" : "Next"}
-</button>
+                        onClick={currentStep === 3 || paymentType === 'Later'? handleSubmit : handleNextStep}
+                        className={`text-white px-8 py-2 rounded-full font-semibold ml-auto ${
+                            remainingAmount === 0 || remainingBalance ===0 ? "bg-[#0D47A1] hover:bg-[#08357C]" : "bg-gray-400 cursor-not-allowed"
+                        }`}
+                        disabled={remainingAmount !== 0 || remainingBalance !== 0} // Disabled if remainingAmount is not 0
+                        >
+                        {currentStep === 3  || paymentType === 'Later' ? "Apply" : "Next"}
+                        </button> */}
+                        <button
+                                onClick={currentStep === 3 || paymentType === 'Later' ? handleSubmit : handleNextStep}
+                                className={`text-white px-8 py-2 rounded-full font-semibold ml-auto ${
+                                    (currentStep === 3 || paymentType === 'Later') 
+                                        ? (remainingBalance === 0 || remainingAmount === 0 ? "bg-[#0D47A1] hover:bg-[#08357C]" : "bg-gray-400 cursor-not-allowed")
+                                        : (remainingAmount === 0 ? "bg-[#0D47A1] hover:bg-[#08357C]" : "bg-gray-400 cursor-not-allowed")
+                                }`}
+                                disabled={(currentStep === 3 || paymentType === 'Later') ? remainingBalance !== 0 : remainingAmount !== 0}
+                            >
+                                {currentStep === 3 || paymentType === 'Later' ? "Apply" : "Next"}
+                        </button>
 
 
                     </div>
