@@ -4,6 +4,7 @@ import { useGet } from '../../../../Hooks/useGet';
 import { TextField } from '@mui/material';
 import StaticLoader from '../../../../Components/StaticLoader';
 import { usePost } from "../../../../Hooks/usePostJson";
+import InvoicePage from '../../../../Components/Agent Components/InvoicePage';
 
 const CheckOutProcessPage = () => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -33,6 +34,13 @@ const CheckOutProcessPage = () => {
     // Format date
     const formatDate = (date) => new Date(date).toLocaleString();
         
+
+//     useEffect(() => {
+//     if(!loadingPost){
+// return <InvoicePage bookingData={}/>
+//     }
+//     }, [loadingPost,response])
+
     useEffect(() => {
         if (cartId) {
             console.log("Cart Id: ", cartId);

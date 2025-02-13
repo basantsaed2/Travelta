@@ -97,12 +97,12 @@ const Hotels = () => {
                   >
                     <FaEye/>
                   </button>
-                  <button
+                  {/* <button
                     onClick={() => handleUpdate(hotel.id)}
                     className="bg-mainColor text-white px-3 py-1 rounded-lg hover:bg-blue-600 text-sm md:text-base w-full md:w-auto"
                   >
                     <FaEdit/>
-                  </button>
+                  </button> */}
                   <button
                     onClick={() => handleDelete(hotel.id, hotel.hotel_name)}
                     className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 text-sm md:text-base w-full md:w-auto"
