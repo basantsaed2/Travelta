@@ -9,21 +9,19 @@ import { format } from 'date-fns';
 
 const AddTourPage = ({ update, setUpdate }) => {
     const { refetch: refetchList, loading: loadingList, data: listData } = useGet({url:'https://travelta.online/agent/tour/lists'});
-    // const { postData:postHotelId, loadingPost:loadingHotelId , response:responseHotelId} = usePost({url:`https://travelta.online/agent/room/hotel_lists`});
     const { postData, loadingPost, response } = usePost({url: "https://travelta.online/agent/tour/add",});
     const [activeTab, setActiveTab] = useState('General Details');
 
     //General Detalils
     const [countries, setCountries] = useState([])
-    const [selectedCountries, setSelectedCountries] = useState([])
     const [cities, setCities] = useState([])
-    const [selectedCities, setSelectedCities] = useState([])
     const [tours, setTours] = useState([])
     const [selectedTours, setSelectedTours] = useState('')
-    // const [priceType, setPriceType] = useState('fixed');
-    // const [currencies, setCurrencies] = useState([])
-    // const fileInputRef = useRef();
-    // const [selectedRoomCurrencies, setSelectedRoomCurrencies] = useState([])
+    const [selectedDestinationType, setSelectedDestinationType] = useState('')
+    const [quantity, setQuantity] = useState('')
+    const [paymentOption, setPaymentOption] = useState('')
+    const [tourArrival,setTourArrival] = useState('')
+
     const [tourDetails, setTourDetails] = useState({
         name: '',
         description: '',
@@ -47,19 +45,18 @@ const AddTourPage = ({ update, setUpdate }) => {
     const tourType = [
         { value: "private", label: "Private Tour" },
         { value: "group", label: "Group Tour" },
-      ];
-
+    ];
     const [tourPickUp, setTourPickUp] = useState({
       pick_up_country: '',
       pick_up_city: '',
       pick_up_map: '',
     });
-    const [tourDestination, setTourDestination] = useState({
-      destination_type: '',
+    const [tourDestination, setTourDestination] = useState([
+      {
       destination_country: '',
       destination_city: '',
       destination_arrival_map: '',
-    });
+    }]);
     const [tourItinerary , setTourItinerary] = useState([
       {
       itinerary_image: '',
@@ -67,8 +64,33 @@ const AddTourPage = ({ update, setUpdate }) => {
       itinerary_day_description: '',
       itinerary_content: '',
     }]);
+    const [tourAvailability , setTourAvailability] = useState([
+      {
+        date: '',
+        last_booking: '',
+    }]);
     
     const fileInputRef = useRef();
+    const [policyDetails, setPolicyDetails] = useState({
+      childrenPolicy: '',
+      cancellationPolicy: 'non_refundable',
+      cancellationPolicies: [
+        {
+          cancellationType: 'Value', // or 'Percentage'
+          cancellationValue: 0,
+          cancellationBeforeDays: 0,
+        },
+      ],
+    });
+
+    const [includes,setIncludes] = useState([
+      {
+        name: '',
+    }]);
+    const [excludes ,setExcludes] = useState([
+      {
+        name: '',
+    }]);
     
     
     const handleImageUpload = (e, index) => {
@@ -92,8 +114,6 @@ const AddTourPage = ({ update, setUpdate }) => {
       fileInputRef.current.value = '';
     };
     
-
-
     useEffect(() => {
       refetchList();
     }, [refetchList,update]);
@@ -127,12 +147,12 @@ const AddTourPage = ({ update, setUpdate }) => {
       [e.target.name]: e.target.value,
       });
   };
-  const handleChangeTourDestination = (e) => {
-    setTourDestination({
-    ...tourDestination,
-    [e.target.name]: e.target.value,
-    });
-};
+//   const handleChangeTourDestination = (e) => {
+//     setTourDestination({
+//     ...tourDestination,
+//     [e.target.name]: e.target.value,
+//     });
+// };
 
   // Handle changes for all Itinerary, including the default
   const handleItineraryChange = (e, index) => {
@@ -154,10 +174,213 @@ const AddTourPage = ({ update, setUpdate }) => {
   const removeItinerary = (index) => {
       setTourItinerary((prevList) => prevList.filter((_, i) => i !== index));
   };
-   
-    
+
+  // Handle changes for all Destination, including the default
+  const handleChangeTourDestination = (e, index) => {
+    const { name, value } = e.target;
+    setTourDestination((prevList) => {
+        const updatedList = [...prevList];
+        updatedList[index] = { ...updatedList[index], [name]: value };
+        return updatedList;
+    });
+  };
+  // Add new Itinerary
+  const addDestination = () => {
+      setTourDestination((prevList) => [
+          ...prevList,
+          { destination_country: '', destination_city: '', destination_arrival_map:'' },
+        ]);
+  };
+  // Remove Itinerary from the list
+  const removeDestination = (index) => {
+      setTourDestination((prevList) => prevList.filter((_, i) => i !== index));
+  };
+
+   // Handle changes for all Availability, including the default
+   const handleChangeAvailability = (e, index) => {
+    const { name, value } = e.target;
+    setTourAvailability((prevList) => {
+        const updatedList = [...prevList];
+        updatedList[index] = { ...updatedList[index], [name]: value };
+        return updatedList;
+    });
+  };
+  // Add new Availability
+  const addAvailability = () => {
+      setTourAvailability((prevList) => [
+          ...prevList,
+          { date: '', last_booking: ''},
+      ]);
+  };
+  // Remove Availability from the list
+  const removeAvailability = (index) => {
+      setTourAvailability((prevList) => prevList.filter((_, i) => i !== index));
+  };
+
+  const handlePolicyChange = (e) => {
+    const { name, value } = e.target;
+    setPolicyDetails((prevState) => ({
+      ...prevState,
+      [name]: value, // Update specific field in state
+    }));
+  };
+
+  const handleCancellationSwitchChange = (index) => {
+    setPolicyDetails((prevState) => {
+      const updatedPolicies = [...prevState.cancellationPolicies];
+      updatedPolicies[index].cancellationType =
+        updatedPolicies[index].cancellationType === 'Value' ? 'Percentage' : 'Value';
+      return { ...prevState, cancellationPolicies: updatedPolicies };
+    });
+  };
+
+  const handlePolicyFieldChange = (e, index) => {
+    const { name, value } = e.target;
+    setPolicyDetails((prevState) => {
+      const updatedPolicies = [...prevState.cancellationPolicies];
+      updatedPolicies[index][name] = value;
+      return { ...prevState, cancellationPolicies: updatedPolicies };
+    });
+  };
+
+  const handleRemovePolicy = (index) => {
+    setPolicyDetails((prevState) => {
+      const updatedPolicies = prevState.cancellationPolicies.filter((_, i) => i !== index);
+      return { ...prevState, cancellationPolicies: updatedPolicies };
+    });
+  };
+
+  const handleAddPolicy = () => {
+    setPolicyDetails((prevState) => ({
+      ...prevState,
+      cancellationPolicies: [
+        ...prevState.cancellationPolicies,
+        { cancellationType: 'Value', cancellationValue: 0, cancellationBeforeDays: 0 },
+      ],
+    }));
+  };
+
+  
+  // Handle changes for all Includes, including the default
+  const handleChangeTourIncludes = (e, index) => {
+    const { name, value } = e.target;
+    setIncludes((prevList) => {
+        const updatedList = [...prevList];
+        updatedList[index] = { ...updatedList[index], [name]: value };
+        return updatedList;
+    });
+  };
+  // Add new Includes
+  const addIncludes = () => {
+      setIncludes((prevList) => [
+          ...prevList,
+          { name: ''},
+        ]);
+  };
+  // Remove Includes from the list
+  const removeIncludes = (index) => {
+      setIncludes((prevList) => prevList.filter((_, i) => i !== index));
+  };
+
+    // Handle changes for all Excludes, including the default
+    const handleChangeTourExcludes = (e, index) => {
+      const { name, value } = e.target;
+      setExcludes((prevList) => {
+          const updatedList = [...prevList];
+          updatedList[index] = { ...updatedList[index], [name]: value };
+          return updatedList;
+      });
+    };
+    // Add new Excludes
+    const addExcludes = () => {
+        setExcludes((prevList) => [
+            ...prevList,
+            { name: ''},
+          ]);
+    };
+    // Remove Excludes from the list
+    const removeExcludes = (index) => {
+        setExcludes((prevList) => prevList.filter((_, i) => i !== index));
+    };
+  
+
+      
   const handleSubmit = async (e) => {
-     
+    e.preventDefault();
+    const formData = new FormData();
+
+
+  // Basic Tour Details
+    formData.append("name", tourDetails.name);
+    formData.append("description", tourDetails.description);
+    formData.append("video_link", tourDetails.videoLink);
+    formData.append("tour_type",tourDetails.selectedTourType); // 'private' or 'group'
+    formData.append('status', tourDetails.status===true? 1:0 );
+    formData.append("arrival", tourArrival);
+    formData.append("days", tourDetails.days);
+    formData.append("nights", tourDetails.nights);
+    formData.append("tour_type_id", selectedTours);
+    formData.append("featured", tourDetails.featured ? "yes" : "no");
+    formData.append("featured_from", tourDetails.featured_from);
+    formData.append("featured_to", tourDetails.featured_to);
+    formData.append("deposit", tourDetails.deposit);
+    formData.append("deposit_type", tourDetails.deposit_type==='Percentage' ? 'precentage' : 'fixed'); // 'percentage' or 'fixed'
+    formData.append("tax", tourDetails.tax);
+    formData.append("tax_type", tourDetails.tax_type); // 'percentage' or 'fixed'
+
+    // Pickup Information
+    formData.append("pick_up_country_id", tourPickUp.pick_up_country);
+    formData.append("pick_up_city_id", tourPickUp.pick_up_city);
+    formData.append("pick_up_map", tourPickUp.pick_up_map);
+
+    // Destination Type & Contact Info
+    formData.append("destination_type", selectedDestinationType); // 'single' or 'multiple'
+    formData.append("tour_email", tourDetails.tour_email);
+    formData.append("tour_phone", tourDetails.tour_phone);
+    formData.append("tour_website", tourDetails.tour_website);
+    formData.append("tour_address", tourDetails.tour_address);
+    formData.append("payments_options", paymentOption);
+
+     // Append Arrays Correctly
+  tourDestination.forEach((dest, index) => {
+    formData.append(`destinations[${index}][country_id]`, dest.destination_country);
+    formData.append(`destinations[${index}][city_id]`, dest.destination_city);
+    formData.append(`destinations[${index}][arrival_map]`, dest.destination_arrival_map);
+  });
+
+  tourAvailability.forEach((avail, index) => {
+    formData.append(`availability[${index}][date]`, avail.date);
+    formData.append(`availability[${index}][last_booking]`, avail.last_booking);
+    formData.append(`availability[${index}][quantity]`, avail.quantity || 0);
+  });
+
+  includes.forEach((inc, index) => {
+    formData.append(`includes[${index}][name]`, inc.name);
+  });
+
+  excludes.forEach((exc, index) => {
+    formData.append(`excludes[${index}][name]`, exc.name);
+  });
+
+  tourItinerary.forEach((itinerary, index) => {
+    formData.append(`itinerary[${index}][image]`, itinerary.itinerary_image);
+    formData.append(`itinerary[${index}][day_name]`, itinerary.itinerary_day_name);
+    formData.append(`itinerary[${index}][day_description]`, itinerary.itinerary_day_description);
+    formData.append(`itinerary[${index}][content]`, itinerary.itinerary_content);
+  });
+
+  policyDetails.cancellationPolicies.forEach((policy, index) => {
+    formData.append(`cancelation_items[${index}][type]`, policy.cancellationType==='Percentage' ? 'precentage' : 'fixed');
+    formData.append(`cancelation_items[${index}][amount]`, policy.cancellationValue);
+    formData.append(`cancelation_items[${index}][days]`, policy.cancellationBeforeDays);
+  });
+
+    // Policy & Cancellation
+    formData.append("policy", policyDetails.childrenPolicy);
+    formData.append("cancelation", policyDetails.cancellationPolicy ==='non_refundable' ? 1 : 0);
+
+    postData(formData, 'Tour Added Success');
+
   };
 
   return (
@@ -211,14 +434,21 @@ const AddTourPage = ({ update, setUpdate }) => {
                                 value={tourDetails.name}
                                 onChange={handleChangeTourDetails}
                             />
-                             <TextField
-                                name="videoLink"
-                                label="Video Link"
-                                type="text"
+                            <TextField
+                                select
                                 fullWidth
-                                value={tourDetails.videoLink}
-                                onChange={handleChangeTourDetails}
-                            />
+                                variant="outlined"
+                                value={selectedTours}
+                                onChange={(e) => setSelectedTours(e.target.value)} // Update the selected service                }
+                                label="Select Tour"
+                                required
+                                >
+                                {tours.map((tour) => (
+                                    <MenuItem key={tour.id} value={tour.id}>
+                                    {tour.name}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
                             <TextField
                                 select
                                 name="selectedTourType"
@@ -238,6 +468,14 @@ const AddTourPage = ({ update, setUpdate }) => {
                             </TextField>
                             </div>
                             <div className="flex flex-col md:flex-row gap-4 mb-4">
+                            <TextField
+                                name="videoLink"
+                                label="Video Link"
+                                type="text"
+                                fullWidth
+                                value={tourDetails.videoLink}
+                                onChange={handleChangeTourDetails}
+                            />
                                 <TextField
                                     name="days"
                                     label="Days"
@@ -258,20 +496,12 @@ const AddTourPage = ({ update, setUpdate }) => {
                                     inputProps={{ min: 1 }}
                                 />
                                 <TextField
-                                    select
-                                    fullWidth
-                                    variant="outlined"
-                                    value={selectedTours}
-                                    onChange={(e) => setSelectedTours(e.target.value)} // Update the selected service                }
-                                    label="Select Tour"
-                                    required
-                                    >
-                                    {tours.map((tour) => (
-                                        <MenuItem key={tour.id} value={tour.id}>
-                                        {tour.name}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
+                                  name="paymentOption"
+                                  label="Payment Option"
+                                  fullWidth
+                                  value={paymentOption}
+                                  onChange={(e) => setPaymentOption(e.target.value)} // Update the selected service                }
+                                />
                             </div>
                             <div className="flex flex-col md:flex-row gap-4 items-center mb-4">
                               <div className='flex justify-col items-center'>
@@ -399,73 +629,15 @@ const AddTourPage = ({ update, setUpdate }) => {
         {activeTab === 'Pickup & Destination' && (
             <div className="p-4 flex flex-col gap-5">
           <h1 className='font-semibold text-2xl text-mainColor'>Pick_UP Location</h1>
-          <div className="flex flex-col md:flex-row gap-4 mb-4">
-          <TextField
-              select
-              name="pick_up_country"
-              fullWidth
-              variant="outlined"
-              value={tourPickUp.pick_up_country}
-              onChange={handleChangeTourPickUp}
-              label="Select PickUp Country"
-              className="mb-6"
-              required
-              >
-              {countries.map((country) => (
-                  <MenuItem key={country.id} value={country.id}>
-                  {country.name}
-                  </MenuItem>
-              ))}
-          </TextField>
-          <TextField
-              select
-              name="pick_up_city"
-              fullWidth
-              variant="outlined"
-              value={tourPickUp.pick_up_city}
-              onChange={handleChangeTourPickUp}
-              label="Select PickUp City"
-              className="mb-6"
-              required
-              >
-              {cities.map((city) => (
-                  <MenuItem key={city.id} value={city.id}>
-                  {city.name}
-                  </MenuItem>
-              ))}
-          </TextField>
-          <TextField
-              name="pick_up_map"
-              label="Pick_up Map"
-              type="text"
-              fullWidth
-              required
-              value={tourPickUp.pick_up_map}
-              onChange={handleChangeTourPickUp}
-          /> 
-          </div>
-          <h1 className='font-semibold text-2xl text-mainColor'>Destination Location</h1>
-
-          <div className="flex flex-col md:flex-row flex-wrap lg:flex-nowrap gap-4 mb-4">
+            <div className="flex flex-col md:flex-row gap-4 mb-4">
             <TextField
                 select
-                label="Destination Type"
-                name="destination_type"
-                value={tourDestination.destination_type}
-                onChange={handleChangeTourDestination}
-                fullWidth
-            >
-                <MenuItem value="single">Single</MenuItem>
-                <MenuItem value="multiple">Multiple</MenuItem>
-            </TextField>
-            <TextField
-                select
-                name="destination_country"
+                name="pick_up_country"
                 fullWidth
                 variant="outlined"
-                value={tourDestination.destination_country}
-                onChange={handleChangeTourDestination}
-                label="Select Destination Country"
+                value={tourPickUp.pick_up_country}
+                onChange={handleChangeTourPickUp}
+                label="Select PickUp Country"
                 className="mb-6"
                 required
                 >
@@ -477,12 +649,12 @@ const AddTourPage = ({ update, setUpdate }) => {
             </TextField>
             <TextField
                 select
-                name="destination_city"
+                name="pick_up_city"
                 fullWidth
                 variant="outlined"
-                value={tourDestination.destination_city}
-                onChange={handleChangeTourDestination}
-                label="Select Destination City"
+                value={tourPickUp.pick_up_city}
+                onChange={handleChangeTourPickUp}
+                label="Select PickUp City"
                 className="mb-6"
                 required
                 >
@@ -493,19 +665,173 @@ const AddTourPage = ({ update, setUpdate }) => {
                 ))}
             </TextField>
             <TextField
-                name="destination_arrival_map"
-                label="Destination Map"
+                name="pick_up_map"
+                label="Pick_up Map"
                 type="text"
                 fullWidth
                 required
-                value={tourDestination.destination_arrival_map}
-                onChange={handleChangeTourDestination}
+                value={tourPickUp.pick_up_map}
+                onChange={handleChangeTourPickUp}
             /> 
+            </div>
+          <h1 className='font-semibold text-2xl text-mainColor'>Destination Location</h1>
+            <div className="flex w-full gap-4 lg:w-2/4 mb-4">
+              <TextField
+                select
+                label="Destination Type"
+                name="destination_type"
+                value={selectedDestinationType}
+                onChange={(e) => {
+                  setSelectedDestinationType(e.target.value);
+                  if (e.target.value === 'single') {
+                    setTourDestination([tourDestination[0]]); // Keep only one destination
+                  }
+                }}
+                fullWidth
+              >
+                <MenuItem value="single">Single</MenuItem>
+                <MenuItem value="multiple">Multiple</MenuItem>
+              </TextField>
+              <TextField
+                type="datetime-local"
+                label="Arrival Date & Time"
+                value={tourArrival}
+                onChange={(e) => setTourArrival(e.target.value)}
+                placeholder="Enter Arrival Date & Time"
+                variant="outlined"
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                className="w-full"
+              />
+            </div>
+            {tourDestination.map((destination, index) => (
+              <div key={index} className="bg-white rounded-lg mb-4">
+                <div className="w-full flex flex-col md:flex-row gap-4">
+                  <TextField
+                    select
+                    name="destination_country"
+                    fullWidth
+                    variant="outlined"
+                    value={destination.destination_country}
+                    onChange={(e) => handleChangeTourDestination(e, index)}
+                    label="Select Destination Country"
+                    className="mb-6"
+                    required
+                  >
+                    {countries.map((country) => (
+                      <MenuItem key={country.id} value={country.id}>
+                        {country.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <TextField
+                    select
+                    name="destination_city"
+                    fullWidth
+                    variant="outlined"
+                    value={destination.destination_city}
+                    onChange={(e) => handleChangeTourDestination(e, index)}
+                    label="Select Destination City"
+                    className="mb-6"
+                    required
+                  >
+                    {cities.map((city) => (
+                      <MenuItem key={city.id} value={city.id}>
+                        {city.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <TextField
+                    name="destination_arrival_map"
+                    label="Destination Map"
+                    type="text"
+                    fullWidth
+                    required
+                    value={destination.destination_arrival_map}
+                    onChange={(e) => handleChangeTourDestination(e, index)}
+                  />
+                </div>
+                {selectedDestinationType === 'multiple' && index !== 0 && (
+                  <button
+                    type="button"
+                    onClick={() => removeDestination(index)}
+                    className="remove-supplement-btn bg-red-500 text-white px-4 py-2 rounded-md mt-4"
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
+            ))}
+            {selectedDestinationType === 'multiple' && (
+              <div className='w-full flex justify-center'>
+              <button
+                type="button"
+                onClick={addDestination}
+                className="add-supplement-btn bg-[#0D47A1] text-white px-4 py-2 rounded-md mt-4"
+              >
+                Add More Destination
+              </button>
+              </div>
+            )}
+
+             <h1 className='font-semibold text-2xl text-mainColor'>Availability</h1>
+             <div className="flex w-full md:w-2/4 xl:w-1/4 mb-4">
+              <TextField
+                type='number'
+                label="Quantity"
+                name="quantity"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+                fullWidth
+              />
+            </div>
+            {tourAvailability.map((availability, index) => (
+              <div key={index} className="bg-white rounded-lg shadow-sm mb-4">
+                <div className="w-full flex flex-col md:flex-row gap-4">
+                  <TextField
+                    name="date"
+                    type="date"
+                    label="Select Date"
+                    value={availability.date}
+                    onChange={(e) => handleChangeAvailability(e, index)}
+                    placeholder="Enter Date"
+                    className="w-full"
+                    variant="outlined"
+                    fullWidth
+                    InputLabelProps={{ shrink: true }}
+                  />
+                  <TextField
+                    name="last_booking"
+                    label="Last Booking"
+                    type="date"
+                    fullWidth
+                    required
+                    value={availability.last_booking}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => handleChangeAvailability(e, index)}
+                  />
+                    <button
+                type="button"
+                onClick={addAvailability}
+                className="add-supplement-btn w-1/2 bg-[#0D47A1] text-white px-2 py-1 rounded-md"
+              >
+                Add Availability
+              </button>
+                </div>
+                {index !== 0 && (
+                  <button
+                    type="button"
+                    onClick={() => removeAvailability(index)}
+                    className="remove-supplement-btn bg-red-500 text-white px-4 py-2 rounded-md mt-4"
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
+            ))}
+            
           </div>
 
-            </div>
-
-            
         )}
         {activeTab === 'Itinerary' && (
             <div className="p-4 bg-gray-100 rounded-lg shadow-md">
@@ -534,10 +860,10 @@ const AddTourPage = ({ update, setUpdate }) => {
                                           className="h-80 w-96 object-cover mr-4"
                                         /> */}
                                          <img
-    src={typeof itinerary.itinerary_image === 'string' ? itinerary.itinerary_image : URL.createObjectURL(itinerary.itinerary_image)}
-    alt="Tour Preview"
-    className="h-80 w-96 object-cover mr-4"
-  />
+                                          src={typeof itinerary.itinerary_image === 'string' ? itinerary.itinerary_image : URL.createObjectURL(itinerary.itinerary_image)}
+                                          alt="Tour Preview"
+                                          className="h-80 w-96 object-cover mr-4"
+                                        />
                                         <button
                                             type="button"
                                             onClick={() => handleRemoveImage(index)} // Pass index
@@ -602,7 +928,206 @@ const AddTourPage = ({ update, setUpdate }) => {
                  </div>
         )}
         {activeTab === 'Policy' && (
-        <div>
+          <div className="p-4 xl:p-8 bg-gray-50 rounded-lg shadow-md">
+              <h2 className="text-3xl font-semibold text-gray-800 mb-6">Policy Settings</h2>
+          
+            {/* Children Policy */}
+            <div className="space-y-4 mb-6">
+              <TextField
+                label="Policy"
+                name="childrenPolicy"
+                value={policyDetails.childrenPolicy}
+                onChange={handlePolicyChange}
+                multiline
+                rows={4}
+                fullWidth
+                variant="outlined"
+              />
+            </div>
+            
+              {/* Cancellation Policy Radio Group */}
+              <div className="space-y-4 mb-6">
+                <h3 className="text-lg font-semibold text-gray-800">Cancellation Policy</h3>
+                <RadioGroup
+                  name="cancellationPolicy"
+                  value={policyDetails.cancellationPolicy}
+                  onChange={(e) =>
+                    setPolicyDetails((prevState) => ({
+                      ...prevState,
+                      cancellationPolicy: e.target.value,
+                    }))
+                  }
+                  row
+                >
+                  <FormControlLabel value="non_refundable" control={<Radio />} label="Non Refundable" />
+                  <FormControlLabel value="free" control={<Radio />} label="Free Cancellation" />
+                </RadioGroup>
+              </div>
+          
+          {/* Conditional Rendering for Free Cancellation */}
+          {policyDetails.cancellationPolicy === "free" && (
+            <div>
+              {policyDetails.cancellationPolicies.map((policy, index) => (
+                <div key={index} className="w-full flex flex-col md:flex-row gap-3 mb-4">
+                  <div className="flex items-center w-full md:w-1/2">
+                    <span className="text-mainColor font-semibold">Cancellation Type: </span>
+                    <MdAttachMoney
+                      className={`ml-2 ${policy.cancellationType === "Value" ? "text-green-500" : "text-gray-500"}`}
+                    />
+                    <Switch
+                      checked={policy.cancellationType === "Percentage"}
+                      onChange={() => handleCancellationSwitchChange(index)}
+                      color="primary"
+                    />
+                    <FiPercent
+                      className={`ml-2 ${policy.cancellationType === "Percentage" ? "text-blue-500" : "text-gray-500"}`}
+                    />
+                  </div>
+          
+                  {/* Conditional Fields for Percentage or Value */}
+                  {policy.cancellationType === "Percentage" ? (
+                    <div className="w-full md:w-1/2">
+                      <TextField
+                        label="Cancellation Percentage"
+                        name="cancellationValue"
+                        value={policy.cancellationValue}
+                        onChange={(e) => handlePolicyFieldChange(e, index)}
+                        select
+                        fullWidth
+                        variant="outlined"
+                      >
+                        {[...Array(101).keys()].map((value) => (
+                          <MenuItem key={value} value={value}>
+                            {value}%
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </div>
+                  ) : (
+                    <div className="w-full md:w-1/2">
+                      <TextField
+                        label="Cancellation Value"
+                        name="cancellationValue"
+                        value={policy.cancellationValue}
+                        onChange={(e) => handlePolicyFieldChange(e, index)}
+                        type="number"
+                        fullWidth
+                        variant="outlined"
+                      />
+                    </div>
+                  )}
+          
+                  {/* Before Days to Cancellation */}
+                  <div className="w-full md:w-1/2">
+                    <TextField
+                      label="Before Days to Cancellation"
+                      name="cancellationBeforeDays"
+                      value={policy.cancellationBeforeDays}
+                      onChange={(e) => handlePolicyFieldChange(e, index)}
+                      type="number"
+                      fullWidth
+                      variant="outlined"
+                    />
+                  </div>
+          
+                  {/* Remove Button */}
+                  {index !== 0 && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemovePolicy(index)}
+                      className="remove-supplement-btn flex items-center justify-center bg-red-500 text-white px-4 py-2 rounded-md shadow-md hover:shadow-lg transform hover:scale-105 transition duration-300 ease-in-out"
+                    >
+                      <AiOutlineMinus className="mr-2" size={16} />
+                      Remove
+                    </button>
+                  )}
+                </div>
+              ))}
+          
+              {/* Add Button */}
+              <div className="flex mt-4">
+                <button
+                  type="button"
+                  onClick={handleAddPolicy}
+                  className="add-supplement-btn flex items-center justify-center bg-[#0D47A1] text-white px-4 py-2 rounded-md shadow-md hover:shadow-lg transform hover:scale-105 transition duration-300 ease-in-out mt-4"
+                >
+                  <AiOutlinePlus className="mr-2" size={16} />
+                  Add More
+                </button>
+              </div>
+            </div>
+          )}
+
+          <h1 className='font-bold text-2xl text-mainColor mb-4 border-b-2 border-gray-300 pb-2 mt-5'>Tour Includes</h1>
+          <div className="space-y-4">
+            {includes.map((include, index) => (
+              <div key={index} className="bg-gray-100 rounded-lg shadow p-4 flex items-center justify-between">
+                <TextField
+                  name="name"
+                  type="text"
+                  label="Include"
+                  value={include.name}
+                  onChange={(e) => handleChangeTourIncludes(e, index)}
+                  placeholder="Enter Name"
+                  className="flex-1"
+                  variant="outlined"
+                  size="small"
+                />
+                {index !== 0 && (
+                  <button
+                    type="button"
+                    onClick={() => removeIncludes(index)}
+                    className="bg-red-500 text-white px-3 py-1 rounded ml-2 hover:bg-red-600 transition"
+                  >
+                    - Remove
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addIncludes}
+              className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+            >
+              + Add Include
+            </button>
+          </div>
+
+          <h1 className='font-bold text-2xl text-mainColor mb-4 border-b-2 border-gray-300 pb-2 mt-8'>Tour Excludes</h1>
+          <div className="space-y-4">
+            {excludes.map((exclude, index) => (
+              <div key={index} className="bg-gray-100 rounded-lg shadow p-4 flex items-center justify-between">
+                <TextField
+                  name="name"
+                  type="text"
+                  label="Exclude"
+                  value={exclude.name}
+                  onChange={(e) => handleChangeTourExcludes(e, index)}
+                  placeholder="Enter Name"
+                  className="flex-1"
+                  variant="outlined"
+                  size="small"
+                />
+                {index !== 0 && (
+                  <button
+                    type="button"
+                    onClick={() => removeExcludes(index)}
+                    className="bg-red-500 text-white px-3 py-1 rounded ml-2 hover:bg-red-600 transition"
+                  >
+                    - Remove
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addExcludes}
+              className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+            >
+              + Add Exclude
+            </button>
+          </div>
+
             </div>
         )}
 
