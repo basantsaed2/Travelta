@@ -875,10 +875,10 @@ const CheckOutProcessPage = () => {
                                 onClick={currentStep === 3 || paymentType === 'Later' ? handleSubmit : handleNextStep}
                                 className={`text-white px-8 py-2 rounded-full font-semibold ml-auto ${
                                     (currentStep === 3 || paymentType === 'Later') 
-                                        ? (remainingBalance === 0 || remainingAmount === 0 ? "bg-[#0D47A1] hover:bg-[#08357C]" : "bg-gray-400 cursor-not-allowed")
+                                        ? (remainingAmount === 0 ? "bg-[#0D47A1] hover:bg-[#08357C]" : "bg-gray-400 cursor-not-allowed")
                                         : (remainingAmount === 0 ? "bg-[#0D47A1] hover:bg-[#08357C]" : "bg-gray-400 cursor-not-allowed")
                                 }`}
-                                disabled={remainingAmount !== 0 || remainingBalance !== 0} // Disabled if remainingAmount is not 0
+                                disabled={remainingAmount !== 0} // Disabled if remainingAmount is not 0
 
                                 // disabled={(currentStep === 3 || paymentType === 'Later') ? remainingBalance !== 0 : remainingAmount !== 0}
                             >
