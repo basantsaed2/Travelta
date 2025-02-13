@@ -32,28 +32,66 @@ const AddTourPage = ({ update, setUpdate }) => {
         nights: 1,
         days: 1,
         selectedTourType: '',
-        featured: false,  // Boolean for yes/no
-        featured_from: '', // Date input (only if featured is true)
-        featured_to: '',   // Date input (only if featured is true)
+        featured: false, 
+        featured_from: '',
+        featured_to: '', 
         deposit: 0,
-        deposit_type: 'percentage', // Can be 'percentage' or 'fixed'
+        deposit_type: 'percentage',
         tax: 0,
-        tax_type: 'percentage', // Can be 'percentage' or 'fixed'
-        pick_up_country_id: '', // ID of selected country
+        tax_type: 'percentage', 
+        tour_email:'',
+        tour_phone:'',
+        tour_website:'',
+        tour_address:'',
     });
-    
     const tourType = [
         { value: "private", label: "Private Tour" },
         { value: "group", label: "Group Tour" },
       ];
-    // const [supplementList, setSupplementList] = useState([
-    //   {
-    //       supplementName: '', 
-    //       supplementType: '', 
-    //       supplementPrice: 0, 
-    //       selectedCurrency: '',
-    //   },
-    // ]);
+
+    const [tourPickUp, setTourPickUp] = useState({
+      pick_up_country: '',
+      pick_up_city: '',
+      pick_up_map: '',
+    });
+    const [tourDestination, setTourDestination] = useState({
+      destination_type: '',
+      destination_country: '',
+      destination_city: '',
+      destination_arrival_map: '',
+    });
+    const [tourItinerary , setTourItinerary] = useState([
+      {
+      itinerary_image: '',
+      itinerary_day_name: '',
+      itinerary_day_description: '',
+      itinerary_content: '',
+    }]);
+    
+    const fileInputRef = useRef();
+    
+    
+    const handleImageUpload = (e, index) => {
+      const file = e.target.files[0];
+      if (file) {
+        setTourItinerary((prevList) => {
+          const updatedList = [...prevList];
+          updatedList[index] = { ...updatedList[index], itinerary_image: file };
+          return updatedList;
+        });
+      }
+    };    
+    const handleRemoveImage = (index) => {
+      setTourItinerary((prevList) => {
+        const updatedList = [...prevList];
+        updatedList[index] = { ...updatedList[index], itinerary_image: null };
+        return updatedList;
+      });
+    
+      // Clear the file input field
+      fileInputRef.current.value = '';
+    };
+    
 
 
     useEffect(() => {
@@ -69,28 +107,13 @@ const AddTourPage = ({ update, setUpdate }) => {
       }
     }, [listData]);
 
-    // useEffect(() => {
-    //   if (selectedHotel) {  
-    //     const formData = new FormData();
-    //     formData.append('hotel_id', selectedHotel);              
-    //     postHotelId(formData);
-    //   }
-    // }, [selectedHotel]);
-
-    // useEffect(() => {
-    //   if (!loadingHotelId && responseHotelId) {                
-    //     setMealPlans(responseHotelId.data?.meal_plans)
-    //     setTaxes(responseHotelId.data?.country_taxes)
-    //   }
-    // }, [responseHotelId]);
-
-    const handleChange = (e) => {
+    
+    const handleChangeTourDetails = (e) => {
         setTourDetails({
         ...tourDetails,
         [e.target.name]: e.target.value,
         });
     };
-  
     const handleCheckboxChange = (e) => {
         setTourDetails({
         ...tourDetails,
@@ -98,7 +121,39 @@ const AddTourPage = ({ update, setUpdate }) => {
         });
     };
 
+    const handleChangeTourPickUp = (e) => {
+      setTourPickUp({
+      ...tourPickUp,
+      [e.target.name]: e.target.value,
+      });
+  };
+  const handleChangeTourDestination = (e) => {
+    setTourDestination({
+    ...tourDestination,
+    [e.target.name]: e.target.value,
+    });
+};
 
+  // Handle changes for all Itinerary, including the default
+  const handleItineraryChange = (e, index) => {
+      const { name, value } = e.target;
+      setTourItinerary((prevList) => {
+          const updatedList = [...prevList];
+          updatedList[index] = { ...updatedList[index], [name]: value };
+          return updatedList;
+      });
+  };
+  // Add new Itinerary
+  const addItinerary = () => {
+      setTourItinerary((prevList) => [
+          ...prevList,
+          { itinerary_image: '', itinerary_day_name: '', itinerary_day_description:'', itinerary_content: '' },
+      ]);
+  };
+  // Remove Itinerary from the list
+  const removeItinerary = (index) => {
+      setTourItinerary((prevList) => prevList.filter((_, i) => i !== index));
+  };
    
     
   const handleSubmit = async (e) => {
@@ -109,7 +164,7 @@ const AddTourPage = ({ update, setUpdate }) => {
     <div className="w-full p-2 md:p-6 bg-white shadow rounded">
       <div className="border-b border-gray-200">
         <nav className="flex space-x-2 xl:space-x-4">
-          {['General Details', 'Facilities', 'Markup & Taxes', 'Policy'].map((tab) => (
+          {['General Details', 'Pickup & Destination','Itinerary','Policy'].map((tab) => (
             <button
               key={tab}
               className={`py-2 px-4 text-sm font-medium text-gray-700 border-b-2 ${
@@ -132,7 +187,7 @@ const AddTourPage = ({ update, setUpdate }) => {
                           rows={4}
                           fullWidth
                           value={tourDetails.description}
-                          onChange={handleChange}
+                          onChange={handleChangeTourDetails}
                           className="mb-4"
                         />
                         <div className="flex items-center p-4 pb-0">
@@ -154,7 +209,7 @@ const AddTourPage = ({ update, setUpdate }) => {
                                 type="text"
                                 fullWidth
                                 value={tourDetails.name}
-                                onChange={handleChange}
+                                onChange={handleChangeTourDetails}
                             />
                              <TextField
                                 name="videoLink"
@@ -162,7 +217,7 @@ const AddTourPage = ({ update, setUpdate }) => {
                                 type="text"
                                 fullWidth
                                 value={tourDetails.videoLink}
-                                onChange={handleChange}
+                                onChange={handleChangeTourDetails}
                             />
                             <TextField
                                 select
@@ -170,7 +225,7 @@ const AddTourPage = ({ update, setUpdate }) => {
                                 fullWidth
                                 variant="outlined"
                                 value={tourDetails.selectedTourType}
-                                onChange={handleChange}
+                                onChange={handleChangeTourDetails}
                                 label="Select Tour Type"
                                 className="mb-6"
                                 required
@@ -189,7 +244,7 @@ const AddTourPage = ({ update, setUpdate }) => {
                                     type="number"
                                     fullWidth
                                     value={tourDetails.days}
-                                    onChange={handleChange}
+                                    onChange={handleChangeTourDetails}
                                     inputProps={{ min: 1 }}
                                 />
                                 <TextField
@@ -199,7 +254,7 @@ const AddTourPage = ({ update, setUpdate }) => {
                                     variant="outlined"
                                     fullWidth
                                     value={tourDetails.nights}
-                                    onChange={handleChange}
+                                    onChange={handleChangeTourDetails}
                                     inputProps={{ min: 1 }}
                                 />
                                 <TextField
@@ -218,7 +273,8 @@ const AddTourPage = ({ update, setUpdate }) => {
                                     ))}
                                 </TextField>
                             </div>
-                            <div className="flex items-center py-2">
+                            <div className="flex flex-col md:flex-row gap-4 items-center mb-4">
+                              <div className='flex justify-col items-center'>
                                 <span className="mr-2 text-mainColor font-semibold">Featured:</span>
                                 <Switch
                                     checked={tourDetails.featured}
@@ -226,32 +282,31 @@ const AddTourPage = ({ update, setUpdate }) => {
                                     inputProps={{ 'aria-label': 'featured switch' }}
                                 />
                                 <span className="ml-2">{tourDetails.featured ? 'Yes' : 'No'}</span>
+                              </div>
+                              {/* Show date pickers only if featured is enabled */}
+                              {tourDetails.featured && (
+                                <>
+                                      <TextField
+                                          name="featured_from"
+                                          label="Featured From"
+                                          type="date"
+                                          fullWidth
+                                          value={tourDetails.featured_from}
+                                          onChange={handleChangeTourDetails}
+                                          InputLabelProps={{ shrink: true }}
+                                      />
+                                      <TextField
+                                          name="featured_to"
+                                          label="Featured To"
+                                          type="date"
+                                          fullWidth
+                                          value={tourDetails.featured_to}
+                                          onChange={handleChangeTourDetails}
+                                          InputLabelProps={{ shrink: true }}
+                                      />
+                                </>
+                              )}
                             </div>
-
-                            {/* Show date pickers only if featured is enabled */}
-                            {tourDetails.featured && (
-                                <div className="flex flex-col md:flex-row gap-4 mb-4">
-                                    <TextField
-                                        name="featured_from"
-                                        label="Featured From"
-                                        type="date"
-                                        fullWidth
-                                        value={tourDetails.featured_from}
-                                        onChange={handleChange}
-                                        InputLabelProps={{ shrink: true }}
-                                    />
-                                    <TextField
-                                        name="featured_to"
-                                        label="Featured To"
-                                        type="date"
-                                        fullWidth
-                                        value={tourDetails.featured_to}
-                                        onChange={handleChange}
-                                        InputLabelProps={{ shrink: true }}
-                                    />
-                                </div>
-                            )}
-
                             <div className="flex flex-col md:flex-row gap-4 mb-4">
                                 <TextField
                                     name="deposit"
@@ -259,7 +314,7 @@ const AddTourPage = ({ update, setUpdate }) => {
                                     type="number"
                                     fullWidth
                                     value={tourDetails.deposit}
-                                    onChange={handleChange}
+                                    onChange={handleChangeTourDetails}
                                     inputProps={{ min: 0 }}
                                     variant="outlined"
                                 />
@@ -269,14 +324,13 @@ const AddTourPage = ({ update, setUpdate }) => {
                                     fullWidth
                                     variant="outlined"
                                     value={tourDetails.deposit_type}
-                                    onChange={handleChange}
+                                    onChange={handleChangeTourDetails}
                                     label="Deposit Type"
                                 >
                                     <MenuItem value="percentage">Percentage</MenuItem>
                                     <MenuItem value="fixed">Fixed</MenuItem>
                                 </TextField>
                             </div>
-
                             <div className="flex flex-col md:flex-row gap-4 mb-4">
                                 <TextField
                                     name="tax"
@@ -284,7 +338,7 @@ const AddTourPage = ({ update, setUpdate }) => {
                                     type="number"
                                     fullWidth
                                     value={tourDetails.tax}
-                                    onChange={handleChange}
+                                    onChange={handleChangeTourDetails}
                                     inputProps={{ min: 0 }}
                                     variant="outlined"
                                 />
@@ -294,25 +348,258 @@ const AddTourPage = ({ update, setUpdate }) => {
                                     fullWidth
                                     variant="outlined"
                                     value={tourDetails.tax_type}
-                                    onChange={handleChange}
+                                    onChange={handleChangeTourDetails}
                                     label="Tax Type"
                                 >
                                     <MenuItem value="percentage">Percentage</MenuItem>
                                     <MenuItem value="fixed">Fixed</MenuItem>
                                 </TextField>
-                            </div>
+                            </div> 
 
-     
+                            <h1 className='font-semibold text-2xl text-mainColor'>Contact Information</h1>
+                            <div className="flex flex-col md:flex-row gap-4 mb-4">
+                            <TextField
+                                name="tour_email"
+                                label="Tour Operator's Email"
+                                type="text"
+                                fullWidth
+                                value={tourDetails.tour_email}
+                                onChange={handleChangeTourDetails}
+                            />
+                            <TextField
+                                name="tour_phone"
+                                label="Tour Operator's Phone"
+                                type="text"
+                                fullWidth
+                                value={tourDetails.tour_phone}
+                                onChange={handleChangeTourDetails}
+                            />
+                            </div>
+                            <div className="flex flex-col md:flex-row gap-4 mb-4">
+                            <TextField
+                                name="tour_website"
+                                label="Tour Operator's Website"
+                                type="text"
+                                fullWidth
+                                value={tourDetails.tour_website}
+                                onChange={handleChangeTourDetails}
+                            />
+                            <TextField
+                                name="tour_address"
+                                label="Tour Operator's Address"
+                                type="text"
+                                fullWidth
+                                value={tourDetails.tour_address}
+                                onChange={handleChangeTourDetails}
+                            />
+                            </div>
                         </div>
                 </div>
         )}
-        {activeTab === 'Facilities' && (
-          <div>
+        {activeTab === 'Pickup & Destination' && (
+            <div className="p-4 flex flex-col gap-5">
+          <h1 className='font-semibold text-2xl text-mainColor'>Pick_UP Location</h1>
+          <div className="flex flex-col md:flex-row gap-4 mb-4">
+          <TextField
+              select
+              name="pick_up_country"
+              fullWidth
+              variant="outlined"
+              value={tourPickUp.pick_up_country}
+              onChange={handleChangeTourPickUp}
+              label="Select PickUp Country"
+              className="mb-6"
+              required
+              >
+              {countries.map((country) => (
+                  <MenuItem key={country.id} value={country.id}>
+                  {country.name}
+                  </MenuItem>
+              ))}
+          </TextField>
+          <TextField
+              select
+              name="pick_up_city"
+              fullWidth
+              variant="outlined"
+              value={tourPickUp.pick_up_city}
+              onChange={handleChangeTourPickUp}
+              label="Select PickUp City"
+              className="mb-6"
+              required
+              >
+              {cities.map((city) => (
+                  <MenuItem key={city.id} value={city.id}>
+                  {city.name}
+                  </MenuItem>
+              ))}
+          </TextField>
+          <TextField
+              name="pick_up_map"
+              label="Pick_up Map"
+              type="text"
+              fullWidth
+              required
+              value={tourPickUp.pick_up_map}
+              onChange={handleChangeTourPickUp}
+          /> 
+          </div>
+          <h1 className='font-semibold text-2xl text-mainColor'>Destination Location</h1>
+
+          <div className="flex flex-col md:flex-row flex-wrap lg:flex-nowrap gap-4 mb-4">
+            <TextField
+                select
+                label="Destination Type"
+                name="destination_type"
+                value={tourDestination.destination_type}
+                onChange={handleChangeTourDestination}
+                fullWidth
+            >
+                <MenuItem value="single">Single</MenuItem>
+                <MenuItem value="multiple">Multiple</MenuItem>
+            </TextField>
+            <TextField
+                select
+                name="destination_country"
+                fullWidth
+                variant="outlined"
+                value={tourDestination.destination_country}
+                onChange={handleChangeTourDestination}
+                label="Select Destination Country"
+                className="mb-6"
+                required
+                >
+                {countries.map((country) => (
+                    <MenuItem key={country.id} value={country.id}>
+                    {country.name}
+                    </MenuItem>
+                ))}
+            </TextField>
+            <TextField
+                select
+                name="destination_city"
+                fullWidth
+                variant="outlined"
+                value={tourDestination.destination_city}
+                onChange={handleChangeTourDestination}
+                label="Select Destination City"
+                className="mb-6"
+                required
+                >
+                {cities.map((city) => (
+                    <MenuItem key={city.id} value={city.id}>
+                    {city.name}
+                    </MenuItem>
+                ))}
+            </TextField>
+            <TextField
+                name="destination_arrival_map"
+                label="Destination Map"
+                type="text"
+                fullWidth
+                required
+                value={tourDestination.destination_arrival_map}
+                onChange={handleChangeTourDestination}
+            /> 
+          </div>
+
             </div>
+
+            
         )}
-        {activeTab === 'Markup & Taxes' && (
-          <div>
-            </div>
+        {activeTab === 'Itinerary' && (
+            <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+                     <h1 className="font-semibold text-2xl text-[#0D47A1] mb-6">Itinerary</h1>
+         
+                     {tourItinerary.map((itinerary, index) => (
+                         <div key={index} className="bg-white p-4 rounded-lg shadow-sm mb-4">
+                             <div className="flex flex-col md:flex-row gap-4">
+                                  <div className="mb-4">
+                                    <Button variant="contained" component="label">
+                                      Upload Image
+                                      <input
+                                        type="file"
+                                        hidden
+                                        accept="image/*"
+                                        onChange={(e) => handleImageUpload(e, index)} // Pass index here
+                                        ref={fileInputRef} // Reference to the input field
+                                      />
+                                    </Button>
+                                    {itinerary.itinerary_image && (
+                                      <div className="flex flex-col xl:flex-row gap-5 items-center mt-4">
+                                        {/* <img src={roomDetails.thumbnail} alt="Room Preview" className="h-80 w-96 object-cover mr-4" /> */}
+                                        {/* <img
+                                          src={URL.createObjectURL(itinerary.itinerary_image)}
+                                          alt="Tour Preview"
+                                          className="h-80 w-96 object-cover mr-4"
+                                        /> */}
+                                         <img
+    src={typeof itinerary.itinerary_image === 'string' ? itinerary.itinerary_image : URL.createObjectURL(itinerary.itinerary_image)}
+    alt="Tour Preview"
+    className="h-80 w-96 object-cover mr-4"
+  />
+                                        <button
+                                            type="button"
+                                            onClick={() => handleRemoveImage(index)} // Pass index
+                                            className="remove-supplement-btn bg-red-500 text-white px-4 py-2 rounded-md"
+                                        >
+                                            Remove Image
+                                        </button>
+                                      </div>
+                                    )}
+                                  </div>
+                             </div>
+                             <div className="flex flex-col md:flex-row gap-4 mt-4">
+                                 <TextField
+                                     label="Day Name"
+                                     name="itinerary_day_name"
+                                     type="text"
+                                     required
+                                     value={itinerary.itinerary_day_name}
+                                     onChange={(e) => handleItineraryChange(e, index)}
+                                     fullWidth
+                                 />
+                                <TextField
+                                     label="Day Description"
+                                     name="itinerary_day_description"
+                                     type="text"
+                                     required
+                                     value={itinerary.itinerary_day_description}
+                                     onChange={(e) => handleItineraryChange(e, index)}
+                                     fullWidth
+                                 />
+                                <TextField
+                                     label="Day Content"
+                                     name="itinerary_content"
+                                     type="text"
+                                     required
+                                     value={itinerary.itinerary_content}
+                                     onChange={(e) => handleItineraryChange(e, index)}
+                                     fullWidth
+                                 />
+                             </div>
+         
+                             {/* Only show the remove button for supplements other than the first one */}
+                             {index !== 0 && (
+                                 <button
+                                     type="button"
+                                     onClick={() => removeItinerary(index)}
+                                     className="remove-supplement-btn bg-red-500 text-white px-4 py-2 rounded-md mt-4"
+                                 >
+                                     Remove
+                                 </button>
+                             )}
+                         </div>
+                     ))}
+         
+                     <button
+                         type="button"
+                         onClick={addItinerary}
+                         className="add-supplement-btn bg-[#0D47A1] text-white px-4 py-2 rounded-md mt-4"
+                     >
+                         Add Itinerary
+                     </button>
+                 </div>
         )}
         {activeTab === 'Policy' && (
         <div>
