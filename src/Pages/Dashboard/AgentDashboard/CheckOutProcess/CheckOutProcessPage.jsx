@@ -101,14 +101,15 @@ const CheckOutProcessPage = () => {
     const handleNextStep = () => {
         if (currentStep < 3) {
           setCurrentStep(currentStep + 1);
-        } else {
-          const newEmployee = { name, phone, email, role, startDate, image, active: activeStatus };
-          employees.push(newEmployee); // Add the new employee to the data array
-          localStorage.setItem('employees', JSON.stringify(employees)); // Save to localStorage
-          alert("Employee added successfully");
-          setShowModel(false);
-          resetForm();
         }
+        //  else {
+        //   const newEmployee = { name, phone, email, role, startDate, image, active: activeStatus };
+        //   employees.push(newEmployee); // Add the new employee to the data array
+        //   localStorage.setItem('employees', JSON.stringify(employees)); // Save to localStorage
+        //   alert("Employee added successfully");
+        //   setShowModel(false);
+        //   resetForm();
+        // }
     };   
     // Handle previous step
     const handlePrevStep = () => {
