@@ -16,9 +16,9 @@ const EditTourLayout = () => {
         >
             <FaArrowLeft/>
         </button>
-    <TitlePage text={'Add Tour'} /> 
+    <TitlePage text={'Edit Tour'} /> 
     </div>
-    <AddTourPage update={update} setUpdate={setUpdate} />
+    <EditTourPage update={update} setUpdate={setUpdate} />
     </>
   ) 
 };

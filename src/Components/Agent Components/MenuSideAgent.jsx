@@ -180,7 +180,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
                           stateLink.isActiveInventoryRoomPreview ?? false
                       );
 
-              //Inventory Flight
+              //Inventory Tour
                const [isOpenInventoryTour, setIsOpenInventoryTour] = useState(
                 stateLink.isOpenInventoryTour ?? false
               );
@@ -190,6 +190,14 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
               const [isActiveInventoryTour, setIsActiveInventoryTour] = useState(
                   stateLink.isActiveInventoryTour?? false
               );
+
+                     //Inventory Tour Preview
+                     const [isOpenInventoryTourPreview, setIsOpenInventoryTourPreview] = useState(
+                      stateLink.isOpenInventoryTourPreview ?? false
+                    );
+                    const [isActiveInventoryTourPreview, setIsActiveInventoryTourPreview] = useState(
+                        stateLink.isActiveInventoryTourPreview ?? false
+                    );
 
 
   // Accounting
@@ -306,6 +314,10 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
 
       isOpenInventoryRoomPreview,
       isActiveInventoryRoomPreview,
+
+      isOpenInventoryTourPreview,
+      isActiveInventoryTourPreview
+
     };
     auth.sidebar = JSON.stringify(activeLinks);
   }, [
@@ -381,6 +393,9 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
 
     isOpenInventoryRoomPreview,
     isActiveInventoryRoomPreview,
+
+    isOpenInventoryTourPreview,
+    isActiveInventoryTourPreview
   ]);
 
   // Save state to sidebar at auth when any link state changes
@@ -461,6 +476,9 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
 
     isOpenInventoryRoomPreview,
     isActiveInventoryRoomPreview,
+
+    isOpenInventoryTourPreview,
+    isActiveInventoryTourPreview
   ]);
 
   // Handler functions to manage all state
@@ -799,7 +817,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActiveFinancial(true);
     setIsActiveFinancialIcon(true);
     setIsActiveInvoice(true);
-  }, [handleStateLinks]);
+  }, []);
 
   // Ensure correct state when visiting financial section
   useEffect(() => {
@@ -810,14 +828,14 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       handleClickFinancial();
       navigate("/dashboard_agent/financial/invoice", { replace: true });
     }
-  }, [pathName, navigate, handleClickFinancial]);
+  }, [location]);
 
   // Ensure correct state when on the invoice page
   useEffect(() => {
     if (pathName === "/dashboard_agent/financial/invoice") {
       handleClickInvoice();
     }
-  }, [pathName, handleClickInvoice]);
+  }, [location]);
 
   // Operation
   const handleClickOperation = useCallback(() => {
@@ -1005,12 +1023,12 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     if (!pathName) return; // Ensure pathName is defined
 
     const part = pathName.split("/");
-    const result = part.slice(0, 3).join("/");
+    const result = part.slice(0, 5).join("/");
     
     if (result === "/dashboard_agent/inventory/tour/list") {
       handleClickInventoryTour();
     }
-  }, [pathName, handleClickInventoryTour]);
+  }, [location]);
 
 
   // Accounting
@@ -1862,42 +1880,39 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
                       </ul>
                     </div>
 
-      <li
-        onMouseMove={() => setIsActiveInventoryTourIcon(true)}
-        onMouseOut={() => setIsActiveInventoryTourIcon(false)}
-        onClick={handleClickInventoryTour}
-        className={`
-          ${isActiveInventoryTour ? "active" : ""}
-         flex items-center 
-         ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
-        hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
-      >
-        <div className="flex font-semibold text-xl items-center gap-x-2">
-          <FaMapMarkedAlt
-            className={`${
-              isActiveInventoryTourIcon || isActiveInventoryTour
-                ? "text-mainColor"
-                : "text-white"
-            }`}
-          />
-          {!isSidebarCollapsed && (
-            <span
-              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
-                isActiveInventoryTour ? "text-mainColor" : "text-white"
-              }`}
-            >
-              Tour
-            </span>
-          )}
-        </div>
-        {!isSidebarCollapsed && (
-          <IoIosArrowForward
-            className={`${
-              isActiveInventoryTour ? "text-mainColor rotate-90" : "text-white rotate-0"
-            } text-xl transition-all duration-300 group-hover:text-mainColor`}
-          />
-        )}
-      </li>
+
+                    <Link
+                      to="inventory/tour/list"
+                      onMouseMove={() => setIsActiveInventoryIcon(true)}
+                      onMouseOut={() => setIsActiveInventoryIcon(false)}
+                      onClick={() => {
+                        handleClickInventoryTour();
+                        onLinkClick();
+                      }}
+                      className={`
+                          ${isActiveInventoryTourIcon ? "active" : ""}
+                        flex items-center ${
+                          isSidebarCollapsed ? "justify-center" : "justify-start"
+                        } hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+                    >
+                      <div className="flex font-semibold text-xl items-center gap-x-2">
+                        <FaMapMarkedAlt
+                          className={`${
+                            isActiveInventoryTourIcon || isActiveInventoryTour ? "text-mainColor" : "text-white"
+                          }`}
+                        />
+                        {!isSidebarCollapsed && (
+                          <span
+                            className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
+                              isActiveInventoryTourIcon ? "text-mainColor" : "text-white"
+                            }`}
+                          >
+                            Tour
+                          </span>
+                        )}
+                      </div>  
+                    </Link>
+
       
           </div>
         </ul>
