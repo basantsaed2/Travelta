@@ -19,12 +19,12 @@ const RoomGalleryLayout = () => {
       >
         <FaArrowLeft/>
       </button>
- <TitlePage text={'Room Callery'} />
+ <TitlePage text={'Add Gallery'} />
    
  </div>
         <AddRoomGalleryPage galleryId={galleryId} update={update} setUpdate={setUpdate} />
         
-        <TitleSection text={'Room Image'} />
+        <TitleSection text={'Room Gallery'} />
         <RoomGalleryPage update={update} setUpdate={setUpdate} galleryId={galleryId}/>
         </>
     );

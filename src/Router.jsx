@@ -108,6 +108,8 @@ import TourTypeLayout from "./Layouts/SuperAdminLayouts/SettingLayout/ToutTypeLa
 import AddTourType from "./Pages/SuperAdmin/Settings/Tabs/TourType/AddTourType";
 import BookingInvoiceLayout from "./Layouts/AgentLayouts/BookingPayments/BookingInvoiceLayout";
 import InvoicePage from "./Components/Agent Components/InvoicePage";
+import TourGalleryLayout from "./Layouts/AgentLayouts/Inventory/Tours/TourGallery/TourGalleryLayout";
+import TourPageLayout from "./Layouts/AgentLayouts/Inventory/Tours/TourReview/TourPageLayout";
 
 
 const AppLayoutAgent = () => (
@@ -788,7 +790,7 @@ export const router = createBrowserRouter([
                         children:[
                           {
                             path:"",
-                            element:<TourLayout/>,
+                            element:<TourPageLayout/>,
                           },
                           {
                             path:"add",
@@ -797,6 +799,10 @@ export const router = createBrowserRouter([
                           {
                             path:"edit/:tourId",
                             element:<EditTourLayout/>,
+                          },
+                          {
+                            path:"gallery/:TourId",
+                            element:<TourGalleryLayout/>,
                           },
                     ]
                       }

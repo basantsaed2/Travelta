@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../Context/Auth";
-import { FaCreditCard, FaFileArchive, FaHome } from "react-icons/fa";
+import { FaCreditCard, FaFileArchive, FaHome, FaMapMarkedAlt } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
 import { MdFlightTakeoff } from "react-icons/md";
@@ -13,6 +13,7 @@ import { FaBriefcase } from 'react-icons/fa';
 import { FaCog } from 'react-icons/fa';
 import { MdOutlineBedroomChild } from "react-icons/md";
 import { MdOutlineFlight } from "react-icons/md";
+import { FaArrowTurnDown } from "react-icons/fa6";
 
 const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
   const auth = useAuth();
@@ -180,14 +181,14 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
                       );
 
               //Inventory Flight
-               const [isOpenInventoryFlight, setIsOpenInventoryFlight] = useState(
-                stateLink.isOpenInventoryFlight ?? false
+               const [isOpenInventoryTour, setIsOpenInventoryTour] = useState(
+                stateLink.isOpenInventoryTour ?? false
               );
-              const [isActiveInventoryFlightIcon, setIsActiveInventoryFlightIcon] = useState(
-                stateLink.isActiveInventoryFlightIcon ?? false
+              const [isActiveInventoryTourIcon, setIsActiveInventoryTourIcon] = useState(
+                stateLink.isActiveInventoryTourIcon ?? false
               );
-              const [isActiveInventoryFlight, setIsActiveInventoryFlight] = useState(
-                  stateLink.isActiveInventoryFlight?? false
+              const [isActiveInventoryTour, setIsActiveInventoryTour] = useState(
+                  stateLink.isActiveInventoryTour?? false
               );
 
 
@@ -296,9 +297,9 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       isActiveInventoryRoom,
       isActiveInventoryRoomIcon,
 
-      isOpenInventoryFlight,
-      isActiveInventoryFlight,
-      isActiveInventoryFlightIcon,
+      isOpenInventoryTour,
+      isActiveInventoryTour,
+      isActiveInventoryTourIcon,
 
       isOpenInventoryRoomSetting,
       isActiveInventoryRoomSetting,
@@ -371,9 +372,9 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveInventoryRoom,
     isActiveInventoryRoomIcon,
 
-    isOpenInventoryFlight,
-    isActiveInventoryFlight,
-    isActiveInventoryFlightIcon,
+    isOpenInventoryTour,
+    isActiveInventoryTour,
+    isActiveInventoryTourIcon,
 
     isOpenInventoryRoomSetting,
     isActiveInventoryRoomSetting,
@@ -451,9 +452,9 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveInventoryRoom,
     isActiveInventoryRoomIcon,
 
-    isOpenInventoryFlight,
-    isActiveInventoryFlight,
-    isActiveInventoryFlightIcon,
+    isOpenInventoryTour,
+    isActiveInventoryTour,
+    isActiveInventoryTourIcon,
 
     isOpenInventoryRoomSetting,
     isActiveInventoryRoomSetting,
@@ -527,9 +528,9 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsOpenInventoryRoom(false);
     setIsActiveInventoryRoomIcon(false);
 
-    setIsActiveInventoryFlight(false);
-    setIsOpenInventoryFlight(false);
-    setIsActiveInventoryFlightIcon(false);
+    setIsActiveInventoryTour(false);
+    setIsOpenInventoryTour(false);
+    setIsActiveInventoryTourIcon(false);
 
     setIsActiveInventoryRoomSetting(false);
     setIsOpenInventoryRoomSetting(false);
@@ -938,16 +939,16 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActiveInventoryRoomIcon(true);
   }, []);
 
-  const handleClickInventoryFlight = useCallback(() => {
+  const handleClickInventoryTour = useCallback(() => {
     handleStateLinks();
 
     setIsOpenInventory(true);
     setIsActiveInventoryIcon(true);
     setIsActiveInventory(true);
 
-    setIsOpenInventoryFlight(true);
-    setIsActiveInventoryFlight(true);
-    setIsActiveInventoryFlightIcon(true);
+    setIsOpenInventoryTour(true);
+    setIsActiveInventoryTour(true);
+    setIsActiveInventoryTourIcon(true);
   }, []);
 
   const handleClickInventoryRoomPreview = useCallback(() => {
@@ -999,6 +1000,18 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
         handleClickInventoryRoomSetting();
     }
   }, [location]);
+
+  useEffect(() => {
+    if (!pathName) return; // Ensure pathName is defined
+
+    const part = pathName.split("/");
+    const result = part.slice(0, 3).join("/");
+    
+    if (result === "/dashboard_agent/inventory/tour/list") {
+      handleClickInventoryTour();
+    }
+  }, [pathName, handleClickInventoryTour]);
+
 
   // Accounting
   const handleClickAccounting = useCallback(() => {
@@ -1850,19 +1863,19 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
                     </div>
 
       <li
-        onMouseMove={() => setIsActiveInventoryFlightIcon(true)}
-        onMouseOut={() => setIsActiveInventoryFlightIcon(false)}
-        onClick={handleClickInventoryFlight}
+        onMouseMove={() => setIsActiveInventoryTourIcon(true)}
+        onMouseOut={() => setIsActiveInventoryTourIcon(false)}
+        onClick={handleClickInventoryTour}
         className={`
-          ${isActiveInventoryFlight ? "active" : ""}
+          ${isActiveInventoryTour ? "active" : ""}
          flex items-center 
          ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
         hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
       >
         <div className="flex font-semibold text-xl items-center gap-x-2">
-          <MdOutlineFlight
+          <FaMapMarkedAlt
             className={`${
-              isActiveInventoryFlightIcon || isActiveInventoryFlight
+              isActiveInventoryTourIcon || isActiveInventoryTour
                 ? "text-mainColor"
                 : "text-white"
             }`}
@@ -1870,17 +1883,17 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
           {!isSidebarCollapsed && (
             <span
               className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
-                isActiveInventoryFlight ? "text-mainColor" : "text-white"
+                isActiveInventoryTour ? "text-mainColor" : "text-white"
               }`}
             >
-              Flight
+              Tour
             </span>
           )}
         </div>
         {!isSidebarCollapsed && (
           <IoIosArrowForward
             className={`${
-              isActiveInventoryFlight ? "text-mainColor rotate-90" : "text-white rotate-0"
+              isActiveInventoryTour ? "text-mainColor rotate-90" : "text-white rotate-0"
             } text-xl transition-all duration-300 group-hover:text-mainColor`}
           />
         )}
@@ -1889,6 +1902,8 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
           </div>
         </ul>
       </div>
+
+
 
       {/* <div
         className={`${

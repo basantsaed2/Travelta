@@ -60,7 +60,7 @@ export { default as EditRoomAvailabilityLayout } from "./AgentLayouts/Inventory/
 
 //Tours
 //Tour Review
-export { default as TourLayout } from "./AgentLayouts/Inventory/Tours/TourReview/TourLayout";
+export { default as TourLayout } from "./AgentLayouts/Inventory/Tours/TourReview/TourPageLayout";
 export { default as AddTourLayout } from "./AgentLayouts/Inventory/Tours/TourReview/AddTourLayout";
 export { default as EditTourLayout } from "./AgentLayouts/Inventory/Tours/TourReview/EditTourLayout";
 
