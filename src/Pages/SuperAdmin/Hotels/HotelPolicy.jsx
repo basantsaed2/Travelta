@@ -4,29 +4,51 @@ const HotelPolicy = ({ onPoliciesChange }) => {
   const [isAdding, setIsAdding] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [images, setImages] = useState([]);
   const [policies, setPolicies] = useState([]);
 
   useEffect(() => {
-    // Notify the parent whenever policies are updated
     onPoliciesChange(policies);
   }, [policies, onPoliciesChange]);
 
-  const handleAddClick = () => {
-    setIsAdding(true);
+  // Convert selected images to Base64
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    const imagePromises = files.map((file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+      });
+    });
+
+    Promise.all(imagePromises)
+      .then((base64Images) => setImages([...images, ...base64Images]))
+      .catch((err) => console.error("Error converting images:", err));
+  };
+
+  // Remove an image before saving
+  const handleRemoveImage = (index) => {
+    const updatedImages = images.filter((_, i) => i !== index);
+    setImages(updatedImages);
   };
 
   const handleSavePolicy = () => {
-    // Add the new policy to the list
-    const newPolicies = [...policies, { title, description }];
-    setPolicies(newPolicies);
+    if (!title.trim() || !description.trim()) return;
+
+    const newPolicy = { title, description, images };
+    setPolicies([...policies, newPolicy]);
+    
+    // Clear input fields
     setTitle("");
     setDescription("");
+    setImages([]);
     setIsAdding(false);
   };
 
   const handleDeletePolicy = (index) => {
-    const updatedPolicies = policies.filter((_, idx) => idx !== index);
-    setPolicies(updatedPolicies);
+    setPolicies(policies.filter((_, i) => i !== index));
   };
 
   return (
@@ -37,7 +59,7 @@ const HotelPolicy = ({ onPoliciesChange }) => {
         <label className="text-lg text-gray-700">Enter Hotel Policy:</label>
         {!isAdding && (
           <button
-            onClick={handleAddClick}
+            onClick={() => setIsAdding(true)}
             className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-lg hover:bg-blue-600"
           >
             Add Policy
@@ -61,44 +83,63 @@ const HotelPolicy = ({ onPoliciesChange }) => {
             className="border border-gray-300 p-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows="3"
           ></textarea>
+
+          {/* Image Upload Section */}
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImageUpload}
+            className="border border-gray-300 p-2 rounded-md w-full"
+          />
+
+          {/* Preview Uploaded Images */}
+          <div className="flex gap-2 mt-2 flex-wrap">
+            {images.map((img, index) => (
+              <div key={index} className="relative">
+                <img src={img} alt="Preview" className="w-24 h-24 object-cover rounded-md border" />
+                <button
+                  onClick={() => handleRemoveImage(index)}
+                  className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 text-xs"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+
           <button
             onClick={handleSavePolicy}
-            className="bg-mainColor text-white px-6 py-2 rounded-md shadow-md hover:bg-green-600"
+            className="bg-green-500 text-white px-6 py-2 rounded-md shadow-md hover:bg-green-600"
           >
             Save Policy
           </button>
         </div>
       )}
 
+      {/* Display Saved Policies */}
       {policies.length > 0 && (
         <div className="mt-8">
           <h3 className="text-xl font-semibold mb-4">Saved Policies:</h3>
           {policies.map((policy, index) => (
             <div
               key={index}
-              className="border border-gray-200 p-4 rounded-md mb-4 shadow-sm bg-gray-50 flex justify-between items-center"
+              className="border border-gray-200 p-4 rounded-md mb-4 shadow-sm bg-gray-50"
             >
               <div>
-                <h4 className="font-bold text-gray-800">Title: {policy.title || "N/A"}</h4>
-                <p className="text-gray-700">Description: {policy.description || "N/A"}</p>
+                <h4 className="font-bold text-gray-800">Title: {policy.title}</h4>
+                <p className="text-gray-700">Description: {policy.description}</p>
+                <div className="flex gap-2 mt-2 flex-wrap">
+                  {policy.images.map((img, imgIndex) => (
+                    <img key={imgIndex} src={img} alt="Policy" className="w-24 h-24 object-cover rounded-md border" />
+                  ))}
+                </div>
               </div>
               <button
                 onClick={() => handleDeletePolicy(index)}
-                className="text-red-500 hover:text-red-600"
+                className="text-red-500 hover:text-red-600 mt-2"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M6.293 6.293a1 1 0 011.414 0L10 8.586l2.293-2.293a1 1 0 111.414 1.414L11.414 10l2.293 2.293a1 1 0 01-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 01-1.414-1.414L8.586 10 6.293 7.707a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                Delete
               </button>
             </div>
           ))}

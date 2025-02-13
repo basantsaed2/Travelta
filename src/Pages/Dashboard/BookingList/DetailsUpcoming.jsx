@@ -219,21 +219,21 @@ const handleUpdateRequest = async () => {
         {/* Supplier Emails */}
         <p className="font-semibold mt-2">📧 Emails:</p>
         <ul className="list-disc list-inside text-gray-700">
-          {item.supplier_from_email?.map((email, i) => (
-            <li key={i} className="ml-4">
-              {email}
+          
+            <li className="ml-4">
+              {item.supplier_from_email}
             </li>
-          ))}
+        
         </ul>
 
         {/* Supplier Phones */}
         <p className="font-semibold mt-2">📱 Phone Numbers:</p>
         <ul className="list-disc list-inside text-gray-700">
-          {item.supplier_from_phone?.map((phone, i) => (
-            <li key={i} className="ml-4">
-              {phone}
+         
+            <li className="ml-4">
+              {item.supplier_from_phone}
             </li>
-          ))}
+        
         </ul>
       </div>
 
@@ -347,21 +347,21 @@ const handleUpdateRequest = async () => {
         {/* Supplier Emails */}
         <p className="font-semibold mt-2">📧 Emails:</p>
         <ul className="list-disc list-inside text-gray-700">
-          {item.supplier_from_email?.map((email, i) => (
-            <li key={i} className="ml-4">
-              {email}
+          
+            <li className="ml-4">
+              {item.supplier_from_email}
             </li>
-          ))}
+        
         </ul>
 
         {/* Supplier Phones */}
         <p className="font-semibold mt-2">📱 Phone Numbers:</p>
         <ul className="list-disc list-inside text-gray-700">
-          {item.supplier_from_phone?.map((phone, i) => (
-            <li key={i} className="ml-4">
-              {phone}
+         
+            <li className="ml-4">
+              {item.supplier_from_phone}
             </li>
-          ))}
+       
         </ul>
       </div>
           {/* Special Request Section */}
@@ -654,17 +654,17 @@ const handleUpdateRequest = async () => {
         {/* Supplier Emails */}
         <p className="font-semibold mt-2">📧 Emails:</p>
         <ul className="list-disc list-inside text-gray-700">
-          {item.supplier_from_email?.map((email, i) => (
-            <li key={i} className="ml-4">{email}</li>
-          ))}
+         
+            <li className="ml-4">{item.supplier_from_email}</li>
+       
         </ul>
 
         {/* Supplier Phones */}
         <p className="font-semibold mt-2">📱 Phone Numbers:</p>
         <ul className="list-disc list-inside text-gray-700">
-          {item.supplier_from_phone?.map((phone, i) => (
-            <li key={i} className="ml-4">{phone}</li>
-          ))}
+          
+            <li  className="ml-4">{item.supplier_from_phone}</li>
+         
         </ul>
       </div>
 
@@ -776,17 +776,17 @@ const handleUpdateRequest = async () => {
         {/* Supplier Emails */}
         <p className="font-semibold mt-2">📧 Emails:</p>
         <ul className="list-disc list-inside text-gray-700">
-          {item.supplier_from_email?.map((email, i) => (
-            <li key={i} className="ml-4">{email}</li>
-          ))}
+         
+            <li  className="ml-4">{item.supplier_from_email}</li>
+         
         </ul>
 
         {/* Supplier Phones */}
         <p className="font-semibold mt-2">📱 Phone Numbers:</p>
         <ul className="list-disc list-inside text-gray-700">
-          {item.supplier_from_phone?.map((phone, i) => (
-            <li key={i} className="ml-4">{phone}</li>
-          ))}
+          
+            <li className="ml-4">{item.supplier_from_phone}</li>
+         
         </ul>
       </div>
           {/* Special Request Section */}

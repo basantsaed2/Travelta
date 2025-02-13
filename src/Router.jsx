@@ -107,6 +107,7 @@ import WalletLayoutSuper from "./Layouts/SuperAdminLayouts/PendingPaymetLayout/W
 import TourTypeLayout from "./Layouts/SuperAdminLayouts/SettingLayout/ToutTypeLayout";
 import AddTourType from "./Pages/SuperAdmin/Settings/Tabs/TourType/AddTourType";
 import BookingInvoiceLayout from "./Layouts/AgentLayouts/BookingPayments/BookingInvoiceLayout";
+import InvoicePage from "./Components/Agent Components/InvoicePage";
 
 
 const AppLayoutAgent = () => (
@@ -425,6 +426,13 @@ export const router = createBrowserRouter([
         element: <ProtectedRoute allowedRoles={['agent']} />,
         path: '/dashboard_agent',
         children: [
+
+
+          {
+            path: 'InvoicePage',
+            element: <InvoicePage/>,
+          },
+
           {
             path: '',
             element: <AppLayoutAgent/>,

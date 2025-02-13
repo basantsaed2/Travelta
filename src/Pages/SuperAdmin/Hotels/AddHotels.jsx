@@ -14,6 +14,7 @@ import HotelPolicy from "./HotelPolicy";
 import CardAccepted from "./CardAccepted";
 import Feature from "./Feature/Feature";
 import { useDelete } from "../../../Hooks/useDelete";
+import LocationHotel from "./LocationHotel";
 const AddHotels = () => {
   const [hotelName, setHotelName] = useState("");
   const [countryId, setCountryId] = useState("");
@@ -36,8 +37,10 @@ const AddHotels = () => {
   const [hotelLogo,setHotelLogo] = useState('')
   const [imageFile, setImageFile] = useState(null);
   const [nameFacility,setNameFacility] = useState('');
+  const [logoFacility,setLogoFacility] = useState('');
   const [nameTheme,setNameTheme] = useState('')
   const [nameCard,setNameCard] = useState('')
+  const [logoCard,setLogoCard] = useState('')
   const [selectedFacilities, setSelectedFacilities] = useState([]);
   const [selectedTheme, setSelectedTheme] = useState([]);
   const [selectedCard, setSelectedCard] = useState([]);
@@ -83,7 +86,7 @@ const AddHotels = () => {
   const { refetch: refetchThemes, loading: loadingThemes, data: DataThemes } = useGet({url:'https://www.travelta.online/api/super/THemes'});
   
   const { refetch: refetchCard, loading: loadingCard, data: DataCard } = useGet({url:'https://www.travelta.online/api/super/acceptedCards'});
-  const { refetch: refetchImage, loading: loadingImage, data: DataImage } = useGet({url:'https://www.travelta.online/api/super/hOtelImages'});
+  // const { refetch: refetchImage, loading: loadingImage, data: DataImage } = useGet({url:'https://www.travelta.online/api/super/hOtelImages'});
   const { deleteData:deleteFacility, loadingDelete:loadingFacility, responseDelete:responseDelFacility } = useDelete();
   const { deleteData:deleteTheme, loadingDelete:loadingTheme, responseDelete:responseDelTheme } = useDelete();
   const { deleteData:deleteCard, loadingDelete:loadingCards, responseDelete:responseDelCard } = useDelete();
@@ -101,6 +104,7 @@ const AddHotels = () => {
       const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
       const [currentFacility, setCurrentFacility] = useState(null);
       const [updatedName, setUpdatedName] = useState("");
+      const [updatedImage, setUpdatedImage] = useState("");
 
       const handleUpdateClick = (facility) => {
         setCurrentFacility(facility);
@@ -108,36 +112,57 @@ const AddHotels = () => {
         setIsUpdateDialogOpen(true);
       };
 
-
-      const handleUpdateSubmit = async () => {
-        try {
-          const response = await fetch(`https://www.travelta.online/api/super/Facility/uPdate/${currentFacility.id}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${auth.user?.token || ""}`,
-
-            },
-            body: JSON.stringify({ name: updatedName }),
-          });
-      
-          if (response.ok) {
-            auth.toastSuccess("Update successful")
-          }
-       
-      
-          const updatedFacility = await response.json(); // Assuming the API returns the updated facility
-          setFacilities((prev) =>
-            prev.map((facility) =>
-              facility.id === currentFacility.id ? updatedFacility : facility
-            )
-          );
-          setIsUpdateDialogOpen(false);
-        } catch (error) {
-          console.error("Error updating facility:", error);
-          // Optionally, display an error message to the user
+      const handleFileFacilityChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => {
+            setLogoFacility(reader.result); // Store Base64 string
+          };
         }
       };
+
+      const handleFileCardChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => {
+            setLogoCard(reader.result); // Store Base64 string
+          };
+        }
+      };
+
+      // const handleUpdateSubmit = async () => {
+      //   try {
+      //     const response = await fetch(`https://www.travelta.online/api/super/Facility/uPdate/${currentFacility.id}`, {
+      //       method: "PUT",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //         "Authorization": `Bearer ${auth.user?.token || ""}`,
+
+      //       },
+      //       body: JSON.stringify({ name: updatedName }),
+      //     });
+      
+      //     if (response.ok) {
+      //       auth.toastSuccess("Update successful")
+      //     }
+       
+      
+      //     const updatedFacility = await response.json(); // Assuming the API returns the updated facility
+      //     setFacilities((prev) =>
+      //       prev.map((facility) =>
+      //         facility.id === currentFacility.id ? updatedFacility : facility
+      //       )
+      //     );
+      //     setIsUpdateDialogOpen(false);
+      //   } catch (error) {
+      //     console.error("Error updating facility:", error);
+      //     // Optionally, display an error message to the user
+      //   }
+      // };
       
 
   // Handle delete facility
@@ -200,8 +225,8 @@ useEffect(() => {
         refetchFacilities();
         refetchThemes();
         refetchCard()
-        refetchImage()
-    }, [refetchCountry,refetchCity,refetchZone,refetchFacilities,refetchThemes,refetchCard,refetchImage])
+        // refetchImage()
+    }, [refetchCountry,refetchCity,refetchZone,refetchFacilities,refetchThemes,refetchCard])
  //  data country
     useEffect(() => {
     if(DataCountry)
@@ -251,13 +276,13 @@ useEffect(() => {
               console.log("Data card",DataCard )
               }, [DataCard])
     //  data image
-    useEffect(() => {
-                if(DataImage)
-                {
-                  setFeatureImage(DataImage)
-                }
-                console.log("Data Image",DataImage )
-              }, [DataImage])          
+    // useEffect(() => {
+    //             if(DataImage)
+    //             {
+    //               setFeatureImage(DataImage)
+    //             }
+    //             console.log("Data Image",DataImage )
+    //           }, [DataImage])          
 
     // Handle image file input change
     const handleImageChange = (e) => {
@@ -271,8 +296,7 @@ useEffect(() => {
         reader.readAsDataURL(file);
       }
     };
-    
-    
+
     const removeImageselect = (index) => {
       const newImages = images.filter((_, i) => i !== index);
       setImages(newImages);
@@ -462,7 +486,7 @@ useEffect(() => {
 
 // Ensure selectedFacilities and selectedTheme contain valid data
 // Append policies
-policies.forEach((policy) => formData.append("policies[]", policy));
+formData.append("policies[]",JSON.stringify(policies))
 
 // Append facilities
 selectedFacilities.forEach((facility) =>
@@ -492,9 +516,9 @@ console.log("Policies:", policies);
 
    // Append each image to FormData
    
-   images.forEach(image => {
-    formData.append("images[]",image) // 'images[]' for array of images
-  });
+   
+formData.append("images[]",JSON.stringify(image)); // 'images[]' for array of images
+
 
   try {
     // Simulate an API call
@@ -513,17 +537,34 @@ console.log("Policies:", policies);
     setIsSubmitting(false); // Stop loading state
   }
   };
-
-  const handleAddFacility=(e)=>{
+  const handleAddFacility = (e) => {
     e.preventDefault();
-    if(!nameFacility){
-      auth.toastError('Enter Name')
+  
+    if (!nameFacility) {
+      auth.toastError("Enter Name");
+      return;
     }
-
+  
+    if (!logoFacility) {
+      auth.toastError("Upload a Logo");
+      return;
+    }
+  
     const formData = new FormData();
-    formData.append('name', nameFacility);
-    postDataFacility(formData, "facility Add Successful")
-  }
+    formData.append("name", nameFacility);
+    formData.append("logo", logoFacility);
+  
+    // Call the API and reset after success
+    postDataFacility(formData, "Facility Added Successfully").then(() => {
+      setNameFacility(""); 
+      setLogoFacility(""); 
+      setIsOpen(false);
+    }).catch((error) => {
+      auth.toastError("Failed to add facility"); // Handle error if needed
+    });
+  };
+  
+  
 
   const handleAddTheme=(e)=>{
     e.preventDefault();
@@ -537,17 +578,35 @@ console.log("Policies:", policies);
     postDataTheme(formData, "Theme Add Successful")
   }
 
-  const handleAddCard=(e)=>{
+  const handleAddCard = (e) => {
     e.preventDefault();
-    if(!nameCard){
-      auth.toastError('Enter Name')
+  
+    if (!nameCard) {
+      auth.toastError("Enter Name");
+      return; // Stop execution if name is missing
     }
-
+  
+    if (!logoCard) {
+      auth.toastError("Upload a Logo");
+      return; // Stop execution if logo is missing
+    }
+  
     const formData = new FormData();
-    formData.append('card_name', nameCard);
-
-    postDataCard(formData, "Accepted Card Add Successful")
-  }
+    formData.append("card_name", nameCard);
+    formData.append("logo", logoCard);
+  
+    // Call API and reset only on success
+    postDataCard(formData, "Accepted Card Added Successfully")
+      .then(() => {
+        setNameCard(""); 
+        setLogoCard(""); 
+        setIsOpenCard(false);
+      })
+      .catch((error) => {
+        auth.toastError("Failed to add card"); // Handle errors gracefully
+      });
+  };
+  
 
   const resetForm = () => {
     setHotelName("");
@@ -872,31 +931,53 @@ console.log("Policies:", policies);
     <div className="flex-1 "> 
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-3">{/* Hotel Facilities */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg p-6 w-80 relative">
-            <button
-            type="button"
-              onClick={togglePopup}
-              className="absolute right-0 top-0 m-1 text-red-700 text-3xl"
-            >
-              &times;
-            </button>
-            <h2 className="text-xl font-bold mb-4">Add Item</h2>
-            <input
-              type="text"
-              className="w-full p-2 border border-gray-300 rounded-lg mb-4"
-              placeholder="Enter Facilit name"
-              value={nameFacility}
-              onChange={(e) => setNameFacility(e.target.value)}
-            />
-            <button
-              onClick={handleAddFacility}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none w-full"
-            >
-              Submit
-            </button>
-          </div>
-        </div>
+         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+         <div className="bg-white rounded-lg p-6 w-80 relative">
+           <button
+             type="button"
+             onClick={togglePopup}
+             className="absolute right-0 top-0 m-1 text-red-700 text-3xl"
+           >
+             &times;
+           </button>
+           <h2 className="text-xl font-bold mb-4">Add Facility</h2>
+   
+           {/* Facility Name Input */}
+           <input
+             type="text"
+             className="w-full p-2 border border-gray-300 rounded-lg mb-4"
+             placeholder="Enter Facility Name"
+             value={nameFacility}
+             onChange={(e) => setNameFacility(e.target.value)}
+           />
+   
+           {/* Facility Logo Upload */}
+           <input
+             type="file"
+             accept="image/*"
+             className="w-full p-2 border border-gray-300 rounded-lg mb-4"
+             onChange={handleFileFacilityChange}
+           />
+   
+           {/* Preview Uploaded Logo */}
+           {logoFacility && (
+             <img
+               src={logoFacility}
+               alt="Facility Logo"
+               className="w-20 h-20 object-cover rounded-lg mx-auto mb-4"
+             />
+           )}
+   
+           {/* Submit Button */}
+           <button
+             type="button"
+             onClick={handleAddFacility}
+             className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none w-full"
+           >
+            {loadingDataFacility ? "Submit..." :"Submit"}
+           </button>
+         </div>
+       </div>
       )}
       <div className="mb-6 bg-white p-5">
   <div className="flex items-center justify-between">
@@ -934,62 +1015,50 @@ console.log("Policies:", policies);
 
           {/* Render Facilities Based on View */}
           {viewAll ? (
-            <div className="mb-4">
-              <h2 className="text-lg font-medium">All Hotel Facilities</h2>
-              <div className="space-y-2 flex flex-col">
-                {facilities.map((facility) => (
-                 <div key={facility.id} className="flex items-center justify-between mb-2">
-                     <FormControlLabel
-                    key={facility.id}
-                    control={
-                      <Checkbox
-                        name={facility.id}
-                        checked={selectedFacilities.includes(facility.id.toString())}
-                        onChange={handleFacilityChange}
-                      />
-                    }
-                    label={facility.name}
+        <div className="mb-4">
+        <h2 className="text-lg font-medium">All Hotel Facilities</h2>
+        <div className="space-y-2 flex flex-col">
+          {DataFacilities?.map((facility) => (
+            <div key={facility?.id} className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                {/* Facility Logo */}
+                {facility.icon && (
+                  <img
+                    src={facility.icon}
+                    alt={facility.name}
+                    className="w-8 h-8 object-cover rounded-full"
                   />
-                      <div className="flex gap-2">
-           
-            <FaTrash
-              className="text-red-500 cursor-pointer hover:text-red-700"
-              onClick={() => handleDelete(facility.id,facility.name)}
-              title="Delete Facility"
-            />
-          </div>
-                  </div>
-              
-                ))}
-                  {/* Update Dialog */}
-      <Dialog open={isUpdateDialogOpen} onClose={() => setIsUpdateDialogOpen(false)}>
-        <div className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Update Facility Name</h3>
-          <TextField
-            label="Facility Name"
-            fullWidth
-            value={updatedName}
-            onChange={(e) => setUpdatedName(e.target.value)}
-          />
-          <div className="flex justify-end gap-2 mt-4">
-            <Button
-              variant="outlined"
-              onClick={() => setIsUpdateDialogOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button variant="contained" onClick={handleUpdateSubmit}>
-              Update
-            </Button>
-          </div>
-        </div>
-      </Dialog>
+                )}
+                {/* Facility Name with Checkbox */}
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name={facility?.id}
+                      checked={selectedFacilities.includes(facility?.id.toString())}
+                      onChange={handleFacilityChange}
+                    />
+                  }
+                  label={facility?.name}
+                />
+              </div>
+      
+              {/* Delete Icon */}
+              <div className="flex gap-2">
+                <FaTrash
+                  className="text-red-500 cursor-pointer hover:text-red-700"
+                  onClick={() => handleDelete(facility.id, facility.name)}
+                  title="Delete Facility"
+                />
               </div>
             </div>
+          ))}
+        </div>
+      </div>
+      
           ) : (
             <div className="mb-4">
               <h2 className="text-lg font-medium">Most Used Hotel Facilities</h2>
-              <div className="space-y-2 flex flex-col">
+              {/* <div className="space-y-2 flex flex-col">
               {selectedFacilities.slice(0, 5).map((facility) => (
             <FormControlLabel
               key={facility.id}
@@ -1003,7 +1072,7 @@ console.log("Policies:", policies);
               label={facility.name}
             />
           ))}
-              </div>
+              </div> */}
             </div>
           )}
         </div>
@@ -1147,10 +1216,28 @@ console.log("Policies:", policies);
             <input
               type="text"
               className="w-full p-2 border border-gray-300 rounded-lg mb-4"
-              placeholder="Enter Facilit name"
+              placeholder="Enter Card name"
               value={nameCard}
               onChange={(e) => setNameCard(e.target.value)}
             />
+
+  {/* Facility Logo Upload */}
+  <input
+             type="file"
+             accept="image/*"
+             className="w-full p-2 border border-gray-300 rounded-lg mb-4"
+             onChange={handleFileCardChange}
+           />
+   
+           {/* Preview Uploaded Logo */}
+           {logoCard && (
+             <img
+               src={logoCard}
+               alt="card Logo"
+               className="w-20 h-20 object-cover rounded-lg mx-auto mb-4"
+             />
+           )}
+
             <button
               onClick={handleAddCard}
               className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none w-full"
@@ -1196,55 +1283,77 @@ console.log("Policies:", policies);
 
           {/* Render Facilities Based on View */}
           {viewAllCard ? (
-            <div className="mb-4">
-              <h2 className="text-lg font-medium">All Hotel Accepted Cards</h2>
-              <div className="space-y-2 flex flex-col">
-                {card.map((card) => (
-                   <div key={card.id} className="flex items-center justify-between mb-2">
-                        <FormControlLabel
-                    key={card.id}
-                    control={
-                      <Checkbox
-                        name={card.id}
-                        checked={selectedCard.includes(card.id.toString())}
-                        onChange={handleCardChange}
-                      />
-                    }
-                    label={card.card_name}
-                  />
-                               <div className="flex gap-2">
-           
-           <FaTrash
-             className="text-red-500 cursor-pointer hover:text-red-700"
-             onClick={() => handleDeleteCard(card.id,card.card_name)}
-             title="Delete card"
-           />
-         </div>
-                  </div>
-              
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="mb-4">
-              <h2 className="text-lg font-medium">Most Used Hotel Card</h2>
-              <div className="space-y-2 flex flex-col">
-              {selectedCard.slice(0, 5).map((card) => (
+  <div className="mb-4">
+    <h2 className="text-lg font-medium">All Hotel Accepted Cards</h2>
+    <div className="space-y-2 flex flex-col">
+      {card.map((card) => (
+        <div key={card.id} className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            {/* Card Logo/Icon */}
+            {card.icon && (
+              <img
+                src={card.icon}
+                alt={card.card_name}
+                className="w-8 h-8 object-cover rounded-md"
+              />
+            )}
+
+            {/* Checkbox with Card Name */}
             <FormControlLabel
-              key={card.id}
               control={
                 <Checkbox
                   name={card.id}
-                  checked={selectedCard.includes(card.id)}
-                  // onChange={handleFacilityChange}
+                  checked={selectedCard.includes(card.id.toString())}
+                  onChange={handleCardChange}
                 />
               }
               label={card.card_name}
             />
-          ))}
-              </div>
-            </div>
+          </div>
+
+          {/* Delete Icon */}
+          <div className="flex gap-2">
+            <FaTrash
+              className="text-red-500 cursor-pointer hover:text-red-700"
+              onClick={() => handleDeleteCard(card.id, card.card_name)}
+              title="Delete Card"
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+) : (
+  <div className="mb-4">
+    <h2 className="text-lg font-medium">Most Used Hotel Card</h2>
+    <div className="space-y-2 flex flex-col">
+      {selectedCard.slice(0, 5).map((card) => (
+        <div key={card.id} className="flex items-center gap-2">
+          {/* Card Logo/Icon */}
+          {card.logo && (
+            <img
+              src={card.logo}
+              alt={card.card_name}
+              className="w-8 h-8 object-cover rounded-md"
+            />
           )}
+
+          {/* Checkbox with Card Name */}
+          <FormControlLabel
+            control={
+              <Checkbox
+                name={card.id}
+                checked={selectedCard.includes(card.id)}
+              />
+            }
+            label={card.card_name}
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
         </div>
       )}
   <Button className="mt-4" onClick={togglePopupCard}>+ New Hotel Accepted Cards</Button>
@@ -1258,6 +1367,7 @@ console.log("Policies:", policies);
 <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-3">
   <HotelPolicy onPoliciesChange={handlePoliciesUpdate} />
 <Feature selectedFeatures={selectedFeatures} setSelectedFeatures={setSelectedFeatures}/>
+<LocationHotel/>
 </div>
 
 
