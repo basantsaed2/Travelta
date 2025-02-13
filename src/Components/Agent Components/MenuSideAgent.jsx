@@ -1020,8 +1020,6 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
   }, [location]);
 
   useEffect(() => {
-    if (!pathName) return; // Ensure pathName is defined
-
     const part = pathName.split("/");
     const result = part.slice(0, 5).join("/");
     
@@ -1890,7 +1888,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
                         onLinkClick();
                       }}
                       className={`
-                          ${isActiveInventoryTourIcon ? "active" : ""}
+                          ${isActiveInventoryTour ? "active" : ""}
                         flex items-center ${
                           isSidebarCollapsed ? "justify-center" : "justify-start"
                         } hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
@@ -1904,7 +1902,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
                         {!isSidebarCollapsed && (
                           <span
                             className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
-                              isActiveInventoryTourIcon ? "text-mainColor" : "text-white"
+                              isActiveInventoryTour ? "text-mainColor" : "text-white"
                             }`}
                           >
                             Tour
