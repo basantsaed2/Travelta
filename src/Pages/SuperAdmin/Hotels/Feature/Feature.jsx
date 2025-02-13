@@ -159,6 +159,20 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
     }
   };
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      
+      reader.onloadend = () => {
+        setNewFeature({ ...newFeature, image: reader.result }); // Store as Base64
+      };
+      
+      reader.readAsDataURL(file); // Convert image to Base64
+    }
+  };
+  
+  
   return (
     <div className="p-6 bg-gradient-to-t bg-white shadow-md rounded-lg">
     {loadingFeature ? (
@@ -285,46 +299,64 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
 
         {/* Update Feature Form (Popup) */}
         {showPopup && selectedFeatures.length > 0 && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-8 rounded-lg max-w-lg">
-              <h3 className="text-xl font-semibold text-indigo-600 mb-4">Update Selected Features</h3>
-              <input
-                type="text"
-                value={newFeature.name}
-                onChange={(e) => setNewFeature({ ...newFeature, name: e.target.value })}
-                className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
-              />
-              <textarea
-                value={newFeature.description}
-                onChange={(e) => setNewFeature({ ...newFeature, description: e.target.value })}
-                className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
-              />
-              <input
-                type="text"
-                value={newFeature.image}
-                onChange={(e) => setNewFeature({ ...newFeature, image: e.target.value })}
-                className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
-              />
-              <div className="flex gap-4 mt-4">
-                <button
-                  type="button"
-                  onClick={handleUpdateSubmit}
-                  disabled={loadingPut}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md"
-                >
-                  {loadingPut ? "Updating..." : "Update Features"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowPopup(false)}
-                  className="px-4 py-2 bg-gray-400 text-white rounded-md"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div className="bg-white p-8 rounded-lg max-w-lg">
+      <h3 className="text-xl font-semibold text-indigo-600 mb-4">Update Selected Features</h3>
+      
+      {/* Feature Name */}
+      <input
+        type="text"
+        value={newFeature.name}
+        onChange={(e) => setNewFeature({ ...newFeature, name: e.target.value })}
+        className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
+      />
+
+      {/* Feature Description */}
+      <textarea
+        value={newFeature.description}
+        onChange={(e) => setNewFeature({ ...newFeature, description: e.target.value })}
+        className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
+      />
+
+<input
+  type="file"
+  accept="image/*"
+  onChange={(e) => handleImageUpload(e)}
+  className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
+/>
+
+
+      {/* Preview Uploaded Image */}
+      {newFeature.image && (
+        <img
+          src={newFeature.image}
+          alt="Preview"
+          className="w-full h-40 object-cover rounded-md mb-4"
+        />
+      )}
+
+      {/* Buttons */}
+      <div className="flex gap-4 mt-4">
+        <button
+          type="button"
+          onClick={handleUpdateSubmit}
+          disabled={loadingPut}
+          className="px-4 py-2 bg-blue-600 text-white rounded-md"
+        >
+          {loadingPut ? "Updating..." : "Update Features"}
+        </button>
+        <button
+          type="button"
+          onClick={() => setShowPopup(false)}
+          className="px-4 py-2 bg-gray-400 text-white rounded-md"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
       </div>
     )}
   </div>

@@ -25,6 +25,7 @@ const AddHotels = () => {
   const [rating, setRating] = useState("");
   const [video, setVideo] = useState("");
   const [webSite, setWebSite] = useState("");
+  const [location, setLocation] = useState("");
   const [images, setImages] = useState([]);
   const [policies, setPolicies] = useState([]);
   const [inputCount, setInputCount] = useState(1);
@@ -201,7 +202,7 @@ const AddHotels = () => {
     });
 
     const { postData:postDataCard, loadingPost:loadingDataCard, response:responseCard } = usePost({
-      url: "https://www.travelta.online/api/super/acceptedCard/add ",
+      url: "https://www.travelta.online/api/super/acceptedCard/add",
     });
     useEffect(() => {
       if(!loadingFacilities){
@@ -384,19 +385,19 @@ useEffect(() => {
 //     console.error("No file selected.");
 // }
 // };}
-useEffect(() => {
-  console.log("loadingPost:", loadingPost); // Debugging
-  console.log("response:", response); // Debugging
+// useEffect(() => {
+//   console.log("loadingPost:", loadingPost); // Debugging
+//   console.log("response:", response); // Debugging
 
-  if (!loadingPost) {
-    if (response) {
-      navigate(-1); // Navigate back only when the response is successful
-      resetForm()
-    } else {
-      console.error("Response does not indicate success:", response);
-    }
-  }
-}, [loadingPost, response, navigate]);
+//   if (!loadingPost) {
+//     if (response) {
+//       navigate(-1); // Navigate back only when the response is successful
+//       resetForm()
+//     } else {
+//       console.error("Response does not indicate success:", response);
+//     }
+//   }
+// }, [loadingPost, response, navigate]);
 
 
   const handleSubmit = (e) => {
@@ -451,6 +452,9 @@ useEffect(() => {
   if (!webSite) {
     auth.toastError('Please enter website link');
   }
+  if (!location) {
+    auth.toastError('Please enter location link');
+  }
 
   if (policies.length===0) {
     auth.toastError('Please enter policies');
@@ -483,6 +487,7 @@ useEffect(() => {
 
     formData.append("hotel_video_link", video);
     formData.append("hotel_website", webSite);
+    formData.append("location", location);
 
 // Ensure selectedFacilities and selectedTheme contain valid data
 // Append policies
@@ -517,8 +522,9 @@ console.log("Policies:", policies);
    // Append each image to FormData
    
    
-formData.append("images[]",JSON.stringify(image)); // 'images[]' for array of images
-
+   images.forEach((image) => {
+    formData.append("images[]", JSON.stringify(image));
+  });
 
   try {
     // Simulate an API call
@@ -918,6 +924,23 @@ formData.append("images[]",JSON.stringify(image)); // 'images[]' for array of im
   />
 </div>
 
+  {/* Hotel location */}
+  <div className="mb-6">
+  <TextField
+    fullWidth
+    variant="outlined"
+    value={location}
+    onChange={(e) => setLocation(e.target.value)}
+    label="Hotel Location Link"
+    placeholder="Enter hotel Location link"
+    required
+    className="shadow-sm"
+    InputLabelProps={{
+      className: "text-gray-700 font-semibold",
+    }}
+  />
+</div>
+
 </div>
 
 
@@ -1222,7 +1245,8 @@ formData.append("images[]",JSON.stringify(image)); // 'images[]' for array of im
             />
 
   {/* Facility Logo Upload */}
-  <input
+    {/* Facility Logo Upload */}
+    <input
              type="file"
              accept="image/*"
              className="w-full p-2 border border-gray-300 rounded-lg mb-4"
@@ -1242,7 +1266,7 @@ formData.append("images[]",JSON.stringify(image)); // 'images[]' for array of im
               onClick={handleAddCard}
               className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none w-full"
             >
-              Submit
+              {loadingDataCard? "Submit..." :"Submit"}
             </button>
           </div>
         </div>
@@ -1290,13 +1314,14 @@ formData.append("images[]",JSON.stringify(image)); // 'images[]' for array of im
         <div key={card.id} className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             {/* Card Logo/Icon */}
-            {card.icon && (
+
+            {/* {card.logo && (
               <img
-                src={card.icon}
+                src={card.logo}
                 alt={card.card_name}
                 className="w-8 h-8 object-cover rounded-md"
               />
-            )}
+            )} */}
 
             {/* Checkbox with Card Name */}
             <FormControlLabel
@@ -1367,7 +1392,7 @@ formData.append("images[]",JSON.stringify(image)); // 'images[]' for array of im
 <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-3">
   <HotelPolicy onPoliciesChange={handlePoliciesUpdate} />
 <Feature selectedFeatures={selectedFeatures} setSelectedFeatures={setSelectedFeatures}/>
-<LocationHotel/>
+{/* <LocationHotel/> */}
 </div>
 
 
