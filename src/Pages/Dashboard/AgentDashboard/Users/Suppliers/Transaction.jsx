@@ -13,6 +13,7 @@ const Transaction = () => {
   const [currentCredit, setCurrentCredit] = useState([]);
   const [historyDebit, setHistoryDebit] = useState([]);
   const [currentDebit, setCurrentDebit] = useState([]);
+  const [due, setDue] = useState(null);
   const navigate = useNavigate();
   useEffect(() => {
     refetchTransaction();
@@ -24,6 +25,7 @@ const Transaction = () => {
       setCurrentCredit(TransactionData.transactions_current_credit);
       setHistoryDebit(TransactionData.transactions_history_debt);
       setCurrentDebit(TransactionData.transactions_current_debt);
+      setDue(TransactionData.due);
     }
   }, [TransactionData]);
 
@@ -37,7 +39,7 @@ const Transaction = () => {
     if (activeTab === "History" && subTab === "Debit") return historyDebit;
     if (activeTab === "Current" && subTab === "Credit") return currentCredit;
     if (activeTab === "Current" && subTab === "Debit") return currentDebit;
-    if (activeTab === "Due") return currentDebit;
+    if (activeTab === "Due") return due;
     return [];
   };
 
@@ -118,11 +120,11 @@ const Transaction = () => {
             <div className="flex justify-between gap-4 mb-6">
               <div className="flex-1 bg-red-100 p-4 rounded shadow text-center">
                 <h3 className="text-lg font-bold">Credit</h3>
-                <p className="text-xl font-semibold">$500</p>
+                <p className="text-xl font-semibold">${due.total_credit}</p>
               </div>
               <div className="flex-1 bg-green-100 p-4 rounded shadow text-center">
                 <h3 className="text-lg font-bold">Debit</h3>
-                <p className="text-xl font-semibold">$300</p>
+                <p className="text-xl font-semibold">${due.total_debt}</p>
               </div>
             </div>
 
@@ -131,25 +133,30 @@ const Transaction = () => {
               <thead>
                 <tr className="bg-gray-200">
                   <th className="border border-gray-300 px-4 py-2">Date</th>
-                  <th className="border border-gray-300 px-4 py-2">Balance</th>
-                  <th className="border border-gray-300 px-4 py-2">Type</th>
-                  <th className="border border-gray-300 px-4 py-2">Invoice</th>
+                  <th className="border border-gray-300 px-4 py-2">Amount</th>
+                  <th className="border border-gray-300 px-4 py-2">Payment</th>
+                  <th className="border border-gray-300 px-4 py-2">Due Payment</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">2025-02-15</td>
-                  <td className="border border-gray-300 px-4 py-2">$100</td>
-                  <td className="border border-gray-300 px-4 py-2">Credit</td>
-                  <td className="border border-gray-300 px-4 py-2">INV-12345</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">2025-02-10</td>
-                  <td className="border border-gray-300 px-4 py-2">$50</td>
-                  <td className="border border-gray-300 px-4 py-2">Debit</td>
-                  <td className="border border-gray-300 px-4 py-2">INV-67890</td>
-                </tr>
-              </tbody>
+  {due.due_from_supplier.map((item) => (
+    <tr key={item.id} className="border border-gray-300 text-center">
+      <td className="border border-gray-300 px-4 py-2">{item.date}</td>
+      <td 
+        className={`border border-gray-300 px-4 py-2 font-semibold ${
+          item.payment > 0 ? "text-red-600" : "text-green-600"
+        }`}
+      >
+        ${item.amount}
+      </td>
+      <td className="border border-gray-300 px-4 py-2">
+        {item.payment > 0 ? "Credit" : "Debit"}
+      </td>
+      <td className="border border-gray-300 px-4 py-2">{item.due_payment}</td>
+    </tr>
+  ))}
+</tbody>
+
             </table>
           </div>
         )}

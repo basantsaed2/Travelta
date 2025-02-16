@@ -289,7 +289,7 @@ const ManualBooking = () => {
   const addNewMultiCityFlight = () => {
     setMultiCityFlights((prev) => [...prev, { from: "", to: "" }]);
   };
-  const [flightChildrenNumber, setFlightChildrenNumber] = useState("");
+  const [flightChildrenNumber, setFlightChildrenNumber] = useState(0);
   const [flightAdultsNumber, setFlightAdultsNumber] = useState(0);
   const [flightAdults, setFlightAdults] = useState([]);
   const [flightChildren, setFlightChildren] = useState([]);
@@ -358,7 +358,7 @@ const ManualBooking = () => {
   };
   // To track the visa details
   const [visaCountry, setVisaCountry] = useState("");
-  const [visaChildrenNumber, setVisaChildrenNumber] = useState("");
+  const [visaChildrenNumber, setVisaChildrenNumber] = useState(0);
   const [visaAdultsNumber, setVisaAdultsNumber] = useState(0);
   const [visaAdults, setVisaAdults] = useState([]);
   const [visaChildren, setVisaChildren] = useState([]);
@@ -436,7 +436,7 @@ const ManualBooking = () => {
   const [tourAdultPrice, setTourAdultPrice] = useState("");
   const [tourChildPrice, setTourChildPrice] = useState("");
   const [transportationDeparture, setTransportationDeparture] = useState("");
-  const [tourChildrenNumber, setTourChildrenNumber] = useState("");
+  const [tourChildrenNumber, setTourChildrenNumber] = useState(0);
   const [tourAdultsNumber, setTourAdultsNumber] = useState(0);
   const [tourAdults, setTourAdults] = useState([]);
   const [tourChildren, setTourChildren] = useState([]);
@@ -1385,16 +1385,19 @@ const ManualBooking = () => {
         {/* Room Types Inputs */}
         {roomTypes.length > 0 &&
   roomTypes.map((type, index) => (
-    <TextField
-      key={index}
-      fullWidth
-      label={`Room Type for Room ${index + 1}`}
-      value={type}
-      onChange={(e) => handleRoomTypeChange(index, e.target.value)}
-      variant="outlined"
-      type="text"
-      placeholder="Enter room type (e.g., Single, Double)"
-    />
+<TextField
+  select
+  key={index}
+  fullWidth
+  label={`Room Type for Room ${index + 1}`}
+  value={type}
+  onChange={(e) => handleRoomTypeChange(index, e.target.value)}
+  variant="outlined"
+  placeholder="Select Room Type"
+>
+<MenuItem value="domestic">Domestic</MenuItem>
+  <MenuItem value="international">International</MenuItem>
+</TextField>
   ))
 }
 
@@ -2375,16 +2378,21 @@ const ManualBooking = () => {
 
                       {/* Class */}
                       <div className="mb-4">
-                        <TextField
-                          label="Flight Class"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={flightClass}
-                          onChange={(e) => setFlightClass(e.target.value)}
-                          placeholder="Enter Class"
-                        />
-                      </div>
+  {/* Dropdown Menu with Three Defined MenuItems */}
+  <TextField
+    select
+    label="Select Flight Class"
+    variant="outlined"
+    fullWidth
+    className="w-full"
+    value={flightClass}
+    onChange={(e) => setFlightClass(e.target.value)}
+  >
+    <MenuItem value="first">First</MenuItem>
+    <MenuItem value="economy">Economy</MenuItem>
+    <MenuItem value="business">Business</MenuItem>
+  </TextField>
+</div>
 
                       {/* Airline */}
                       <div className="mb-4">
@@ -2855,19 +2863,17 @@ const ManualBooking = () => {
                               fullWidth
                               className="mb-2"
                             />
-                            <TextField
-                              label="Room Type"
-                              value={hotel.room_type}
-                              onChange={(e) =>
-                                handleHotelChange(
-                                  index,
-                                  "room_type",
-                                  e.target.value
-                                )
-                              }
-                              fullWidth
-                              className="mb-2"
-                            />
+                           <TextField
+  select
+  label="Room Type"
+  value={hotel.room_type}
+  onChange={(e) => handleHotelChange(index, "room_type", e.target.value)}
+  fullWidth
+  className="mb-2"
+>
+  <MenuItem value="domestic">Domestic</MenuItem>
+  <MenuItem value="international">International</MenuItem>
+</TextField>
                             <TextField
                               label="Check-In Date"
                               type="date"
