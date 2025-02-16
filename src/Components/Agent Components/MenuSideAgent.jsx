@@ -1043,8 +1043,6 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
   }, [location]);
 
   useEffect(() => {
-    if (!pathName) return; // Ensure pathName is defined
-
     const part = pathName.split("/");
     const result = part.slice(0, 5).join("/");
     
