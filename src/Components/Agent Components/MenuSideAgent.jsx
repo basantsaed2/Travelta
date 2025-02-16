@@ -65,6 +65,9 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
   const [isActiveManualBooking, setIsActiveManualBooking] = useState(
     stateLink.isActiveManualBooking ?? false
   );
+  const [isActiveBookingEngine, setIsActiveBookingEngine] = useState(
+    stateLink.isActiveBookingEngine ?? false
+  );
 
   /* Booking List*/
   const [isOpenBookingList, setIsOpenBookingList] = useState(
@@ -256,6 +259,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       isActiveBookingIcon,
       isActiveBooking,
       isActiveManualBooking,
+      isActiveBookingEngine,
 
       isOpenBookingList,
       isActiveBookingListIcon,
@@ -335,7 +339,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveBookingIcon,
     isActiveBooking,
     isActiveManualBooking,
-
+    isActiveBookingEngine,
     isOpenBookingList,
     isActiveBookingListIcon,
     isActiveBookingList,
@@ -416,7 +420,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveBookingIcon,
     isActiveBooking,
     isActiveManualBooking,
-
+    isActiveBookingEngine,
     isOpenBookingList,
     isActiveBookingListIcon,
     isActiveBookingList,
@@ -497,6 +501,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActiveBookingIcon(false);
     setIsActiveBooking(false);
     setIsActiveManualBooking(false);
+    setIsActiveBookingEngine(false);
 
     setIsOpenBookingList(false);
     setIsActiveBookingListIcon(false);
@@ -659,23 +664,22 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActiveBookingIcon(true);
     setIsActiveBooking(true);
     setIsActiveManualBooking(true);
+    
   }, []);
   useEffect(() => {
+    const pathName = location.pathname;
     const part = pathName.split("/");
     const result = part.slice(0, 3).join("/");
-
-    // Only navigate if on `/dashboard/setting` but not already on any sub-route
+  
     if (
       result === "/dashboard_agent/booking" &&
-      !["/dashboard_agent/booking/manual_booking"].some((path) =>
-        pathName.startsWith(path)
-      )
+      !["/dashboard_agent/booking/manual_booking", "/dashboard_agent/booking/booking_engine"].includes(pathName)
     ) {
       handleClickBooking();
       navigate("/dashboard_agent/booking/manual_booking");
     }
-    console.log("result", result);
-  }, [location]);
+  }, [location.pathname]); // Fixed dependency
+  
 
   /* Manual Booking */
   const handleClickManualBooking = useCallback(() => {
@@ -685,6 +689,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActiveBookingIcon(true);
     setIsActiveBooking(true);
     setIsActiveManualBooking(true);
+    setIsActiveBookingEngine(false);
   }, []);
   useEffect(() => {
     const part = pathName.split("/");
@@ -693,6 +698,24 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       handleClickManualBooking();
     }
   }, [location]);
+
+    /* Manual Booking */
+    const handleClickBookingEngine = useCallback(() => {
+      handleStateLinks();
+  
+      setIsOpenBooking(true);
+      setIsActiveBookingIcon(true);
+      setIsActiveBooking(true);
+      setIsActiveBookingEngine(true);
+      setIsActiveManualBooking(false);
+    }, []);
+    useEffect(() => {
+      const part = pathName.split("/");
+      const result = part.slice(0, 4).join("/");
+      if (result == "/dashboard_agent/booking/booking_engine") {
+        handleClickBookingEngine();
+      }
+    }, [location]);
 
   /* Booking List */
   const handleClickBookingList = useCallback(() => {
@@ -1372,6 +1395,21 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
               Manual Booking
             </li>
           </Link>
+          <Link
+            to={"booking/booking_engine"}
+            onClick={handleClickBookingEngine}
+          >
+            <li
+              className={`${
+                isActiveBookingEngine
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+                Booking Engine
+            </li>
+          </Link>
         </ul>
       </div>
 
@@ -1882,36 +1920,37 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
 
 
                     <Link
-                      to="inventory/tour/list"
-                      onMouseMove={() => setIsActiveInventoryIcon(true)}
-                      onMouseOut={() => setIsActiveInventoryIcon(false)}
-                      onClick={() => {
-                        handleClickInventoryTour();
-                        onLinkClick();
-                      }}
-                      className={`
-                          ${isActiveInventoryTourIcon ? "active" : ""}
-                        flex items-center ${
-                          isSidebarCollapsed ? "justify-center" : "justify-start"
-                        } hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
-                    >
-                      <div className="flex font-semibold text-xl items-center gap-x-2">
-                        <FaMapMarkedAlt
-                          className={`${
-                            isActiveInventoryTourIcon || isActiveInventoryTour ? "text-mainColor" : "text-white"
-                          }`}
-                        />
-                        {!isSidebarCollapsed && (
-                          <span
-                            className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
-                              isActiveInventoryTourIcon ? "text-mainColor" : "text-white"
-                            }`}
-                          >
-                            Tour
-                          </span>
-                        )}
-                      </div>  
-                    </Link>
+  to="inventory/tour/list"
+  onMouseMove={() => setIsActiveInventoryIcon(true)}
+  onMouseOut={() => setIsActiveInventoryIcon(false)} // Fix: Set to false
+  onClick={() => {
+    handleClickInventoryTour();
+    onLinkClick();
+  }}
+  className={`
+    ${isActiveInventoryTour ? "active" : ""}
+    flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-start"}
+    hover:rounded-xl p-2 hover:bg-white hover:text-mainColor
+    group transition-all duration-300`}
+>
+  <div className="flex font-semibold text-xl items-center gap-x-2">
+    <FaMapMarkedAlt
+      className={`${
+        isActiveInventoryTourIcon || isActiveInventoryTour ? "text-mainColor" : "text-white"
+      } transition-all duration-300`} // Ensure smooth transition
+    />
+    {!isSidebarCollapsed && (
+      <span
+        className={`text-base transition-all duration-300 font-TextFontRegular ml-2 ${
+          isActiveInventoryTourIcon || isActiveInventoryTour ? "text-mainColor" : "text-white"
+        }`}
+      >
+        Tour
+      </span>
+    )}
+  </div>  
+</Link>
+
 
       
           </div>

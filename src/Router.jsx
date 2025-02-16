@@ -110,6 +110,9 @@ import BookingInvoiceLayout from "./Layouts/AgentLayouts/BookingPayments/Booking
 import InvoicePage from "./Components/Agent Components/InvoicePage";
 import TourGalleryLayout from "./Layouts/AgentLayouts/Inventory/Tours/TourGallery/TourGalleryLayout";
 import TourPageLayout from "./Layouts/AgentLayouts/Inventory/Tours/TourReview/TourPageLayout";
+import BookingEngineLayout from "./Layouts/BookingLayout/BookingEngineLayout";
+import TransactionLayout from "./Layouts/AgentLayouts/Users/Suppliers/TransactionLayout";
+import DetailsTransactionLayout from "./Layouts/AgentLayouts/Users/Suppliers/DetailsTransactionLayout";
 
 
 const AppLayoutAgent = () => (
@@ -380,6 +383,11 @@ const AppInventoryTour= () => (
   <Outlet />
   </>
 );
+const AppTransaction= () => (
+  <>
+  <Outlet />
+  </>
+);
 export const router = createBrowserRouter([
 
     {
@@ -499,7 +507,15 @@ export const router = createBrowserRouter([
                       },
                       {path: 'profile/:id',
                         element: <ProfileSupplierLayout/>
+                      },
+                      {path: 'transaction/:id',
+                        element: <TransactionLayout/>
+                      },
+                      {path: 'transaction_details/:id',
+                        element: <DetailsTransactionLayout/>
                       }
+
+                   
                     ]
                   },
 
@@ -513,6 +529,10 @@ export const router = createBrowserRouter([
                   {
                     path: 'manual_booking',
                     element: <ManualBookingLayout />,
+                  },
+                  {
+                    path: 'booking_engine',
+                    element: <BookingEngineLayout />,
                   },
                 ]
               },
