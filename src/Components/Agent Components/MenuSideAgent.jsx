@@ -214,6 +214,69 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     stateLink.isActiveAccounting ?? false
   );
 
+  const [isActiveSupplierAccount, setIsActiveSupplierAccount] = useState(
+    stateLink.isActiveSupplierAccount ?? false
+  );
+
+                //Inventory Room
+                const [isOpenExpenses, setIsOpenExpenses] = useState(
+                  stateLink.isOpenExpenses ?? false
+                );
+                const [isActiveExpensesIcon, setIsActiveExpensesIcon] = useState(
+                  stateLink.isActiveExpensesIcon ?? false
+                );
+                const [isActiveExpenses, setIsActiveExpenses] = useState(
+                    stateLink.isActiveExpenses?? false
+                );
+                        //Inventory Room Setting
+                        const [isOpenListExpenses, setIsOpenListExpenses] = useState(
+                            stateLink.isOpenListExpenses ?? false
+                        );
+                        const [isActiveListExpenses, setIsActiveListExpenses] = useState(
+                            stateLink.isActiveListExpenses ?? false
+                        );
+  
+                        //Inventory Room Preview
+                        const [isOpenCategory, setIsOpenCategory] = useState(
+                          stateLink.isOpenCategory ?? false
+                        );
+                        const [isActiveCategory, setIsActiveCategory] = useState(
+                            stateLink.isActiveCategory ?? false
+                        );
+
+                        // is open payable
+                        const [isOpenPayable, setIsOpenPayable] = useState(
+                          stateLink.isOpenPayable ?? false
+                        );
+                        const [isActivePayableIcon, setIsActivePayableIcon] = useState(
+                          stateLink.isActivePayableIcon ?? false
+                        );
+                        const [isActivePayable, setIsActivePayable] = useState(
+                            stateLink.isActivePayable?? false
+                        );
+                                //Inventory Room Setting
+                                const [isOpenPayableToSupplier, setIsOpenPayableToSupplier] = useState(
+                                    stateLink.isOpenPayableToSupplier ?? false
+                                );
+                                const [isActivePayableToSupplier, setIsActivePayableToSupplier] = useState(
+                                    stateLink.isActivePayableToSupplier ?? false
+                                );
+          
+                                //Inventory Room Preview
+                                const [isOpenPaidSupplier, setIsOpenPaidSupplier] = useState(
+                                  stateLink.isOpenPaidSupplier ?? false
+                                );
+                                const [isActivePaidSupplier, setIsActivePaidSupplier] = useState(
+                                    stateLink.isActivePaidSupplier ?? false
+                                );
+
+                                const [isOpenOverDue, setIsOpenOverDue] = useState(
+                                  stateLink.isOpenOverDue ?? false
+                                );
+                                const [isActiveOverDue, setIsActiveOverDue] = useState(
+                                    stateLink.isActiveOverDue ?? false
+                                );
+
   // Settings
   const [isOpenSetting, setIsOpenSetting] = useState(
     stateLink.isOpenSetting ?? false
@@ -300,6 +363,27 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       isActiveAccounting,
       isActiveAccountingIcon,
       isOpenAccounting,
+      isActiveSupplierAccount,
+      isActiveCategory,
+      isOpenCategory,
+      isActiveListExpenses,
+      isOpenListExpenses,
+      isActiveExpenses,
+      isActiveExpensesIcon,
+      isOpenExpenses,
+
+      isActiveOverDue,
+      isOpenOverDue,
+      isActivePaidSupplier,
+      isOpenPaidSupplier,
+      isActivePayableToSupplier,
+      isOpenPayableToSupplier,
+      isActivePayable,
+      isActivePayableIcon,
+      isOpenPayable,
+      
+
+
 
       isActiveCurrency,
       isActiveTax,
@@ -383,6 +467,24 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveAccounting,
     isActiveAccountingIcon,
     isOpenAccounting,
+    isActiveSupplierAccount,
+    isActiveCategory,
+    isOpenCategory,
+    isActiveListExpenses,
+    isOpenListExpenses,
+    isActiveExpenses,
+    isActiveExpensesIcon,
+    isOpenExpenses,
+
+    isActiveOverDue,
+    isOpenOverDue,
+    isActivePaidSupplier,
+    isOpenPaidSupplier,
+    isActivePayableToSupplier,
+    isOpenPayableToSupplier,
+    isActivePayable,
+    isActivePayableIcon,
+    isOpenPayable,
 
     isOpenInventoryRoom,
     isActiveInventoryRoom,
@@ -466,6 +568,25 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveAccounting,
     isActiveAccountingIcon,
     isOpenAccounting,
+    isActiveSupplierAccount,
+
+    isActiveCategory,
+    isOpenCategory,
+    isActiveListExpenses,
+    isOpenListExpenses,
+    isActiveExpenses,
+    isActiveExpensesIcon,
+    isOpenExpenses,
+
+    isActiveOverDue,
+    isOpenOverDue,
+    isActivePaidSupplier,
+    isOpenPaidSupplier,
+    isActivePayableToSupplier,
+    isOpenPayableToSupplier,
+    isActivePayable,
+    isActivePayableIcon,
+    isOpenPayable,
 
     isOpenInventoryRoom,
     isActiveInventoryRoom,
@@ -541,6 +662,26 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActiveAccounting(false);
     setIsActiveAccountingIcon(false);
     setIsOpenAccounting(false);
+    setIsActiveSupplierAccount(false);
+
+    setIsActiveCategory(false)
+    setIsOpenCategory(false)
+    setIsActiveListExpenses(false)
+    setIsOpenListExpenses(false)
+    setIsActiveExpenses(false)
+    setIsActiveExpensesIcon(false)
+    setIsOpenExpenses(false)
+
+    setIsActiveOverDue(false)
+    setIsOpenOverDue(false)
+    setIsActivePaidSupplier(false)
+    setIsOpenPaidSupplier(false)
+    setIsActivePayableToSupplier(false)
+    setIsOpenPayableToSupplier(false)
+    setIsActivePayable(false)
+    setIsActivePayableIcon(false)
+    setIsOpenPayable(false)
+    
 
     setIsActiveSetting(false);
     setIsActiveSettingIcon(false);
@@ -1065,12 +1206,185 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     const result = part.slice(0, 3).join("/");
 
     // Only navigate if on `/dashboard/setting` but not already on any sub-route
-    if (result === "/dashboard_agent/IncomingPage") {
+    if (result === "/dashboard_agent/IncomingPage"
+      &&
+      ![
+        "/dashboard_agent/IncomingPage/account_supplier"
+      ].some((path) => pathName.startsWith(path))
+    ) {
       handleClickAccounting();
     
     }
     console.log("result", result);
   }, [location]);
+
+  const handleClickSuppliersAccount = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenAccounting(true);
+    setIsActiveAccountingIcon(true);
+    setIsActiveAccounting(true);
+    setIsActiveSupplierAccount(true);
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 4).join("/");
+    if (result == "/dashboard_agent/IncomingPage/account_supplier") {
+      handleClickSuppliersAccount();
+    }
+  }, [location]);
+
+  const handleClickExpenses = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenAccounting(true);
+    setIsActiveAccountingIcon(true);
+    setIsActiveAccounting(true);
+
+    setIsOpenExpenses(true);
+    setIsActiveExpenses(true);
+    setIsActiveExpensesIcon(true);
+  }, []);
+
+  const handleClickListExpenses = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenAccounting(true);
+    setIsActiveAccountingIcon(true);
+    setIsActiveAccounting(true);
+
+    setIsOpenExpenses(true);
+    setIsActiveExpenses(true);
+    setIsActiveExpensesIcon(true);
+
+    setIsOpenListExpenses(true);
+    setIsActiveListExpenses(true);
+  }, []);
+
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 5).join("/");
+    if (
+      result === "/dashboard_agent/IncomingPage/expenses/list_expenses") {
+      handleClickListExpenses();
+    }
+  }, [location]);
+
+
+    /* Category */
+    const handleClickCategory = useCallback(() => {
+      handleStateLinks();
+  
+      setIsOpenAccounting(true);
+      setIsActiveAccountingIcon(true);
+      setIsActiveAccounting(true);
+  
+      setIsOpenExpenses(true);
+      setIsActiveExpenses(true);
+      setIsActiveExpensesIcon(true);
+  
+      setIsOpenCategory(true);
+      setIsActiveCategory(true);
+    }, []);
+  
+    useEffect(() => {
+      const part = pathName.split("/");
+      const result = part.slice(0, 5).join("/");
+      if (
+        result === "/dashboard_agent/IncomingPage/expenses/category_account") {
+          handleClickCategory();
+      }
+    }, [location]);
+
+
+    // payable
+    const handleClickPayable = useCallback(() => {
+      handleStateLinks();
+  
+      setIsOpenAccounting(true);
+      setIsActiveAccountingIcon(true);
+      setIsActiveAccounting(true);
+  
+      setIsOpenPayable(true);
+      setIsActivePayable(true);
+      setIsActivePayableIcon(true);
+    }, []);
+  
+    const handleClickPayableToSupplier = useCallback(() => {
+      handleStateLinks();
+  
+      setIsOpenAccounting(true);
+      setIsActiveAccountingIcon(true);
+      setIsActiveAccounting(true);
+  
+      setIsOpenPayable(true);
+      setIsActivePayable(true);
+      setIsActivePayableIcon(true);
+  
+      setIsOpenPayableToSupplier(true);
+      setIsActivePayableToSupplier(true);
+    }, []);
+  
+    useEffect(() => {
+      const part = pathName.split("/");
+      const result = part.slice(0, 5).join("/");
+      if (
+        result === "/dashboard_agent/IncomingPage/payable_to_supplier/payable_supplier") {
+          handleClickPayableToSupplier();
+      }
+    }, [location]);
+  
+  
+      /* Category */
+      const handleClickPaidSupplier = useCallback(() => {
+        handleStateLinks();
+    
+        setIsOpenAccounting(true);
+        setIsActiveAccountingIcon(true);
+        setIsActiveAccounting(true);
+    
+        setIsOpenPayable(true);
+        setIsActivePayable(true);
+        setIsActivePayableIcon(true);
+    
+        setIsOpenPaidSupplier(true);
+        setIsActivePaidSupplier(true);
+      }, []);
+    
+      useEffect(() => {
+        const part = pathName.split("/");
+        const result = part.slice(0, 5).join("/");
+        if (
+          result === "/dashboard_agent/IncomingPage/payable_to_supplier/paid_supplier") {
+            handleClickPaidSupplier();
+        }
+      }, [location]);
+  
+         /* overDue */
+         const handleClickOverDue = useCallback(() => {
+          handleStateLinks();
+      
+          setIsOpenAccounting(true);
+          setIsActiveAccountingIcon(true);
+          setIsActiveAccounting(true);
+      
+          setIsOpenPayable(true);
+          setIsActivePayable(true);
+          setIsActivePayableIcon(true);
+      
+          setIsOpenOverDue(true);
+          setIsActiveOverDue(true);
+        }, []);
+      
+        useEffect(() => {
+          const part = pathName.split("/");
+          const result = part.slice(0, 5).join("/");
+          if (
+            result === "/dashboard_agent/IncomingPage/payable_to_supplier/over_due") {
+              handleClickOverDue();
+          }
+        }, [location]);
+    
 
   // Setting
   const handleClickSetting = useCallback(() => {
@@ -2020,6 +2334,125 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
           />
         )}
       </Link>
+
+      <div
+  className={`overflow-hidden w-full transition-all duration-700 ${
+    isOpenAccounting && !isSidebarCollapsed ? "max-h-[200px]" : "max-h-0"
+  }`}
+>
+<ul className="list-none pl-5 flex flex-col gap-y-2 transition-all duration-700">
+  
+  {/* Supplier Link */}
+  <Link to={"IncomingPage/account_supplier"} onClick={() => { handleClickSuppliersAccount(); onLinkClick(); }}>
+    <li className={`text-lg font-medium px-4 py-2 rounded-lg transition-all duration-300 ${
+      isActiveSupplierAccount ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+    }`}>
+      Supplier
+    </li>
+  </Link>
+
+  {/* Expenses Section */}
+  <li
+    onMouseEnter={() => setIsActiveExpenses(true)}
+    onMouseLeave={() => setIsActiveExpenses(false)}
+    onClick={handleClickExpenses}
+    className={`flex items-center justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer
+      ${isActiveExpenses ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}
+    `}
+  >
+    <div className="flex items-center gap-2">
+      <MdOutlineBedroomChild className={isActiveExpenses ? "text-mainColor" : "text-white"} />
+      {!isSidebarCollapsed && <span>Expenses</span>}
+    </div>
+    {!isSidebarCollapsed && (
+      <IoIosArrowForward className={`transition-transform duration-300 ${
+        isActiveExpenses ? "rotate-90 text-mainColor" : "rotate-0 text-white"
+      }`} />
+    )}
+  </li>
+
+  {/* Expenses Dropdown */}
+  <div className={`overflow-hidden transition-all duration-700 ${
+    isOpenExpenses && !isSidebarCollapsed ? "max-h-[200px]" : "max-h-0"
+  }`}>
+    <ul className="pl-8 flex flex-col gap-y-2 transition-all duration-700">
+      {/* List Expenses */}
+      <Link to={"IncomingPage/expenses/list_expenses"} onClick={() => { handleClickListExpenses(); onLinkClick(); }}>
+        <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
+          isActiveListExpenses ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+        }`}>
+          List Expenses
+        </li>
+      </Link>
+
+      {/* Category */}
+      <Link to={"IncomingPage/expenses/category_account"} onClick={() => { handleClickCategory(); onLinkClick(); }}>
+        <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
+          isActiveCategory ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+        }`}>
+          Category
+        </li>
+      </Link>
+    </ul>
+  </div>
+
+  {/* Payable Section */}
+  <li
+    onMouseEnter={() => setIsActivePayable(true)}
+    onMouseLeave={() => setIsActivePayable(false)}
+    onClick={handleClickPayable}
+    className={`flex items-center justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer
+      ${isActivePayable ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}
+    `}
+  >
+    <div className="flex items-center gap-2">
+      <MdOutlineBedroomChild className={isActivePayable ? "text-mainColor" : "text-white"} />
+      {!isSidebarCollapsed && <span>Payable</span>}
+    </div>
+    {!isSidebarCollapsed && (
+      <IoIosArrowForward className={`transition-transform duration-300 ${
+        isActivePayable ? "rotate-90 text-mainColor" : "rotate-0 text-white"
+      }`} />
+    )}
+  </li>
+
+  {/* Payable Dropdown */}
+  <div className={`overflow-hidden transition-all duration-700 ${
+    isOpenPayable && !isSidebarCollapsed ? "max-h-[200px]" : "max-h-0"
+  }`}>
+    <ul className="pl-8 flex flex-col gap-y-2 transition-all duration-700">
+      {/* Payable To Supplier */}
+      <Link to={"IncomingPage/payable_to_supplier/payable_supplier"} onClick={() => { handleClickPayableToSupplier(); onLinkClick(); }}>
+        <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
+          isActivePayableToSupplier ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+        }`}>
+          Payable To Supplier
+        </li>
+      </Link>
+
+      {/* Paid Supplier */}
+      <Link to={"IncomingPage/payable_to_supplier/paid_supplier"} onClick={() => { handleClickPaidSupplier(); onLinkClick(); }}>
+        <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
+          isActivePaidSupplier ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+        }`}>
+          Paid Supplier
+        </li>
+      </Link>
+
+      {/* OverDue */}
+      <Link to={"IncomingPage/payable_to_supplier/over_due"} onClick={() => { handleClickOverDue(); onLinkClick(); }}>
+        <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
+          isActiveOverDue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+        }`}>
+          OverDue
+        </li>
+      </Link>
+    </ul>
+  </div>
+</ul>
+
+</div>
+
 
          {/* Settings */}
          <Link

@@ -113,6 +113,17 @@ import TourPageLayout from "./Layouts/AgentLayouts/Inventory/Tours/TourReview/To
 import BookingEngineLayout from "./Layouts/BookingLayout/BookingEngineLayout";
 import TransactionLayout from "./Layouts/AgentLayouts/Users/Suppliers/TransactionLayout";
 import DetailsTransactionLayout from "./Layouts/AgentLayouts/Users/Suppliers/DetailsTransactionLayout";
+import ComingSoon from "./Pages/Dashboard/AgentDashboard/ComingSoon/ComingSoon";
+import AccountSupplierLayout from "./Layouts/AgentLayouts/Accounting/AccountSupplierLayout";
+import TransactionAccountLayout from "./Layouts/AgentLayouts/Accounting/TransactionAccountLayout";
+import InvoiceAccountLayout from "./Layouts/AgentLayouts/Accounting/InvoiceAccountLayout";
+import CategoryExpenses from "./Layouts/AgentLayouts/Accounting/AccountExpensesLayout/CategoryExpensesLayout";
+import CategoryExpensesLayout from "./Layouts/AgentLayouts/Accounting/AccountExpensesLayout/CategoryExpensesLayout";
+import ListExpensesLayout from "./Layouts/AgentLayouts/Accounting/AccountExpensesLayout/ListExpensesLayout";
+import ExpensesLayout from "./Layouts/AgentLayouts/Accounting/AccountExpensesLayout/ExpensesLayout";
+import PayableToSupplierLayout from "./Layouts/AgentLayouts/Accounting/PayableToSupplierLayout/PayableToSupplierLayout";
+import PaidSupplierLayout from "./Layouts/AgentLayouts/Accounting/PayableToSupplierLayout/PaidSupplierLayout";
+import OverDueLayout from "./Layouts/AgentLayouts/Accounting/PayableToSupplierLayout/OverDueLayout";
 
 
 const AppLayoutAgent = () => (
@@ -383,7 +394,17 @@ const AppInventoryTour= () => (
   <Outlet />
   </>
 );
-const AppTransaction= () => (
+const AppExpenses= () => (
+  <>
+  <Outlet />
+  </>
+);
+const AppPayable= () => (
+  <>
+  <Outlet />
+  </>
+);
+const AppAccounting= () => (
   <>
   <Outlet />
   </>
@@ -454,7 +475,59 @@ export const router = createBrowserRouter([
 
               {
                 path: 'IncomingPage',
-                element: <InComing/>,
+                element: <AppAccounting/>,
+                children:[
+                  {
+                    path:"",
+                    element: <ComingSoon/>
+                  },
+                  {
+                    path:"account_supplier",
+                    element: <AccountSupplierLayout/>
+                  },
+                  {
+                    path:"account_transaction/:id",
+                    element: <TransactionAccountLayout/>
+                  },
+                  {
+                    path:"account_invoice",
+                    element: <InvoiceAccountLayout/>
+                  },
+                 {path:"expenses",
+                  element:<AppExpenses/>,
+                  children:[
+                    {
+                      path:"",
+                      element:<ExpensesLayout/>,
+                    },
+                    {
+                      path:"category_account",
+                      element:<CategoryExpensesLayout/>,
+                    },
+                    {
+                      path:"list_expenses",
+                      element:<ListExpensesLayout/>,
+                    }
+              ]},
+              {path:"payable_to_supplier",
+                element:<AppPayable/>,
+                children:[
+                  {
+                    path:"payable_supplier",
+                    element:<PayableToSupplierLayout/>,
+                  },
+                  {
+                    path:"paid_supplier",
+                    element:<PaidSupplierLayout/>,
+                  },
+                  {
+                    path:"over_due",
+                    element:<OverDueLayout/>,
+                  }
+            ]}
+
+
+                ]
               },
 
     
