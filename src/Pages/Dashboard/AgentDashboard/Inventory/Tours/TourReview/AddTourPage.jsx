@@ -1,11 +1,15 @@
 import React, { useState ,useEffect ,useRef} from 'react';
-import { TextField, MenuItem, Checkbox, InputAdornment,ListItemText,Switch, Button,FormControlLabel,RadioGroup,Radio  } from "@mui/material";
+import { TextField, MenuItem, Checkbox,  Card,
+  CardContent,
+  Typography,
+  Grid, InputAdornment,ListItemText,IconButton ,Switch,FormControl,InputLabel ,Select, Button,FormControlLabel,RadioGroup,Radio  } from "@mui/material";
 import { useGet } from '../../../../../../Hooks/useGet';
 import { usePost } from '../../../../../../Hooks/usePostJson';
 import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
 import { MdAttachMoney } from "react-icons/md";
 import { FiPercent } from "react-icons/fi";
 import { format } from 'date-fns';
+import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
 
 const AddTourPage = ({ update, setUpdate }) => {
     const { refetch: refetchList, loading: loadingList, data: listData } = useGet({url:'https://travelta.online/agent/tour/lists'});
@@ -91,6 +95,158 @@ const AddTourPage = ({ update, setUpdate }) => {
       {
         name: '',
     }]);
+
+    const [isExtraPriceEnabled, setIsExtraPriceEnabled] = useState(false);
+    const [extraPrices, setExtraPrices] = useState([
+      { name: '', price: '', currency: '', type: 'fixed' } // Default entry
+    ]);
+    
+    const [discounts, setDiscounts] = useState([
+      { from: '', to: '', discount: '', type: 'fixed' } // Default entry
+    ]);
+    
+    // Handle Extra Price Input Change
+    const handleExtraPriceChange = (e, index) => {
+      const { name, value } = e.target;
+      setExtraPrices((prev) =>
+        prev.map((item, i) => (i === index ? { ...item, [name]: value } : item))
+      );
+    };
+    
+    // Add Extra Price Entry
+    const addExtraPrice = () => {
+      setExtraPrices([...extraPrices, { name: '', price: '', currency: '', type: 'fixed' }]);
+    };
+    
+    // Remove Extra Price Entry
+    const removeExtraPrice = (index) => {
+      setExtraPrices(extraPrices.filter((_, i) => i !== index));
+    };
+    
+    // Handle Discount Change
+    const handleDiscountChange = (e, index) => {
+      const { name, value } = e.target;
+      setDiscounts((prev) =>
+        prev.map((d, i) => (i === index ? { ...d, [name]: value } : d))
+      );
+    };
+    
+    // Add Discount Entry
+    const addDiscount = () => {
+      setDiscounts([...discounts, { from: '', to: '', discount: '', type: 'fixed' }]);
+    };
+    
+    // Remove Discount Entry
+    const removeDiscount = (index) => {
+      setDiscounts(discounts.filter((_, i) => i !== index));
+    };
+
+    const [isPersonTypeEnabled, setIsPersonTypeEnabled] = useState(false);
+    const [withAccommodation, setWithAccommodation] = useState(false);
+  
+    // State for Person Type entries
+    const [persons, setPersons] = useState([
+      {
+        type: "",
+        minAge: "",
+        maxAge: "",
+        price: "",
+        currency: "USD",
+        singlePrice: "",
+        doublePrice: "",
+        triplePrice: "",
+        quadruplePrice: "",
+        singlePriceCurrency: "USD",
+        doublePriceCurrency: "USD",
+        triplePriceCurrency: "USD",
+        quadruplePriceCurrency: "USD",
+      },
+    ]);
+  
+    // State for Room Capacity entries
+    const [roomCapacities, setRoomCapacities] = useState([
+      {
+        singleChildren: "",
+        singleAdults: "",
+        doubleChildren: "",
+        doubleAdults: "",
+        tripleChildren: "",
+        tripleAdults: "",
+        quadrupleChildren: "",
+        quadrupleAdults: "",
+      },
+    ]);
+  
+    // Handler for Person Type input changes
+    const handlePersonTypeChange = (index, event) => {
+      const { name, value } = event.target;
+      const updatedPersons = [...persons];
+      updatedPersons[index][name] = value;
+      setPersons(updatedPersons);
+    };
+  
+    // Add a new Person Type entry
+    const addPersonType = () => {
+      setPersons([
+        ...persons,
+        {
+          type: "",
+          minAge: "",
+          maxAge: "",
+          price: "",
+          currency: "USD",
+          singlePrice: "",
+          doublePrice: "",
+          triplePrice: "",
+          quadruplePrice: "",
+          singlePriceCurrency: "USD",
+          doublePriceCurrency: "USD",
+          triplePriceCurrency: "USD",
+          quadruplePriceCurrency: "USD",
+        },
+      ]);
+    };
+  
+    // Remove a Person Type entry (if more than one exists)
+    const removePersonType = (index) => {
+      if (persons.length > 1) {
+        setPersons(persons.filter((_, i) => i !== index));
+      }
+    };
+  
+    // Handler for Room Capacity input changes
+    const handleRoomCapacityChange = (index, event) => {
+      const { name, value } = event.target;
+      const updatedCapacities = [...roomCapacities];
+      updatedCapacities[index][name] = value;
+      setRoomCapacities(updatedCapacities);
+    };
+  
+    // Add a new Room Capacity entry
+    const addRoomCapacity = () => {
+      setRoomCapacities([
+        ...roomCapacities,
+        {
+          singleChildren: "",
+          singleAdults: "",
+          doubleChildren: "",
+          doubleAdults: "",
+          tripleChildren: "",
+          tripleAdults: "",
+          quadrupleChildren: "",
+          quadrupleAdults: "",
+        },
+      ]);
+    };
+  
+    // Remove a Room Capacity entry (if more than one exists)
+    const removeRoomCapacity = (index) => {
+      if (roomCapacities.length > 1) {
+        setRoomCapacities(roomCapacities.filter((_, i) => i !== index));
+      }
+    };
+
+    
     
     
     const handleImageUpload = (e, index) => {
@@ -387,7 +543,7 @@ const AddTourPage = ({ update, setUpdate }) => {
     <div className="w-full p-2 md:p-6 bg-white shadow rounded">
       <div className="border-b border-gray-200">
         <nav className="flex space-x-2 xl:space-x-4">
-          {['General Details', 'Pickup & Destination','Itinerary','Policy'].map((tab) => (
+          {['General Details', 'Pickup & Destination','Itinerary','Pricing','Policy'].map((tab) => (
             <button
               key={tab}
               className={`py-2 px-4 text-sm font-medium text-gray-700 border-b-2 ${
@@ -927,6 +1083,420 @@ const AddTourPage = ({ update, setUpdate }) => {
                      </button>
                  </div>
         )}
+{activeTab === 'Pricing' && (
+  <div className="p-4 bg-gray-50 rounded-lg shadow-md">
+
+    <h2 className="text-3xl font-semibold text-gray-800 mb-6">Person Type</h2>
+    <div className='mb-6 flex flex-col gap-5'>
+      {/* Settings Card */}
+      <Card className="w-full">
+        <CardContent>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isPersonTypeEnabled}
+                    onChange={() => setIsPersonTypeEnabled(!isPersonTypeEnabled)}
+                  />
+                }
+                label="Enable Person Type"
+              />
+            </Grid>
+            {isPersonTypeEnabled && (
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={withAccommodation}
+                      onChange={() => setWithAccommodation(!withAccommodation)}
+                    />
+                  }
+                  label="With Accommodation"
+                />
+              </Grid>
+            )}
+          </Grid>
+        </CardContent>
+      </Card>
+
+      {/* Person Type Details Card */}
+      {isPersonTypeEnabled && (
+        <Card className="w-full mb-8">
+          <CardContent>
+            <Typography variant="h5" className="font-bold text-gray-800 mb-5">
+              Person Type Details
+            </Typography>
+            {persons.map((person, index) => (
+              <Grid
+                container
+                spacing={2}
+                key={index}
+                className="items-center border-b pb-4 mb-4 "
+              >
+                <Grid item xs={12} sm={6} md={4}>
+                  <TextField
+                    fullWidth
+                    label="Person Type"
+                    name="type"
+                    value={person.type}
+                    onChange={(e) => handlePersonTypeChange(index, e)}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={3} md={2}>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    label="Min Age"
+                    name="minAge"
+                    value={person.minAge}
+                    onChange={(e) => handlePersonTypeChange(index, e)}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={3} md={2}>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    label="Max Age"
+                    name="maxAge"
+                    value={person.maxAge}
+                    onChange={(e) => handlePersonTypeChange(index, e)}
+                  />
+                </Grid>
+
+                {!withAccommodation ? (
+                  <Grid item xs={12} sm={6} md={4}>
+                    <Grid container spacing={1} alignItems="center">
+                      <Grid item xs={8}>
+                        <TextField
+                          fullWidth
+                          type="number"
+                          label="Price"
+                          name="price"
+                          value={person.price}
+                          onChange={(e) => handlePersonTypeChange(index, e)}
+                        />
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Select
+                          fullWidth
+                          name="currency"
+                          value={person.currency}
+                          onChange={(e) => handlePersonTypeChange(index, e)}
+                        >
+                          <MenuItem value="USD">USD ($)</MenuItem>
+                          <MenuItem value="EUR">EUR (€)</MenuItem>
+                          <MenuItem value="EGP">EGP (ج.م)</MenuItem>
+                        </Select>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                ) : (
+                  <Grid item xs={12}>
+                    <Grid container spacing={2}>
+                      {["singlePrice", "doublePrice", "triplePrice", "quadruplePrice"].map((field) => (
+                        <Grid item xs={12} sm={6} key={field}>
+                          <Grid container spacing={1} alignItems="center">
+                            <Grid item xs={8}>
+                              <TextField
+                                fullWidth
+                                type="number"
+                                label={field.replace("Price", " Price")}
+                                name={field}
+                                value={person[field]}
+                                onChange={(e) => handlePersonTypeChange(index, e)}
+                              />
+                            </Grid>
+                            <Grid item xs={4}>
+                              <Select
+                                fullWidth
+                                name={`${field}Currency`}
+                                value={person[`${field}Currency`]}
+                                onChange={(e) => handlePersonTypeChange(index, e)}
+                              >
+                                <MenuItem value="USD">USD ($)</MenuItem>
+                                <MenuItem value="EUR">EUR (€)</MenuItem>
+                                <MenuItem value="EGP">EGP (ج.م)</MenuItem>
+                              </Select>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </Grid>
+                )}
+              {index !== 0 && (
+                <Grid item xs={12} md="auto">
+                  <IconButton
+                    onClick={() => removePersonType(index)}
+                    disabled={persons.length === 1}
+                  >
+                    <AiOutlineMinusCircle
+                      size={24}
+                      className={persons.length === 1 ? "text-gray-400" : "text-red-500 hover:text-red-700"}
+                    /> Remove
+                  </IconButton>
+                </Grid>
+              )}
+              </Grid>
+            ))}
+          {/* 
+            <Button
+              onClick={addPersonType}
+              variant="contained"
+              color="primary"
+              startIcon={<AiOutlinePlusCircle size={20} />}
+              className="mt-2"
+            >
+              Add Person Type
+            </Button> */}
+
+          <button
+              type="button"
+              onClick={addPersonType}
+              className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+            > 
+              + Add Person Type
+            </button>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Room Capacity Card (Visible when With Accommodation is enabled) */}
+      {withAccommodation && (
+        <Card className="w-full">
+          <CardContent>
+            <Typography variant="h5" className="font-bold text-gray-800 mb-4">
+              Room Capacity
+            </Typography>
+            {roomCapacities.map((room, index) => (
+              <Grid
+                container
+                spacing={2}
+                key={index}
+                className="items-center border-b pb-3 mb-3"
+              >
+                {[
+                  "singleChildren",
+                  "singleAdults",
+                  "doubleChildren",
+                  "doubleAdults",
+                  "tripleChildren",
+                  "tripleAdults",
+                  "quadrupleChildren",
+                  "quadrupleAdults",
+                ].map((field) => (
+                  <Grid item xs={12} sm={6} md={3} key={field}>
+                    <TextField
+                      fullWidth
+                      type="number"
+                      label={field.replace(/([A-Z])/g, " $1")}
+                      name={field}
+                      value={room[field]}
+                      onChange={(e) => handleRoomCapacityChange(index, e)}
+                    />
+                  </Grid>
+                ))}
+                {index !== 0 && (
+                <Grid item xs={12} md="auto">
+                  <IconButton
+                    onClick={() => removeRoomCapacity(index)}
+                    disabled={roomCapacities.length === 1}
+                  >
+                    <AiOutlineMinusCircle
+                      size={24}
+                      className={roomCapacities.length === 1 ? "text-gray-400" : "text-red-500 hover:text-red-700"}
+                    />Remove
+                  </IconButton>
+                </Grid>
+                )}
+              </Grid>
+            ))}
+
+            <Button
+              onClick={addRoomCapacity}
+              variant="contained"
+              color="primary"
+              startIcon={<AiOutlinePlusCircle size={20} />}
+              className="mt-2"
+            >
+              Add Room Capacity
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+    </div>
+
+    
+    {/* Extra Price Section */}
+    <div className="mb-6 bg-white p-4 roundred-xl">
+    <h2 className="text-3xl font-semibold text-gray-800 mb-6">Extra Price</h2>
+      <div className="flex items-center p-4">
+        <input
+          type="checkbox"
+          id="enableExtraPrice"
+          checked={isExtraPriceEnabled}
+          onChange={() => setIsExtraPriceEnabled(!isExtraPriceEnabled)}
+          className="w-5 h-5 accent-blue-600"
+        />
+        <label htmlFor="enableExtraPrice" className="ml-2 text-lg font-semibold text-gray-800">
+          Enabled Extra Price
+        </label>
+      </div>
+
+      {isExtraPriceEnabled && (
+        <div className="p-4 bg-white shadow-md rounded-lg">
+          {extraPrices.map((extra, index) => (
+            <div key={index} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-4 p-4 bg-gray-50 rounded-md shadow">
+              
+              {/* Name */}
+              <TextField
+                label="Name"
+                type="text"
+                name="name"
+                value={extra.name}
+                onChange={(e) => handleExtraPriceChange(e, index)}
+                variant="outlined"
+              />
+
+              {/* Price */}
+              <TextField
+                label="Price"
+                type="number"
+                name="price"
+                value={extra.price}
+                onChange={(e) => handleExtraPriceChange(e, index)}
+                variant="outlined"
+              />
+
+              {/* Currency Selection */}
+              <TextField
+                select
+                name="currency"
+                value={extra.currency}
+                fullWidth
+                variant="outlined"
+                onChange={(e) => handleExtraPriceChange(e, index)}
+                label="Currency"
+              >
+                <MenuItem value="USD">USD</MenuItem>
+                <MenuItem value="EUR">EUR</MenuItem>
+                <MenuItem value="EGP">EGP</MenuItem>
+              </TextField>
+
+              {/* Extra Price Type */}
+              <TextField
+                select
+                name="type"
+                value={extra.type}
+                fullWidth
+                variant="outlined"
+                onChange={(e) => handleExtraPriceChange(e, index)}
+                label="Type"
+              >
+                <MenuItem value="fixed">Fixed</MenuItem>
+                <MenuItem value="percentage">Percentage</MenuItem>
+              </TextField>
+
+              {/* Remove Button (not for first entry) */}
+              {index !== 0 && (
+                <button
+                  type="button"
+                  onClick={() => removeExtraPrice(index)}
+                  className="bg-red-500 text-white mt-2 px-4 py-2 rounded shadow hover:bg-red-600 transition"
+                >
+                  - Remove
+                </button>
+              )}
+            </div>
+          ))}
+
+          {/* Add More Extra Prices Button */}
+          <button
+            type="button"
+            onClick={addExtraPrice}
+            className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+          >
+            + Add More
+          </button>
+        </div>
+      )}
+    </div>
+
+    {/* Discount By Number of People Section */}
+    <h2 className="text-3xl font-semibold text-gray-800 mb-6">Discount By Number of People</h2>
+    {discounts.map((discount, index) => (
+      <div key={index} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-5 p-4 bg-white shadow rounded-md">
+        
+        {/* From */}
+        <TextField
+          label="From"
+          type="number"
+          name="from"
+          value={discount.from}
+          onChange={(e) => handleDiscountChange(e, index)}
+          variant="outlined"
+        />
+
+        {/* To */}
+        <TextField
+          label="To"
+          type="number"
+          name="to"
+          value={discount.to}
+          onChange={(e) => handleDiscountChange(e, index)}
+          variant="outlined"
+        />
+
+        {/* Discount Value */}
+        <TextField
+          label="Discount Price"
+          type="number"
+          name="discount"
+          value={discount.discount}
+          onChange={(e) => handleDiscountChange(e, index)}
+          variant="outlined"
+        />
+
+        {/* Discount Type: Fixed or Percentage */}
+        <TextField
+          select
+          name="type"
+          value={discount.type}
+          fullWidth
+          variant="outlined"
+          onChange={(e) => handleDiscountChange(e, index)}
+          label="Discount Type"
+        >
+          <MenuItem value="percentage">Percentage</MenuItem>
+          <MenuItem value="fixed">Fixed</MenuItem>
+        </TextField>
+
+        {/* Remove Button (not for first entry) */}
+        {index !== 0 && (
+          <button
+            type="button"
+            onClick={() => removeDiscount(index)}
+            className="bg-red-500 text-white mt-2 px-4 py-2 rounded shadow hover:bg-red-600 transition"
+          >
+            - Remove
+          </button>
+        )}
+      </div>
+    ))}
+
+    {/* Add More Discounts Button */}
+    <button
+      type="button"
+      onClick={addDiscount}
+      className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+    >
+      + Add More
+    </button>
+  </div>
+)}
+
         {activeTab === 'Policy' && (
           <div className="p-4 xl:p-8 bg-gray-50 rounded-lg shadow-md">
               <h2 className="text-3xl font-semibold text-gray-800 mb-6">Policy Settings</h2>
