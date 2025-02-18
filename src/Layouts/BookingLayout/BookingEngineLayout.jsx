@@ -7,7 +7,7 @@ const BookingEngineLayout = () => {
     return (
       <>
         <TitlePage text={'Booking Engine'} />
-        <BookingEngine/>
+        <BookingEngine update={update} setUpdate={setUpdate}/>
       </>
   )
 }
