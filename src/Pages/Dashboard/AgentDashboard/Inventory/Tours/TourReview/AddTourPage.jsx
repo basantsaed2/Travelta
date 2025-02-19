@@ -1,11 +1,15 @@
 import React, { useState ,useEffect ,useRef} from 'react';
-import { TextField, MenuItem, Checkbox, InputAdornment,ListItemText,Switch, Button,FormControlLabel,RadioGroup,Radio  } from "@mui/material";
+import { TextField, MenuItem, Checkbox,  Card,
+  CardContent,
+  Typography,
+  Grid, InputAdornment,ListItemText,IconButton ,Switch,FormControl,InputLabel ,Select, Button,FormControlLabel,RadioGroup,Radio  } from "@mui/material";
 import { useGet } from '../../../../../../Hooks/useGet';
 import { usePost } from '../../../../../../Hooks/usePostJson';
-import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
+import { AiOutlinePlus, AiOutlineMinus,AiOutlineDelete  } from 'react-icons/ai';
 import { MdAttachMoney } from "react-icons/md";
 import { FiPercent } from "react-icons/fi";
 import { format } from 'date-fns';
+import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
 
 const AddTourPage = ({ update, setUpdate }) => {
     const { refetch: refetchList, loading: loadingList, data: listData } = useGet({url:'https://travelta.online/agent/tour/lists'});
@@ -16,11 +20,35 @@ const AddTourPage = ({ update, setUpdate }) => {
     const [countries, setCountries] = useState([])
     const [cities, setCities] = useState([])
     const [tours, setTours] = useState([])
+    const [currencies, setCurrencies] = useState([])
     const [selectedTours, setSelectedTours] = useState('')
     const [selectedDestinationType, setSelectedDestinationType] = useState('')
     const [quantity, setQuantity] = useState('')
     const [paymentOption, setPaymentOption] = useState('')
     const [tourArrival,setTourArrival] = useState('')
+
+    const [hotels, setHotels] = useState([{ id: 1, name: "" }]);
+    const [price, setPrice] = useState("");
+    const [selectCurrency, setSelectCurrency] = useState("");
+
+      // Handle hotel name change
+  const handleHotelChange = (index, e) => {
+    const updatedHotels = [...hotels];
+    updatedHotels[index].name = e.target.value;
+    setHotels(updatedHotels);
+  };
+
+  // Add more hotels
+  const addHotel = () => {
+    setHotels([...hotels, { id: hotels.length + 1, name: "" }]);
+  };
+
+  // Remove hotel (except the first one)
+  const removeHotel = (index) => {
+    if (hotels.length > 1) {
+      setHotels(hotels.filter((_, i) => i !== index));
+    }
+  };
 
     const [tourDetails, setTourDetails] = useState({
         name: '',
@@ -91,6 +119,158 @@ const AddTourPage = ({ update, setUpdate }) => {
       {
         name: '',
     }]);
+
+    const [isExtraPriceEnabled, setIsExtraPriceEnabled] = useState(false);
+    const [extraPrices, setExtraPrices] = useState([
+      { name: '', price: '', currency: '', type: 'fixed' } // Default entry
+    ]);
+    
+    const [discounts, setDiscounts] = useState([
+      { from: '', to: '', discount: '', type: 'fixed' } // Default entry
+    ]);
+    
+    // Handle Extra Price Input Change
+    const handleExtraPriceChange = (e, index) => {
+      const { name, value } = e.target;
+      setExtraPrices((prev) =>
+        prev.map((item, i) => (i === index ? { ...item, [name]: value } : item))
+      );
+    };
+    
+    // Add Extra Price Entry
+    const addExtraPrice = () => {
+      setExtraPrices([...extraPrices, { name: '', price: '', currency: '', type: 'fixed' }]);
+    };
+    
+    // Remove Extra Price Entry
+    const removeExtraPrice = (index) => {
+      setExtraPrices(extraPrices.filter((_, i) => i !== index));
+    };
+    
+    // Handle Discount Change
+    const handleDiscountChange = (e, index) => {
+      const { name, value } = e.target;
+      setDiscounts((prev) =>
+        prev.map((d, i) => (i === index ? { ...d, [name]: value } : d))
+      );
+    };
+    
+    // Add Discount Entry
+    const addDiscount = () => {
+      setDiscounts([...discounts, { from: '', to: '', discount: '', type: 'fixed' }]);
+    };
+    
+    // Remove Discount Entry
+    const removeDiscount = (index) => {
+      setDiscounts(discounts.filter((_, i) => i !== index));
+    };
+
+    const [isPersonTypeEnabled, setIsPersonTypeEnabled] = useState(false);
+    const [withAccommodation, setWithAccommodation] = useState(false);
+  
+    // State for Person Type entries
+    const [persons, setPersons] = useState([
+      {
+        type: "",
+        minAge: "",
+        maxAge: "",
+        price: "",
+        currency: "USD",
+        singlePrice: "",
+        doublePrice: "",
+        triplePrice: "",
+        quadruplePrice: "",
+        singlePriceCurrency: "USD",
+        doublePriceCurrency: "USD",
+        triplePriceCurrency: "USD",
+        quadruplePriceCurrency: "USD",
+      },
+    ]);
+  
+    // State for Room Capacity entries
+    const [roomCapacities, setRoomCapacities] = useState([
+      {
+        singleChildren: "",
+        singleAdults: "",
+        doubleChildren: "",
+        doubleAdults: "",
+        tripleChildren: "",
+        tripleAdults: "",
+        quadrupleChildren: "",
+        quadrupleAdults: "",
+      },
+    ]);
+  
+    // Handler for Person Type input changes
+    const handlePersonTypeChange = (index, event) => {
+      const { name, value } = event.target;
+      const updatedPersons = [...persons];
+      updatedPersons[index][name] = value;
+      setPersons(updatedPersons);
+    };
+  
+    // Add a new Person Type entry
+    const addPersonType = () => {
+      setPersons([
+        ...persons,
+        {
+          type: "",
+          minAge: "",
+          maxAge: "",
+          price: "",
+          currency: "",
+          singlePrice: "",
+          doublePrice: "",
+          triplePrice: "",
+          quadruplePrice: "",
+          singlePriceCurrency: "",
+          doublePriceCurrency: "",
+          triplePriceCurrency: "",
+          quadruplePriceCurrency: "",
+        },
+      ]);
+    };
+  
+    // Remove a Person Type entry (if more than one exists)
+    const removePersonType = (index) => {
+      if (persons.length > 1) {
+        setPersons(persons.filter((_, i) => i !== index));
+      }
+    };
+  
+    // Handler for Room Capacity input changes
+    const handleRoomCapacityChange = (index, event) => {
+      const { name, value } = event.target;
+      const updatedCapacities = [...roomCapacities];
+      updatedCapacities[index][name] = value;
+      setRoomCapacities(updatedCapacities);
+    };
+  
+    // Add a new Room Capacity entry
+    const addRoomCapacity = () => {
+      setRoomCapacities([
+        ...roomCapacities,
+        {
+          singleChildren: "",
+          singleAdults: "",
+          doubleChildren: "",
+          doubleAdults: "",
+          tripleChildren: "",
+          tripleAdults: "",
+          quadrupleChildren: "",
+          quadrupleAdults: "",
+        },
+      ]);
+    };
+  
+    // Remove a Room Capacity entry (if more than one exists)
+    const removeRoomCapacity = (index) => {
+      if (roomCapacities.length > 1) {
+        setRoomCapacities(roomCapacities.filter((_, i) => i !== index));
+      }
+    };
+
+    
     
     
     const handleImageUpload = (e, index) => {
@@ -124,6 +304,7 @@ const AddTourPage = ({ update, setUpdate }) => {
           setTours(listData.tour_types);
           setCountries(listData.countries);
           setCities(listData.cities);
+          setCurrencies(listData.currencies);
       }
     }, [listData]);
 
@@ -387,7 +568,7 @@ const AddTourPage = ({ update, setUpdate }) => {
     <div className="w-full p-2 md:p-6 bg-white shadow rounded">
       <div className="border-b border-gray-200">
         <nav className="flex space-x-2 xl:space-x-4">
-          {['General Details', 'Pickup & Destination','Itinerary','Policy'].map((tab) => (
+          {['General Details', 'Pickup & Destination','Itinerary','Pricing','Policy'].map((tab) => (
             <button
               key={tab}
               className={`py-2 px-4 text-sm font-medium text-gray-700 border-b-2 ${
@@ -927,6 +1108,487 @@ const AddTourPage = ({ update, setUpdate }) => {
                      </button>
                  </div>
         )}
+{activeTab === 'Pricing' && (
+  <div className=" bg-gray-50 rounded-lg shadow-md flex flex-col gap-5">
+
+    <div className='rounded-lg bg-white shadow-md p-4'>
+      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Pricing</h2>
+      
+      {/* Price Input */}
+      <div className="w-full mb-6 flex gap-5">
+        <TextField
+          label="Price"
+          type="number"
+          value={price}
+          onChange={(e)=>setPrice(e.target.value)}
+          variant="outlined"
+          className='w-full md:w-1/2'
+        />
+
+        {/* Currency Selection */}
+        <TextField
+          select
+          value={selectCurrency}
+          onChange={(e)=>setSelectCurrency(e.target.value)}
+          variant="outlined"
+          label="Currency"
+          className='w-full md:w-1/2'
+        >
+        {currencies.map((currency) => (
+            <MenuItem key={currency.id} value={currency.id}>
+                {currency.name}
+            </MenuItem>
+        ))}
+        </TextField>
+      </div>
+
+    </div>
+
+    <div className='flex flex-col gap-5 rounded-lg bg-white shadow-md p-4'>
+    <h2 className="text-2xl font-semibold text-gray-800">Person Type</h2>
+      {/* Settings Card */}
+      <div className="w-full flex flex-col md:flex-row gap-5 px-4">
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="enablePersonType"
+            checked={isPersonTypeEnabled}
+            onChange={() => setIsPersonTypeEnabled(!isPersonTypeEnabled)}
+            className="w-5 h-5 accent-blue-600"
+          />
+          <label htmlFor="enablePersonType" className="ml-2 text-lg font-semibold text-gray-800">
+            Enable Person Type
+          </label>
+        </div>
+        {isPersonTypeEnabled && (
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="withAccommodation"
+              checked={withAccommodation}
+              onChange={() => setWithAccommodation(!withAccommodation)}
+              className="w-5 h-5 accent-blue-600"
+            />
+            <label htmlFor="withAccommodation" className="ml-2 text-lg font-semibold text-gray-800">
+              With Accommodation
+            </label>
+          </div>
+        )}
+      </div>
+
+      {/* Person Type Details Card */}
+      {isPersonTypeEnabled && (
+       <div className="w-full">
+       <div className="font-bold text-gray-800 text-xl">Person Type Details</div>
+       {persons.map((person, index) => (
+         <div key={index} className="border-b pb-4 mb-4 flex flex-wrap items-center">
+           
+           <div className="w-full md:w-4/12 p-2">
+             <TextField
+               select
+               name="type"
+               value={person.type}
+               fullWidth
+               variant="outlined"
+               onChange={(e) => handlePersonTypeChange(index, e)}
+               label="Person Type"
+             >
+               <MenuItem value="adult">Adult</MenuItem>
+               <MenuItem value="child">Child</MenuItem>
+               <MenuItem value="infant">Infant</MenuItem>
+             </TextField>
+           </div>
+     
+           <div className="w-full md:w-3/12 xl:w-2/12 p-2">
+             <TextField
+               fullWidth
+               type="number"
+               label="Min Age"
+               name="minAge"
+               value={person.minAge}
+               onChange={(e) => handlePersonTypeChange(index, e)}
+             />
+           </div>
+     
+           <div className="w-full md:w-3/12 xl:w-2/12 p-2">
+             <TextField
+               fullWidth
+               type="number"
+               label="Max Age"
+               name="maxAge"
+               value={person.maxAge}
+               onChange={(e) => handlePersonTypeChange(index, e)}
+             />
+           </div>
+     
+           {!withAccommodation ? (
+             <div className="w-full md:w-6/12 xl:w-4/12 p-2">
+               <div className="flex flex-wrap items-center">
+                 <div className="w-8/12 p-1">
+                   <TextField
+                     fullWidth
+                     type="number"
+                     label="Price"
+                     name="price"
+                     value={person.price}
+                     onChange={(e) => handlePersonTypeChange(index, e)}
+                   />
+                 </div>
+                 <div className="w-4/12 p-1">
+                   <TextField
+                    select
+                     fullWidth
+                     label="Currency"
+                     name="currency"
+                     value={person.currency}
+                     onChange={(e) => handlePersonTypeChange(index, e)}
+                   >
+                    {currencies.map((currency) => (
+                          <MenuItem key={currency.id} value={currency.id}>
+                              {currency.name}
+                          </MenuItem>
+                      ))}
+                   </TextField>
+                 </div>
+               </div>
+             </div>
+           ) : (
+             <div className="w-full">
+               <div className="flex flex-wrap">
+                 {["singlePrice", "doublePrice", "triplePrice", "quadruplePrice"].map((field) => (
+                   <div className="w-full md:w-6/12 p-2" key={field}>
+                     <div className="flex flex-wrap items-center">
+                       <div className="w-8/12 p-1">
+                         <TextField
+                           fullWidth
+                           type="number"
+                           label={field.replace("Price", " Price")}
+                           name={field}
+                           value={person[field]}
+                           onChange={(e) => handlePersonTypeChange(index, e)}
+                         />
+                       </div>
+                       <div className="w-4/12 p-1">
+                         <TextField
+                          select
+                          fullWidth
+                          label="Currency"
+                          name={`${field}Currency`}
+                          value={person[`${field}Currency`]}
+                          onChange={(e) => handlePersonTypeChange(index, e)}
+                         >
+                          {currencies.map((currency) => (
+                              <MenuItem key={currency.id} value={currency.id}>
+                                  {currency.name}
+                              </MenuItem>
+                          ))}
+                         </TextField>
+                       </div>
+                     </div>
+                   </div>
+                 ))}
+               </div>
+             </div>
+           )}
+     
+           {index !== 0 && (
+             <div className="w-auto p-2">
+               <IconButton
+                 onClick={() => removePersonType(index)}
+                 disabled={persons.length === 1}
+               >
+                 <AiOutlineMinusCircle
+                   size={24}
+                   className={persons.length === 1 ? "text-gray-400" : "text-red-500 hover:text-red-700"}
+                 /> Remove
+               </IconButton>
+             </div>
+           )}
+     
+         </div>
+       ))}
+     
+       <button
+         type="button"
+         onClick={addPersonType}
+         className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition mt-2"
+       >
+         + Add Person Type
+       </button>
+     </div>
+     
+      )}
+      
+      {withAccommodation && (
+      <div>
+        <h3 className="text-2xl font-semibold text-gray-800 mb-4">Hotels</h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          {hotels.map((hotel, index) => (
+            <div key={hotel.id} className="relative">
+              <TextField
+                label="Hotel Name"
+                value={hotel.name}
+                onChange={(e) => handleHotelChange(index, e)}
+                variant="outlined"
+                fullWidth
+                InputProps={{
+                  endAdornment: index !== 0 && (
+                    <IconButton onClick={() => removeHotel(index)} size="small">
+                      <AiOutlineDelete color="red" />
+                    </IconButton>
+                  ),
+                }}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Add More Hotels Button */}
+        <button
+          type="button"
+          onClick={addHotel}
+          className="mt-4 bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+        >
+          + Add More Hotels
+        </button>
+      </div>
+      )}
+
+      {/* Room Capacity Card (Visible when With Accommodation is enabled) */}
+      {withAccommodation && (
+        <Card className="w-full">
+          <CardContent>
+            <Typography variant="h5" className="font-bold text-gray-800 mb-4">
+              Room Capacity
+            </Typography>
+            {roomCapacities.map((room, index) => (
+              <Grid
+                container
+                spacing={2}
+                key={index}
+                className="items-center border-b pb-3 mb-3"
+              >
+                {[
+                  "singleChildren",
+                  "singleAdults",
+                  "doubleChildren",
+                  "doubleAdults",
+                  "tripleChildren",
+                  "tripleAdults",
+                  "quadrupleChildren",
+                  "quadrupleAdults",
+                ].map((field) => (
+                  <Grid item xs={12} sm={6} md={3} key={field}>
+                    <TextField
+                      fullWidth
+                      type="number"
+                      label={field.replace(/([A-Z])/g, " $1")}
+                      name={field}
+                      value={room[field]}
+                      onChange={(e) => handleRoomCapacityChange(index, e)}
+                    />
+                  </Grid>
+                ))}
+                {index !== 0 && (
+                <Grid item xs={12} md="auto">
+                  <IconButton
+                    onClick={() => removeRoomCapacity(index)}
+                    disabled={roomCapacities.length === 1}
+                  >
+                    <AiOutlineMinusCircle
+                      size={24}
+                      className={roomCapacities.length === 1 ? "text-gray-400" : "text-red-500 hover:text-red-700"}
+                    />Remove
+                  </IconButton>
+                </Grid>
+                )}
+              </Grid>
+            ))}
+
+            <Button
+              onClick={addRoomCapacity}
+              variant="contained"
+              color="primary"
+              startIcon={<AiOutlinePlusCircle size={20} />}
+              className="mt-2"
+            >
+              Add Room Capacity
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+    </div>
+   
+    {/* Extra Price Section */}
+    <div className="mb-6 bg-white p-4 roundred-xl">
+    <h2 className="text-3xl font-semibold text-gray-800 mb-6">Extra Price</h2>
+      <div className="flex items-center">
+        <input
+          type="checkbox"
+          id="enableExtraPrice"
+          checked={isExtraPriceEnabled}
+          onChange={() => setIsExtraPriceEnabled(!isExtraPriceEnabled)}
+          className="w-5 h-5 accent-blue-600"
+        />
+        <label htmlFor="enableExtraPrice" className="ml-2 text-lg font-semibold text-gray-800">
+          Enabled Extra Price
+        </label>
+      </div>
+
+      {isExtraPriceEnabled && (
+        <div className="p-4 bg-white shadow-md rounded-lg">
+          {extraPrices.map((extra, index) => (
+            <div key={index} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-4 p-4 bg-gray-50 rounded-md shadow">
+              
+              {/* Name */}
+              <TextField
+                label="Name"
+                type="text"
+                name="name"
+                value={extra.name}
+                onChange={(e) => handleExtraPriceChange(e, index)}
+                variant="outlined"
+              />
+
+              {/* Price */}
+              <TextField
+                label="Price"
+                type="number"
+                name="price"
+                value={extra.price}
+                onChange={(e) => handleExtraPriceChange(e, index)}
+                variant="outlined"
+              />
+
+              {/* Currency Selection */}
+              <TextField
+                select
+                name="currency"
+                value={extra.currency}
+                fullWidth
+                variant="outlined"
+                onChange={(e) => handleExtraPriceChange(e, index)}
+                label="Currency"
+              >
+                <MenuItem value="USD">USD</MenuItem>
+                <MenuItem value="EUR">EUR</MenuItem>
+                <MenuItem value="EGP">EGP</MenuItem>
+              </TextField>
+
+              {/* Extra Price Type */}
+              <TextField
+                select
+                name="type"
+                value={extra.type}
+                fullWidth
+                variant="outlined"
+                onChange={(e) => handleExtraPriceChange(e, index)}
+                label="Type"
+              >
+                <MenuItem value="fixed">Fixed</MenuItem>
+                <MenuItem value="percentage">Percentage</MenuItem>
+              </TextField>
+
+              {/* Remove Button (not for first entry) */}
+              {index !== 0 && (
+                <button
+                  type="button"
+                  onClick={() => removeExtraPrice(index)}
+                  className="bg-red-500 text-white mt-2 px-4 py-2 rounded shadow hover:bg-red-600 transition"
+                >
+                  - Remove
+                </button>
+              )}
+            </div>
+          ))}
+
+          {/* Add More Extra Prices Button */}
+          <button
+            type="button"
+            onClick={addExtraPrice}
+            className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+          >
+            + Add More
+          </button>
+        </div>
+      )}
+    </div>
+
+    {/* Discount By Number of People Section */}
+    <h2 className="text-3xl font-semibold text-gray-800 mb-6">Discount By Number of People</h2>
+    {discounts.map((discount, index) => (
+      <div key={index} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-5 p-4 bg-white shadow rounded-md">
+        
+        {/* From */}
+        <TextField
+          label="From"
+          type="number"
+          name="from"
+          value={discount.from}
+          onChange={(e) => handleDiscountChange(e, index)}
+          variant="outlined"
+        />
+
+        {/* To */}
+        <TextField
+          label="To"
+          type="number"
+          name="to"
+          value={discount.to}
+          onChange={(e) => handleDiscountChange(e, index)}
+          variant="outlined"
+        />
+
+        {/* Discount Value */}
+        <TextField
+          label="Discount Price"
+          type="number"
+          name="discount"
+          value={discount.discount}
+          onChange={(e) => handleDiscountChange(e, index)}
+          variant="outlined"
+        />
+
+        {/* Discount Type: Fixed or Percentage */}
+        <TextField
+          select
+          name="type"
+          value={discount.type}
+          fullWidth
+          variant="outlined"
+          onChange={(e) => handleDiscountChange(e, index)}
+          label="Discount Type"
+        >
+          <MenuItem value="percentage">Percentage</MenuItem>
+          <MenuItem value="fixed">Fixed</MenuItem>
+        </TextField>
+
+        {/* Remove Button (not for first entry) */}
+        {index !== 0 && (
+          <button
+            type="button"
+            onClick={() => removeDiscount(index)}
+            className="bg-red-500 text-white mt-2 px-4 py-2 rounded shadow hover:bg-red-600 transition"
+          >
+            - Remove
+          </button>
+        )}
+      </div>
+    ))}
+
+    {/* Add More Discounts Button */}
+    <button
+      type="button"
+      onClick={addDiscount}
+      className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+    >
+      + Add More
+    </button>
+  </div>
+)}
+
         {activeTab === 'Policy' && (
           <div className="p-4 xl:p-8 bg-gray-50 rounded-lg shadow-md">
               <h2 className="text-3xl font-semibold text-gray-800 mb-6">Policy Settings</h2>

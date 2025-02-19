@@ -814,7 +814,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
   
     if (
       result === "/dashboard_agent/booking" &&
-      !["/dashboard_agent/booking/manual_booking", "/dashboard_agent/booking/booking_engine"].includes(pathName)
+      !["/dashboard_agent/booking/manual_booking", "/dashboard_agent/booking/booking_engine", "/dashboard_agent/booking/booking_engine/details"].includes(pathName)
     ) {
       handleClickBooking();
       navigate("/dashboard_agent/booking/manual_booking");
@@ -2243,7 +2243,8 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
   }}
   className={`
     ${isActiveInventoryTour ? "active" : ""}
-    flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-start"}
+    flex items-center 
+     ${isSidebarCollapsed ? "justify-center" : "justify-start"}
     hover:rounded-xl p-2 hover:bg-white hover:text-mainColor
     group transition-all duration-300`}
 >
@@ -2251,12 +2252,12 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     <FaMapMarkedAlt
       className={`${
         isActiveInventoryTourIcon || isActiveInventoryTour ? "text-mainColor" : "text-white"
-      } transition-all duration-300`} // Ensure smooth transition
+      } transition-all duration-300 group-hover:text-mainColor`} // Ensure smooth transition
     />
     {!isSidebarCollapsed && (
       <span
-        className={`text-base transition-all duration-300 font-TextFontRegular ml-2 ${
-          isActiveInventoryTourIcon || isActiveInventoryTour ? "text-mainColor" : "text-white"
+        className={`text-base transition-all duration-300 font-TextFontRegular group-hover:text-mainColor ml-2 ${
+          isActiveInventoryTour ? "text-mainColor" : "text-white"
         }`}
       >
         Tour
