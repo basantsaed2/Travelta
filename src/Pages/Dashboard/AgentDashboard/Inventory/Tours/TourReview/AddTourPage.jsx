@@ -175,15 +175,15 @@ const AddTourPage = ({ update, setUpdate }) => {
         minAge: "",
         maxAge: "",
         price: "",
-        currency: "USD",
+        currency: "",
         singlePrice: "",
         doublePrice: "",
         triplePrice: "",
         quadruplePrice: "",
-        singlePriceCurrency: "USD",
-        doublePriceCurrency: "USD",
-        triplePriceCurrency: "USD",
-        quadruplePriceCurrency: "USD",
+        singlePriceCurrency: "",
+        doublePriceCurrency: "",
+        triplePriceCurrency: "",
+        quadruplePriceCurrency: "",
       },
     ]);
   
@@ -244,34 +244,7 @@ const AddTourPage = ({ update, setUpdate }) => {
       const updatedCapacities = [...roomCapacities];
       updatedCapacities[index][name] = value;
       setRoomCapacities(updatedCapacities);
-    };
-  
-    // Add a new Room Capacity entry
-    const addRoomCapacity = () => {
-      setRoomCapacities([
-        ...roomCapacities,
-        {
-          singleChildren: "",
-          singleAdults: "",
-          doubleChildren: "",
-          doubleAdults: "",
-          tripleChildren: "",
-          tripleAdults: "",
-          quadrupleChildren: "",
-          quadrupleAdults: "",
-        },
-      ]);
-    };
-  
-    // Remove a Room Capacity entry (if more than one exists)
-    const removeRoomCapacity = (index) => {
-      if (roomCapacities.length > 1) {
-        setRoomCapacities(roomCapacities.filter((_, i) => i !== index));
-      }
-    };
-
-    
-    
+    };  
     
     const handleImageUpload = (e, index) => {
       const file = e.target.files[0];
@@ -559,6 +532,65 @@ const AddTourPage = ({ update, setUpdate }) => {
     // Policy & Cancellation
     formData.append("policy", policyDetails.childrenPolicy);
     formData.append("cancelation", policyDetails.cancellationPolicy ==='non_refundable' ? 1 : 0);
+
+
+// Append the boolean for extra pricing
+formData.append("enabled_extra_price", isExtraPriceEnabled ? 1 : 0);
+
+
+// Append additional pricing for single, double, triple, and quadruple
+persons.forEach((person, index) => {
+  formData.append(`pricing[${index}][pricing_item][1][currency_id]`, person.singlePriceCurrency);
+  formData.append(`pricing[${index}][pricing_item][1][price]`, person.singlePrice);
+  formData.append(`pricing[${index}][pricing_item][1][type]`, "fixed");
+
+  formData.append(`pricing[${index}][pricing_item][2][currency_id]`, person.doublePriceCurrency);
+  formData.append(`pricing[${index}][pricing_item][2][price]`, person.doublePrice);
+  formData.append(`pricing[${index}][pricing_item][2][type]`, "fixed");
+
+  formData.append(`pricing[${index}][pricing_item][3][currency_id]`, person.triplePriceCurrency);
+  formData.append(`pricing[${index}][pricing_item][3][price]`, person.triplePrice);
+  formData.append(`pricing[${index}][pricing_item][3][type]`, "fixed");
+
+  formData.append(`pricing[${index}][pricing_item][4][currency_id]`, person.quadruplePriceCurrency);
+  formData.append(`pricing[${index}][pricing_item][4][price]`, person.quadruplePrice);
+  formData.append(`pricing[${index}][pricing_item][4][type]`, "fixed");
+});
+
+// Hotels
+hotels.forEach((hotel, index) => {
+  formData.append(`hotels[${index}][name]`, hotel.name);
+});
+
+// Append Room Capacity Data
+roomCapacities.forEach((room, index) => {
+  formData.append(`tour_room[${index}][adult_single]`, room.singleAdults);
+  formData.append(`tour_room[${index}][adult_double]`, room.doubleAdults);
+  formData.append(`tour_room[${index}][adult_triple]`, room.tripleAdults);
+  formData.append(`tour_room[${index}][adult_quadruple]`, room.quadrupleAdults);
+  formData.append(`tour_room[${index}][children_single]`, room.singleChildren);
+  formData.append(`tour_room[${index}][children_double]`, room.doubleChildren);
+  formData.append(`tour_room[${index}][children_triple]`, room.tripleChildren);
+  formData.append(`tour_room[${index}][children_quadruple]`, room.quadrupleChildren);
+});
+
+// Append Extra Prices
+extraPrices.forEach((extra, index) => {
+    formData.append(`extra[${index}][name]`, extra.name);
+    formData.append(`extra[${index}][price]`, extra.price);
+    formData.append(`extra[${index}][currency_id]`, extra.currency);
+    formData.append(`extra[${index}][type]`, extra.type==='Percentage' ? 'precentage' : 'fixed'); // Can be 'one_time', 'person', or 'night'
+});
+
+// Append Discounts
+discounts.forEach((discount, index) => {
+    formData.append(`discounts[${index}][from]`, discount.from);
+    formData.append(`discounts[${index}][to]`, discount.to);
+    formData.append(`discounts[${index}][discount]`, discount.discount);
+    formData.append(`discounts[${index}][type]`, discount.type ==='Percentage' ? 'precentage' : 'fixed'); // Can be 'percentage' or 'fixed'
+});
+
+
 
     postData(formData, 'Tour Added Success');
 
@@ -1108,487 +1140,453 @@ const AddTourPage = ({ update, setUpdate }) => {
                      </button>
                  </div>
         )}
-{activeTab === 'Pricing' && (
-  <div className=" bg-gray-50 rounded-lg shadow-md flex flex-col gap-5">
+        {activeTab === 'Pricing' && (
+          <div className=" bg-gray-50 rounded-lg shadow-md flex flex-col gap-5">
 
-    <div className='rounded-lg bg-white shadow-md p-4'>
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Pricing</h2>
-      
-      {/* Price Input */}
-      <div className="w-full mb-6 flex gap-5">
-        <TextField
-          label="Price"
-          type="number"
-          value={price}
-          onChange={(e)=>setPrice(e.target.value)}
-          variant="outlined"
-          className='w-full md:w-1/2'
-        />
+            <div className='rounded-lg bg-white shadow-md p-4'>
+              <h2 className="text-2xl font-semibold text-gray-800 mb-6">Pricing</h2>
+              
+              {/* Price Input */}
+              <div className="w-full mb-6 flex gap-5">
+                <TextField
+                  label="Price"
+                  type="number"
+                  value={price}
+                  onChange={(e)=>setPrice(e.target.value)}
+                  variant="outlined"
+                  className='w-full md:w-1/2'
+                />
 
-        {/* Currency Selection */}
-        <TextField
-          select
-          value={selectCurrency}
-          onChange={(e)=>setSelectCurrency(e.target.value)}
-          variant="outlined"
-          label="Currency"
-          className='w-full md:w-1/2'
-        >
-        {currencies.map((currency) => (
-            <MenuItem key={currency.id} value={currency.id}>
-                {currency.name}
-            </MenuItem>
-        ))}
-        </TextField>
-      </div>
+                {/* Currency Selection */}
+                <TextField
+                  select
+                  value={selectCurrency}
+                  onChange={(e)=>setSelectCurrency(e.target.value)}
+                  variant="outlined"
+                  label="Currency"
+                  className='w-full md:w-1/2'
+                >
+                {currencies.map((currency) => (
+                    <MenuItem key={currency.id} value={currency.id}>
+                        {currency.name}
+                    </MenuItem>
+                ))}
+                </TextField>
+              </div>
 
-    </div>
-
-    <div className='flex flex-col gap-5 rounded-lg bg-white shadow-md p-4'>
-    <h2 className="text-2xl font-semibold text-gray-800">Person Type</h2>
-      {/* Settings Card */}
-      <div className="w-full flex flex-col md:flex-row gap-5 px-4">
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            id="enablePersonType"
-            checked={isPersonTypeEnabled}
-            onChange={() => setIsPersonTypeEnabled(!isPersonTypeEnabled)}
-            className="w-5 h-5 accent-blue-600"
-          />
-          <label htmlFor="enablePersonType" className="ml-2 text-lg font-semibold text-gray-800">
-            Enable Person Type
-          </label>
-        </div>
-        {isPersonTypeEnabled && (
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="withAccommodation"
-              checked={withAccommodation}
-              onChange={() => setWithAccommodation(!withAccommodation)}
-              className="w-5 h-5 accent-blue-600"
-            />
-            <label htmlFor="withAccommodation" className="ml-2 text-lg font-semibold text-gray-800">
-              With Accommodation
-            </label>
-          </div>
-        )}
-      </div>
-
-      {/* Person Type Details Card */}
-      {isPersonTypeEnabled && (
-       <div className="w-full">
-       <div className="font-bold text-gray-800 text-xl">Person Type Details</div>
-       {persons.map((person, index) => (
-         <div key={index} className="border-b pb-4 mb-4 flex flex-wrap items-center">
-           
-           <div className="w-full md:w-4/12 p-2">
-             <TextField
-               select
-               name="type"
-               value={person.type}
-               fullWidth
-               variant="outlined"
-               onChange={(e) => handlePersonTypeChange(index, e)}
-               label="Person Type"
-             >
-               <MenuItem value="adult">Adult</MenuItem>
-               <MenuItem value="child">Child</MenuItem>
-               <MenuItem value="infant">Infant</MenuItem>
-             </TextField>
-           </div>
-     
-           <div className="w-full md:w-3/12 xl:w-2/12 p-2">
-             <TextField
-               fullWidth
-               type="number"
-               label="Min Age"
-               name="minAge"
-               value={person.minAge}
-               onChange={(e) => handlePersonTypeChange(index, e)}
-             />
-           </div>
-     
-           <div className="w-full md:w-3/12 xl:w-2/12 p-2">
-             <TextField
-               fullWidth
-               type="number"
-               label="Max Age"
-               name="maxAge"
-               value={person.maxAge}
-               onChange={(e) => handlePersonTypeChange(index, e)}
-             />
-           </div>
-     
-           {!withAccommodation ? (
-             <div className="w-full md:w-6/12 xl:w-4/12 p-2">
-               <div className="flex flex-wrap items-center">
-                 <div className="w-8/12 p-1">
-                   <TextField
-                     fullWidth
-                     type="number"
-                     label="Price"
-                     name="price"
-                     value={person.price}
-                     onChange={(e) => handlePersonTypeChange(index, e)}
-                   />
-                 </div>
-                 <div className="w-4/12 p-1">
-                   <TextField
-                    select
-                     fullWidth
-                     label="Currency"
-                     name="currency"
-                     value={person.currency}
-                     onChange={(e) => handlePersonTypeChange(index, e)}
-                   >
-                    {currencies.map((currency) => (
-                          <MenuItem key={currency.id} value={currency.id}>
-                              {currency.name}
-                          </MenuItem>
-                      ))}
-                   </TextField>
-                 </div>
-               </div>
-             </div>
-           ) : (
-             <div className="w-full">
-               <div className="flex flex-wrap">
-                 {["singlePrice", "doublePrice", "triplePrice", "quadruplePrice"].map((field) => (
-                   <div className="w-full md:w-6/12 p-2" key={field}>
-                     <div className="flex flex-wrap items-center">
-                       <div className="w-8/12 p-1">
-                         <TextField
-                           fullWidth
-                           type="number"
-                           label={field.replace("Price", " Price")}
-                           name={field}
-                           value={person[field]}
-                           onChange={(e) => handlePersonTypeChange(index, e)}
-                         />
-                       </div>
-                       <div className="w-4/12 p-1">
-                         <TextField
-                          select
-                          fullWidth
-                          label="Currency"
-                          name={`${field}Currency`}
-                          value={person[`${field}Currency`]}
-                          onChange={(e) => handlePersonTypeChange(index, e)}
-                         >
-                          {currencies.map((currency) => (
-                              <MenuItem key={currency.id} value={currency.id}>
-                                  {currency.name}
-                              </MenuItem>
-                          ))}
-                         </TextField>
-                       </div>
-                     </div>
-                   </div>
-                 ))}
-               </div>
-             </div>
-           )}
-     
-           {index !== 0 && (
-             <div className="w-auto p-2">
-               <IconButton
-                 onClick={() => removePersonType(index)}
-                 disabled={persons.length === 1}
-               >
-                 <AiOutlineMinusCircle
-                   size={24}
-                   className={persons.length === 1 ? "text-gray-400" : "text-red-500 hover:text-red-700"}
-                 /> Remove
-               </IconButton>
-             </div>
-           )}
-     
-         </div>
-       ))}
-     
-       <button
-         type="button"
-         onClick={addPersonType}
-         className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition mt-2"
-       >
-         + Add Person Type
-       </button>
-     </div>
-     
-      )}
-      
-      {withAccommodation && (
-      <div>
-        <h3 className="text-2xl font-semibold text-gray-800 mb-4">Hotels</h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {hotels.map((hotel, index) => (
-            <div key={hotel.id} className="relative">
-              <TextField
-                label="Hotel Name"
-                value={hotel.name}
-                onChange={(e) => handleHotelChange(index, e)}
-                variant="outlined"
-                fullWidth
-                InputProps={{
-                  endAdornment: index !== 0 && (
-                    <IconButton onClick={() => removeHotel(index)} size="small">
-                      <AiOutlineDelete color="red" />
-                    </IconButton>
-                  ),
-                }}
-              />
             </div>
-          ))}
-        </div>
 
-        {/* Add More Hotels Button */}
-        <button
-          type="button"
-          onClick={addHotel}
-          className="mt-4 bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
-        >
-          + Add More Hotels
-        </button>
-      </div>
-      )}
+            <div className='flex flex-col gap-5 rounded-lg bg-white shadow-md p-4'>
+            <h2 className="text-2xl font-semibold text-gray-800">Person Type</h2>
+              {/* Settings Card */}
+              <div className="w-full flex flex-col md:flex-row gap-5">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="enablePersonType"
+                    checked={isPersonTypeEnabled}
+                    onChange={() => setIsPersonTypeEnabled(!isPersonTypeEnabled)}
+                    className="w-5 h-5 accent-blue-600"
+                  />
+                  <label htmlFor="enablePersonType" className="ml-2 text-lg font-semibold text-gray-800">
+                    Enable Person Type
+                  </label>
+                </div>
+                {isPersonTypeEnabled && (
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="withAccommodation"
+                      checked={withAccommodation}
+                      onChange={() => setWithAccommodation(!withAccommodation)}
+                      className="w-5 h-5 accent-blue-600"
+                    />
+                    <label htmlFor="withAccommodation" className="ml-2 text-lg font-semibold text-gray-800">
+                      With Accommodation
+                    </label>
+                  </div>
+                )}
+              </div>
 
-      {/* Room Capacity Card (Visible when With Accommodation is enabled) */}
-      {withAccommodation && (
-        <Card className="w-full">
-          <CardContent>
-            <Typography variant="h5" className="font-bold text-gray-800 mb-4">
-              Room Capacity
-            </Typography>
-            {roomCapacities.map((room, index) => (
-              <Grid
-                container
-                spacing={2}
-                key={index}
-                className="items-center border-b pb-3 mb-3"
-              >
-                {[
-                  "singleChildren",
-                  "singleAdults",
-                  "doubleChildren",
-                  "doubleAdults",
-                  "tripleChildren",
-                  "tripleAdults",
-                  "quadrupleChildren",
-                  "quadrupleAdults",
-                ].map((field) => (
-                  <Grid item xs={12} sm={6} md={3} key={field}>
+              {/* Person Type Details Card */}
+              {isPersonTypeEnabled && (
+              <div className="w-full p-4 border rounded-lg shadow-md bg-white">
+              <div className="font-bold text-gray-800 text-xl">Person Type Details</div>
+              {persons.map((person, index) => (
+                <div key={index} className="w-full border-b pb-4 mb-4 flex flex-wrap items-center">
+                  
+                  <div className="w-full md:w-4/12 p-2">
+                    <TextField
+                      select
+                      name="type"
+                      value={person.type}
+                      fullWidth
+                      variant="outlined"
+                      onChange={(e) => handlePersonTypeChange(index, e)}
+                      label="Person Type"
+                    >
+                      <MenuItem value="adult">Adult</MenuItem>
+                      <MenuItem value="child">Child</MenuItem>
+                      <MenuItem value="infant">Infant</MenuItem>
+                    </TextField>
+                  </div>
+            
+                  <div className="w-full md:w-3/12 xl:w-2/12 p-2">
                     <TextField
                       fullWidth
                       type="number"
-                      label={field.replace(/([A-Z])/g, " $1")}
-                      name={field}
-                      value={room[field]}
-                      onChange={(e) => handleRoomCapacityChange(index, e)}
+                      label="Min Age"
+                      name="minAge"
+                      value={person.minAge}
+                      onChange={(e) => handlePersonTypeChange(index, e)}
                     />
-                  </Grid>
-                ))}
-                {index !== 0 && (
-                <Grid item xs={12} md="auto">
-                  <IconButton
-                    onClick={() => removeRoomCapacity(index)}
-                    disabled={roomCapacities.length === 1}
-                  >
-                    <AiOutlineMinusCircle
-                      size={24}
-                      className={roomCapacities.length === 1 ? "text-gray-400" : "text-red-500 hover:text-red-700"}
-                    />Remove
-                  </IconButton>
-                </Grid>
-                )}
-              </Grid>
-            ))}
-
-            <Button
-              onClick={addRoomCapacity}
-              variant="contained"
-              color="primary"
-              startIcon={<AiOutlinePlusCircle size={20} />}
-              className="mt-2"
-            >
-              Add Room Capacity
-            </Button>
-          </CardContent>
-        </Card>
-      )}
-
-    </div>
-   
-    {/* Extra Price Section */}
-    <div className="mb-6 bg-white p-4 roundred-xl">
-    <h2 className="text-3xl font-semibold text-gray-800 mb-6">Extra Price</h2>
-      <div className="flex items-center">
-        <input
-          type="checkbox"
-          id="enableExtraPrice"
-          checked={isExtraPriceEnabled}
-          onChange={() => setIsExtraPriceEnabled(!isExtraPriceEnabled)}
-          className="w-5 h-5 accent-blue-600"
-        />
-        <label htmlFor="enableExtraPrice" className="ml-2 text-lg font-semibold text-gray-800">
-          Enabled Extra Price
-        </label>
-      </div>
-
-      {isExtraPriceEnabled && (
-        <div className="p-4 bg-white shadow-md rounded-lg">
-          {extraPrices.map((extra, index) => (
-            <div key={index} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-4 p-4 bg-gray-50 rounded-md shadow">
+                  </div>
+            
+                  <div className="w-full md:w-3/12 xl:w-2/12 p-2">
+                    <TextField
+                      fullWidth
+                      type="number"
+                      label="Max Age"
+                      name="maxAge"
+                      value={person.maxAge}
+                      onChange={(e) => handlePersonTypeChange(index, e)}
+                    />
+                  </div>
+            
+                  {!withAccommodation ? (
+                    <div className="w-full md:w-6/12 xl:w-4/12 p-2">
+                      <div className="flex flex-wrap items-center">
+                        <div className="w-8/12 p-1">
+                          <TextField
+                            fullWidth
+                            type="number"
+                            label="Price"
+                            name="price"
+                            value={person.price}
+                            onChange={(e) => handlePersonTypeChange(index, e)}
+                          />
+                        </div>
+                        <div className="w-4/12 p-1">
+                          <TextField
+                            select
+                            fullWidth
+                            label="Currency"
+                            name="currency"
+                            value={person.currency}
+                            onChange={(e) => handlePersonTypeChange(index, e)}
+                          >
+                            {currencies.map((currency) => (
+                                  <MenuItem key={currency.id} value={currency.id}>
+                                      {currency.name}
+                                  </MenuItem>
+                              ))}
+                          </TextField>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="w-full">
+                      <div className="flex flex-wrap">
+                        {["singlePrice", "doublePrice", "triplePrice", "quadruplePrice"].map((field) => (
+                          <div className="w-full md:w-6/12 p-2" key={field}>
+                            <div className="flex flex-wrap items-center">
+                              <div className="w-8/12 p-1">
+                                <TextField
+                                  fullWidth
+                                  type="number"
+                                  label={field.replace("Price", " Price")}
+                                  name={field}
+                                  value={person[field]}
+                                  onChange={(e) => handlePersonTypeChange(index, e)}
+                                />
+                              </div>
+                              <div className="w-4/12 p-1">
+                                <TextField
+                                  select
+                                  fullWidth
+                                  label="Currency"
+                                  name={`${field}Currency`}
+                                  value={person[`${field}Currency`]}
+                                  onChange={(e) => handlePersonTypeChange(index, e)}
+                                >
+                                  {currencies.map((currency) => (
+                                      <MenuItem key={currency.id} value={currency.id}>
+                                          {currency.name}
+                                      </MenuItem>
+                                  ))}
+                                </TextField>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+            
+                  {index !== 0 && (
+                    <div className="w-auto p-2">
+                      <IconButton
+                        onClick={() => removePersonType(index)}
+                        disabled={persons.length === 1}
+                      >
+                        <AiOutlineMinusCircle
+                          size={24}
+                          className={persons.length === 1 ? "text-gray-400" : "text-red-500 hover:text-red-700"}
+                        /> Remove
+                      </IconButton>
+                    </div>
+                  )}
+            
+                </div>
+              ))}
+            
+              <button
+                type="button"
+                onClick={addPersonType}
+                className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition mt-2"
+              >
+                + Add Person Type
+              </button>
+            </div>
+            
+              )}
               
-              {/* Name */}
-              <TextField
-                label="Name"
-                type="text"
-                name="name"
-                value={extra.name}
-                onChange={(e) => handleExtraPriceChange(e, index)}
-                variant="outlined"
-              />
+              {withAccommodation && (
+              <div className='w-full p-4 border rounded-lg shadow-md bg-white'>
+                <h3 className="text-2xl font-semibold text-gray-800 mb-4">Hotels</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                  {hotels.map((hotel, index) => (
+                    <div key={hotel.id} className="relative">
+                      <TextField
+                        label="Hotel Name"
+                        value={hotel.name}
+                        onChange={(e) => handleHotelChange(index, e)}
+                        variant="outlined"
+                        fullWidth
+                        InputProps={{
+                          endAdornment: index !== 0 && (
+                            <IconButton onClick={() => removeHotel(index)} size="small">
+                              <AiOutlineDelete color="red" />
+                            </IconButton>
+                          ),
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
 
-              {/* Price */}
-              <TextField
-                label="Price"
-                type="number"
-                name="price"
-                value={extra.price}
-                onChange={(e) => handleExtraPriceChange(e, index)}
-                variant="outlined"
-              />
-
-              {/* Currency Selection */}
-              <TextField
-                select
-                name="currency"
-                value={extra.currency}
-                fullWidth
-                variant="outlined"
-                onChange={(e) => handleExtraPriceChange(e, index)}
-                label="Currency"
-              >
-                <MenuItem value="USD">USD</MenuItem>
-                <MenuItem value="EUR">EUR</MenuItem>
-                <MenuItem value="EGP">EGP</MenuItem>
-              </TextField>
-
-              {/* Extra Price Type */}
-              <TextField
-                select
-                name="type"
-                value={extra.type}
-                fullWidth
-                variant="outlined"
-                onChange={(e) => handleExtraPriceChange(e, index)}
-                label="Type"
-              >
-                <MenuItem value="fixed">Fixed</MenuItem>
-                <MenuItem value="percentage">Percentage</MenuItem>
-              </TextField>
-
-              {/* Remove Button (not for first entry) */}
-              {index !== 0 && (
+                {/* Add More Hotels Button */}
                 <button
                   type="button"
-                  onClick={() => removeExtraPrice(index)}
-                  className="bg-red-500 text-white mt-2 px-4 py-2 rounded shadow hover:bg-red-600 transition"
+                  onClick={addHotel}
+                  className="mt-4 bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
                 >
-                  - Remove
+                  + Add More Hotels
                 </button>
+              </div>
+              )}
+
+              {/* Room Capacity Card (Visible when With Accommodation is enabled) */}
+              {withAccommodation && (
+              <div className="w-full p-4 border rounded-lg shadow-md bg-white">
+                <h2 className="text-lg font-bold text-gray-800 mb-4">Maximum Room Capacity</h2>
+                <div className="p-4 border rounded-lg bg-gray-100 relative">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    {["singleChildren", "singleAdults", "doubleChildren", "doubleAdults", "tripleChildren", "tripleAdults", "quadrupleChildren", "quadrupleAdults"].map((field) => (
+                      <div key={field} className="flex flex-col">
+                        <label className="text-sm font-medium text-gray-700">
+                          {field.replace(/([A-Z])/g, " $1")}:
+                        </label>
+                        <TextField
+                          type="number"
+                          name={field}
+                          value={roomCapacities[field]}
+                          onChange={(e) => handleRoomCapacityChange(e)}
+                          inputProps={{ min: 0}}
+                          fullWidth
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              )}
+
+            </div>
+          
+            {/* Extra Price Section */}
+            <div className="flex flex-col gap-4 rounded-lg bg-white shadow-md p-4">
+            <h2 className="text-2xl font-semibold text-gray-800">Extra Price</h2>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="enableExtraPrice"
+                  checked={isExtraPriceEnabled}
+                  onChange={() => setIsExtraPriceEnabled(!isExtraPriceEnabled)}
+                  className="w-5 h-5 accent-blue-600"
+                />
+                <label htmlFor="enableExtraPrice" className="ml-2 text-lg font-semibold text-gray-800">
+                  Enabled Extra Price
+                </label>
+              </div>
+
+              {isExtraPriceEnabled && (
+                <div>
+                  {extraPrices.map((extra, index) => (
+                    <div key={index} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-4 p-4 bg-gray-50 rounded-md shadow">
+                      
+                      {/* Name */}
+                      <TextField
+                        label="Name"
+                        type="text"
+                        name="name"
+                        value={extra.name}
+                        onChange={(e) => handleExtraPriceChange(e, index)}
+                        variant="outlined"
+                      />
+
+                      {/* Price */}
+                      <TextField
+                        label="Price"
+                        type="number"
+                        name="price"
+                        value={extra.price}
+                        onChange={(e) => handleExtraPriceChange(e, index)}
+                        variant="outlined"
+                      />
+
+                      {/* Currency Selection */}
+                      <TextField
+                        select
+                        name="currency"
+                        value={extra.currency}
+                        fullWidth
+                        variant="outlined"
+                        onChange={(e) => handleExtraPriceChange(e, index)}
+                        label="Currency"
+                      >
+                        <MenuItem value="USD">USD</MenuItem>
+                        <MenuItem value="EUR">EUR</MenuItem>
+                        <MenuItem value="EGP">EGP</MenuItem>
+                      </TextField>
+
+                      {/* Extra Price Type */}
+                      <TextField
+                        select
+                        name="type"
+                        value={extra.type}
+                        fullWidth
+                        variant="outlined"
+                        onChange={(e) => handleExtraPriceChange(e, index)}
+                        label="Type"
+                      >
+                        <MenuItem value="fixed">Fixed</MenuItem>
+                        <MenuItem value="percentage">Percentage</MenuItem>
+                      </TextField>
+
+                      {/* Remove Button (not for first entry) */}
+                      {index !== 0 && (
+                        <button
+                          type="button"
+                          onClick={() => removeExtraPrice(index)}
+                          className="bg-red-500 text-white mt-2 px-4 py-2 rounded shadow hover:bg-red-600 transition"
+                        >
+                          - Remove
+                        </button>
+                      )}
+                    </div>
+                  ))}
+
+                  {/* Add More Extra Prices Button */}
+                  <button
+                    type="button"
+                    onClick={addExtraPrice}
+                    className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+                  >
+                    + Add More
+                  </button>
+                </div>
               )}
             </div>
-          ))}
 
-          {/* Add More Extra Prices Button */}
-          <button
-            type="button"
-            onClick={addExtraPrice}
-            className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
-          >
-            + Add More
-          </button>
-        </div>
-      )}
-    </div>
+            {/* Discount By Number of People Section */}
+            <div className="flex flex-col gap-4 rounded-lg bg-white shadow-md p-4">
+            <h2 className="text-2xl font-semibold text-gray-800">Discount By Number of People</h2>
+            <div>
+            {discounts.map((discount, index) => (
+              <div key={index} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-4 p-4 bg-gray-50 rounded-md shadow">
+                
+                {/* From */}
+                <TextField
+                  label="From"
+                  type="number"
+                  name="from"
+                  value={discount.from}
+                  onChange={(e) => handleDiscountChange(e, index)}
+                  variant="outlined"
+                />
 
-    {/* Discount By Number of People Section */}
-    <h2 className="text-3xl font-semibold text-gray-800 mb-6">Discount By Number of People</h2>
-    {discounts.map((discount, index) => (
-      <div key={index} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-5 p-4 bg-white shadow rounded-md">
-        
-        {/* From */}
-        <TextField
-          label="From"
-          type="number"
-          name="from"
-          value={discount.from}
-          onChange={(e) => handleDiscountChange(e, index)}
-          variant="outlined"
-        />
+                {/* To */}
+                <TextField
+                  label="To"
+                  type="number"
+                  name="to"
+                  value={discount.to}
+                  onChange={(e) => handleDiscountChange(e, index)}
+                  variant="outlined"
+                />
 
-        {/* To */}
-        <TextField
-          label="To"
-          type="number"
-          name="to"
-          value={discount.to}
-          onChange={(e) => handleDiscountChange(e, index)}
-          variant="outlined"
-        />
+                {/* Discount Value */}
+                <TextField
+                  label="Discount Price"
+                  type="number"
+                  name="discount"
+                  value={discount.discount}
+                  onChange={(e) => handleDiscountChange(e, index)}
+                  variant="outlined"
+                />
 
-        {/* Discount Value */}
-        <TextField
-          label="Discount Price"
-          type="number"
-          name="discount"
-          value={discount.discount}
-          onChange={(e) => handleDiscountChange(e, index)}
-          variant="outlined"
-        />
+                {/* Discount Type: Fixed or Percentage */}
+                <TextField
+                  select
+                  name="type"
+                  value={discount.type}
+                  fullWidth
+                  variant="outlined"
+                  onChange={(e) => handleDiscountChange(e, index)}
+                  label="Discount Type"
+                >
+                  <MenuItem value="percentage">Percentage</MenuItem>
+                  <MenuItem value="fixed">Fixed</MenuItem>
+                </TextField>
 
-        {/* Discount Type: Fixed or Percentage */}
-        <TextField
-          select
-          name="type"
-          value={discount.type}
-          fullWidth
-          variant="outlined"
-          onChange={(e) => handleDiscountChange(e, index)}
-          label="Discount Type"
-        >
-          <MenuItem value="percentage">Percentage</MenuItem>
-          <MenuItem value="fixed">Fixed</MenuItem>
-        </TextField>
+                {/* Remove Button (not for first entry) */}
+                {index !== 0 && (
+                  <button
+                    type="button"
+                    onClick={() => removeDiscount(index)}
+                    className="bg-red-500 text-white mt-2 px-4 py-2 rounded shadow hover:bg-red-600 transition"
+                  >
+                    - Remove
+                  </button>
+                )}
+              </div>
+            ))}
+            {/* Add More Discounts Button */}
+            <button
+              type="button"
+              onClick={addDiscount}
+              className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+            >
+              + Add More
+            </button>
+            </div>
 
-        {/* Remove Button (not for first entry) */}
-        {index !== 0 && (
-          <button
-            type="button"
-            onClick={() => removeDiscount(index)}
-            className="bg-red-500 text-white mt-2 px-4 py-2 rounded shadow hover:bg-red-600 transition"
-          >
-            - Remove
-          </button>
+            </div>
+
+          </div>
         )}
-      </div>
-    ))}
-
-    {/* Add More Discounts Button */}
-    <button
-      type="button"
-      onClick={addDiscount}
-      className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
-    >
-      + Add More
-    </button>
-  </div>
-)}
-
         {activeTab === 'Policy' && (
           <div className="p-4 xl:p-8 bg-gray-50 rounded-lg shadow-md">
               <h2 className="text-3xl font-semibold text-gray-800 mb-6">Policy Settings</h2>

@@ -250,7 +250,7 @@ const BookingEngine = ({ update, setUpdate }) => {
           <p className="text-lg text-gray-600">Unfortunately, no hotels match your search criteria. Please try again with different filters.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-6">
         {hotels.map((hotel) => (
        <div key={hotel.hotel_id} className="bg-white rounded-xl shadow-xl overflow-hidden transition-transform transform hover:scale-90">
        {/* Hotel Image Carousel */}
