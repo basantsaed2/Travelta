@@ -235,6 +235,9 @@ const ListExpenses = () => {
         margin="normal"
         value={amount}
         onChange={(e)=>setAmount(e.target.value)}
+        inputProps={{
+          min: "0", // Set the minimum value for the number input
+}}
       />
         <TextField
               select
@@ -370,6 +373,9 @@ const ListExpenses = () => {
             amount: e.target.value,
           }))
         }
+        inputProps={{
+          min: "0", // Set the minimum value for the number input
+}}
       />
       
       {/* Currency dropdown */}

@@ -624,6 +624,9 @@ const CheckOutProcessPage = () => {
                                             required
                                             type="number"
                                             value={amountPaid}
+                                            inputProps={{
+                                                min: "0", // Set the minimum value for the number input
+}}
                                             onChange={(e) => setAmountPaid(Number(e.target.value) || 0)}
                                             className="w-full border border-[#0D47A1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0D47A1] transition duration-300"
                                         />
@@ -680,6 +683,9 @@ const CheckOutProcessPage = () => {
                                                         if (value > remainingBalance) value = remainingBalance; // Prevent exceeding balance
                                                         setPaymentAmount(value);
                                                     }}
+                                                    inputProps={{
+                                                        min: "0", // Set the minimum value for the number input
+                                            }}
                                                     className="w-full border border-[#0D47A1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0D47A1] transition duration-300"
                                                 />          
                                                 <div className="mt-6">
@@ -758,6 +764,9 @@ const CheckOutProcessPage = () => {
                                                                     if (value > remainingBalance) value = remainingBalance; // Prevent exceeding balance
                                                                     setPaymentAmount(value);
                                                                 }}
+                                                                inputProps={{
+                                                                    min: "0", // Set the minimum value for the number input
+                                                        }}
                                                             className="w-full border border-[#0D47A1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0D47A1] transition duration-300"
                                                         />
                                                     </div>

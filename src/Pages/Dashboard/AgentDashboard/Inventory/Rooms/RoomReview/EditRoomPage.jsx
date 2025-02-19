@@ -578,6 +578,9 @@ const EditRoomPage = ({ update, setUpdate }) => {
                     value={roomDetails.price}
                     onChange={handleChange}
                     className="mb-4"
+                    inputProps={{
+                      min: "0",
+            }}
                 />
                 <TextField
                   select
@@ -735,6 +738,9 @@ const EditRoomPage = ({ update, setUpdate }) => {
                             value={supplement.supplementPrice}
                             onChange={(e) => handleSupplementChange(e, index)}
                             fullWidth
+                            inputProps={{
+                              min: "0",
+                    }}
                         />
                         <TextField
                             select
@@ -1123,6 +1129,9 @@ const EditRoomPage = ({ update, setUpdate }) => {
               onChange={(e) => handlePolicyFieldChange(e, index)}
               type="number"
               fullWidth
+              inputProps={{
+                min: "0",
+      }}
               variant="outlined"
             />
           </div>
@@ -1138,6 +1147,9 @@ const EditRoomPage = ({ update, setUpdate }) => {
             type="number"
             fullWidth
             variant="outlined"
+            inputProps={{
+              min: "0",
+    }}
           />
         </div>
 

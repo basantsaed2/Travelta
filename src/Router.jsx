@@ -124,6 +124,9 @@ import ExpensesLayout from "./Layouts/AgentLayouts/Accounting/AccountExpensesLay
 import PayableToSupplierLayout from "./Layouts/AgentLayouts/Accounting/PayableToSupplierLayout/PayableToSupplierLayout";
 import PaidSupplierLayout from "./Layouts/AgentLayouts/Accounting/PayableToSupplierLayout/PaidSupplierLayout";
 import OverDueLayout from "./Layouts/AgentLayouts/Accounting/PayableToSupplierLayout/OverDueLayout";
+import OwnerTransaction from "./Pages/Dashboard/AgentDashboard/ComingSoon/OwnerTransaction/OwnerTransaction";
+import OwnerLayout from "./Layouts/AgentLayouts/Accounting/OwnerTransaction/OwnerLayout";
+import TransactionLayoutO from "./Layouts/AgentLayouts/Accounting/OwnerTransaction/TransactionLayoutO";
 
 
 const AppLayoutAgent = () => (
@@ -414,6 +417,11 @@ const AppBookingEngine =() => (
   <Outlet />
   </>
 );
+const AppOwnerTransaction =() => (
+  <>
+  <Outlet />
+  </>
+);
 export const router = createBrowserRouter([
 
     {
@@ -529,7 +537,19 @@ export const router = createBrowserRouter([
                     path:"over_due",
                     element:<OverDueLayout/>,
                   }
-            ]}
+            ]},
+            {path:"owner_transaction",
+              element:<AppOwnerTransaction/>,
+              children:[
+                {
+                  path:"owner",
+                  element:<OwnerLayout/>,
+                },
+                {
+                  path:"transaction",
+                  element:<TransactionLayoutO/>,
+                },
+          ]},
 
 
                 ]

@@ -186,6 +186,7 @@ const handleCloseDelete = () => {
                     <input
                       id={`amount-${card.id}`}
                       type="number"
+                      min='0'
                       value={amount[card.id] || ""}
                       onChange={(e) => handleAmountChange(card.id, e.target.value)}
                       className="w-full px-4 py-2 border rounded-lg mt-2 shadow-sm focus:ring-mainColor focus:border-mainColor transition-all"

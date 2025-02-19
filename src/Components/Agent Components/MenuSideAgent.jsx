@@ -244,38 +244,66 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
                             stateLink.isActiveCategory ?? false
                         );
 
-                        // is open payable
-                        const [isOpenPayable, setIsOpenPayable] = useState(
-                          stateLink.isOpenPayable ?? false
+                        // is open O.T
+                        const [isOpenOwnerTransaction, setIsOpenOwnerTransaction] = useState(
+                          stateLink.isOpenOwnerTransaction ?? false
                         );
-                        const [isActivePayableIcon, setIsActivePayableIcon] = useState(
-                          stateLink.isActivePayableIcon ?? false
+                        const [isActiveOwnerTransactionIcon, setIsActiveOwnerTransactionIcon] = useState(
+                          stateLink.isActiveOwnerTransactionIcon ?? false
                         );
-                        const [isActivePayable, setIsActivePayable] = useState(
-                            stateLink.isActivePayable?? false
+                        const [isActiveOwnerTransaction, setIsActiveOwnerTransaction] = useState(
+                            stateLink.isActiveOwnerTransaction?? false
                         );
-                                //Inventory Room Setting
-                                const [isOpenPayableToSupplier, setIsOpenPayableToSupplier] = useState(
-                                    stateLink.isOpenPayableToSupplier ?? false
+                                // isOpenPayableToSupplier
+                                const [isOpenOwner, setIsOpenOwner] = useState(
+                                    stateLink.isOpenOwner ?? false
                                 );
-                                const [isActivePayableToSupplier, setIsActivePayableToSupplier] = useState(
-                                    stateLink.isActivePayableToSupplier ?? false
+                                const [isActiveOwner, setIsActiveOwner] = useState(
+                                    stateLink.isActiveOwner ?? false
                                 );
           
-                                //Inventory Room Preview
-                                const [isOpenPaidSupplier, setIsOpenPaidSupplier] = useState(
-                                  stateLink.isOpenPaidSupplier ?? false
+                                // isOpenPaidSupplier Preview
+                                const [isOpenTransaction, setIsOpenTransaction] = useState(
+                                  stateLink.isOpenTransaction ?? false
                                 );
-                                const [isActivePaidSupplier, setIsActivePaidSupplier] = useState(
-                                    stateLink.isActivePaidSupplier ?? false
+                                const [isActiveTransaction, setIsActiveTransaction] = useState(
+                                    stateLink.isActiveTransaction ?? false
                                 );
 
-                                const [isOpenOverDue, setIsOpenOverDue] = useState(
-                                  stateLink.isOpenOverDue ?? false
-                                );
-                                const [isActiveOverDue, setIsActiveOverDue] = useState(
-                                    stateLink.isActiveOverDue ?? false
-                                );
+                            
+
+               // is open payable
+               const [isOpenPayable, setIsOpenPayable] = useState(
+                stateLink.isOpenPayable ?? false
+              );
+              const [isActivePayableIcon, setIsActivePayableIcon] = useState(
+                stateLink.isActivePayableIcon ?? false
+              );
+              const [isActivePayable, setIsActivePayable] = useState(
+                  stateLink.isActivePayable?? false
+              );
+                      // isOpenPayableToSupplier
+                      const [isOpenPayableToSupplier, setIsOpenPayableToSupplier] = useState(
+                          stateLink.isOpenPayableToSupplier ?? false
+                      );
+                      const [isActivePayableToSupplier, setIsActivePayableToSupplier] = useState(
+                          stateLink.isActivePayableToSupplier ?? false
+                      );
+
+                      // isOpenPaidSupplier Preview
+                      const [isOpenPaidSupplier, setIsOpenPaidSupplier] = useState(
+                        stateLink.isOpenPaidSupplier ?? false
+                      );
+                      const [isActivePaidSupplier, setIsActivePaidSupplier] = useState(
+                          stateLink.isActivePaidSupplier ?? false
+                      );  
+                      
+                      const [isOpenOverDue, setIsOpenOverDue] = useState(
+                        stateLink.isOpenOverDue ?? false
+                      );
+                      const [isActiveOverDue, setIsActiveOverDue] = useState(
+                          stateLink.isActiveOverDue ?? false
+                      );
 
   // Settings
   const [isOpenSetting, setIsOpenSetting] = useState(
@@ -381,6 +409,14 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       isActivePayable,
       isActivePayableIcon,
       isOpenPayable,
+
+      isActiveTransaction,
+      isOpenTransaction,
+      isActiveOwner,
+      isOpenOwner,
+      isActiveOwnerTransaction,
+      isActiveOwnerTransactionIcon,
+      isOpenOwnerTransaction,
       
 
 
@@ -486,6 +522,14 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActivePayableIcon,
     isOpenPayable,
 
+    isActiveTransaction,
+    isOpenTransaction,
+    isActiveOwner,
+    isOpenOwner,
+    isActiveOwnerTransaction,
+    isActiveOwnerTransactionIcon,
+    isOpenOwnerTransaction,
+
     isOpenInventoryRoom,
     isActiveInventoryRoom,
     isActiveInventoryRoomIcon,
@@ -588,6 +632,14 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActivePayableIcon,
     isOpenPayable,
 
+    isActiveTransaction,
+    isOpenTransaction,
+    isActiveOwner,
+    isOpenOwner,
+    isActiveOwnerTransaction,
+    isActiveOwnerTransactionIcon,
+    isOpenOwnerTransaction,
+
     isOpenInventoryRoom,
     isActiveInventoryRoom,
     isActiveInventoryRoomIcon,
@@ -681,7 +733,15 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActivePayable(false)
     setIsActivePayableIcon(false)
     setIsOpenPayable(false)
-    
+
+    setIsActiveTransaction(false)
+    setIsOpenTransaction(false)
+    setIsActiveOwner(false)
+    setIsOpenOwner(false)
+    setIsActiveOwnerTransaction(false)
+    setIsActiveOwnerTransactionIcon(false)
+    setIsOpenOwnerTransaction(false)
+   
 
     setIsActiveSetting(false);
     setIsActiveSettingIcon(false);
@@ -1296,6 +1356,69 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       }
     }, [location]);
 
+
+    const handleClickOwnerTransaction = useCallback(() => {
+      handleStateLinks();
+  
+      setIsOpenAccounting(true);
+      setIsActiveAccountingIcon(true);
+      setIsActiveAccounting(true);
+  
+      setIsOpenOwnerTransaction(true);
+      setIsActiveOwnerTransaction(true);
+      setIsActiveOwnerTransactionIcon(true);
+    }, []);
+  
+    const handleClickOwner = useCallback(() => {
+      handleStateLinks();
+  
+      setIsOpenAccounting(true);
+      setIsActiveAccountingIcon(true);
+      setIsActiveAccounting(true);
+
+      setIsOpenOwnerTransaction(true);
+      setIsActiveOwnerTransaction(true);
+      setIsActiveOwnerTransactionIcon(true);
+  
+      setIsOpenOwner(true);
+      setIsActiveOwner(true);
+    }, []);
+  
+    useEffect(() => {
+      const part = pathName.split("/");
+      const result = part.slice(0, 5).join("/");
+      if (
+        result === "/dashboard_agent/IncomingPage/owner_transaction/owner") {
+        handleClickOwner();
+      }
+    }, [location]);
+  
+  
+      /* Category */
+      const handleClickTransaction = useCallback(() => {
+        handleStateLinks();
+    
+        setIsOpenAccounting(true);
+        setIsActiveAccountingIcon(true);
+        setIsActiveAccounting(true);
+    
+        setIsOpenOwnerTransaction(true);
+        setIsActiveOwnerTransaction(true);
+        setIsActiveOwnerTransactionIcon(true);
+    
+        setIsOpenTransaction(true);
+        setIsActiveTransaction(true);
+      }, []);
+    
+      useEffect(() => {
+        const part = pathName.split("/");
+        const result = part.slice(0, 5).join("/");
+        if (
+          result === "/dashboard_agent/IncomingPage/owner_transaction/transaction") {
+            handleClickTransaction();
+        }
+      }, [location]);
+  
 
     // payable
     const handleClickPayable = useCallback(() => {
@@ -2353,6 +2476,52 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       Supplier
     </li>
   </Link>
+
+    {/* O.T Section */}
+    <li
+    onMouseEnter={() => setIsActiveOwnerTransaction(true)}
+    onMouseLeave={() => setIsActiveOwnerTransaction(false)}
+    onClick={handleClickOwnerTransaction}
+    className={`flex items-center justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer
+      ${isActiveOwnerTransaction ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}
+    `}
+  >
+    <div className="flex items-center gap-2">
+      <MdOutlineBedroomChild className={isActiveOwnerTransaction ? "text-mainColor" : "text-white"} />
+      {!isSidebarCollapsed && <span>O.T</span>}
+    </div>
+    {!isSidebarCollapsed && (
+      <IoIosArrowForward className={`transition-transform duration-300 ${
+        isActiveOwnerTransaction ? "rotate-90 text-mainColor" : "rotate-0 text-white"
+      }`} />
+    )}
+  </li>
+
+  {/* Expenses Dropdown */}
+  <div className={`overflow-hidden transition-all duration-700 ${
+    isOpenOwnerTransaction && !isSidebarCollapsed ? "max-h-[200px]" : "max-h-0"
+  }`}>
+    <ul className="pl-8 flex flex-col gap-y-2 transition-all duration-700">
+      {/* List Expenses */}
+      <Link to={"IncomingPage/owner_transaction/owner"} onClick={() => { handleClickOwner(); onLinkClick(); }}>
+        <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
+          isActiveOwner ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+        }`}>
+          Owner
+        </li>
+      </Link>
+
+      {/* Category */}
+      <Link to={"IncomingPage/owner_transaction/transaction"} onClick={() => { handleClickTransaction(); onLinkClick(); }}>
+        <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
+          isActiveTransaction ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+        }`}>
+          Transaction
+        </li>
+      </Link>
+    </ul>
+  </div>
+
 
   {/* Expenses Section */}
   <li

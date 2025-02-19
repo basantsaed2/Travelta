@@ -1843,6 +1843,9 @@ const ManualBooking = () => {
                               variant="outlined"
                               fullWidth
                               value={child.age}
+                              inputProps={{
+                                min: "0",
+                      }}
                               onChange={(e) =>
                                 handleChildChangeBus(index, "age", e.target.value)
                               }
@@ -2917,6 +2920,9 @@ const ManualBooking = () => {
                               }
                               fullWidth
                               className="mb-2"
+                              inputProps={{
+                                min: "0",
+                      }}
                             />
                           </div>
 
@@ -2991,6 +2997,9 @@ const ManualBooking = () => {
                               }
                               fullWidth
                               className="mb-2"
+                              inputProps={{
+                                min: "0",
+                      }}
                             />
 
                           </div>

@@ -160,6 +160,9 @@ const AddPlan = () => {
             variant="outlined"
             type="number"
             required
+            inputProps={{
+              min: "0",
+    }}
           />
 
           <TextField
@@ -170,6 +173,9 @@ const AddPlan = () => {
             variant="outlined"
             type="number"
             required
+            inputProps={{
+              min: "0",
+    }}
           />
         </div>
 
@@ -181,6 +187,9 @@ const AddPlan = () => {
             fullWidth
             variant="outlined"
             type="number"
+            inputProps={{
+              min: "0",
+    }}
             required
           />
 
@@ -191,6 +200,9 @@ const AddPlan = () => {
             fullWidth
             variant="outlined"
             type="number"
+            inputProps={{
+              min: "0",
+    }}
             required
           />
         </div>
@@ -216,6 +228,9 @@ const AddPlan = () => {
             variant="outlined"
             type="number"
             required
+            inputProps={{
+              min: "0",
+    }}
           />
         </div>
 
@@ -256,6 +271,9 @@ const AddPlan = () => {
             fullWidth
             variant="outlined"
             type="number"
+            inputProps={{
+              min: "0",
+    }}
             required
           />
 
@@ -266,6 +284,9 @@ const AddPlan = () => {
             fullWidth
             variant="outlined"
             type="number"
+            inputProps={{
+              min: "0",
+    }}
             required
           />
         </div>

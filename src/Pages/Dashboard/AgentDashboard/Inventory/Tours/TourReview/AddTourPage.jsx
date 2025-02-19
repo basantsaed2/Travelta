@@ -1123,6 +1123,9 @@ const AddTourPage = ({ update, setUpdate }) => {
           onChange={(e)=>setPrice(e.target.value)}
           variant="outlined"
           className='w-full md:w-1/2'
+          inputProps={{
+            min: "0",
+  }}
         />
 
         {/* Currency Selection */}
@@ -1207,6 +1210,9 @@ const AddTourPage = ({ update, setUpdate }) => {
                name="minAge"
                value={person.minAge}
                onChange={(e) => handlePersonTypeChange(index, e)}
+               inputProps={{
+                min: "0",
+      }}
              />
            </div>
      
@@ -1218,6 +1224,9 @@ const AddTourPage = ({ update, setUpdate }) => {
                name="maxAge"
                value={person.maxAge}
                onChange={(e) => handlePersonTypeChange(index, e)}
+               inputProps={{
+                min: "0",
+      }}
              />
            </div>
      
@@ -1232,6 +1241,9 @@ const AddTourPage = ({ update, setUpdate }) => {
                      name="price"
                      value={person.price}
                      onChange={(e) => handlePersonTypeChange(index, e)}
+                     inputProps={{
+                      min: "0",
+            }}
                    />
                  </div>
                  <div className="w-4/12 p-1">
@@ -1266,6 +1278,9 @@ const AddTourPage = ({ update, setUpdate }) => {
                            name={field}
                            value={person[field]}
                            onChange={(e) => handlePersonTypeChange(index, e)}
+                           inputProps={{
+                            min: "0",
+                  }}
                          />
                        </div>
                        <div className="w-4/12 p-1">
@@ -1387,6 +1402,9 @@ const AddTourPage = ({ update, setUpdate }) => {
                       name={field}
                       value={room[field]}
                       onChange={(e) => handleRoomCapacityChange(index, e)}
+                      inputProps={{
+                        min: "0",
+              }}
                     />
                   </Grid>
                 ))}
@@ -1460,6 +1478,9 @@ const AddTourPage = ({ update, setUpdate }) => {
                 value={extra.price}
                 onChange={(e) => handleExtraPriceChange(e, index)}
                 variant="outlined"
+                inputProps={{
+                  min: "0",
+        }}
               />
 
               {/* Currency Selection */}
@@ -1529,6 +1550,9 @@ const AddTourPage = ({ update, setUpdate }) => {
           value={discount.from}
           onChange={(e) => handleDiscountChange(e, index)}
           variant="outlined"
+          inputProps={{
+            min: "0",
+  }}
         />
 
         {/* To */}
@@ -1539,6 +1563,9 @@ const AddTourPage = ({ update, setUpdate }) => {
           value={discount.to}
           onChange={(e) => handleDiscountChange(e, index)}
           variant="outlined"
+          inputProps={{
+            min: "0",
+  }}
         />
 
         {/* Discount Value */}
@@ -1549,6 +1576,9 @@ const AddTourPage = ({ update, setUpdate }) => {
           value={discount.discount}
           onChange={(e) => handleDiscountChange(e, index)}
           variant="outlined"
+          inputProps={{
+            min: "0",
+  }}
         />
 
         {/* Discount Type: Fixed or Percentage */}
@@ -1675,6 +1705,9 @@ const AddTourPage = ({ update, setUpdate }) => {
                         type="number"
                         fullWidth
                         variant="outlined"
+                        inputProps={{
+                          min: "0",
+                }}
                       />
                     </div>
                   )}
@@ -1689,6 +1722,9 @@ const AddTourPage = ({ update, setUpdate }) => {
                       type="number"
                       fullWidth
                       variant="outlined"
+                      inputProps={{
+                        min: "0",
+              }}
                     />
                   </div>
           

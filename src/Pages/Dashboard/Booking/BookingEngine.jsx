@@ -196,6 +196,9 @@ const BookingEngine = ({ update, setUpdate }) => {
           type="number"
           fullWidth
           label="Adults"
+          inputProps={{
+            min: "0",
+  }}
           value={adults}
           onChange={(e) => setAdults(e.target.value)}
           InputProps={{
@@ -205,9 +208,7 @@ const BookingEngine = ({ update, setUpdate }) => {
               </InputAdornment>
             ),
           }}
-          inputProps={{
-            min: "0", // Set the minimum value for the number input
-          }}
+        
       />
 
         {/* Children dropdown with a limit of 5 */}

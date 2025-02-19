@@ -440,6 +440,9 @@ const AddRoomPage = ({ update, setUpdate }) => {
                     value={roomDetails.price}
                     onChange={handleChange}
                     className="mb-4"
+                    inputProps={{
+                      min: "0", // Set the minimum value for the number input
+            }}
                 />
                 <TextField
                   select
@@ -597,6 +600,9 @@ const AddRoomPage = ({ update, setUpdate }) => {
                             value={supplement.supplementPrice}
                             onChange={(e) => handleSupplementChange(e, index)}
                             fullWidth
+                            inputProps={{
+                              min: "0",
+                    }}
                         />
                         <TextField
                             select
@@ -1009,6 +1015,9 @@ const AddRoomPage = ({ update, setUpdate }) => {
               type="number"
               fullWidth
               variant="outlined"
+              inputProps={{
+                min: "0",
+      }}
             />
           </div>
         )}
@@ -1023,6 +1032,9 @@ const AddRoomPage = ({ update, setUpdate }) => {
             type="number"
             fullWidth
             variant="outlined"
+            inputProps={{
+              min: "0",
+    }}
           />
         </div>
 
