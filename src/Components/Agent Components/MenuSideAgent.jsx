@@ -814,7 +814,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
   
     if (
       result === "/dashboard_agent/booking" &&
-      !["/dashboard_agent/booking/manual_booking", "/dashboard_agent/booking/booking_engine"].includes(pathName)
+      !["/dashboard_agent/booking/manual_booking", "/dashboard_agent/booking/booking_engine", "/dashboard_agent/booking/booking_engine/details"].includes(pathName)
     ) {
       handleClickBooking();
       navigate("/dashboard_agent/booking/manual_booking");

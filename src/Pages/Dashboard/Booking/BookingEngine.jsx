@@ -6,9 +6,8 @@ import { MdHotel } from "react-icons/md";
 import { FaGlobe, FaCity, FaUser, FaChild } from "react-icons/fa";
 import { FaStar ,FaBed, FaMoneyBillWave, FaRegCreditCard, FaInfoCircle } from 'react-icons/fa';
 import { Link } from "react-router-dom";
-import { Splide, SplideSlide } from "@splidejs/react-splide";
-import "@splidejs/splide/dist/css/splide.min.css";
-
+import { Splide, SplideSlide } from '@splidejs/react-splide';
+import '@splidejs/react-splide/css'; // Import Splide styles
 // Installing modules
 const BookingEngine = ({ update, setUpdate }) => {
   const { refetch: refetchHotelsList, data: hotelsData } = useGet({
@@ -63,9 +62,11 @@ const BookingEngine = ({ update, setUpdate }) => {
     const allOptions = [...hotels, ...countries, ...cities];
 
     if (searchInput.trim()) {
-      setFilteredOptions(allOptions.filter((item) => item.name.toLowerCase().startsWith(searchInput.toLowerCase())));
+      setFilteredOptions(allOptions.filter((item) => item.name.toLowerCase().startsWith(searchInput.toLowerCase())));   
+      setSelectedOption(null); // Reset selected option when user types
     } else {
       setFilteredOptions(allOptions);
+      setSelectedOption(null); // Reset selected option when user types
     }
   }, [searchInput, hotelsData, countryData, cityData]);
 
@@ -74,7 +75,7 @@ const BookingEngine = ({ update, setUpdate }) => {
       // console.log(responseSearch)
       setHotels(responseSearch?.data?.hotels)
     }
-  },[responseSearch])
+  },[responseSearch,update])
 
   const handleSelect = (option) => {
     setSelectedOption(option);
@@ -84,31 +85,41 @@ const BookingEngine = ({ update, setUpdate }) => {
 
     // Example settings for Splide carousel
     const options = {
-      type       : 'fade',    // Type of transition (slide, fade)
-      heightRatio: 0.5,       // Adjust the height of the carousel
-      autoplay  : true,       // Enable autoplay
-      interval  : 2000,       // Set the interval for autoplay (in ms)
-      pagination: true,       // Enable pagination dots
-      arrows    : true,       // Show navigation arrows
-      pauseOnHover: true,     // Pause autoplay when hovered
+      type: 'loop',    
+      perPage: 1, // Show only 1 image per slide
+      perMove: 1, 
+      pagination: false,
+      arrows: false,
+      autoplay: true,
+      pauseOnHover: true,
+      heightRatio: 0.8, 
+      gap: '0px',  // Ensure no gap between slides
+      trimSpace: false, // Prevents extra space that might show next slide
     };
-
+    
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Ensure only valid city_id, hotel_id, and country_id are appended
+    console.log(selectedOption)
+    let finalSelectedOption = selectedOption;
+
+    // If no option was selected, choose the first matching option automatically
+    if (!finalSelectedOption && filteredOptions.length > 0) {
+        finalSelectedOption = filteredOptions[0];
+        setSelectedOption(finalSelectedOption);  // Update state with auto-selected option
+    }
+
     const formData = new FormData();
     
-    if (selectedOption?.type === "City" && selectedOption.id) {
-      formData.append("city_id", selectedOption.id);  // Send the integer city_id
+    if (finalSelectedOption?.type === "City" && finalSelectedOption.id) {
+      formData.append("city_id", finalSelectedOption.id);
     }
     
-    if (selectedOption?.type === "Hotel" && selectedOption.id) {
-      formData.append("hotel_id", selectedOption.id);  // Send the integer hotel_id
+    if (finalSelectedOption?.type === "Hotel" && finalSelectedOption.id) {
+      formData.append("hotel_id", finalSelectedOption.id);
     }
   
-    if (selectedOption?.type === "Country" && selectedOption.id) {
-      formData.append("country_id", selectedOption.id);  // Send the integer country_id
+    if (finalSelectedOption?.type === "Country" && finalSelectedOption.id) {
+      formData.append("country_id", finalSelectedOption.id);
     }
   
     // Append other fields (check-in, check-out, etc.)
@@ -117,7 +128,7 @@ const BookingEngine = ({ update, setUpdate }) => {
     formData.append("max_adults", adults);
     formData.append("max_children", children);
   
-    postData(formData,"Searching....");
+    postData(formData);
   };
   
   return (
@@ -125,41 +136,42 @@ const BookingEngine = ({ update, setUpdate }) => {
     <div className="p-8 w-full bg-white shadow-xl rounded-xl border border-gray-200">
       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-4">
       <div className="relative">
-  <TextField
-    fullWidth
-    label="Where do you want to go?"
-    variant="outlined"
-    value={searchInput}
-    onChange={(e) => setSearchInput(e.target.value)}
-    onFocus={() => setShowDropdown(true)}
-    onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-    InputProps={{
-      startAdornment: (
-        <InputAdornment position="start">
-          <MdHotel className="text-blue-500 text-lg" />
-        </InputAdornment>
-      ),
-    }}
-  />
+      <TextField
+        fullWidth
+        placeholder="Where do you want to go?"
+        label="Where do you want to go?"
+        variant="outlined"
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
+        onFocus={() => setShowDropdown(true)}
+        onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <MdHotel className="text-blue-500 text-lg" />
+            </InputAdornment>
+          ),
+        }}
+      />
 
-  {/* Dropdown for filtered options */}
-  {showDropdown && filteredOptions.length > 0 && (
-    <div className="border p-3 max-h-48 overflow-y-auto rounded-lg bg-white shadow-lg absolute w-full z-20">
-      {filteredOptions.map((option, index) => (
-        <div
-          key={index}
-          onClick={() => handleSelect(option)}
-          className="p-2 cursor-pointer flex items-center gap-3 hover:bg-gray-200 rounded-lg transition"
-        >
-          {option.type === "Hotel" && <MdHotel className="text-blue-500 text-lg" />}
-          {option.type === "Country" && <FaGlobe className="text-green-500 text-lg" />}
-          {option.type === "City" && <FaCity className="text-red-500 text-lg" />}
-          <span className="text-gray-700">{option.name}</span>
+      {/* Dropdown for filtered options */}
+      {showDropdown && filteredOptions.length > 0 && (
+        <div className="border p-3 max-h-48 overflow-y-auto rounded-lg bg-white shadow-lg absolute w-full z-20">
+          {filteredOptions.map((option, index) => (
+            <div
+              key={index}
+              onClick={() => handleSelect(option)}
+              className="p-2 cursor-pointer flex items-center gap-3 hover:bg-gray-200 rounded-lg transition"
+            >
+              {option.type === "Hotel" && <MdHotel className="text-blue-500 text-lg" />}
+              {option.type === "Country" && <FaGlobe className="text-green-500 text-lg" />}
+              {option.type === "City" && <FaCity className="text-red-500 text-lg" />}
+              <span className="text-gray-700">{option.name}</span>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
-  )}
-      </div>
+      )}
+          </div>
 
       <TextField
         fullWidth
@@ -240,19 +252,19 @@ const BookingEngine = ({ update, setUpdate }) => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
         {hotels.map((hotel) => (
-       <div key={hotel.hotel_id} className="bg-white rounded-lg shadow-xl overflow-hidden transition-transform transform hover:scale-105">
+       <div key={hotel.hotel_id} className="bg-white rounded-xl shadow-xl overflow-hidden transition-transform transform hover:scale-90">
        {/* Hotel Image Carousel */}
-       <Splide options={options}>
-        {hotel.images.map((image, index) => (
-          <SplideSlide key={index}>
-            <img
-              src={image || 'https://via.placeholder.com/400'}
-              alt={hotel.hotel_name}
-              className="w-full h-64 object-cover"
-            />
-          </SplideSlide>
-        ))}
-      </Splide>
+       <Splide options={options} className="w-full">
+      {hotel.images.map((image, index) => (
+        <SplideSlide key={index} className="w-full flex justify-center">
+          <img
+            src={image}
+            alt={hotel.hotel_name}
+            className="w-full h-full object-fit"
+          />
+        </SplideSlide>
+      ))}
+    </Splide>
      
        {/* Hotel Info */}
        <div className="p-6 space-y-4">
@@ -281,28 +293,28 @@ const BookingEngine = ({ update, setUpdate }) => {
          <div className="space-y-3">
            {hotel.hotel_facilities.map((facility) => (
              <div key={facility.id} className="flex items-center text-gray-700 space-x-2">
-               <FaBed className="text-purple-500" />
+               <FaBed className="text-mainColor" />
                <span>{facility.name}</span>
              </div>
            ))}
-           <div className="flex items-center text-gray-700 space-x-2">
+           {/* <div className="flex items-center text-gray-700 space-x-2">
              <FaMoneyBillWave className="text-green-500" />
              <span className="font-semibold">Price: ${hotel.available_rooms[0]?.price}</span>
-           </div>
+           </div> */}
          </div>
      
          {/* Policies */}
-         <div className="space-y-2">
+         {/* <div className="space-y-2">
            {hotel.hotel_policies.map((policy) => (
              <div key={policy.id} className="flex items-center text-gray-600">
                <FaRegCreditCard className="mr-2 text-blue-500" />
                <span>{policy.title}: {policy.description}</span>
              </div>
            ))}
-         </div>
+         </div> */}
      
          {/* Button to Get More Details */}
-         <Link to={`/hotel/${hotel.hotel_id}`} className="inline-block w-full mt-4">
+         <Link to={"details"} state={{hotel:hotel}} className="inline-block w-full mt-4">
            <button className="bg-blue-600 text-white py-2 px-6 rounded-md w-full hover:bg-blue-700 transition duration-300 ease-in-out">
              <FaInfoCircle className="inline-block mr-2" />
              View More Details
