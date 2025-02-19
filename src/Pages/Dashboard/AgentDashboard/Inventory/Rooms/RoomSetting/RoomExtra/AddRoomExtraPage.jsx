@@ -116,6 +116,9 @@ const AddRoomExtraPage = ({ update, setUpdate }) => {
               required
               value={price}
               onChange={(e) => setPrice(e.target.value)}
+              inputProps={{
+                min: "0",
+      }}
               className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
               />
           </div>

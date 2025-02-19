@@ -1155,7 +1155,10 @@ discounts.forEach((discount, index) => {
                   onChange={(e)=>setPrice(e.target.value)}
                   variant="outlined"
                   className='w-full md:w-1/2'
-                />
+                  inputProps={{
+            min: "0",
+  }}
+        />
 
                 {/* Currency Selection */}
                 <TextField
@@ -1239,7 +1242,10 @@ discounts.forEach((discount, index) => {
                       name="minAge"
                       value={person.minAge}
                       onChange={(e) => handlePersonTypeChange(index, e)}
-                    />
+                      inputProps={{
+                min: "0",
+      }}
+             />
                   </div>
             
                   <div className="w-full md:w-3/12 xl:w-2/12 p-2">
@@ -1250,7 +1256,10 @@ discounts.forEach((discount, index) => {
                       name="maxAge"
                       value={person.maxAge}
                       onChange={(e) => handlePersonTypeChange(index, e)}
-                    />
+                      inputProps={{
+                min: "0",
+      }}
+             />
                   </div>
             
                   {!withAccommodation ? (
@@ -1264,7 +1273,10 @@ discounts.forEach((discount, index) => {
                             name="price"
                             value={person.price}
                             onChange={(e) => handlePersonTypeChange(index, e)}
-                          />
+                            inputProps={{
+                      min: "0",
+            }}
+                   />
                         </div>
                         <div className="w-4/12 p-1">
                           <TextField
@@ -1298,7 +1310,10 @@ discounts.forEach((discount, index) => {
                                   name={field}
                                   value={person[field]}
                                   onChange={(e) => handlePersonTypeChange(index, e)}
-                                />
+                                  inputProps={{
+                            min: "0",
+                  }}
+                         />
                               </div>
                               <div className="w-4/12 p-1">
                                 <TextField
@@ -1446,15 +1461,18 @@ discounts.forEach((discount, index) => {
                         variant="outlined"
                       />
 
-                      {/* Price */}
-                      <TextField
-                        label="Price"
-                        type="number"
-                        name="price"
-                        value={extra.price}
-                        onChange={(e) => handleExtraPriceChange(e, index)}
-                        variant="outlined"
-                      />
+              {/* Price */}
+              <TextField
+                label="Price"
+                type="number"
+                name="price"
+                value={extra.price}
+                onChange={(e) => handleExtraPriceChange(e, index)}
+                variant="outlined"
+                inputProps={{
+                  min: "0",
+        }}
+              />
 
                       {/* Currency Selection */}
                       <TextField
@@ -1525,27 +1543,36 @@ discounts.forEach((discount, index) => {
                   value={discount.from}
                   onChange={(e) => handleDiscountChange(e, index)}
                   variant="outlined"
-                />
+                  inputProps={{
+            min: "0",
+  }}
+        />
 
-                {/* To */}
-                <TextField
-                  label="To"
-                  type="number"
-                  name="to"
-                  value={discount.to}
-                  onChange={(e) => handleDiscountChange(e, index)}
-                  variant="outlined"
-                />
+        {/* To */}
+        <TextField
+          label="To"
+          type="number"
+          name="to"
+          value={discount.to}
+          onChange={(e) => handleDiscountChange(e, index)}
+          variant="outlined"
+          inputProps={{
+            min: "0",
+  }}
+        />
 
-                {/* Discount Value */}
-                <TextField
-                  label="Discount Price"
-                  type="number"
-                  name="discount"
-                  value={discount.discount}
-                  onChange={(e) => handleDiscountChange(e, index)}
-                  variant="outlined"
-                />
+        {/* Discount Value */}
+        <TextField
+          label="Discount Price"
+          type="number"
+          name="discount"
+          value={discount.discount}
+          onChange={(e) => handleDiscountChange(e, index)}
+          variant="outlined"
+          inputProps={{
+            min: "0",
+  }}
+        />
 
                 {/* Discount Type: Fixed or Percentage */}
                 <TextField
@@ -1673,6 +1700,9 @@ discounts.forEach((discount, index) => {
                         type="number"
                         fullWidth
                         variant="outlined"
+                        inputProps={{
+                          min: "0",
+                }}
                       />
                     </div>
                   )}
@@ -1687,6 +1717,9 @@ discounts.forEach((discount, index) => {
                       type="number"
                       fullWidth
                       variant="outlined"
+                      inputProps={{
+                        min: "0",
+              }}
                     />
                   </div>
           

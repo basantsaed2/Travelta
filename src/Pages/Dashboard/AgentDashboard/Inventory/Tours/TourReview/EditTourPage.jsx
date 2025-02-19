@@ -1097,6 +1097,9 @@ const EditTourPage = ({ update, setUpdate }) => {
                         type="number"
                         fullWidth
                         variant="outlined"
+                        inputProps={{
+                          min: "0",
+                }}
                       />
                     </div>
                   )}
@@ -1111,6 +1114,9 @@ const EditTourPage = ({ update, setUpdate }) => {
                       type="number"
                       fullWidth
                       variant="outlined"
+                      inputProps={{
+                        min: "0",
+              }}
                     />
                   </div>
           

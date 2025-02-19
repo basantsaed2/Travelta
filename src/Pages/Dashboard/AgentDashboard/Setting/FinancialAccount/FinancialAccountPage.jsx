@@ -286,6 +286,9 @@ const handleClosePopup = () => {
         label="Amount"
         type="number"
         value={amount}
+        inputProps={{
+          min: "0",
+}}
         onChange={(e) => setAmount(e.target.value)}
         placeholder="Enter amount"
       />

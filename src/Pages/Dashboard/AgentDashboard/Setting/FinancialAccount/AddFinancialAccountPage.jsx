@@ -136,6 +136,9 @@ const AddFinancialAccountPage = ({ update, setUpdate }) => {
               type="number"
               fullWidth
               value={balance}
+              inputProps={{
+                min: "0",
+      }}
               onChange={(e) => setBalance(e.target.value)}
               className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
             />

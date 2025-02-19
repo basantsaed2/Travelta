@@ -237,6 +237,9 @@ const UpdatePlan = () => {
             fullWidth
             variant="outlined"
             type="number"
+            inputProps={{
+              min: "0",
+    }}
             required
           />
 
@@ -247,6 +250,9 @@ const UpdatePlan = () => {
             fullWidth
             variant="outlined"
             type="number"
+            inputProps={{
+              min: "0",
+    }}
             required
           />
         </div>
@@ -259,6 +265,9 @@ const UpdatePlan = () => {
             fullWidth
             variant="outlined"
             type="number"
+            inputProps={{
+              min: "0",
+    }}
             required
           />
 
@@ -269,6 +278,9 @@ const UpdatePlan = () => {
             fullWidth
             variant="outlined"
             type="number"
+            inputProps={{
+              min: "0",
+    }}
             required
           />
         </div>
@@ -293,6 +305,9 @@ const UpdatePlan = () => {
             fullWidth
             variant="outlined"
             type="number"
+            inputProps={{
+              min: "0",
+    }}
             required
           />
         </div>
@@ -333,6 +348,9 @@ const UpdatePlan = () => {
             fullWidth
             variant="outlined"
             type="number"
+            inputProps={{
+              min: "0",
+    }}
             required
           />
 
@@ -343,6 +361,9 @@ const UpdatePlan = () => {
             fullWidth
             variant="outlined"
             type="number"
+            inputProps={{
+              min: "0",
+    }}
             required
           />
         </div>

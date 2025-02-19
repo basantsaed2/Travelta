@@ -116,7 +116,7 @@ const ActionUpcoming = ({ id, item }) => {
               <div>
                 {deposits.map((dep, index) => (
                   <div key={index} className="flex gap-2 mt-2">
-                    <input type="number" placeholder="Deposit" value={dep.deposit} onChange={(e) => setDeposits(prev => prev.map((d, i) => i === index ? { ...d, deposit: e.target.value } : d))} className="border p-1 w-full" />
+                    <input type="number" min='0' placeholder="Deposit" value={dep.deposit} onChange={(e) => setDeposits(prev => prev.map((d, i) => i === index ? { ...d, deposit: e.target.value } : d))} className="border p-1 w-full" />
                     <input type="date" value={dep.date} onChange={(e) => setDeposits(prev => prev.map((d, i) => i === index ? { ...d, date: e.target.value } : d))} className="border p-1 w-full" />
                   </div>
                 ))}

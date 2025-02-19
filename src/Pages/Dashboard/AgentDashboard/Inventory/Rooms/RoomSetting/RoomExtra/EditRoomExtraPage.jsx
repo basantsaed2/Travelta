@@ -132,6 +132,9 @@ const EditRoomExtraPage = ({ update, setUpdate }) => {
               fullWidth
               required
               value={price}
+              inputProps={{
+                min: "0",
+      }}
               onChange={(e) => setPrice(e.target.value)}
               className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
               />

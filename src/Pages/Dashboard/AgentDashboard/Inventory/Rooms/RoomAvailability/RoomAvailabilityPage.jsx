@@ -629,6 +629,9 @@ const RoomAvailability = ({ refetch, setUpdate }) => {
                           onChange={(e) =>
                             handleCommonRoomsChange(key, e.target.value)
                           }
+                          inputProps={{
+                            min: "0", // Set the minimum value for the number input
+                  }}
                         />
                       )}
                       {config.mode === "custom" && (
@@ -644,6 +647,9 @@ const RoomAvailability = ({ refetch, setUpdate }) => {
                                   ? config.customRooms[date]
                                   : ""
                               }
+                              inputProps={{
+                                min: "0", // Set the minimum value for the number input
+                      }}
                               onChange={(e) =>
                                 handleCustomRoomChange(key, date, e.target.value)
                               }

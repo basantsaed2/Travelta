@@ -219,6 +219,9 @@ const Tax = ({update}) => {
          type="number"
          fullWidth
          variant="outlined"
+         inputProps={{
+          min: "0",
+}}
          value={amount}
          onChange={(e) => setAmount(e.target.value)}
          label="Amount"

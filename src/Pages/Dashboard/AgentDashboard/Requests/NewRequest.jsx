@@ -717,6 +717,9 @@ const NewRequest = () => {
             fullWidth
             value={expectedRevenue}
             onChange={(e) => setExpectedRevenue(e.target.value)}
+            inputProps={{
+              min: "0",
+    }}
           />
         </div>
 
@@ -920,6 +923,9 @@ const NewRequest = () => {
         onChange={handleAdultsVisaChange}
         min="0"
         className="mb-4"
+        inputProps={{
+          min: "0",
+}}
       />
       {bookingDataVisa.adults > 0 &&
         bookingDataVisa.adult_data.map((adult, index) => (
@@ -1004,6 +1010,9 @@ const NewRequest = () => {
                 variant="outlined"
                 type="number"
                 fullWidth
+                inputProps={{
+                  min: "0",
+        }}
                 value={child.age}
                 onChange={(e) => {
                   const updatedChildren = [...bookingDataVisa.child_data];
@@ -1219,6 +1228,9 @@ const NewRequest = () => {
                 value={adultPriceFlight}
                 onChange={(e) => setAdultPriceFlight(e.target.value)}
                 margin="normal"
+                inputProps={{
+                  min: "0",
+        }}
               />
               <TextField
                 fullWidth
@@ -1227,6 +1239,9 @@ const NewRequest = () => {
                 value={childPriceFlight}
                 onChange={(e) => setChildPriceFlight(e.target.value)}
                 margin="normal"
+                inputProps={{
+                  min: "0",
+        }}
               />
            </div>
 
@@ -1238,6 +1253,9 @@ const NewRequest = () => {
                 value={bookingDataFlight.adults}
                 onChange={handleAdultsFlightChange}
                 margin="normal"
+                inputProps={{
+                  min: "0",
+        }}
               />
               {bookingDataFlight.adults > 0 &&
                 bookingDataFlight.adult_data.map((adult, index) => (
@@ -1301,6 +1319,9 @@ const NewRequest = () => {
                 value={bookingDataFlight.children}
                 onChange={handleChildrenFlightChange}
                 margin="normal"
+                inputProps={{
+                  min: "0",
+        }}
               />
               {bookingDataFlight.children > 0 &&
                 bookingDataFlight.child_data.map((child, index) => (
@@ -1310,6 +1331,9 @@ const NewRequest = () => {
                       fullWidth
                       label="Age"
                       type="number"
+                      inputProps={{
+                        min: "0",
+              }}
                       value={child.age}
                       onChange={(e) => {
                         const updatedChildren = [
@@ -1403,6 +1427,9 @@ const NewRequest = () => {
               value={nights}
               onChange={(e) => setNights(e.target.value)}
               margin="normal"
+              inputProps={{
+                min: "0",
+      }}
             />
             <TextField
               fullWidth
@@ -1427,6 +1454,9 @@ const NewRequest = () => {
               value={roomQuantity}
               onChange={(e) => setRoomQuantity(e.target.value)}
               margin="normal"
+              inputProps={{
+                min: "0",
+      }}
             />
          </div>
 
@@ -1438,6 +1468,9 @@ const NewRequest = () => {
               value={bookingData.adults}
               onChange={handleAdultsChange}
               margin="normal"
+              inputProps={{
+                min: "0",
+      }}
             />
 
             {/* Adult Inputs */}
@@ -1505,6 +1538,9 @@ const NewRequest = () => {
               value={bookingData.children}
               onChange={handleChildrenChange}
               margin="normal"
+              inputProps={{
+                min: "0",
+      }}
             />
 
             {/* Child Inputs */}
@@ -1526,6 +1562,9 @@ const NewRequest = () => {
                       });
                     }}
                     margin="normal"
+                    inputProps={{
+                      min: "0",
+            }}
                   />
 
                   <TextField
@@ -1616,6 +1655,9 @@ const NewRequest = () => {
           value={tourAdultPrice}
           onChange={(e) => setTourAdultPrice(e.target.value)}
           margin="normal"
+          inputProps={{
+            min: "0",
+  }}
         />
         <TextField
           fullWidth
@@ -1624,6 +1666,9 @@ const NewRequest = () => {
           value={tourChildPrice}
           onChange={(e) => setTourChildPrice(e.target.value)}
           margin="normal"
+          inputProps={{
+            min: "0",
+  }}
         />
       </div>
     </div>
@@ -1665,6 +1710,9 @@ const NewRequest = () => {
               value={bus.seats}
               onChange={(e) => handleBusChange(index, "seats", e.target.value)}
               fullWidth
+              inputProps={{
+                min: "0",
+      }}
             />
           </div>
 
@@ -1749,6 +1797,9 @@ const NewRequest = () => {
             onChange={(e) => handleHotelChange(index, "nights", e.target.value)}
             fullWidth
             margin="normal"
+            inputProps={{
+              min: "0",
+    }}
           />
           <div className="flex justify-between mt-2">
             {index !== 0 && tourHotels.length > 1 && (
@@ -1784,6 +1835,9 @@ const NewRequest = () => {
         value={bookingDataTour.adults}
         onChange={handleAdultsTourChange}
         margin="normal"
+        inputProps={{
+          min: "0",
+}}
       />
 {bookingDataTour.adults > 0 &&
   bookingDataTour.adult_data.map((adult, index) => (
@@ -1843,6 +1897,9 @@ const NewRequest = () => {
         value={bookingDataTour.children}
         onChange={handleChildrenTourChange}
         margin="normal"
+        inputProps={{
+          min: "0",
+}}
       />
       {bookingDataTour.children > 0 &&
         bookingDataTour.child_data.map((child, index) => (
@@ -1854,6 +1911,9 @@ const NewRequest = () => {
                     label="Age"
                     type="number"
                     margin="normal"
+                    inputProps={{
+                      min: "0",
+            }}
                     value={child.age}
                     onChange={(e) => {
                       const updatedChildren = [...bookingDataTour.child_data];
@@ -1963,6 +2023,9 @@ const NewRequest = () => {
                 value={adultPrice}
                 onChange={(e) => setAdultPrice(e.target.value)}
                 margin="normal"
+                inputProps={{
+                  min: "0",
+        }}
               />
               <TextField
                 fullWidth
@@ -1971,6 +2034,9 @@ const NewRequest = () => {
                 value={childPrice}
                 onChange={(e) => setChildPrice(e.target.value)}
                 margin="normal"
+                inputProps={{
+                  min: "0",
+        }}
               />
           </div>
 
@@ -2007,6 +2073,9 @@ const NewRequest = () => {
                 value={bookingDataBus.adults}
                 onChange={handleAdultsBusChange}
                 margin="normal"
+                inputProps={{
+                  min: "0",
+        }}
               />
 
               {/* Adult Inputs */}
@@ -2074,6 +2143,9 @@ const NewRequest = () => {
                 value={bookingDataBus.children}
                 onChange={handleChildrenBusChange}
                 margin="normal"
+                inputProps={{
+                  min: "0",
+        }}
               />
 
               {/* Child Inputs */}
@@ -2085,6 +2157,9 @@ const NewRequest = () => {
                       fullWidth
                       label="Age"
                       type="number"
+                      inputProps={{
+                        min: "0",
+              }}
                       value={child.age}
                       onChange={(e) => {
                         const updatedChildren = [...bookingDataBus.child_data];
