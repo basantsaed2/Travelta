@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useGet } from "../../../../../Hooks/useGet";
 import { useAuth } from "../../../../../Context/Auth";
+import StaticLoader from "../../../../../Components/StaticLoader";
 
 const PaidToSupplier = () => {
   const [fromDate, setFromDate] = useState("");
@@ -27,17 +28,15 @@ const auth = useAuth()
 
       const handleFilter = async () => {
         try {
-          const response = await fetch(`https://travelta.online/agent/accounting/payable_to_suppliers_filter`, {
+          const response = await fetch(`https://travelta.online/agent/accounting/paid_to_suppliers_filter`, {
             method: "Post",
             headers: {
               "Content-Type": "application/json",
               'Authorization': `Bearer ${auth.user?.token || ''}`,
             },
             body: JSON.stringify({
-              payable_from: fromDate,
-              payable_to: toDate,
-              due_from: fromDate,
-              due_to: toDate,
+              from: fromDate,
+              to: toDate,
             }),
           });
     
@@ -54,7 +53,9 @@ const auth = useAuth()
         item.supplier.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
     
-
+      if(loadingPaid){
+        return <StaticLoader/>
+      }
   return (
      <div className="p-5 flex flex-col items-center gap-6">
        {/* Blue Card */}

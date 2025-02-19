@@ -1309,6 +1309,8 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       setIsActivePayable(true);
       setIsActivePayableIcon(true);
     }, []);
+
+
   
     const handleClickPayableToSupplier = useCallback(() => {
       handleStateLinks();
@@ -1508,7 +1510,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
 
 
   return (
-    <div className="space-y-4 w-full">
+    <div className="space-y-4 w-full h-full">
       {/* Home */}
       <Link
         to="/dashboard_agent"
@@ -2417,38 +2419,85 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
   </li>
 
   {/* Payable Dropdown */}
-  <div className={`overflow-hidden transition-all duration-700 ${
-    isOpenPayable && !isSidebarCollapsed ? "max-h-[200px]" : "max-h-0"
-  }`}>
-    <ul className="pl-8 flex flex-col gap-y-2 transition-all duration-700">
-      {/* Payable To Supplier */}
-      <Link to={"IncomingPage/payable_to_supplier/payable_supplier"} onClick={() => { handleClickPayableToSupplier(); onLinkClick(); }}>
-        <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
-          isActivePayableToSupplier ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-        }`}>
-          Payable To Supplier
-        </li>
-      </Link>
+  <div
+                      className={`${
+                        isOpenPayable && !isSidebarCollapsed ? "h-17" : "h-0 "
+                      } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+                    >
+                      <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-4">
+                        {/* <Link
+                          to={"inventory/room/setting_room"}
+                          onClick={handleClickInventoryRoomSetting}
+                        >
+                          <li
+                            className={`${
+                              isActiveInventoryRoomPreview
+                                ? "rounded-xl bg-white text-mainColor"
+                                : "text-white"
+                            }
+                                        text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+                          >
+                            Room List
+                          </li> */}
 
-      {/* Paid Supplier */}
-      <Link to={"IncomingPage/payable_to_supplier/paid_supplier"} onClick={() => { handleClickPaidSupplier(); onLinkClick(); }}>
-        <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
-          isActivePaidSupplier ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-        }`}>
-          Paid Supplier
-        </li>
-      </Link>
+                              <Link
+                                to={"IncomingPage/payable_to_supplier/payable_supplier"}
+                                onClick={() => {
+                                    handleClickPayableToSupplier();
+                                    onLinkClick();
+                                  }}
+                                >
+                                  <li
+                                    className={`${
+                                      isActivePayableToSupplier
+                                        ? "rounded-xl bg-white text-mainColor"
+                                        : "text-white"
+                                    }
+                                                text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+                                  >
+                                    Payable To Supplier
+                                  </li>
+                              </Link>
 
-      {/* OverDue */}
-      <Link to={"IncomingPage/payable_to_supplier/over_due"} onClick={() => { handleClickOverDue(); onLinkClick(); }}>
-        <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
-          isActiveOverDue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-        }`}>
-          OverDue
-        </li>
-      </Link>
-    </ul>
-  </div>
+                              <Link
+                              to={"IncomingPage/payable_to_supplier/paid_supplier"}
+                              onClick={() => {
+                                handleClickPaidSupplier();
+                                onLinkClick();
+                                }}
+                              >
+                                <li
+                                className={`${
+                                  isActivePaidSupplier
+                                    ? "rounded-xl bg-white text-mainColor"
+                                    : "text-white"
+                                }
+                                            text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+                              >
+                                Paid Supplier
+                              </li>
+                              </Link>
+
+                              <Link
+                              to={"IncomingPage/payable_to_supplier/over_due"}
+                              onClick={() => {
+                                handleClickOverDue();
+                                onLinkClick();
+                                }}
+                              >
+                                <li
+                                className={`${
+                                  isActiveOverDue
+                                    ? "rounded-xl bg-white text-mainColor"
+                                    : "text-white"
+                                }
+                                            text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+                              >
+                                Over Due
+                              </li>
+                              </Link>
+                      </ul>
+                    </div>
 </ul>
 
 </div>

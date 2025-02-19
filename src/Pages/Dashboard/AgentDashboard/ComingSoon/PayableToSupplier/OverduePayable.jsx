@@ -2,24 +2,38 @@ import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useGet } from "../../../../../Hooks/useGet";
 import { useAuth } from "../../../../../Context/Auth";
-
+import StaticLoader from "../../../../../Components/StaticLoader";
+import { usePost } from "../../../../../Hooks/usePostJson";
+import { Link } from "react-router-dom";
+import { TextField, MenuItem, Button } from "@mui/material";
 const OverduePayable = () => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState([]);
  const auth = useAuth()
-  const sampleData = [
-    { id: 1, bookingCode: "BC123", supplier: "Supplier A", paid: "$500", payable: "$1000" },
-    { id: 2, bookingCode: "BC456", supplier: "Supplier B", paid: "$200", payable: "$800" },
-    { id: 3, bookingCode: "BC789", supplier: "Supplier C", paid: "$700", payable: "$300" },
-  ];
+
 
       const { refetch: refetchOverDue, loading: loadingOverDue, data: dataOverDue } = useGet({url:'https://travelta.online/agent/accounting/due_to_suppliers'});
+          const { refetch: refetchList, loading: loadingList, data: DataList } = useGet({
+            url: `https://travelta.online/agent/accounting/expenses/lists`,
+          });
+          
+          const [list,setList] = useState([])
+      
+        const { postData: postTransaction ,loadingPost,response } = usePost({ url: `https://travelta.online/agent/accounting/transactions_payment` });
       const [OverDue, setOverDue] = useState([])
+       const [amount,setAmount]= useState('')
+        const [date,setDate]= useState('')
+        const [supplierId,setSupplierId]= useState('')
+        const [manualBookingId,setManualBookingId]= useState('')
+        const [financialId,setFinancialId]= useState('')
+        const [currencyId,setCurrencyId]= useState('')
+        const [showModal, setShowModal] = useState(false);
       useEffect(() => {
         refetchOverDue()
-      }, [refetchOverDue])
+        refetchList();
+      }, [refetchOverDue,refetchList])
 
       useEffect(() => {
         if(dataOverDue){
@@ -30,9 +44,17 @@ const OverduePayable = () => {
 
       }, [dataOverDue])
 
+        useEffect(() => {
+          if (DataList) {
+            setList(DataList);
+           
+          }
+          console.log("data",DataList)
+        }, [DataList]);
+
       const handleFilter = async () => {
         try {
-          const response = await fetch(`https://travelta.online/agent/accounting/payable_to_suppliers_filter`, {
+          const response = await fetch(`https://travelta.online/agent/accounting/due_to_suppliers_filter`, {
             method: "Post",
             headers: {
               "Content-Type": "application/json",
@@ -58,7 +80,38 @@ const OverduePayable = () => {
       const filteredSearch = filteredData.filter((item) =>
         item.supplier.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
+
+      const handleTransactionClick = (item) => {
+        // setAmount(item.payable);
+        // setDate(item.due_date);
+        setSupplierId(item.supplier_id);
+        setManualBookingId(item.manuel_booking_id);
+        setCurrencyId(item.currency_id);
+        setShowModal(true);
+      };
     
+      const handleSubmitTransaction = (e) => {
+    e.preventDefault();
+    const formData= new FormData();
+    formData.append("amount",amount),
+    formData.append("date",date)
+    formData.append("supplier_id",supplierId)
+    formData.append("manuel_booking_id",manualBookingId),
+    formData.append("financial_id",financialId)
+    formData.append("currency_id",currencyId)
+    postTransaction(formData,"Transaction added successfull");
+    
+        setShowModal(false);
+        setFinancialId('')
+        setAmount('')
+        setDate('')
+      };
+    
+
+    
+      if(loadingOverDue){
+        return <StaticLoader/>
+      }
 
   return (
     <div className="p-5 flex flex-col items-center gap-6">
@@ -115,6 +168,7 @@ const OverduePayable = () => {
             <th className="p-3">Payable Amount</th>
             <th className="p-3">Due Date</th>
             <th className="p-3">Manual Date</th>
+            <th className="p-3">Transaction</th>
           </tr>
         </thead>
         <tbody>
@@ -129,6 +183,14 @@ const OverduePayable = () => {
                 <td className="p-3">{item.payable}</td>
                 <td className="p-3">{item.due_date}</td>
                 <td className="p-3">{item.manuel_date}</td>
+                <td className="p-3">
+  <Link 
+      onClick={() => handleTransactionClick(item)}
+    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300"
+  >
+    Transaction
+  </Link>
+</td>
               </tr>
             ))
           ) : (
@@ -140,6 +202,67 @@ const OverduePayable = () => {
           )}
         </tbody>
       </table>
+                  {/* Transaction Modal */}
+                  {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-lg w-96 shadow-lg">
+      <h2 className="text-xl font-bold mb-4">Add Transaction</h2>
+
+      <TextField
+        label="Amount"
+        type="text"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+        fullWidth
+        variant="outlined"
+        margin="normal"
+      />
+
+      <TextField
+        label="Date"
+        type="date"
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
+        fullWidth
+        variant="outlined"
+        margin="normal"
+        InputLabelProps={{ shrink: true }}
+      />
+
+      <TextField
+        label="Financial"
+        select
+        value={financialId}
+        onChange={(e) => setFinancialId(e.target.value)}
+        fullWidth
+        variant="outlined"
+        margin="normal"
+      >
+        
+        {list.finantiols?.map((fin) => (
+          <MenuItem key={fin.id} value={fin.id}>
+            {fin.name}
+          </MenuItem>
+        ))}
+      </TextField>
+
+      <div className="flex justify-between gap-2 mt-4">
+  <button
+    className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
+    onClick={() => setShowModal(false)}
+  >
+    Cancel
+  </button>
+  <button
+    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition"
+    onClick={handleSubmitTransaction}
+  >
+    Submit
+  </button>
+</div>
+    </div>
+        </div>
+      )}
     </div>
   );
 };
