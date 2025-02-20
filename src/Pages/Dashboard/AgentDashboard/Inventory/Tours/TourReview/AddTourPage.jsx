@@ -122,7 +122,7 @@ const AddTourPage = ({ update, setUpdate }) => {
 
     const [isExtraPriceEnabled, setIsExtraPriceEnabled] = useState(false);
     const [extraPrices, setExtraPrices] = useState([
-      { name: '', price: '', currency: '', type: 'fixed' } // Default entry
+      { name: '', price: '', currency: '', type: '' } // Default entry
     ]);
     
     const [discounts, setDiscounts] = useState([
@@ -139,7 +139,7 @@ const AddTourPage = ({ update, setUpdate }) => {
     
     // Add Extra Price Entry
     const addExtraPrice = () => {
-      setExtraPrices([...extraPrices, { name: '', price: '', currency: '', type: 'fixed' }]);
+      setExtraPrices([...extraPrices, { name: '', price: '', currency: '', type: '' }]);
     };
     
     // Remove Extra Price Entry
@@ -175,15 +175,15 @@ const AddTourPage = ({ update, setUpdate }) => {
         minAge: "",
         maxAge: "",
         price: "",
-        currency: "USD",
+        currency: "",
         singlePrice: "",
         doublePrice: "",
         triplePrice: "",
         quadruplePrice: "",
-        singlePriceCurrency: "USD",
-        doublePriceCurrency: "USD",
-        triplePriceCurrency: "USD",
-        quadruplePriceCurrency: "USD",
+        singlePriceCurrency: "",
+        doublePriceCurrency: "",
+        triplePriceCurrency: "",
+        quadruplePriceCurrency: "",
       },
     ]);
   
@@ -244,34 +244,7 @@ const AddTourPage = ({ update, setUpdate }) => {
       const updatedCapacities = [...roomCapacities];
       updatedCapacities[index][name] = value;
       setRoomCapacities(updatedCapacities);
-    };
-  
-    // Add a new Room Capacity entry
-    const addRoomCapacity = () => {
-      setRoomCapacities([
-        ...roomCapacities,
-        {
-          singleChildren: "",
-          singleAdults: "",
-          doubleChildren: "",
-          doubleAdults: "",
-          tripleChildren: "",
-          tripleAdults: "",
-          quadrupleChildren: "",
-          quadrupleAdults: "",
-        },
-      ]);
-    };
-  
-    // Remove a Room Capacity entry (if more than one exists)
-    const removeRoomCapacity = (index) => {
-      if (roomCapacities.length > 1) {
-        setRoomCapacities(roomCapacities.filter((_, i) => i !== index));
-      }
-    };
-
-    
-    
+    };  
     
     const handleImageUpload = (e, index) => {
       const file = e.target.files[0];
@@ -489,8 +462,6 @@ const AddTourPage = ({ update, setUpdate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-
-
   // Basic Tour Details
     formData.append("name", tourDetails.name);
     formData.append("description", tourDetails.description);
@@ -507,7 +478,7 @@ const AddTourPage = ({ update, setUpdate }) => {
     formData.append("deposit", tourDetails.deposit);
     formData.append("deposit_type", tourDetails.deposit_type==='Percentage' ? 'precentage' : 'fixed'); // 'percentage' or 'fixed'
     formData.append("tax", tourDetails.tax);
-    formData.append("tax_type", tourDetails.tax_type); // 'percentage' or 'fixed'
+    formData.append("tax_type", tourDetails.tax_type==='Percentage' ? 'precentage' : 'fixed'); // 'percentage' or 'fixed'
 
     // Pickup Information
     formData.append("pick_up_country_id", tourPickUp.pick_up_country);
@@ -522,43 +493,119 @@ const AddTourPage = ({ update, setUpdate }) => {
     formData.append("tour_address", tourDetails.tour_address);
     formData.append("payments_options", paymentOption);
 
-     // Append Arrays Correctly
-  tourDestination.forEach((dest, index) => {
-    formData.append(`destinations[${index}][country_id]`, dest.destination_country);
-    formData.append(`destinations[${index}][city_id]`, dest.destination_city);
-    formData.append(`destinations[${index}][arrival_map]`, dest.destination_arrival_map);
-  });
+    // Append Arrays Correctly
+    tourDestination.forEach((dest, index) => {
+      formData.append(`destinations[${index}][country_id]`, dest.destination_country);
+      formData.append(`destinations[${index}][city_id]`, dest.destination_city);
+      formData.append(`destinations[${index}][arrival_map]`, dest.destination_arrival_map);
+    });
 
-  tourAvailability.forEach((avail, index) => {
-    formData.append(`availability[${index}][date]`, avail.date);
-    formData.append(`availability[${index}][last_booking]`, avail.last_booking);
-    formData.append(`availability[${index}][quantity]`, avail.quantity || 0);
-  });
+    tourAvailability.forEach((avail, index) => {
+      formData.append(`availability[${index}][date]`, avail.date);
+      formData.append(`availability[${index}][last_booking]`, avail.last_booking);
+      formData.append(`availability[${index}][quantity]`, avail.quantity || 0);
+    });
 
-  includes.forEach((inc, index) => {
-    formData.append(`includes[${index}][name]`, inc.name);
-  });
+    includes.forEach((inc, index) => {
+      formData.append(`includes[${index}][name]`, inc.name);
+    });
 
-  excludes.forEach((exc, index) => {
-    formData.append(`excludes[${index}][name]`, exc.name);
-  });
+    excludes.forEach((exc, index) => {
+      formData.append(`excludes[${index}][name]`, exc.name);
+    });
 
-  tourItinerary.forEach((itinerary, index) => {
-    formData.append(`itinerary[${index}][image]`, itinerary.itinerary_image);
-    formData.append(`itinerary[${index}][day_name]`, itinerary.itinerary_day_name);
-    formData.append(`itinerary[${index}][day_description]`, itinerary.itinerary_day_description);
-    formData.append(`itinerary[${index}][content]`, itinerary.itinerary_content);
-  });
+    tourItinerary.forEach((itinerary, index) => {
+      formData.append(`itinerary[${index}][image]`, itinerary.itinerary_image);
+      formData.append(`itinerary[${index}][day_name]`, itinerary.itinerary_day_name);
+      formData.append(`itinerary[${index}][day_description]`, itinerary.itinerary_day_description);
+      formData.append(`itinerary[${index}][content]`, itinerary.itinerary_content);
+    });
 
-  policyDetails.cancellationPolicies.forEach((policy, index) => {
-    formData.append(`cancelation_items[${index}][type]`, policy.cancellationType==='Percentage' ? 'precentage' : 'fixed');
-    formData.append(`cancelation_items[${index}][amount]`, policy.cancellationValue);
-    formData.append(`cancelation_items[${index}][days]`, policy.cancellationBeforeDays);
-  });
+    policyDetails.cancellationPolicies.forEach((policy, index) => {
+      formData.append(`cancelation_items[${index}][type]`, policy.cancellationType==='Percentage' ? 'precentage' : 'fixed');
+      formData.append(`cancelation_items[${index}][amount]`, policy.cancellationValue);
+      formData.append(`cancelation_items[${index}][days]`, policy.cancellationBeforeDays);
+    });
 
     // Policy & Cancellation
     formData.append("policy", policyDetails.childrenPolicy);
     formData.append("cancelation", policyDetails.cancellationPolicy ==='non_refundable' ? 1 : 0);
+
+
+    // Append the boolean for extra pricing
+    formData.append("enabled_extra_price", isExtraPriceEnabled ? 1 : 0);
+    formData.append("enable_person_type", isPersonTypeEnabled ? 1 : 0);
+    formData.append("with_accomodation", withAccommodation ? 1 : 0);
+
+    formData.append("price", price);
+    formData.append("currency_id", selectCurrency);
+
+    if(withAccommodation){
+      // Hotels
+      hotels.forEach((hotel, index) => {
+        formData.append(`hotels[${index}][name]`, hotel.name);
+      });
+      // Append Room Capacity Data
+      roomCapacities.forEach((room, index) => {
+        formData.append(`tour_room[${index}][adult_single]`, room.singleAdults || 0);
+        formData.append(`tour_room[${index}][adult_double]`, room.doubleAdults || 0);
+        formData.append(`tour_room[${index}][adult_triple]`, room.tripleAdults || 0);
+        formData.append(`tour_room[${index}][adult_quadruple]`, room.quadrupleAdults || 0);
+        formData.append(`tour_room[${index}][children_single]`, room.singleChildren || 0);
+        formData.append(`tour_room[${index}][children_double]`, room.doubleChildren || 0);
+        formData.append(`tour_room[${index}][children_triple]`, room.tripleChildren || 0);
+        formData.append(`tour_room[${index}][children_quadruple]`, room.quadrupleChildren || 0);
+      });
+    }
+    // Append Extra Prices
+    extraPrices.forEach((extra, index) => {
+        formData.append(`extra[${index}][name]`, extra.name);
+        formData.append(`extra[${index}][price]`, extra.price);
+        formData.append(`extra[${index}][currency_id]`, extra.currency);
+        formData.append(`extra[${index}][type]`, extra.type); // Can be 'one_time', 'person', or 'night'
+    });
+
+    // Append Discounts
+    discounts.forEach((discount, index) => {
+        formData.append(`discounts[${index}][from]`, discount.from);
+        formData.append(`discounts[${index}][to]`, discount.to);
+        formData.append(`discounts[${index}][discount]`, discount.discount);
+        formData.append(`discounts[${index}][type]`, discount.type ==='Percentage' ? 'precentage' : 'fixed'); // Can be 'percentage' or 'fixed'
+    });
+
+    // Append Pricing Data
+    persons.forEach((person, personIndex) => {
+      formData.append(`pricing[${personIndex}][person_type]`, person.type);
+      formData.append(`pricing[${personIndex}][min_age]`, person.minAge);
+      formData.append(`pricing[${personIndex}][max_age]`, person.maxAge);
+
+      let pricingItems = [];
+
+      if (!withAccommodation) {
+          pricingItems.push({
+              currency_id: person.currency,
+              price: person.price,
+              type: "single",
+          });
+      } else {
+          ["singlePrice", "doublePrice", "triplePrice", "quadruplePrice"].forEach((field) => {
+              if (person[field]) {
+                  pricingItems.push({
+                      currency_id: person[`${field}Currency`],
+                      price: person[field],
+                      type: field.replace("Price", "").toLowerCase(),
+                  });
+              }
+          });
+      }
+
+      // Append Pricing Items
+      pricingItems.forEach((item, priceIndex) => {
+          formData.append(`pricing[${personIndex}][pricing_item][${priceIndex}][currency_id]`, item.currency_id);
+          formData.append(`pricing[${personIndex}][pricing_item][${priceIndex}][price]`, item.price);
+          formData.append(`pricing[${personIndex}][pricing_item][${priceIndex}][type]`, item.type);
+      });
+    });
 
     postData(formData, 'Tour Added Success');
 
@@ -1108,449 +1155,416 @@ const AddTourPage = ({ update, setUpdate }) => {
                      </button>
                  </div>
         )}
-{activeTab === 'Pricing' && (
-  <div className=" bg-gray-50 rounded-lg shadow-md flex flex-col gap-5">
+        {activeTab === 'Pricing' && (
+          <div className=" bg-gray-50 rounded-lg shadow-md flex flex-col gap-5">
 
-    <div className='rounded-lg bg-white shadow-md p-4'>
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Pricing</h2>
-      
-      {/* Price Input */}
-      <div className="w-full mb-6 flex gap-5">
-        <TextField
-          label="Price"
-          type="number"
-          value={price}
-          onChange={(e)=>setPrice(e.target.value)}
-          variant="outlined"
-          className='w-full md:w-1/2'
-          inputProps={{
-            min: "0",
-  }}
-        />
+            <div className='rounded-lg bg-white shadow-md p-4'>
+              <h2 className="text-2xl font-semibold text-gray-800 mb-6">Pricing</h2>
+              
+              {/* Price Input */}
+              <div className="w-full mb-6 flex gap-5">
+                <TextField
+                  label="Price"
+                  type="number"
+                  value={price}
+                  onChange={(e)=>setPrice(e.target.value)}
+                  variant="outlined"
+                  className='w-full md:w-1/2'
+                  inputProps={{
+                      min: "0",
+                  }}
+                        />
 
-        {/* Currency Selection */}
-        <TextField
-          select
-          value={selectCurrency}
-          onChange={(e)=>setSelectCurrency(e.target.value)}
-          variant="outlined"
-          label="Currency"
-          className='w-full md:w-1/2'
-        >
-        {currencies.map((currency) => (
-            <MenuItem key={currency.id} value={currency.id}>
-                {currency.name}
-            </MenuItem>
-        ))}
-        </TextField>
-      </div>
+                {/* Currency Selection */}
+                <TextField
+                  select
+                  value={selectCurrency}
+                  onChange={(e)=>setSelectCurrency(e.target.value)}
+                  variant="outlined"
+                  label="Currency"
+                  className='w-full md:w-1/2'
+                >
+                {currencies.map((currency) => (
+                    <MenuItem key={currency.id} value={currency.id}>
+                        {currency.name}
+                    </MenuItem>
+                ))}
+                </TextField>
+              </div>
 
-    </div>
+            </div>
 
-    <div className='flex flex-col gap-5 rounded-lg bg-white shadow-md p-4'>
-    <h2 className="text-2xl font-semibold text-gray-800">Person Type</h2>
-      {/* Settings Card */}
-      <div className="w-full flex flex-col md:flex-row gap-5 px-4">
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            id="enablePersonType"
-            checked={isPersonTypeEnabled}
-            onChange={() => setIsPersonTypeEnabled(!isPersonTypeEnabled)}
-            className="w-5 h-5 accent-blue-600"
-          />
-          <label htmlFor="enablePersonType" className="ml-2 text-lg font-semibold text-gray-800">
-            Enable Person Type
-          </label>
-        </div>
-        {isPersonTypeEnabled && (
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="withAccommodation"
-              checked={withAccommodation}
-              onChange={() => setWithAccommodation(!withAccommodation)}
-              className="w-5 h-5 accent-blue-600"
-            />
-            <label htmlFor="withAccommodation" className="ml-2 text-lg font-semibold text-gray-800">
-              With Accommodation
-            </label>
-          </div>
-        )}
-      </div>
+            <div className='flex flex-col gap-5 rounded-lg bg-white shadow-md p-4'>
+            <h2 className="text-2xl font-semibold text-gray-800">Person Type</h2>
+              {/* Settings Card */}
+              <div className="w-full flex flex-col md:flex-row gap-5">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="enablePersonType"
+                    checked={isPersonTypeEnabled}
+                    onChange={() => setIsPersonTypeEnabled(!isPersonTypeEnabled)}
+                    className="w-5 h-5 accent-blue-600"
+                  />
+                  <label htmlFor="enablePersonType" className="ml-2 text-lg font-semibold text-gray-800">
+                    Enable Person Type
+                  </label>
+                </div>
+                {isPersonTypeEnabled && (
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="withAccommodation"
+                      checked={withAccommodation}
+                      onChange={() => setWithAccommodation(!withAccommodation)}
+                      className="w-5 h-5 accent-blue-600"
+                    />
+                    <label htmlFor="withAccommodation" className="ml-2 text-lg font-semibold text-gray-800">
+                      With Accommodation
+                    </label>
+                  </div>
+                )}
+              </div>
 
-      {/* Person Type Details Card */}
-      {isPersonTypeEnabled && (
-       <div className="w-full">
-       <div className="font-bold text-gray-800 text-xl">Person Type Details</div>
-       {persons.map((person, index) => (
-         <div key={index} className="border-b pb-4 mb-4 flex flex-wrap items-center">
-           
-           <div className="w-full md:w-4/12 p-2">
-             <TextField
-               select
-               name="type"
-               value={person.type}
-               fullWidth
-               variant="outlined"
-               onChange={(e) => handlePersonTypeChange(index, e)}
-               label="Person Type"
-             >
-               <MenuItem value="adult">Adult</MenuItem>
-               <MenuItem value="child">Child</MenuItem>
-               <MenuItem value="infant">Infant</MenuItem>
-             </TextField>
-           </div>
-     
-           <div className="w-full md:w-3/12 xl:w-2/12 p-2">
-             <TextField
-               fullWidth
-               type="number"
-               label="Min Age"
-               name="minAge"
-               value={person.minAge}
-               onChange={(e) => handlePersonTypeChange(index, e)}
-               inputProps={{
+              {/* Person Type Details Card */}
+              {isPersonTypeEnabled && (
+              <div className="w-full p-4 border rounded-lg shadow-md bg-white">
+              <div className="font-bold text-gray-800 text-xl">Person Type Details</div>
+              {persons.map((person, index) => (
+                <div key={index} className="w-full border-b pb-4 mb-4 flex flex-wrap items-center">
+                  
+                  <div className="w-full md:w-4/12 p-2">
+                    <TextField
+                      select
+                      name="type"
+                      value={person.type}
+                      fullWidth
+                      variant="outlined"
+                      onChange={(e) => handlePersonTypeChange(index, e)}
+                      label="Person Type"
+                    >
+                      <MenuItem value="adult">Adult</MenuItem>
+                      <MenuItem value="child">Child</MenuItem>
+                      <MenuItem value="infant">Infant</MenuItem>
+                    </TextField>
+                  </div>
+            
+                  <div className="w-full md:w-3/12 xl:w-2/12 p-2">
+                    <TextField
+                      fullWidth
+                      type="number"
+                      label="Min Age"
+                      name="minAge"
+                      value={person.minAge}
+                      onChange={(e) => handlePersonTypeChange(index, e)}
+                      inputProps={{
                 min: "0",
       }}
              />
-           </div>
-     
-           <div className="w-full md:w-3/12 xl:w-2/12 p-2">
-             <TextField
-               fullWidth
-               type="number"
-               label="Max Age"
-               name="maxAge"
-               value={person.maxAge}
-               onChange={(e) => handlePersonTypeChange(index, e)}
-               inputProps={{
+                  </div>
+            
+                  <div className="w-full md:w-3/12 xl:w-2/12 p-2">
+                    <TextField
+                      fullWidth
+                      type="number"
+                      label="Max Age"
+                      name="maxAge"
+                      value={person.maxAge}
+                      onChange={(e) => handlePersonTypeChange(index, e)}
+                      inputProps={{
                 min: "0",
       }}
              />
-           </div>
-     
-           {!withAccommodation ? (
-             <div className="w-full md:w-6/12 xl:w-4/12 p-2">
-               <div className="flex flex-wrap items-center">
-                 <div className="w-8/12 p-1">
-                   <TextField
-                     fullWidth
-                     type="number"
-                     label="Price"
-                     name="price"
-                     value={person.price}
-                     onChange={(e) => handlePersonTypeChange(index, e)}
-                     inputProps={{
+                  </div>
+            
+                  {!withAccommodation ? (
+                    <div className="w-full md:w-6/12 xl:w-4/12 p-2">
+                      <div className="flex flex-wrap items-center">
+                        <div className="w-8/12 p-1">
+                          <TextField
+                            fullWidth
+                            type="number"
+                            label="Price"
+                            name="price"
+                            value={person.price}
+                            onChange={(e) => handlePersonTypeChange(index, e)}
+                            inputProps={{
                       min: "0",
             }}
                    />
-                 </div>
-                 <div className="w-4/12 p-1">
-                   <TextField
-                    select
-                     fullWidth
-                     label="Currency"
-                     name="currency"
-                     value={person.currency}
-                     onChange={(e) => handlePersonTypeChange(index, e)}
-                   >
-                    {currencies.map((currency) => (
-                          <MenuItem key={currency.id} value={currency.id}>
-                              {currency.name}
-                          </MenuItem>
-                      ))}
-                   </TextField>
-                 </div>
-               </div>
-             </div>
-           ) : (
-             <div className="w-full">
-               <div className="flex flex-wrap">
-                 {["singlePrice", "doublePrice", "triplePrice", "quadruplePrice"].map((field) => (
-                   <div className="w-full md:w-6/12 p-2" key={field}>
-                     <div className="flex flex-wrap items-center">
-                       <div className="w-8/12 p-1">
-                         <TextField
-                           fullWidth
-                           type="number"
-                           label={field.replace("Price", " Price")}
-                           name={field}
-                           value={person[field]}
-                           onChange={(e) => handlePersonTypeChange(index, e)}
-                           inputProps={{
+                        </div>
+                        <div className="w-4/12 p-1">
+                          <TextField
+                            select
+                            fullWidth
+                            label="Currency"
+                            name="currency"
+                            value={person.currency}
+                            onChange={(e) => handlePersonTypeChange(index, e)}
+                          >
+                            {currencies.map((currency) => (
+                                  <MenuItem key={currency.id} value={currency.id}>
+                                      {currency.name}
+                                  </MenuItem>
+                              ))}
+                          </TextField>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="w-full">
+                      <div className="flex flex-wrap">
+                        {["singlePrice", "doublePrice", "triplePrice", "quadruplePrice"].map((field) => (
+                          <div className="w-full md:w-6/12 p-2" key={field}>
+                            <div className="flex flex-wrap items-center">
+                              <div className="w-8/12 p-1">
+                                <TextField
+                                  fullWidth
+                                  type="number"
+                                  label={field.replace("Price", " Price")}
+                                  name={field}
+                                  value={person[field]}
+                                  onChange={(e) => handlePersonTypeChange(index, e)}
+                                  inputProps={{
                             min: "0",
                   }}
                          />
-                       </div>
-                       <div className="w-4/12 p-1">
-                         <TextField
-                          select
-                          fullWidth
-                          label="Currency"
-                          name={`${field}Currency`}
-                          value={person[`${field}Currency`]}
-                          onChange={(e) => handlePersonTypeChange(index, e)}
-                         >
-                          {currencies.map((currency) => (
-                              <MenuItem key={currency.id} value={currency.id}>
-                                  {currency.name}
-                              </MenuItem>
-                          ))}
-                         </TextField>
-                       </div>
-                     </div>
+                              </div>
+                              <div className="w-4/12 p-1">
+                                <TextField
+                                  select
+                                  fullWidth
+                                  label="Currency"
+                                  name={`${field}Currency`}
+                                  value={person[`${field}Currency`]}
+                                  onChange={(e) => handlePersonTypeChange(index, e)}
+                                >
+                                  {currencies.map((currency) => (
+                                      <MenuItem key={currency.id} value={currency.id}>
+                                          {currency.name}
+                                      </MenuItem>
+                                  ))}
+                                </TextField>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+            
+                  {index !== 0 && (
+                    <div className="w-auto p-2">
+                      <IconButton
+                        onClick={() => removePersonType(index)}
+                        disabled={persons.length === 1}
+                      >
+                        <AiOutlineMinusCircle
+                          size={24}
+                          className={persons.length === 1 ? "text-gray-400" : "text-red-500 hover:text-red-700"}
+                        /> Remove
+                      </IconButton>
+                    </div>
+                  )}
+            
+                </div>
+              ))}
+            
+              <button
+                type="button"
+                onClick={addPersonType}
+                className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition mt-2"
+              >
+                + Add Person Type
+              </button>
+            </div>
+            
+              )}
+              
+              {withAccommodation && (
+              <div className='w-full p-4 border rounded-lg shadow-md bg-white'>
+                <h3 className="text-2xl font-semibold text-gray-800 mb-4">Hotels</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                  {hotels.map((hotel, index) => (
+                    <div key={hotel.id} className="relative">
+                      <TextField
+                        label="Hotel Name"
+                        value={hotel.name}
+                        onChange={(e) => handleHotelChange(index, e)}
+                        variant="outlined"
+                        fullWidth
+                        InputProps={{
+                          endAdornment: index !== 0 && (
+                            <IconButton onClick={() => removeHotel(index)} size="small">
+                              <AiOutlineDelete color="red" />
+                            </IconButton>
+                          ),
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                {/* Add More Hotels Button */}
+                <button
+                  type="button"
+                  onClick={addHotel}
+                  className="mt-4 bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+                >
+                  + Add More Hotels
+                </button>
+              </div>
+              )}
+
+              {/* Room Capacity Card (Visible when With Accommodation is enabled) */}
+              {withAccommodation && (
+             <div className="w-full p-4 border rounded-lg shadow-md bg-white">
+             <h2 className="text-lg font-bold text-gray-800 mb-4">Maximum Room Capacity</h2>
+             <div className="p-4 border rounded-lg bg-gray-100 relative">
+               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                 {["singleChildren", "singleAdults", "doubleChildren", "doubleAdults", "tripleChildren", "tripleAdults", "quadrupleChildren", "quadrupleAdults"].map((field) => (
+                   <div key={field} className="flex flex-col">
+                     <label className="text-sm font-medium text-gray-700">
+                       {field.replace(/([A-Z])/g, " $1")}:
+                     </label>
+                     {roomCapacities.length > 0 && (
+                       <TextField
+                         type="number"
+                         name={field}
+                         value={roomCapacities[0][field] || ""}
+                         onChange={(e) => handleRoomCapacityChange(0, e)}
+                         inputProps={{ min: 0 }}
+                         fullWidth
+                       />
+                     )}
                    </div>
                  ))}
                </div>
              </div>
-           )}
-     
-           {index !== 0 && (
-             <div className="w-auto p-2">
-               <IconButton
-                 onClick={() => removePersonType(index)}
-                 disabled={persons.length === 1}
-               >
-                 <AiOutlineMinusCircle
-                   size={24}
-                   className={persons.length === 1 ? "text-gray-400" : "text-red-500 hover:text-red-700"}
-                 /> Remove
-               </IconButton>
-             </div>
-           )}
-     
-         </div>
-       ))}
-     
-       <button
-         type="button"
-         onClick={addPersonType}
-         className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition mt-2"
-       >
-         + Add Person Type
-       </button>
-     </div>
-     
-      )}
-      
-      {withAccommodation && (
-      <div>
-        <h3 className="text-2xl font-semibold text-gray-800 mb-4">Hotels</h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {hotels.map((hotel, index) => (
-            <div key={hotel.id} className="relative">
-              <TextField
-                label="Hotel Name"
-                value={hotel.name}
-                onChange={(e) => handleHotelChange(index, e)}
-                variant="outlined"
-                fullWidth
-                InputProps={{
-                  endAdornment: index !== 0 && (
-                    <IconButton onClick={() => removeHotel(index)} size="small">
-                      <AiOutlineDelete color="red" />
-                    </IconButton>
-                  ),
-                }}
-              />
+           </div>
+           
+              )}
+
             </div>
-          ))}
-        </div>
+          
+            {/* Extra Price Section */}
+            <div className="flex flex-col gap-4 rounded-lg bg-white shadow-md p-4">
+            <h2 className="text-2xl font-semibold text-gray-800">Extra Price</h2>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="enableExtraPrice"
+                  checked={isExtraPriceEnabled}
+                  onChange={() => setIsExtraPriceEnabled(!isExtraPriceEnabled)}
+                  className="w-5 h-5 accent-blue-600"
+                />
+                <label htmlFor="enableExtraPrice" className="ml-2 text-lg font-semibold text-gray-800">
+                  Enabled Extra Price
+                </label>
+              </div>
 
-        {/* Add More Hotels Button */}
-        <button
-          type="button"
-          onClick={addHotel}
-          className="mt-4 bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
-        >
-          + Add More Hotels
-        </button>
-      </div>
-      )}
+              {isExtraPriceEnabled && (
+                <div>
+                  {extraPrices.map((extra, index) => (
+                    <div key={index} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-4 p-4 bg-gray-50 rounded-md shadow">
+                      
+                      {/* Name */}
+                      <TextField
+                        label="Name"
+                        type="text"
+                        name="name"
+                        value={extra.name}
+                        onChange={(e) => handleExtraPriceChange(e, index)}
+                        variant="outlined"
+                      />
 
-      {/* Room Capacity Card (Visible when With Accommodation is enabled) */}
-      {withAccommodation && (
-        <Card className="w-full">
-          <CardContent>
-            <Typography variant="h5" className="font-bold text-gray-800 mb-4">
-              Room Capacity
-            </Typography>
-            {roomCapacities.map((room, index) => (
-              <Grid
-                container
-                spacing={2}
-                key={index}
-                className="items-center border-b pb-3 mb-3"
-              >
-                {[
-                  "singleChildren",
-                  "singleAdults",
-                  "doubleChildren",
-                  "doubleAdults",
-                  "tripleChildren",
-                  "tripleAdults",
-                  "quadrupleChildren",
-                  "quadrupleAdults",
-                ].map((field) => (
-                  <Grid item xs={12} sm={6} md={3} key={field}>
-                    <TextField
-                      fullWidth
-                      type="number"
-                      label={field.replace(/([A-Z])/g, " $1")}
-                      name={field}
-                      value={room[field]}
-                      onChange={(e) => handleRoomCapacityChange(index, e)}
-                      inputProps={{
-                        min: "0",
-              }}
-                    />
-                  </Grid>
-                ))}
-                {index !== 0 && (
-                <Grid item xs={12} md="auto">
-                  <IconButton
-                    onClick={() => removeRoomCapacity(index)}
-                    disabled={roomCapacities.length === 1}
+                      {/* Price */}
+                      <TextField
+                        label="Price"
+                        type="number"
+                        name="price"
+                        value={extra.price}
+                        onChange={(e) => handleExtraPriceChange(e, index)}
+                        variant="outlined"
+                        inputProps={{
+                          min: "0",
+                    }}
+                      />
+
+                      {/* Currency Selection */}
+                      <TextField
+                        select
+                        name="currency"
+                        value={extra.currency}
+                        fullWidth
+                        variant="outlined"
+                        onChange={(e) => handleExtraPriceChange(e, index)}
+                        label="Currency"
+                      >
+                        {currencies.map((currency) => (
+                            <MenuItem key={currency.id} value={currency.id}>
+                                {currency.name}
+                            </MenuItem>
+                        ))}
+                      </TextField>
+
+                      {/* Extra Price Type */}
+                      <TextField
+                        select
+                        name="type"
+                        value={extra.type}
+                        fullWidth
+                        variant="outlined"
+                        onChange={(e) => handleExtraPriceChange(e, index)}
+                        label="Type"
+                      >
+                        <MenuItem value="one_time">One Time</MenuItem>
+                        <MenuItem value="person">Per Person</MenuItem>
+                        <MenuItem value="night">Per Night</MenuItem>
+                      </TextField>
+
+                      {/* Remove Button (not for first entry) */}
+                      {index !== 0 && (
+                        <button
+                          type="button"
+                          onClick={() => removeExtraPrice(index)}
+                          className="bg-red-500 text-white mt-2 px-4 py-2 rounded shadow hover:bg-red-600 transition"
+                        >
+                          - Remove
+                        </button>
+                      )}
+                    </div>
+                  ))}
+
+                  {/* Add More Extra Prices Button */}
+                  <button
+                    type="button"
+                    onClick={addExtraPrice}
+                    className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
                   >
-                    <AiOutlineMinusCircle
-                      size={24}
-                      className={roomCapacities.length === 1 ? "text-gray-400" : "text-red-500 hover:text-red-700"}
-                    />Remove
-                  </IconButton>
-                </Grid>
-                )}
-              </Grid>
-            ))}
-
-            <Button
-              onClick={addRoomCapacity}
-              variant="contained"
-              color="primary"
-              startIcon={<AiOutlinePlusCircle size={20} />}
-              className="mt-2"
-            >
-              Add Room Capacity
-            </Button>
-          </CardContent>
-        </Card>
-      )}
-
-    </div>
-   
-    {/* Extra Price Section */}
-    <div className="mb-6 bg-white p-4 roundred-xl">
-    <h2 className="text-3xl font-semibold text-gray-800 mb-6">Extra Price</h2>
-      <div className="flex items-center">
-        <input
-          type="checkbox"
-          id="enableExtraPrice"
-          checked={isExtraPriceEnabled}
-          onChange={() => setIsExtraPriceEnabled(!isExtraPriceEnabled)}
-          className="w-5 h-5 accent-blue-600"
-        />
-        <label htmlFor="enableExtraPrice" className="ml-2 text-lg font-semibold text-gray-800">
-          Enabled Extra Price
-        </label>
-      </div>
-
-      {isExtraPriceEnabled && (
-        <div className="p-4 bg-white shadow-md rounded-lg">
-          {extraPrices.map((extra, index) => (
-            <div key={index} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-4 p-4 bg-gray-50 rounded-md shadow">
-              
-              {/* Name */}
-              <TextField
-                label="Name"
-                type="text"
-                name="name"
-                value={extra.name}
-                onChange={(e) => handleExtraPriceChange(e, index)}
-                variant="outlined"
-              />
-
-              {/* Price */}
-              <TextField
-                label="Price"
-                type="number"
-                name="price"
-                value={extra.price}
-                onChange={(e) => handleExtraPriceChange(e, index)}
-                variant="outlined"
-                inputProps={{
-                  min: "0",
-        }}
-              />
-
-              {/* Currency Selection */}
-              <TextField
-                select
-                name="currency"
-                value={extra.currency}
-                fullWidth
-                variant="outlined"
-                onChange={(e) => handleExtraPriceChange(e, index)}
-                label="Currency"
-              >
-                <MenuItem value="USD">USD</MenuItem>
-                <MenuItem value="EUR">EUR</MenuItem>
-                <MenuItem value="EGP">EGP</MenuItem>
-              </TextField>
-
-              {/* Extra Price Type */}
-              <TextField
-                select
-                name="type"
-                value={extra.type}
-                fullWidth
-                variant="outlined"
-                onChange={(e) => handleExtraPriceChange(e, index)}
-                label="Type"
-              >
-                <MenuItem value="fixed">Fixed</MenuItem>
-                <MenuItem value="percentage">Percentage</MenuItem>
-              </TextField>
-
-              {/* Remove Button (not for first entry) */}
-              {index !== 0 && (
-                <button
-                  type="button"
-                  onClick={() => removeExtraPrice(index)}
-                  className="bg-red-500 text-white mt-2 px-4 py-2 rounded shadow hover:bg-red-600 transition"
-                >
-                  - Remove
-                </button>
+                    + Add More
+                  </button>
+                </div>
               )}
             </div>
-          ))}
 
-          {/* Add More Extra Prices Button */}
-          <button
-            type="button"
-            onClick={addExtraPrice}
-            className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
-          >
-            + Add More
-          </button>
-        </div>
-      )}
-    </div>
-
-    {/* Discount By Number of People Section */}
-    <h2 className="text-3xl font-semibold text-gray-800 mb-6">Discount By Number of People</h2>
-    {discounts.map((discount, index) => (
-      <div key={index} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-5 p-4 bg-white shadow rounded-md">
-        
-        {/* From */}
-        <TextField
-          label="From"
-          type="number"
-          name="from"
-          value={discount.from}
-          onChange={(e) => handleDiscountChange(e, index)}
-          variant="outlined"
-          inputProps={{
+            {/* Discount By Number of People Section */}
+            <div className="flex flex-col gap-4 rounded-lg bg-white shadow-md p-4">
+            <h2 className="text-2xl font-semibold text-gray-800">Discount By Number of People</h2>
+            <div>
+            {discounts.map((discount, index) => (
+              <div key={index} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-4 p-4 bg-gray-50 rounded-md shadow">
+                
+                {/* From */}
+                <TextField
+                  label="From"
+                  type="number"
+                  name="from"
+                  value={discount.from}
+                  onChange={(e) => handleDiscountChange(e, index)}
+                  variant="outlined"
+                  inputProps={{
             min: "0",
   }}
         />
@@ -1581,44 +1595,46 @@ const AddTourPage = ({ update, setUpdate }) => {
   }}
         />
 
-        {/* Discount Type: Fixed or Percentage */}
-        <TextField
-          select
-          name="type"
-          value={discount.type}
-          fullWidth
-          variant="outlined"
-          onChange={(e) => handleDiscountChange(e, index)}
-          label="Discount Type"
-        >
-          <MenuItem value="percentage">Percentage</MenuItem>
-          <MenuItem value="fixed">Fixed</MenuItem>
-        </TextField>
+                {/* Discount Type: Fixed or Percentage */}
+                <TextField
+                  select
+                  name="type"
+                  value={discount.type}
+                  fullWidth
+                  variant="outlined"
+                  onChange={(e) => handleDiscountChange(e, index)}
+                  label="Discount Type"
+                >
+                  <MenuItem value="percentage">Percentage</MenuItem>
+                  <MenuItem value="fixed">Fixed</MenuItem>
+                </TextField>
 
-        {/* Remove Button (not for first entry) */}
-        {index !== 0 && (
-          <button
-            type="button"
-            onClick={() => removeDiscount(index)}
-            className="bg-red-500 text-white mt-2 px-4 py-2 rounded shadow hover:bg-red-600 transition"
-          >
-            - Remove
-          </button>
+                {/* Remove Button (not for first entry) */}
+                {index !== 0 && (
+                  <button
+                    type="button"
+                    onClick={() => removeDiscount(index)}
+                    className="bg-red-500 text-white mt-2 px-4 py-2 rounded shadow hover:bg-red-600 transition"
+                  >
+                    - Remove
+                  </button>
+                )}
+              </div>
+            ))}
+            {/* Add More Discounts Button */}
+            <button
+              type="button"
+              onClick={addDiscount}
+              className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+            >
+              + Add More
+            </button>
+            </div>
+
+            </div>
+
+          </div>
         )}
-      </div>
-    ))}
-
-    {/* Add More Discounts Button */}
-    <button
-      type="button"
-      onClick={addDiscount}
-      className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
-    >
-      + Add More
-    </button>
-  </div>
-)}
-
         {activeTab === 'Policy' && (
           <div className="p-4 xl:p-8 bg-gray-50 rounded-lg shadow-md">
               <h2 className="text-3xl font-semibold text-gray-800 mb-6">Policy Settings</h2>
