@@ -122,7 +122,7 @@ const AddTourPage = ({ update, setUpdate }) => {
 
     const [isExtraPriceEnabled, setIsExtraPriceEnabled] = useState(false);
     const [extraPrices, setExtraPrices] = useState([
-      { name: '', price: '', currency: '', type: 'fixed' } // Default entry
+      { name: '', price: '', currency: '', type: '' } // Default entry
     ]);
     
     const [discounts, setDiscounts] = useState([
@@ -139,7 +139,7 @@ const AddTourPage = ({ update, setUpdate }) => {
     
     // Add Extra Price Entry
     const addExtraPrice = () => {
-      setExtraPrices([...extraPrices, { name: '', price: '', currency: '', type: 'fixed' }]);
+      setExtraPrices([...extraPrices, { name: '', price: '', currency: '', type: '' }]);
     };
     
     // Remove Extra Price Entry
@@ -462,8 +462,6 @@ const AddTourPage = ({ update, setUpdate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-
-
   // Basic Tour Details
     formData.append("name", tourDetails.name);
     formData.append("description", tourDetails.description);
@@ -480,7 +478,7 @@ const AddTourPage = ({ update, setUpdate }) => {
     formData.append("deposit", tourDetails.deposit);
     formData.append("deposit_type", tourDetails.deposit_type==='Percentage' ? 'precentage' : 'fixed'); // 'percentage' or 'fixed'
     formData.append("tax", tourDetails.tax);
-    formData.append("tax_type", tourDetails.tax_type); // 'percentage' or 'fixed'
+    formData.append("tax_type", tourDetails.tax_type==='Percentage' ? 'precentage' : 'fixed'); // 'percentage' or 'fixed'
 
     // Pickup Information
     formData.append("pick_up_country_id", tourPickUp.pick_up_country);
@@ -495,102 +493,119 @@ const AddTourPage = ({ update, setUpdate }) => {
     formData.append("tour_address", tourDetails.tour_address);
     formData.append("payments_options", paymentOption);
 
-     // Append Arrays Correctly
-  tourDestination.forEach((dest, index) => {
-    formData.append(`destinations[${index}][country_id]`, dest.destination_country);
-    formData.append(`destinations[${index}][city_id]`, dest.destination_city);
-    formData.append(`destinations[${index}][arrival_map]`, dest.destination_arrival_map);
-  });
+    // Append Arrays Correctly
+    tourDestination.forEach((dest, index) => {
+      formData.append(`destinations[${index}][country_id]`, dest.destination_country);
+      formData.append(`destinations[${index}][city_id]`, dest.destination_city);
+      formData.append(`destinations[${index}][arrival_map]`, dest.destination_arrival_map);
+    });
 
-  tourAvailability.forEach((avail, index) => {
-    formData.append(`availability[${index}][date]`, avail.date);
-    formData.append(`availability[${index}][last_booking]`, avail.last_booking);
-    formData.append(`availability[${index}][quantity]`, avail.quantity || 0);
-  });
+    tourAvailability.forEach((avail, index) => {
+      formData.append(`availability[${index}][date]`, avail.date);
+      formData.append(`availability[${index}][last_booking]`, avail.last_booking);
+      formData.append(`availability[${index}][quantity]`, avail.quantity || 0);
+    });
 
-  includes.forEach((inc, index) => {
-    formData.append(`includes[${index}][name]`, inc.name);
-  });
+    includes.forEach((inc, index) => {
+      formData.append(`includes[${index}][name]`, inc.name);
+    });
 
-  excludes.forEach((exc, index) => {
-    formData.append(`excludes[${index}][name]`, exc.name);
-  });
+    excludes.forEach((exc, index) => {
+      formData.append(`excludes[${index}][name]`, exc.name);
+    });
 
-  tourItinerary.forEach((itinerary, index) => {
-    formData.append(`itinerary[${index}][image]`, itinerary.itinerary_image);
-    formData.append(`itinerary[${index}][day_name]`, itinerary.itinerary_day_name);
-    formData.append(`itinerary[${index}][day_description]`, itinerary.itinerary_day_description);
-    formData.append(`itinerary[${index}][content]`, itinerary.itinerary_content);
-  });
+    tourItinerary.forEach((itinerary, index) => {
+      formData.append(`itinerary[${index}][image]`, itinerary.itinerary_image);
+      formData.append(`itinerary[${index}][day_name]`, itinerary.itinerary_day_name);
+      formData.append(`itinerary[${index}][day_description]`, itinerary.itinerary_day_description);
+      formData.append(`itinerary[${index}][content]`, itinerary.itinerary_content);
+    });
 
-  policyDetails.cancellationPolicies.forEach((policy, index) => {
-    formData.append(`cancelation_items[${index}][type]`, policy.cancellationType==='Percentage' ? 'precentage' : 'fixed');
-    formData.append(`cancelation_items[${index}][amount]`, policy.cancellationValue);
-    formData.append(`cancelation_items[${index}][days]`, policy.cancellationBeforeDays);
-  });
+    policyDetails.cancellationPolicies.forEach((policy, index) => {
+      formData.append(`cancelation_items[${index}][type]`, policy.cancellationType==='Percentage' ? 'precentage' : 'fixed');
+      formData.append(`cancelation_items[${index}][amount]`, policy.cancellationValue);
+      formData.append(`cancelation_items[${index}][days]`, policy.cancellationBeforeDays);
+    });
 
     // Policy & Cancellation
     formData.append("policy", policyDetails.childrenPolicy);
     formData.append("cancelation", policyDetails.cancellationPolicy ==='non_refundable' ? 1 : 0);
 
 
-// Append the boolean for extra pricing
-formData.append("enabled_extra_price", isExtraPriceEnabled ? 1 : 0);
+    // Append the boolean for extra pricing
+    formData.append("enabled_extra_price", isExtraPriceEnabled ? 1 : 0);
+    formData.append("enable_person_type", isPersonTypeEnabled ? 1 : 0);
+    formData.append("with_accomodation", withAccommodation ? 1 : 0);
 
+    formData.append("price", price);
+    formData.append("currency_id", selectCurrency);
 
-// Append additional pricing for single, double, triple, and quadruple
-persons.forEach((person, index) => {
-  formData.append(`pricing[${index}][pricing_item][1][currency_id]`, person.singlePriceCurrency);
-  formData.append(`pricing[${index}][pricing_item][1][price]`, person.singlePrice);
-  formData.append(`pricing[${index}][pricing_item][1][type]`, "fixed");
+    if(withAccommodation){
+      // Hotels
+      hotels.forEach((hotel, index) => {
+        formData.append(`hotels[${index}][name]`, hotel.name);
+      });
+      // Append Room Capacity Data
+      roomCapacities.forEach((room, index) => {
+        formData.append(`tour_room[${index}][adult_single]`, room.singleAdults || 0);
+        formData.append(`tour_room[${index}][adult_double]`, room.doubleAdults || 0);
+        formData.append(`tour_room[${index}][adult_triple]`, room.tripleAdults || 0);
+        formData.append(`tour_room[${index}][adult_quadruple]`, room.quadrupleAdults || 0);
+        formData.append(`tour_room[${index}][children_single]`, room.singleChildren || 0);
+        formData.append(`tour_room[${index}][children_double]`, room.doubleChildren || 0);
+        formData.append(`tour_room[${index}][children_triple]`, room.tripleChildren || 0);
+        formData.append(`tour_room[${index}][children_quadruple]`, room.quadrupleChildren || 0);
+      });
+    }
+    // Append Extra Prices
+    extraPrices.forEach((extra, index) => {
+        formData.append(`extra[${index}][name]`, extra.name);
+        formData.append(`extra[${index}][price]`, extra.price);
+        formData.append(`extra[${index}][currency_id]`, extra.currency);
+        formData.append(`extra[${index}][type]`, extra.type); // Can be 'one_time', 'person', or 'night'
+    });
 
-  formData.append(`pricing[${index}][pricing_item][2][currency_id]`, person.doublePriceCurrency);
-  formData.append(`pricing[${index}][pricing_item][2][price]`, person.doublePrice);
-  formData.append(`pricing[${index}][pricing_item][2][type]`, "fixed");
+    // Append Discounts
+    discounts.forEach((discount, index) => {
+        formData.append(`discounts[${index}][from]`, discount.from);
+        formData.append(`discounts[${index}][to]`, discount.to);
+        formData.append(`discounts[${index}][discount]`, discount.discount);
+        formData.append(`discounts[${index}][type]`, discount.type ==='Percentage' ? 'precentage' : 'fixed'); // Can be 'percentage' or 'fixed'
+    });
 
-  formData.append(`pricing[${index}][pricing_item][3][currency_id]`, person.triplePriceCurrency);
-  formData.append(`pricing[${index}][pricing_item][3][price]`, person.triplePrice);
-  formData.append(`pricing[${index}][pricing_item][3][type]`, "fixed");
+    // Append Pricing Data
+    persons.forEach((person, personIndex) => {
+      formData.append(`pricing[${personIndex}][person_type]`, person.type);
+      formData.append(`pricing[${personIndex}][min_age]`, person.minAge);
+      formData.append(`pricing[${personIndex}][max_age]`, person.maxAge);
 
-  formData.append(`pricing[${index}][pricing_item][4][currency_id]`, person.quadruplePriceCurrency);
-  formData.append(`pricing[${index}][pricing_item][4][price]`, person.quadruplePrice);
-  formData.append(`pricing[${index}][pricing_item][4][type]`, "fixed");
-});
+      let pricingItems = [];
 
-// Hotels
-hotels.forEach((hotel, index) => {
-  formData.append(`hotels[${index}][name]`, hotel.name);
-});
+      if (!withAccommodation) {
+          pricingItems.push({
+              currency_id: person.currency,
+              price: person.price,
+              type: "single",
+          });
+      } else {
+          ["singlePrice", "doublePrice", "triplePrice", "quadruplePrice"].forEach((field) => {
+              if (person[field]) {
+                  pricingItems.push({
+                      currency_id: person[`${field}Currency`],
+                      price: person[field],
+                      type: field.replace("Price", "").toLowerCase(),
+                  });
+              }
+          });
+      }
 
-// Append Room Capacity Data
-roomCapacities.forEach((room, index) => {
-  formData.append(`tour_room[${index}][adult_single]`, room.singleAdults);
-  formData.append(`tour_room[${index}][adult_double]`, room.doubleAdults);
-  formData.append(`tour_room[${index}][adult_triple]`, room.tripleAdults);
-  formData.append(`tour_room[${index}][adult_quadruple]`, room.quadrupleAdults);
-  formData.append(`tour_room[${index}][children_single]`, room.singleChildren);
-  formData.append(`tour_room[${index}][children_double]`, room.doubleChildren);
-  formData.append(`tour_room[${index}][children_triple]`, room.tripleChildren);
-  formData.append(`tour_room[${index}][children_quadruple]`, room.quadrupleChildren);
-});
-
-// Append Extra Prices
-extraPrices.forEach((extra, index) => {
-    formData.append(`extra[${index}][name]`, extra.name);
-    formData.append(`extra[${index}][price]`, extra.price);
-    formData.append(`extra[${index}][currency_id]`, extra.currency);
-    formData.append(`extra[${index}][type]`, extra.type==='Percentage' ? 'precentage' : 'fixed'); // Can be 'one_time', 'person', or 'night'
-});
-
-// Append Discounts
-discounts.forEach((discount, index) => {
-    formData.append(`discounts[${index}][from]`, discount.from);
-    formData.append(`discounts[${index}][to]`, discount.to);
-    formData.append(`discounts[${index}][discount]`, discount.discount);
-    formData.append(`discounts[${index}][type]`, discount.type ==='Percentage' ? 'precentage' : 'fixed'); // Can be 'percentage' or 'fixed'
-});
-
-
+      // Append Pricing Items
+      pricingItems.forEach((item, priceIndex) => {
+          formData.append(`pricing[${personIndex}][pricing_item][${priceIndex}][currency_id]`, item.currency_id);
+          formData.append(`pricing[${personIndex}][pricing_item][${priceIndex}][price]`, item.price);
+          formData.append(`pricing[${personIndex}][pricing_item][${priceIndex}][type]`, item.type);
+      });
+    });
 
     postData(formData, 'Tour Added Success');
 
@@ -1156,9 +1171,9 @@ discounts.forEach((discount, index) => {
                   variant="outlined"
                   className='w-full md:w-1/2'
                   inputProps={{
-            min: "0",
-  }}
-        />
+                      min: "0",
+                  }}
+                        />
 
                 {/* Currency Selection */}
                 <TextField
@@ -1404,28 +1419,31 @@ discounts.forEach((discount, index) => {
 
               {/* Room Capacity Card (Visible when With Accommodation is enabled) */}
               {withAccommodation && (
-              <div className="w-full p-4 border rounded-lg shadow-md bg-white">
-                <h2 className="text-lg font-bold text-gray-800 mb-4">Maximum Room Capacity</h2>
-                <div className="p-4 border rounded-lg bg-gray-100 relative">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                    {["singleChildren", "singleAdults", "doubleChildren", "doubleAdults", "tripleChildren", "tripleAdults", "quadrupleChildren", "quadrupleAdults"].map((field) => (
-                      <div key={field} className="flex flex-col">
-                        <label className="text-sm font-medium text-gray-700">
-                          {field.replace(/([A-Z])/g, " $1")}:
-                        </label>
-                        <TextField
-                          type="number"
-                          name={field}
-                          value={roomCapacities[field]}
-                          onChange={(e) => handleRoomCapacityChange(e)}
-                          inputProps={{ min: 0}}
-                          fullWidth
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+             <div className="w-full p-4 border rounded-lg shadow-md bg-white">
+             <h2 className="text-lg font-bold text-gray-800 mb-4">Maximum Room Capacity</h2>
+             <div className="p-4 border rounded-lg bg-gray-100 relative">
+               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                 {["singleChildren", "singleAdults", "doubleChildren", "doubleAdults", "tripleChildren", "tripleAdults", "quadrupleChildren", "quadrupleAdults"].map((field) => (
+                   <div key={field} className="flex flex-col">
+                     <label className="text-sm font-medium text-gray-700">
+                       {field.replace(/([A-Z])/g, " $1")}:
+                     </label>
+                     {roomCapacities.length > 0 && (
+                       <TextField
+                         type="number"
+                         name={field}
+                         value={roomCapacities[0][field] || ""}
+                         onChange={(e) => handleRoomCapacityChange(0, e)}
+                         inputProps={{ min: 0 }}
+                         fullWidth
+                       />
+                     )}
+                   </div>
+                 ))}
+               </div>
+             </div>
+           </div>
+           
               )}
 
             </div>
@@ -1461,18 +1479,18 @@ discounts.forEach((discount, index) => {
                         variant="outlined"
                       />
 
-              {/* Price */}
-              <TextField
-                label="Price"
-                type="number"
-                name="price"
-                value={extra.price}
-                onChange={(e) => handleExtraPriceChange(e, index)}
-                variant="outlined"
-                inputProps={{
-                  min: "0",
-        }}
-              />
+                      {/* Price */}
+                      <TextField
+                        label="Price"
+                        type="number"
+                        name="price"
+                        value={extra.price}
+                        onChange={(e) => handleExtraPriceChange(e, index)}
+                        variant="outlined"
+                        inputProps={{
+                          min: "0",
+                    }}
+                      />
 
                       {/* Currency Selection */}
                       <TextField
@@ -1484,9 +1502,11 @@ discounts.forEach((discount, index) => {
                         onChange={(e) => handleExtraPriceChange(e, index)}
                         label="Currency"
                       >
-                        <MenuItem value="USD">USD</MenuItem>
-                        <MenuItem value="EUR">EUR</MenuItem>
-                        <MenuItem value="EGP">EGP</MenuItem>
+                        {currencies.map((currency) => (
+                            <MenuItem key={currency.id} value={currency.id}>
+                                {currency.name}
+                            </MenuItem>
+                        ))}
                       </TextField>
 
                       {/* Extra Price Type */}
@@ -1499,8 +1519,9 @@ discounts.forEach((discount, index) => {
                         onChange={(e) => handleExtraPriceChange(e, index)}
                         label="Type"
                       >
-                        <MenuItem value="fixed">Fixed</MenuItem>
-                        <MenuItem value="percentage">Percentage</MenuItem>
+                        <MenuItem value="one_time">One Time</MenuItem>
+                        <MenuItem value="person">Per Person</MenuItem>
+                        <MenuItem value="night">Per Night</MenuItem>
                       </TextField>
 
                       {/* Remove Button (not for first entry) */}
