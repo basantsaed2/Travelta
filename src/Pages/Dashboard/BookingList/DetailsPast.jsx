@@ -14,7 +14,7 @@ const tabs = [
   "Invoice",
   // "Special Request",
   "Payments",
-  "Actions",
+  // "Actions",
 ];
 
 const DetailsPast = () => {
@@ -1355,9 +1355,9 @@ const handleUpdateRequest = async () => {
             </div>
           )}
 
-          {activeTab === "Actions" && (
+          {/* {activeTab === "Actions" && (
            <ActionPast id={past_id} item={item}/>
-          )}
+          )} */}
         </div>
       </div>
     </div>

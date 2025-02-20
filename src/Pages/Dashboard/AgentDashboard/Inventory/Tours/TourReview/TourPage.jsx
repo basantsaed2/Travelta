@@ -336,9 +336,13 @@ const TourPageInventory = () => {
               <IconButton className="text-red-500" onClick={() => handleDelete(tour.id, tour.name)}>
                 <FaTrash />
               </IconButton>
+              <Link
+                to={`edit/${tour.id}`}
+                >
               <IconButton className="text-blue-500">
                 <FaEdit />
               </IconButton>
+              </Link>
             </div>
           </CardContent>
         </Card>
