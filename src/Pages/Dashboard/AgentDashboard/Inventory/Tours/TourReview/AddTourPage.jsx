@@ -10,6 +10,7 @@ import { MdAttachMoney } from "react-icons/md";
 import { FiPercent } from "react-icons/fi";
 import { format } from 'date-fns';
 import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
+import PickUpMap from "../../../../../../Components/PickUpMap"; // Import the map component
 
 const AddTourPage = ({ update, setUpdate }) => {
     const { refetch: refetchList, loading: loadingList, data: listData } = useGet({url:'https://travelta.online/agent/tour/lists'});
@@ -78,6 +79,9 @@ const AddTourPage = ({ update, setUpdate }) => {
       pick_up_country: '',
       pick_up_city: '',
       pick_up_map: '',
+      lat: 31.2001, // Default latitude (Alexandria)
+      lng: 29.9187, // Default longitude
+  
     });
     const [tourDestination, setTourDestination] = useState([
       {
@@ -281,7 +285,6 @@ const AddTourPage = ({ update, setUpdate }) => {
       }
     }, [listData]);
 
-    
     const handleChangeTourDetails = (e) => {
         setTourDetails({
         ...tourDetails,
@@ -294,13 +297,51 @@ const AddTourPage = ({ update, setUpdate }) => {
         status: e.target.checked,
         });
     };
+    
 
-    const handleChangeTourPickUp = (e) => {
-      setTourPickUp({
-      ...tourPickUp,
-      [e.target.name]: e.target.value,
-      });
+  //   const handleChangeTourPickUp = (e) => {
+  //     setTourPickUp({
+  //     ...tourPickUp,
+  //     [e.target.name]: e.target.value,
+  //     });
+  // };
+
+  // Function to extract lat/lng from Google Maps link
+  const extractLatLngFromGoogleLink = (link) => {
+    const regex = /q=(-?\d+\.\d+),(-?\d+\.\d+)/;
+    const match = link.match(regex);
+    if (match) {
+      return {
+        lat: parseFloat(match[1]),
+        lng: parseFloat(match[2]),
+      };
+    }
+    return null;
   };
+
+  // Function to handle input change
+  const handleChangeTourPickUp = (e) => {
+    const { name, value } = e.target;
+
+    // If user enters a Google Maps link, extract lat/lng and update state
+    if (name === "pick_up_map") {
+      const googleCoords = extractLatLngFromGoogleLink(value);
+      if (googleCoords) {
+        setTourPickUp((prev) => ({
+          ...prev,
+          pick_up_map: value, // Store full URL
+          lat: googleCoords.lat,
+          lng: googleCoords.lng,
+        }));
+      } else {
+        setTourPickUp((prev) => ({ ...prev, [name]: value }));
+      }
+    } else {
+      setTourPickUp((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  
 //   const handleChangeTourDestination = (e) => {
 //     setTourDestination({
 //     ...tourDestination,
@@ -462,6 +503,8 @@ const AddTourPage = ({ update, setUpdate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
+    const googleMapsLink = `https://www.google.com/maps?q=${tourPickUp.lat},${tourPickUp.lng}`;
+
   // Basic Tour Details
     formData.append("name", tourDetails.name);
     formData.append("description", tourDetails.description);
@@ -483,7 +526,7 @@ const AddTourPage = ({ update, setUpdate }) => {
     // Pickup Information
     formData.append("pick_up_country_id", tourPickUp.pick_up_country);
     formData.append("pick_up_city_id", tourPickUp.pick_up_city);
-    formData.append("pick_up_map", tourPickUp.pick_up_map);
+    formData.append("pick_up_map",googleMapsLink);
 
     // Destination Type & Contact Info
     formData.append("destination_type", selectedDestinationType); // 'single' or 'multiple'
@@ -531,7 +574,6 @@ const AddTourPage = ({ update, setUpdate }) => {
     formData.append("policy", policyDetails.childrenPolicy);
     formData.append("cancelation", policyDetails.cancellationPolicy ==='non_refundable' ? 1 : 0);
 
-
     // Append the boolean for extra pricing
     formData.append("enabled_extra_price", isExtraPriceEnabled ? 1 : 0);
     formData.append("enable_person_type", isPersonTypeEnabled ? 1 : 0);
@@ -557,13 +599,16 @@ const AddTourPage = ({ update, setUpdate }) => {
         formData.append(`tour_room[${index}][children_quadruple]`, room.quadrupleChildren || 0);
       });
     }
-    // Append Extra Prices
-    extraPrices.forEach((extra, index) => {
-        formData.append(`extra[${index}][name]`, extra.name);
-        formData.append(`extra[${index}][price]`, extra.price);
-        formData.append(`extra[${index}][currency_id]`, extra.currency);
-        formData.append(`extra[${index}][type]`, extra.type); // Can be 'one_time', 'person', or 'night'
-    });
+
+    if(isExtraPriceEnabled){
+        // Append Extra Prices
+      extraPrices.forEach((extra, index) => {
+          formData.append(`extra[${index}][name]`, extra.name);
+          formData.append(`extra[${index}][price]`, extra.price);
+          formData.append(`extra[${index}][currency_id]`, extra.currency);
+          formData.append(`extra[${index}][type]`, extra.type); // Can be 'one_time', 'person', or 'night'
+      });
+    }
 
     // Append Discounts
     discounts.forEach((discount, index) => {
@@ -857,51 +902,65 @@ const AddTourPage = ({ update, setUpdate }) => {
         {activeTab === 'Pickup & Destination' && (
             <div className="p-4 flex flex-col gap-5">
           <h1 className='font-semibold text-2xl text-mainColor'>Pick_UP Location</h1>
-            <div className="flex flex-col md:flex-row gap-4 mb-4">
-            <TextField
-                select
-                name="pick_up_country"
-                fullWidth
-                variant="outlined"
-                value={tourPickUp.pick_up_country}
-                onChange={handleChangeTourPickUp}
-                label="Select PickUp Country"
-                className="mb-6"
-                required
-                >
-                {countries.map((country) => (
-                    <MenuItem key={country.id} value={country.id}>
-                    {country.name}
-                    </MenuItem>
-                ))}
-            </TextField>
-            <TextField
-                select
-                name="pick_up_city"
-                fullWidth
-                variant="outlined"
-                value={tourPickUp.pick_up_city}
-                onChange={handleChangeTourPickUp}
-                label="Select PickUp City"
-                className="mb-6"
-                required
-                >
-                {cities.map((city) => (
-                    <MenuItem key={city.id} value={city.id}>
-                    {city.name}
-                    </MenuItem>
-                ))}
-            </TextField>
-            <TextField
-                name="pick_up_map"
-                label="Pick_up Map"
-                type="text"
-                fullWidth
-                required
-                value={tourPickUp.pick_up_map}
-                onChange={handleChangeTourPickUp}
-            /> 
-            </div>
+          <div className="space-y-6">
+        {/* Country & City Selection (Side-by-Side on Desktop) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <TextField
+            select
+            name="pick_up_country"
+            fullWidth
+            variant="outlined"
+            value={tourPickUp.pick_up_country}
+            onChange={handleChangeTourPickUp}
+            label="Select PickUp Country"
+            required
+          >
+            {countries.map((country) => (
+              <MenuItem key={country.id} value={country.id}>
+                {country.name}
+              </MenuItem>
+            ))}
+          </TextField>
+
+          <TextField
+            select
+            name="pick_up_city"
+            fullWidth
+            variant="outlined"
+            value={tourPickUp.pick_up_city}
+            onChange={handleChangeTourPickUp}
+            label="Select PickUp City"
+            required
+          >
+            {cities.map((city) => (
+              <MenuItem key={city.id} value={city.id}>
+                {city.name}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
+
+        {/* Map Input Field (Full Width) */}
+        <TextField
+          name="pick_up_map"
+          label="Pick-up Map"
+          type="text"
+          fullWidth
+          required
+          value={tourPickUp.pick_up_map}
+          onChange={handleChangeTourPickUp}
+        />
+
+        {/* Hidden Lat/Lng Fields */}
+        <input type="hidden" name="lat" value={tourPickUp.lat} />
+        <input type="hidden" name="lng" value={tourPickUp.lng} />
+
+        {/* Interactive Map (Auto-updates with location) */}
+        <div className="border rounded-xl overflow-hidden shadow-md">
+        <PickUpMap tourPickUp={tourPickUp} setTourPickUp={setTourPickUp} />
+        </div>
+      </div>
+
           <h1 className='font-semibold text-2xl text-mainColor'>Destination Location</h1>
             <div className="flex w-full gap-4 lg:w-2/4 mb-4">
               <TextField
