@@ -244,6 +244,32 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
                             stateLink.isActiveCategory ?? false
                         );
 
+                        // revenue
+                const [isOpenRevenue, setIsOpenRevenue] = useState(
+                  stateLink.isOpenRevenue ?? false
+                );
+                const [isActiveRevenueIcon, setIsActiveRevenueIcon] = useState(
+                  stateLink.isActiveRevenueIcon ?? false
+                );
+                const [isActiveRevenue, setIsActiveRevenue] = useState(
+                    stateLink.isActiveRevenue?? false
+                );
+                        //Inventory Room Setting
+                        const [isOpenListRevenue, setIsOpenListRevenue] = useState(
+                            stateLink.isOpenListRevenue ?? false
+                        );
+                        const [isActiveListRevenue, setIsActiveListRevenue] = useState(
+                            stateLink.isActiveListRevenue ?? false
+                        );
+  
+                        //Inventory Room Preview
+                        const [isOpenCategoryRevenue, setIsOpenCategoryRevenue] = useState(
+                          stateLink.isOpenCategoryRevenue ?? false
+                        );
+                        const [isActiveCategoryRevenue, setIsActiveCategoryRevenue] = useState(
+                            stateLink.isActiveCategoryRevenue ?? false
+                        );
+
                         // is open O.T
                         const [isOpenOwnerTransaction, setIsOpenOwnerTransaction] = useState(
                           stateLink.isOpenOwnerTransaction ?? false
@@ -270,7 +296,23 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
                                     stateLink.isActiveTransaction ?? false
                                 );
 
-                            
+                                                    // is open PaymentRecivable
+                        const [isOpenOwnerPaymentRecivable, setIsOpenPaymentRecivable] = useState(
+                          stateLink.isOpenOwnerPaymentRecivable ?? false
+                        );
+                        const [isActivePaymentRecivableIcon, setIsActivePaymentRecivableIcon] = useState(
+                          stateLink.isActivePaymentRecivableIcon ?? false
+                        );
+                        const [isActivePaymentRecivable, setIsActivePaymentRecivable] = useState(
+                            stateLink.isActivePaymentRecivable?? false
+                        );
+                                // isOpenPayableToSupplier
+                                const [isOpenRecivable, setIsOpenRecivable] = useState(
+                                    stateLink.isOpenRecivable ?? false
+                                );
+                                const [isActiveRecivable, setIsActiveRecivable] = useState(
+                                    stateLink.isActiveRecivable ?? false
+                                );
 
                // is open payable
                const [isOpenPayable, setIsOpenPayable] = useState(
@@ -400,6 +442,14 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       isActiveExpensesIcon,
       isOpenExpenses,
 
+      isActiveCategoryRevenue,
+      isOpenCategoryRevenue,
+      isActiveListRevenue,
+      isOpenListRevenue,
+      isActiveRevenue,
+      isActiveRevenueIcon,
+      isOpenRevenue,
+
       isActiveOverDue,
       isOpenOverDue,
       isActivePaidSupplier,
@@ -417,6 +467,13 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       isActiveOwnerTransaction,
       isActiveOwnerTransactionIcon,
       isOpenOwnerTransaction,
+      
+
+      isActiveRecivable,
+      isOpenRecivable,
+      isActivePaymentRecivable,
+      isActivePaymentRecivableIcon,
+      isOpenOwnerPaymentRecivable,
       
 
 
@@ -512,6 +569,14 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveExpensesIcon,
     isOpenExpenses,
 
+    isActiveCategoryRevenue,
+    isOpenCategoryRevenue,
+    isActiveListRevenue,
+    isOpenListRevenue,
+    isActiveRevenue,
+    isActiveRevenueIcon,
+    isOpenRevenue,
+
     isActiveOverDue,
     isOpenOverDue,
     isActivePaidSupplier,
@@ -529,6 +594,12 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveOwnerTransaction,
     isActiveOwnerTransactionIcon,
     isOpenOwnerTransaction,
+
+    isActiveRecivable,
+    isOpenRecivable,
+    isActivePaymentRecivable,
+    isActivePaymentRecivableIcon,
+    isOpenOwnerPaymentRecivable,
 
     isOpenInventoryRoom,
     isActiveInventoryRoom,
@@ -622,6 +693,14 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveExpensesIcon,
     isOpenExpenses,
 
+    isActiveCategoryRevenue,
+    isOpenCategoryRevenue,
+    isActiveListRevenue,
+    isOpenListRevenue,
+    isActiveRevenue,
+    isActiveRevenueIcon,
+    isOpenRevenue,
+
     isActiveOverDue,
     isOpenOverDue,
     isActivePaidSupplier,
@@ -639,6 +718,12 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveOwnerTransaction,
     isActiveOwnerTransactionIcon,
     isOpenOwnerTransaction,
+
+    isActiveRecivable,
+    isOpenRecivable,
+    isActivePaymentRecivable,
+    isActivePaymentRecivableIcon,
+    isOpenOwnerPaymentRecivable,
 
     isOpenInventoryRoom,
     isActiveInventoryRoom,
@@ -724,6 +809,15 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActiveExpensesIcon(false)
     setIsOpenExpenses(false)
 
+
+    setIsActiveCategoryRevenue(false)
+    setIsOpenCategoryRevenue(false)
+    setIsActiveListRevenue(false)
+    setIsOpenListRevenue(false)
+    setIsActiveRevenue(false)
+    setIsActiveRevenueIcon(false)
+    setIsOpenRevenue(false)
+
     setIsActiveOverDue(false)
     setIsOpenOverDue(false)
     setIsActivePaidSupplier(false)
@@ -741,6 +835,12 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActiveOwnerTransaction(false)
     setIsActiveOwnerTransactionIcon(false)
     setIsOpenOwnerTransaction(false)
+
+    setIsActiveRecivable(false)
+    setIsOpenRecivable(false)
+    setIsActivePaymentRecivable(false)
+    setIsActivePaymentRecivableIcon(false)
+    setIsOpenPaymentRecivable(false)
    
 
     setIsActiveSetting(false);
@@ -1356,6 +1456,70 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       }
     }, [location]);
 
+    // revenue
+
+    const handleClickRevenue = useCallback(() => {
+      handleStateLinks();
+  
+      setIsOpenAccounting(true);
+      setIsActiveAccountingIcon(true);
+      setIsActiveAccounting(true);
+  
+      setIsOpenRevenue(true);
+      setIsActiveRevenue(true);
+      setIsActiveRevenueIcon(true);
+    }, []);
+  
+    const handleClickListRevenue = useCallback(() => {
+      handleStateLinks();
+  
+      setIsOpenAccounting(true);
+      setIsActiveAccountingIcon(true);
+      setIsActiveAccounting(true);
+  
+      setIsOpenRevenue(true);
+      setIsActiveRevenue(true);
+      setIsActiveRevenueIcon(true);
+  
+      setIsOpenListRevenue(true);
+      setIsActiveListRevenue(true);
+    }, []);
+  
+    useEffect(() => {
+      const part = pathName.split("/");
+      const result = part.slice(0, 5).join("/");
+      if (
+        result === "/dashboard_agent/IncomingPage/revenue/list_revenue") {
+          handleClickListRevenue();
+      }
+    }, [location]);
+  
+  
+      /* Category */
+      const handleClickCategoryRevenue = useCallback(() => {
+        handleStateLinks();
+    
+        setIsOpenAccounting(true);
+        setIsActiveAccountingIcon(true);
+        setIsActiveAccounting(true);
+    
+        setIsOpenRevenue(true);
+        setIsActiveRevenue(true);
+        setIsActiveRevenueIcon(true);
+    
+        setIsOpenCategoryRevenue(true);
+        setIsActiveCategoryRevenue(true);
+      }, []);
+    
+      useEffect(() => {
+        const part = pathName.split("/");
+        const result = part.slice(0, 5).join("/");
+        if (
+          result === "/dashboard_agent/IncomingPage/revenue/category_revenue") {
+            handleClickCategoryRevenue();
+        }
+      }, [location]);
+
 
     const handleClickOwnerTransaction = useCallback(() => {
       handleStateLinks();
@@ -1509,6 +1673,44 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
               handleClickOverDue();
           }
         }, [location]);
+
+
+          /* payment recivable */
+  const handleClickPaymentRecivable = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenAccounting(true);
+    setIsActiveAccountingIcon(true);
+    setIsActiveAccounting(true);
+
+    setIsOpenPaymentRecivable(true);
+    setIsActivePaymentRecivable(true);
+
+    setIsActivePaymentRecivableIcon(true);
+  }, []);
+
+
+  const handleClickRecivable = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenAccounting(true);
+    setIsActiveAccountingIcon(true);
+    setIsActiveAccounting(true);
+    
+    setIsOpenPaymentRecivable(true);
+    setIsActivePaymentRecivable(true);
+    
+    setIsActivePaymentRecivableIcon(true);
+    setIsOpenRecivable(true)
+    setIsActiveRecivable(true);
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 4).join("/");
+    if (result == "/dashboard_agent/payment_recivable/recivable") {
+      handleClickRecivable();
+    }
+  }, [location]);
     
 
   // Setting
@@ -2522,6 +2724,41 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     </ul>
   </div>
 
+   {/* payment Recivable Section */}
+   <li
+    onMouseEnter={() => setIsActivePaymentRecivable(true)}
+    onMouseLeave={() => setIsActivePaymentRecivable(false)}
+    onClick={handleClickPaymentRecivable}
+    className={`flex items-center justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer
+      ${isActivePaymentRecivable ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}
+    `}
+  >
+    <div className="flex items-center gap-2">
+      <MdOutlineBedroomChild className={isActivePaymentRecivable ? "text-mainColor" : "text-white"} />
+      {!isSidebarCollapsed && <span>Payment Recivable</span>}
+    </div>
+    {!isSidebarCollapsed && (
+      <IoIosArrowForward className={`transition-transform duration-300 ${
+        isActivePaymentRecivable ? "rotate-90 text-mainColor" : "rotate-0 text-white"
+      }`} />
+    )}
+  </li>
+
+  {/* Expenses Dropdown */}
+  <div className={`overflow-hidden transition-all duration-700 ${
+    isOpenOwnerPaymentRecivable && !isSidebarCollapsed ? "max-h-[200px]" : "max-h-0"
+  }`}>
+    <ul className="pl-8 flex flex-col gap-y-2 transition-all duration-700">
+      {/* List Expenses */}
+      <Link to={"IncomingPage/payment_recivable/recivable"} onClick={() => { handleClickRecivable(); onLinkClick(); }}>
+        <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
+          isActiveOwner ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+        }`}>
+          Recivable
+        </li>
+      </Link>
+    </ul>
+  </div>
 
   {/* Expenses Section */}
   <li
@@ -2563,6 +2800,51 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
           isActiveCategory ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
         }`}>
           Category
+        </li>
+      </Link>
+    </ul>
+  </div>
+
+    {/* Revenue Section */}
+    <li
+    onMouseEnter={() => setIsActiveRevenue(true)}
+    onMouseLeave={() => setIsActiveRevenue(false)}
+    onClick={handleClickRevenue}
+    className={`flex items-center justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer
+      ${isActiveRevenue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}
+    `}
+  >
+    <div className="flex items-center gap-2">
+      <MdOutlineBedroomChild className={isActiveRevenue ? "text-mainColor" : "text-white"} />
+      {!isSidebarCollapsed && <span>Revenue</span>}
+    </div>
+    {!isSidebarCollapsed && (
+      <IoIosArrowForward className={`transition-transform duration-300 ${
+        isActiveRevenue ? "rotate-90 text-mainColor" : "rotate-0 text-white"
+      }`} />
+    )}
+  </li>
+
+  {/* Revenue Dropdown */}
+  <div className={`overflow-hidden transition-all duration-700 ${
+    isOpenRevenue && !isSidebarCollapsed ? "max-h-[200px]" : "max-h-0"
+  }`}>
+    <ul className="pl-8 flex flex-col gap-y-2 transition-all duration-700">
+      {/* List Revenue */}
+      <Link to={"IncomingPage/revenue/list_revenue"} onClick={() => { handleClickListRevenue(); onLinkClick(); }}>
+        <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
+          isActiveListRevenue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+        }`}>
+          List Revenue
+        </li>
+      </Link>
+
+      {/* Category */}
+      <Link to={"IncomingPage/revenue/category_revenue"} onClick={() => { handleClickCategoryRevenue(); onLinkClick(); }}>
+        <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
+          isActiveCategoryRevenue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+        }`}>
+          Category 
         </li>
       </Link>
     </ul>

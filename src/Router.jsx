@@ -127,6 +127,10 @@ import OverDueLayout from "./Layouts/AgentLayouts/Accounting/PayableToSupplierLa
 import OwnerTransaction from "./Pages/Dashboard/AgentDashboard/ComingSoon/OwnerTransaction/OwnerTransaction";
 import OwnerLayout from "./Layouts/AgentLayouts/Accounting/OwnerTransaction/OwnerLayout";
 import TransactionLayoutO from "./Layouts/AgentLayouts/Accounting/OwnerTransaction/TransactionLayoutO";
+import PaymentRecivableLayout from "./Layouts/AgentLayouts/Accounting/PaymentRecivableLayout/PaymentRecivableLayout";
+import ListRevenueLayout from "./Layouts/AgentLayouts/Accounting/AccountRevenueLayout/ListRevenueLayout";
+import CategoryRevenueLayout from "./Layouts/AgentLayouts/Accounting/AccountRevenueLayout/CategoryRevenueLayout";
+import RevenueLayout from "./Layouts/AgentLayouts/Accounting/AccountRevenueLayout/RevenueLayout";
 
 
 const AppLayoutAgent = () => (
@@ -422,6 +426,16 @@ const AppOwnerTransaction =() => (
   <Outlet />
   </>
 );
+const AppPaymentRecivable =() => (
+  <>
+  <Outlet />
+  </>
+);
+const AppRevenue =() => (
+  <>
+  <Outlet />
+  </>
+);
 export const router = createBrowserRouter([
 
     {
@@ -522,6 +536,22 @@ export const router = createBrowserRouter([
                       element:<ListExpensesLayout/>,
                     }
               ]},
+              {path:"revenue",
+                element:<AppRevenue/>,
+                children:[
+                  {
+                    path:"",
+                    element:<RevenueLayout/>,
+                  },
+                  {
+                    path:"list_revenue",
+                    element:<ListRevenueLayout/>,
+                  },
+                  {
+                    path:"category_revenue",
+                    element:<CategoryRevenueLayout/>,
+                  },
+            ]},
               {path:"payable_to_supplier",
                 element:<AppPayable/>,
                 children:[
@@ -550,7 +580,14 @@ export const router = createBrowserRouter([
                   element:<TransactionLayoutO/>,
                 },
           ]},
-
+          {path:"payment_recivable",
+            element:<AppPaymentRecivable/>,
+            children:[
+              {
+                path:"recivable",
+                element:<PaymentRecivableLayout/>,
+              },
+        ]},
 
                 ]
               },

@@ -8,7 +8,7 @@ import { useAuth } from "../../../../../Context/Auth";
 import { FaTrashCan } from "react-icons/fa6";
 import StaticLoader from "../../../../../Components/StaticLoader";
 
-const CategoryExpensis = () => {
+const CategoryRevenue = () => {
   const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -17,9 +17,9 @@ const CategoryExpensis = () => {
   const [newName, setNewName] = useState('');
   const [newId, setNewId] = useState('');
   const { refetch: refetchCategory,loading:loadingCategory, data: DataCategory } = useGet({
-    url: `https://travelta.online/agent/accounting/expenses/category`,
+    url: `https://travelta.online/agent/accounting/revenue/category`,
   });
-  const { postData: postCategory ,loadingPost,response } = usePost({ url: `https://travelta.online/agent/accounting/expenses/category/add` });
+  const { postData: postCategory ,loadingPost,response } = usePost({ url: `https://travelta.online/agent/accounting/revenue/category/add` });
   const [category, setCategory] = useState([]);
   const [parent, setParent] = useState([]);
   const { deleteData } = useDelete();
@@ -67,7 +67,7 @@ const CategoryExpensis = () => {
 
     try {
       const response = await fetch(
-        `https://travelta.online/agent/accounting/expenses/category/update/${selectedCategory.id}`,
+        `https://travelta.online/agent/accounting/revenue/category/update/${selectedCategory.id}`,
         {
           method: 'PUT',
           headers: {
@@ -99,7 +99,7 @@ const CategoryExpensis = () => {
 
   const handleDelete = async (id) => {
     const success = await deleteData(
-      `https://travelta.online/agent/accounting/expenses/category/delete/${id}`,
+      `https://travelta.online/agent/accounting/revenue/category/delete/${id}`,
       `Category Deleted Successfully.`
     );
     if (success) {
@@ -110,6 +110,7 @@ const CategoryExpensis = () => {
   if(loadingCategory){
     return <StaticLoader/>
   }
+
   return (
     <div className="p-6">
       <div className="flex justify-end mb-4">
@@ -246,4 +247,4 @@ const CategoryExpensis = () => {
   );
 };
 
-export default CategoryExpensis;
+export default CategoryRevenue;
