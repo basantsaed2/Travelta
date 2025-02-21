@@ -73,34 +73,119 @@ const ActionCurrent = ({ id, item }) => {
       console.error("Error updating status:", error);
     }
   };
+  // Step Indicator Stages
+  const steps = ["pending", "confirmed", "vouchered", "canceled"];
+  const stepIndex = steps.indexOf(status);
 
   return (
-    <div className="p-6 bg-white rounded-2xl shadow-lg flex flex-col gap-4 w-full sm:w-80 border border-gray-200">
-      <h3 className="text-lg font-semibold text-gray-800">Booking #{id}</h3>
-      <p className="text-gray-600">Customer: {dataDetails?.name || "N/A"}</p>
-      <p className="text-gray-600">Email: {dataDetails?.email || "N/A"}</p>
-      <p className="text-gray-600">Phone: {dataDetails?.phone || "N/A"}</p>
+    <div className="p-6  rounded-2xl  flex flex-col gap-4 w-full  ">
 
-      <p className="font-medium px-3 py-1 rounded-full w-fit text-sm" style={{ backgroundColor: status === "pending" ? "#facc15" : status === "confirmed" ? "#34d399" : status === "vouchered" ? "#38bdf8" : "#f87171", color: "#fff" }}>
-        {status}
+      {/* Step Indicator */}
+ {/* Step Indicator */}
+ <div className="relative flex items-center justify-between w-full mt-4">
+  {steps.map((step, index) => (
+    <div key={step} className="relative flex flex-col items-center w-full">
+      {/* Progress Line (Behind Circles) */}
+      {index > 0 && (
+        <div
+          className={`absolute top-1/2 left-[-50%] w-full h-1 transition-all duration-300 ${
+            index <= stepIndex
+              ? step === "pending"
+                ? "bg-yellow-500"
+                : step === "confirmed"
+                ? "bg-green-500"
+                : step === "vouchered"
+                ? "bg-blue-500"
+                : "bg-red-500"
+              : "bg-gray-300"
+          }`}
+          style={{ transform: "translateY(-50%)", width: "100%" }}
+        ></div>
+      )}
+
+      {/* Step Circle */}
+      <div
+        className={`relative z-10 w-10 h-10 flex items-center justify-center rounded-full text-white font-bold shadow-md transition-all duration-300 ${
+          step === "pending"
+            ? "bg-yellow-500"
+            : step === "confirmed"
+            ? "bg-green-500"
+            : step === "vouchered"
+            ? "bg-blue-500"
+            : "bg-red-500"
+        } ${index > stepIndex ? "opacity-50" : ""} hover:scale-110 cursor-pointer`}
+      >
+        {index <= stepIndex ? "✔" : index + 1}
+      </div>
+
+      {/* Step Label */}
+      <p
+        className={`text-xs mt-2 font-medium transition-colors duration-300 ${
+          index <= stepIndex
+            ? step === "pending"
+              ? "text-yellow-600"
+              : step === "confirmed"
+              ? "text-green-600"
+              : step === "vouchered"
+              ? "text-blue-600"
+              : "text-red-600"
+            : "text-gray-400"
+        }`}
+      >
+        {step}
       </p>
+    </div>
+  ))}
+</div>
 
+
+
+
+      {/* Status Badge */}
+      {/* <p
+        className="font-medium px-3 py-1 rounded-full w-fit text-sm"
+        style={{
+          backgroundColor:
+            status === "pending"
+              ? "#facc15"
+              : status === "confirmed"
+              ? "#34d399"
+              : status === "vouchered"
+              ? "#38bdf8"
+              : "#f87171",
+          color: "#fff",
+        }}
+      >
+        {status}
+      </p> */}
+
+      {/* Action Buttons */}
       <div className="flex gap-2 mt-4">
         {status === "pending" && (
           <>
-            <button onClick={() => handleAction("confirmed")} className="px-4 py-2 bg-green-500 text-white rounded-lg">Confirm</button>
-            <button onClick={() => handleAction("canceled")} className="px-4 py-2 bg-red-500 text-white rounded-lg">Cancel</button>
+            <button onClick={() => handleAction("confirmed")} className="px-4 py-2 bg-green-500 text-white rounded-lg">
+              Confirm
+            </button>
+            <button onClick={() => handleAction("canceled")} className="px-4 py-2 bg-red-500 text-white rounded-lg">
+              Cancel
+            </button>
           </>
         )}
         {status === "confirmed" && (
           <>
-            <button onClick={() => handleAction("vouchered")} className="px-4 py-2 bg-blue-500 text-white rounded-lg">Voucher</button>
-            <button onClick={() => handleAction("canceled")} className="px-4 py-2 bg-red-500 text-white rounded-lg">Cancel</button>
+            <button onClick={() => handleAction("vouchered")} className="px-4 py-2 bg-blue-500 text-white rounded-lg">
+              Voucher
+            </button>
+            <button onClick={() => handleAction("canceled")} className="px-4 py-2 bg-red-500 text-white rounded-lg">
+              Cancel
+            </button>
           </>
         )}
-         {status === "vouchered" && (
+        {status === "vouchered" && (
           <>
-            <button onClick={() => handleAction("canceled")} className="px-4 py-2 bg-red-500 text-white rounded-lg">Cancel</button>
+            <button onClick={() => handleAction("canceled")} className="px-4 py-2 bg-red-500 text-white rounded-lg">
+              Cancel
+            </button>
           </>
         )}
       </div>
@@ -119,26 +204,29 @@ const ActionCurrent = ({ id, item }) => {
               <div>
                 {deposits.map((dep, index) => (
                   <div key={index} className="flex gap-2 mt-2">
-                    <input type="number" min='0' placeholder="Deposit" value={dep.deposit} onChange={(e) => setDeposits(prev => prev.map((d, i) => i === index ? { ...d, deposit: e.target.value } : d))} className="border p-1 w-full" />
-                    <input type="date" value={dep.date} onChange={(e) => setDeposits(prev => prev.map((d, i) => i === index ? { ...d, date: e.target.value } : d))} className="border p-1 w-full" />
+                    <input type="number" min="0" placeholder="Deposit" value={dep.deposit} onChange={(e) => setDeposits((prev) => prev.map((d, i) => (i === index ? { ...d, deposit: e.target.value } : d)))} className="border p-1 w-full" />
+                    <input type="date" value={dep.date} onChange={(e) => setDeposits((prev) => prev.map((d, i) => (i === index ? { ...d, date: e.target.value } : d)))} className="border p-1 w-full" />
                   </div>
                 ))}
-                <button onClick={() => setDeposits([...deposits, { deposit: "", date: "" }])} className="text-blue-500 mt-2">+ Add Deposit</button>
+                <button onClick={() => setDeposits([...deposits, { deposit: "", date: "" }])} className="text-blue-500 mt-2">
+                  + Add Deposit
+                </button>
               </div>
             )}
             {actionType === "vouchered" && (
-              <div className="mt-2">
-                {/* <input type="number" placeholder="Totally Paid" value={totallyPaid} onChange={(e) => setTotallyPaid(e.target.value)} className="border p-1 w-full" /> */}
-                <input type="text" placeholder="Confirmation Number" value={confirmationNum} onChange={(e) => setConfirmationNum(e.target.value)} className="border p-1 w-full mt-2" />
-              </div>
+              <input type="text" placeholder="Confirmation Number" value={confirmationNum} onChange={(e) => setConfirmationNum(e.target.value)} className="border p-1 w-full mt-2" />
             )}
             {actionType === "canceled" && (
               <input type="text" placeholder="Cancelation Reason" value={cancelationReason} onChange={(e) => setCancelationReason(e.target.value)} className="border p-1 w-full mt-2" />
             )}
 
             <div className="flex justify-end space-x-2 mt-4">
-              <button onClick={() => setShowConfirm(false)} className="px-3 py-1 text-gray-600 border rounded">No</button>
-              <button onClick={confirmAction} className="px-3 py-1 bg-indigo-500 text-white rounded">Yes</button>
+              <button onClick={() => setShowConfirm(false)} className="px-3 py-1 text-gray-600 border rounded">
+                No
+              </button>
+              <button onClick={confirmAction} className="px-3 py-1 bg-indigo-500 text-white rounded">
+                Yes
+              </button>
             </div>
           </Dialog.Panel>
         </div>

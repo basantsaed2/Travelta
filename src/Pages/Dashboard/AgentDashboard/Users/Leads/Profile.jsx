@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useGet } from '../../../../../Hooks/useGet';
 import StaticLoader from '../../../../../Components/StaticLoader';
-import { FaChevronUp } from 'react-icons/fa';
+import { FaChevronUp, FaEnvelope, FaPhone, FaUser } from 'react-icons/fa';
 import { FaChevronDown } from 'react-icons/fa6';
 
 const Profile = ({ id }) => {
@@ -30,29 +30,39 @@ const Profile = ({ id }) => {
 
   return (
     <div className=" p-4 space-y-6">
-      {/* User Info Card */}
-      <h2 
-        className="mt-4 mb-5 flex justify-start items-start text-mainColor text-3xl px-4 py-2 rounded-lg w-full font-semibold cursor-pointer"
-        onClick={() => setShowInfo((prev) => !prev)}
-      >
-        User Info
-        {/* Conditional Arrow Icon */}
-        {showInfo ? (
-          <FaChevronDown className="ml-2 text-xl text-mainColor" /> // Arrow up
-        ) : (
-          <FaChevronUp className="ml-2 text-xl text-mainColor" /> // Arrow down
-        )}
-      </h2>
-    {showInfo && 
-      <div className="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
+     <div className="shadow-lg rounded-2xl p-6 border border-gray-300 transition-all hover:shadow-2xl  relative">
+         {/* Header with Toggle */}
+         <h2
+           className="mt-4 mb-5 flex items-center justify-between text-mainColor text-3xl px-4 py-2 rounded-lg w-full font-semibold cursor-pointer  transition"
+           onClick={() => setShowInfo((prev) => !prev)}
+         >
+           <span>User Info</span>
+       
+         </h2>
+   
+         {/* Expandable User Info Section */}
+         
+           <div className="bg-white shadow-md rounded-lg p-6 border border-gray-200 transition-all">
+             <p className="flex items-center gap-2 text-gray-700">
+               <FaEnvelope className="text-mainColor" /> 
+               <strong>Email:</strong> {data?.customer_info?.email || "-"}
+             </p>
+             <p className="flex items-center gap-2 text-gray-700">
+               <FaUser className="text-mainColor" /> 
+               <strong>Name:</strong> {data?.customer_info?.name || "-"}
+             </p>
+             <p className="flex items-center gap-2 text-gray-700">
+               <FaPhone className="text-mainColor" /> 
+               <strong>Phone:</strong> {data?.customer_info?.phone || "-"}
+             </p>
+             <p className="flex items-center gap-2 text-gray-700">
+               <strong>Total Booking:</strong> {data?.customer_info?.total_booking || "-"}
+             </p>
+           </div>
       
-      <p><strong>Email:</strong> {data.customer_info?.email}</p>
-      <p><strong>Name:</strong> {data.customer_info?.name}</p>
-      <p><strong>Phone:</strong> {data.customer_info?.phone}</p>
-      <p><strong>Total Booking:</strong> {data.customer_info?.total_booking}</p>
-      
-    </div>
-    }
+   
+     
+       </div>
 
       {/* Request Details Table */}
       <div className="overflow-x-auto">
@@ -62,13 +72,9 @@ const Profile = ({ id }) => {
       >
         Request
         {/* Conditional Arrow Icon */}
-        {showRequest ? (
-          <FaChevronDown className="ml-2 text-xl text-mainColor" /> // Arrow up
-        ) : (
-          <FaChevronUp className="ml-2 text-xl text-mainColor" /> // Arrow down
-        )}
+     
       </h2>
-     {showRequest && 
+    
         <table className="w-full sm:min-w-0">
         <thead className="w-full">
           <tr className="w-full border-b-2">
@@ -113,7 +119,7 @@ const Profile = ({ id }) => {
           )}
         </tbody>
       </table>
-     }
+   
       </div>
     </div>
   );

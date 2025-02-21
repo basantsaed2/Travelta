@@ -99,17 +99,29 @@ const PastBookingPage = ({ refetch, setUpdate }) => {
                 <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
                   {item?.status|| '-'}
                 </td>
-                                                               <td className="min-w-[150px] flex items-center justify-center sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                      <FaEllipsis 
-                        className="w-10 h-10 text-mainColor  cursor-pointer hover:text-blue-500 transition-all"
-                        onClick={() => {
-                          const selectedKey = Object.keys(tabLists).find((key) => tabLists[key] === item.list);
-                          navigate(`/dashboard_agent/booking_list/past_booking/details_past/${item?.id}`, {
-                            state: { type: selectedKey, data: item }
-                          });
-                        }}
-                      />
-                    </td>
+                <td className="min-w-[150px] flex items-center justify-center sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+  <FaEllipsis 
+    className="w-10 h-10 text-mainColor cursor-pointer hover:text-blue-500 transition-all"
+    onClick={() => {
+      // Define a mapping for tab names to the required type
+      const typeMapping = {
+        Hotel: "hotels",
+        Bus: "buses",
+        Tour: "tours",
+        Flight: "flights",
+        Visa: "visas",
+      };
+
+      // Get the correct type based on activeTab
+      const selectedType = typeMapping[activeTab] || "unknown";
+
+      navigate(`/dashboard_agent/booking_list/past_booking/details_past/${item?.id}`, { state: { type: selectedType ,data:item } });
+    }}
+  />
+</td>
+
+
+
               </tr>
               ))
             )}

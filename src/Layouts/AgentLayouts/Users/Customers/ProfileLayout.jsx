@@ -1,11 +1,27 @@
 import React from 'react'
 import ProfileCustomer from '../../../../Pages/Dashboard/AgentDashboard/Users/Customers/Profile'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { FaArrowLeft } from 'react-icons/fa';
+import TitlePage from '../../../../Components/TitlePage';
 
 const ProfileCustomerLayout = () => {
     const { id } = useParams(); 
+    const navigate = useNavigate()
   return (
-    <div><>{<ProfileCustomer id={id} />}</></div>
+    <div>
+              <div className="flex gap-3">
+ <button
+        onClick={() => navigate(-1)}
+        className=" top-2 text-mainColor text-2xl cursor-pointer hover:text-blue-500 transition-all"
+      >
+        <FaArrowLeft/>
+      </button>
+ <TitlePage text={'Profile'} />
+   
+ </div>
+      
+      <>
+      {<ProfileCustomer id={id} />}</></div>
   )
 }
 

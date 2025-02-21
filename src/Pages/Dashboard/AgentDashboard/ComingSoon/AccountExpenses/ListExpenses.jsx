@@ -539,8 +539,8 @@ const ListExpenses = () => {
         <td className="p-4 border-b text-sm">{expense.category.name}</td>
         <td className="p-4 border-b text-sm">{expense.currency.name}</td>
         <td className="p-4 border-b text-sm flex items-center justify-center">
-          <img src={expense.financiale.logo_link} alt={expense.financiale.name} className="w-8 h-8 object-cover mr-2" />
-          {expense.financiale.name}
+          <img src={expense.financial?.logo_link} alt={expense.financial?.name} className="w-8 h-8 object-cover mr-2" />
+          {expense.financial?.name}
         </td>
        <td className="p-4 border-b text-sm">
                <div className="flex justify-center space-x-2">
