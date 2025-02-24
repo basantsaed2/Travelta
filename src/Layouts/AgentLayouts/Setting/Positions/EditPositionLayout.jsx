@@ -17,7 +17,7 @@ const EditPositionLayout = () => {
         >
             <FaArrowLeft/>
         </button>
-        <TitlePage text={'Edit Position Account'} />
+        <TitlePage text={'Edit Position'} />
     
     </div>
     <EditPositionPage update={update} setUpdate={setUpdate} />

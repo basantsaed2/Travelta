@@ -2721,7 +2721,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
 
       <div
   className={`overflow-hidden w-full transition-all duration-700 ${
-    isOpenAccounting && !isSidebarCollapsed ? "max-h-[800px]" : "max-h-0"
+    isOpenAccounting && !isSidebarCollapsed ? "max-h-[620px]" : "max-h-0"
   }`}
 >
 <ul className="list-none pl-5 flex flex-col gap-y-2 transition-all duration-700">
