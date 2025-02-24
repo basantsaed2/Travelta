@@ -1,5 +1,5 @@
 import React from 'react'
-import ListRevenue from '../../../../Pages/Dashboard/AgentDashboard/ComingSoon/AccountRevenue/ListRevenue'
+import ListRevenue from '../../../../Pages/Dashboard/AgentDashboard/Accounting/AccountRevenue/ListRevenue'
 import { useNavigate } from 'react-router-dom'
 import { FaArrowLeft } from 'react-icons/fa'
 import TitlePage from '../../../../Components/TitlePage'

@@ -1,5 +1,5 @@
 import React from 'react'
-import PaymentRecivable from '../../../../Pages/Dashboard/AgentDashboard/ComingSoon/PaymentRecivable/PaymentRecivable'
+import PaymentRecivable from '../../../../Pages/Dashboard/AgentDashboard/Accounting/PaymentRecivable/PaymentRecivable'
 
 const PaymentRecivableLayout = () => {
   return (

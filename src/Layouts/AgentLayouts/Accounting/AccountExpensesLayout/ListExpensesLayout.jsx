@@ -1,5 +1,5 @@
 import React from 'react'
-import ListExpenses from '../../../../Pages/Dashboard/AgentDashboard/ComingSoon/AccountExpenses/ListExpenses'
+import ListExpenses from '../../../../Pages/Dashboard/AgentDashboard/Accounting/AccountExpenses/ListExpenses'
 import { useNavigate } from 'react-router-dom'
 import { FaArrowLeft } from 'react-icons/fa';
 import TitlePage from '../../../../Components/TitlePage';

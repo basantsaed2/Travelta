@@ -1,5 +1,5 @@
 import React from 'react'
-import OwnerTransaction from '../../../../Pages/Dashboard/AgentDashboard/ComingSoon/OwnerTransaction/OwnerTransaction'
+import OwnerTransaction from '../../../../Pages/Dashboard/AgentDashboard/Accounting/OwnerTransaction/OwnerTransaction'
 
 const OwnerTransactionLayout = () => {
   return (

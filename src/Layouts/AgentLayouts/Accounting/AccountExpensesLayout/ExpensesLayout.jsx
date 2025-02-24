@@ -1,5 +1,5 @@
 import React from 'react'
-import AccountExpenses from '../../../../Pages/Dashboard/AgentDashboard/ComingSoon/AccountExpenses/AccountExpenses'
+import AccountExpenses from '../../../../Pages/Dashboard/AgentDashboard/Accounting/AccountExpenses/AccountExpenses'
 
 const ExpensesLayout = () => {
   return (

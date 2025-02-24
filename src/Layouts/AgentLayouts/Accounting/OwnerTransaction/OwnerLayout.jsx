@@ -1,5 +1,5 @@
 import React from 'react'
-import Owner from '../../../../Pages/Dashboard/AgentDashboard/ComingSoon/OwnerTransaction/Owner'
+import Owner from '../../../../Pages/Dashboard/AgentDashboard/Accounting/OwnerTransaction/Owner'
 import { useNavigate } from 'react-router-dom'
 import { FaArrowLeft } from 'react-icons/fa';
 import TitlePage from '../../../../Components/TitlePage';

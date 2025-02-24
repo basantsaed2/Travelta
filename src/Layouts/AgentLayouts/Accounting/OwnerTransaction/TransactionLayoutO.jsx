@@ -1,5 +1,5 @@
 import React from 'react'
-import Transaction from '../../../../Pages/Dashboard/AgentDashboard/ComingSoon/OwnerTransaction/Transaction'
+import Transaction from '../../../../Pages/Dashboard/AgentDashboard/Accounting/OwnerTransaction/Transaction'
 import { useNavigate } from 'react-router-dom'
 import { FaArrowLeft } from 'react-icons/fa'
 import TitlePage from '../../../../Components/TitlePage'

@@ -1,5 +1,5 @@
 import React from 'react'
-import CategoryExpensis from '../../../../Pages/Dashboard/AgentDashboard/ComingSoon/AccountExpenses/CategoryExpensis'
+import CategoryExpensis from '../../../../Pages/Dashboard/AgentDashboard/Accounting/AccountExpenses/CategoryExpensis'
 import { useNavigate } from 'react-router-dom'
 import { FaArrowLeft } from 'react-icons/fa'
 import TitlePage from '../../../../Components/TitlePage'

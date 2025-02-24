@@ -1,5 +1,5 @@
 import React from 'react'
-import AccountSupplier from '../../../Pages/Dashboard/AgentDashboard/ComingSoon/AccountSupplier'
+import AccountSupplier from '../../../Pages/Dashboard/AgentDashboard/Accounting/AccountSupplier'
 
 const AccountSupplierLayout = () => {
   return (

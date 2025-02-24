@@ -12,7 +12,7 @@ import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";
 import {AddAdminAccountLayout, AddFinancialAccountLayout, AddLeadLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddTourLayout, AddWalletLayout, AdminAccountLayout, BookingPaymentLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditAdminAccountLayout, EditFinancialAccountLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, EditTourLayout, FinancialAccountLayout, HotelBookingDetailsLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
 import { LandingPage } from "./Pages/AllPages";
 import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
-import InComing from "./Pages/Dashboard/AgentDashboard/ComingSoon/ComingSoon";
+import ComingSoon from "./Pages/Dashboard/AgentDashboard/Accounting/ComingSoon";
 import HomeSuperAdmin from "./Pages/SuperAdmin/Home/HomeSuperAdmin";
 
 import ClientLayout from "./Layouts/SuperAdminLayouts/ClientLayout/ClientLayout";
@@ -113,7 +113,7 @@ import TourPageLayout from "./Layouts/AgentLayouts/Inventory/Tours/TourReview/To
 import BookingEngineLayout from "./Layouts/BookingLayout/BookingEngineLayout";
 import TransactionLayout from "./Layouts/AgentLayouts/Users/Suppliers/TransactionLayout";
 import DetailsTransactionLayout from "./Layouts/AgentLayouts/Users/Suppliers/DetailsTransactionLayout";
-import ComingSoon from "./Pages/Dashboard/AgentDashboard/ComingSoon/ComingSoon";
+// import Accounting from "./Pages/Dashboard/AgentDashboard/Accounting/";
 import AccountSupplierLayout from "./Layouts/AgentLayouts/Accounting/AccountSupplierLayout";
 import TransactionAccountLayout from "./Layouts/AgentLayouts/Accounting/TransactionAccountLayout";
 import InvoiceAccountLayout from "./Layouts/AgentLayouts/Accounting/InvoiceAccountLayout";
@@ -124,7 +124,7 @@ import ExpensesLayout from "./Layouts/AgentLayouts/Accounting/AccountExpensesLay
 import PayableToSupplierLayout from "./Layouts/AgentLayouts/Accounting/PayableToSupplierLayout/PayableToSupplierLayout";
 import PaidSupplierLayout from "./Layouts/AgentLayouts/Accounting/PayableToSupplierLayout/PaidSupplierLayout";
 import OverDueLayout from "./Layouts/AgentLayouts/Accounting/PayableToSupplierLayout/OverDueLayout";
-import OwnerTransaction from "./Pages/Dashboard/AgentDashboard/ComingSoon/OwnerTransaction/OwnerTransaction";
+import OwnerTransaction from "./Pages/Dashboard/AgentDashboard/Accounting/OwnerTransaction/OwnerTransaction";
 import OwnerLayout from "./Layouts/AgentLayouts/Accounting/OwnerTransaction/OwnerLayout";
 import TransactionLayoutO from "./Layouts/AgentLayouts/Accounting/OwnerTransaction/TransactionLayoutO";
 import PaymentRecivableLayout from "./Layouts/AgentLayouts/Accounting/PaymentRecivableLayout/PaymentRecivableLayout";

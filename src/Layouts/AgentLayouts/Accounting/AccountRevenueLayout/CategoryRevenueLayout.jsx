@@ -1,5 +1,5 @@
 import React from 'react'
-import CategoryRevenue from '../../../../Pages/Dashboard/AgentDashboard/ComingSoon/AccountRevenue/CategoryRevenue'
+import CategoryRevenue from '../../../../Pages/Dashboard/AgentDashboard/Accounting/AccountRevenue/CategoryRevenue'
 import { useNavigate } from 'react-router-dom'
 import { FaArrowLeft } from 'react-icons/fa'
 import TitlePage from '../../../../Components/TitlePage'

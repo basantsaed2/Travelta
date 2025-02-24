@@ -1,5 +1,5 @@
 import React from 'react'
-import OverduePayable from '../../../../Pages/Dashboard/AgentDashboard/ComingSoon/PayableToSupplier/OverduePayable'
+import OverduePayable from '../../../../Pages/Dashboard/AgentDashboard/Accounting/PayableToSupplier/OverduePayable'
 import { useNavigate } from 'react-router-dom'
 import { FaArrowLeft } from 'react-icons/fa'
 import TitlePage from '../../../../Components/TitlePage'

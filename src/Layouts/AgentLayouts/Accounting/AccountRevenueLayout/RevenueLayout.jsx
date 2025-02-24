@@ -1,5 +1,5 @@
 import React from 'react'
-import Revenue from '../../../../Pages/Dashboard/AgentDashboard/ComingSoon/AccountRevenue/Revenue'
+import Revenue from '../../../../Pages/Dashboard/AgentDashboard/Accounting/AccountRevenue/Revenue'
 
 const RevenueLayout = () => {
   return (
