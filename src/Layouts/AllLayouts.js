@@ -81,7 +81,10 @@ export { default as AddWalletLayout } from "./AgentLayouts/Setting/Wallet/AddWal
 export { default as AdminAccountLayout } from "./AgentLayouts/Setting/AdminAccount/AdminAccountLayout";
 export { default as AddAdminAccountLayout } from "./AgentLayouts/Setting/AdminAccount/AddAdminAccountLayout";
 export { default as EditAdminAccountLayout } from "./AgentLayouts/Setting/AdminAccount/EditAdminAccountLayout";
-
+//Positions
+export { default as PositionLayout } from "./AgentLayouts/Setting/Positions/PositionLayout";
+export { default as AddPositionLayout } from "./AgentLayouts/Setting/Positions/AddPositionLayout";
+export { default as EditPositionLayout } from "./AgentLayouts/Setting/Positions/EditPositionLayout";
 //BookingPaymentLayout
 export { default as BookingPaymentLayout } from "./AgentLayouts/BookingPayments/BookingPaymentLayout";
 

@@ -87,9 +87,9 @@ export { default as AddWalletPage } from "./Dashboard/AgentDashboard/Setting/Wal
 export { default as AdminAccountPage } from "./Dashboard/AgentDashboard/Setting/AdminsAccount/AdminAccountPage";
 export { default as AddAdminAccountPage } from "./Dashboard/AgentDashboard/Setting/AdminsAccount/AddAdminAccountPage";
 export { default as EditAdminAccountPage } from "./Dashboard/AgentDashboard/Setting/AdminsAccount/EditAdminAccountPage";
-
-
-
-
+//Positions
+export { default as PositionPage } from "./Dashboard/AgentDashboard/Setting/Positions/PositionPage";
+export { default as AddPositionPage } from "./Dashboard/AgentDashboard/Setting/Positions/AddPositionPage";
+export { default as EditPositionPage } from "./Dashboard/AgentDashboard/Setting/Positions/EditPositionPage";
 //BookingPayment
 export {default as BookingPaymentPage} from './Dashboard/AgentDashboard/BookingPayments/BookingPaymentPage';

@@ -9,7 +9,7 @@ import SignUpAffilate from "./Pages/Authentication/SignUpAffilate"
 import Login from "./Pages/Authentication/Login";
 import AgentLayout from "./Layouts/AgentLayouts/AgentLayout";
 import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";  
-import {AddAdminAccountLayout, AddFinancialAccountLayout, AddLeadLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddTourLayout, AddWalletLayout, AdminAccountLayout, BookingPaymentLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditAdminAccountLayout, EditFinancialAccountLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, EditTourLayout, FinancialAccountLayout, HotelBookingDetailsLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
+import {AddAdminAccountLayout, AddFinancialAccountLayout, AddLeadLayout, AddPositionLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddTourLayout, AddWalletLayout, AdminAccountLayout, BookingPaymentLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditAdminAccountLayout, EditFinancialAccountLayout, EditPositionLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, EditTourLayout, FinancialAccountLayout, HotelBookingDetailsLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, PositionLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
 import { LandingPage } from "./Pages/AllPages";
 import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 import ComingSoon from "./Pages/Dashboard/AgentDashboard/Accounting/ComingSoon";
@@ -380,7 +380,11 @@ const AppCustomer= () => (
   <Outlet />
   </>
 );
-
+const AppPosition= () => (  
+  <>
+  <Outlet />
+  </>
+);
 const AppTour= () => (
   <>
   <Outlet />
@@ -868,6 +872,25 @@ export const router = createBrowserRouter([
                         {
                         path: "edit/:adminAccountId",
                         element: <EditAdminAccountLayout/>,
+                        },
+                    ]
+                  },
+
+                  {
+                    path: "positions",
+                    element: <AppPosition/>,
+                    children:[
+                        {
+                          path: "",
+                          element: <PositionLayout/>,
+                        },       
+                        {
+                          path: "add",
+                          element: <AddPositionLayout/>,
+                        },
+                        {
+                        path: "edit/:positionId",
+                        element: <EditPositionLayout/>,
                         },
                     ]
                   },
