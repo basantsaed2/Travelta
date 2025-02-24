@@ -33,7 +33,7 @@ const CheckoutPage = ({ refetch, setUpdate }) => {
         const { totalPrice } = location.state || {};
         const [isLoading, setIsLoading] = useState(false);
         const [selectedMethod, setSelectedMethod] = useState("");
-        const [thumbnails, setThumbnails] = useState("");
+        const [thumbnails, setThumbnails] = useState(null);
         const [thumbnailFile, setThumbnailFile] = useState(null);
         const [discountedPrice, setDiscountedPrice] = useState(totalPrice);
         const [discount, setDiscount] = useState(0); // State to store the discount amount
@@ -59,15 +59,14 @@ const CheckoutPage = ({ refetch, setUpdate }) => {
         }
     };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    console.log(file)
-    if (file) {
-      setThumbnailFile(file);
-      setThumbnails(file.name);
-    }
-  };
-
+    const handleFileChange = (e) => {
+      const file = e.target.files[0];
+      console.log(file);
+      if (file) {
+        setThumbnailFile(file);
+        setThumbnails(file.name);
+      }
+    };
 
   const handleSubmit = async () => {
     if (selectedMethod.name === "Vodafone Cash") {
@@ -207,35 +206,34 @@ const CheckoutPage = ({ refetch, setUpdate }) => {
     </label>
 
     {/* Additional Input for Vodafone Cash */}
-    {selectedMethod &&
-      selectedMethod.name === 'Vodafone Cash' &&
-      method.name === 'Vodafone Cash' && (
-        <div className="relative w-full mt-2">
-          <input
-            type="text"
-            className="w-full p-2 border border-green-700 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-700"
-            value={thumbnails ? thumbnails.name : 'No file selected'}
-            readOnly={true}
-            onClick={handleInputClick} // Open file input dialog when clicked
-            placeholder="Upload Receipt"
-          />
+    {selectedMethod?.name === 'Vodafone Cash' &&
+  method?.name === 'Vodafone Cash' && (
+    <div className="relative w-full mt-2">
+      <input
+        type="text"
+        className="w-full p-2 border border-green-700 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-700"
+        value={thumbnails ? thumbnails : 'No file selected'}
+        readOnly={true}
+        onClick={handleInputClick} // Open file input dialog when clicked
+        placeholder="Upload Receipt"
+      />
 
-          {/* Upload Icon */}
-          <FiUpload
-            onClick={handleInputClick} // Allow the icon to trigger file selection too
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-mainColor cursor-pointer"
-          />
+      {/* Upload Icon */}
+      <FiUpload
+        onClick={handleInputClick} // Allow the icon to trigger file selection too
+        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-mainColor cursor-pointer"
+      />
 
-          {/* Hidden File Input */}
-          <input
-            type="file"
-            className="hidden"
-            onChange={handleFileChange}
-            ref={uploadRef}
-            accept="image/*" // Optional: restrict to image file types
-          />
-        </div>
-      )}
+      {/* Hidden File Input */}
+      <input
+        type="file"
+        className="hidden"
+        onChange={handleFileChange}
+        ref={uploadRef}
+        accept="image/*" // Optional: restrict to image file types
+      />
+    </div>
+)}
   </div>
       ))}
 

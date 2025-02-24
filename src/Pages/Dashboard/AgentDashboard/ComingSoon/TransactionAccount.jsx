@@ -103,7 +103,7 @@ const TransactionAccount = () => {
                   <td className="p-2 border">
       {item?.id ? (
         <button
-          onClick={() => navigate("dashboard_agent/IncomingPage/account_invoice", { state: { item } })}
+          onClick={() => navigate("dashboard_agent/accounting/account_invoice", { state: { item } })}
           className="text-blue-500 underline hover:text-blue-700"
         >
           {item.code}

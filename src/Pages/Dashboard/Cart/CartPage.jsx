@@ -15,18 +15,22 @@ const CartPage = () => {
   const [promoApplied, setPromoApplied] = useState(false);
 
   const calculateTotal = () => {
-    const subtotal = cartItems.reduce((total, item) => total + item.price, 0);
-    return Math.max(subtotal - discount, 0);
-  };
+    const subtotal = cartItems.reduce((total, item) => total + Math.abs(item.price), 0);
+    return Math.abs(subtotal - discount);
+  };  
+  const calculateTotalDiscount = () => {
+    const subtotal = cartItems.reduce((total, item) => total + Math.abs(item.price_after_discount), 0);
+    return Math.abs(subtotal - discount);
+  };  
 
   const applyPromoCode = () => {
-    if (promoCode.trim().toLowerCase() === "save20") {
-      setDiscount(20); // Apply a $20 discount
-      setPromoApplied(true);
-      auth.toastSuccess("Promo code applied successfully! $20 discount added.");
-    } else {
-        auth.toastError("Invalid promo code");
-    }
+    // if (promoCode.trim().toLowerCase() === "save20") {
+    //   setDiscount(20); // Apply a $20 discount
+    //   setPromoApplied(true);
+    //   auth.toastSuccess("Promo code applied successfully! $20 discount added.");
+    // } else {
+    //     auth.toastError("Invalid promo code");
+    // }
   };
 
   const handleRemoveItem = (item) => {
@@ -96,7 +100,7 @@ const CartPage = () => {
                         </div>
                     </td>
                     <td className="px-4 py-2 border-b border-gray-200 text-gray-800 font-semibold">
-                        {item.price.toFixed(2)} EGP
+                    {Math.abs(item.price).toFixed(2)} EGP
                     </td>
                     <td className="px-4 py-2 border-b border-gray-200 text-center">
                         <button
@@ -134,7 +138,7 @@ const CartPage = () => {
             </div>
             {promoApplied && (
             <p className="text-green-600 font-semibold">
-                🎉 Promo code applied! You saved $20.
+                🎉 Promo code applied! You saved $.
             </p>
             )}
             <div className="border-t pt-4">

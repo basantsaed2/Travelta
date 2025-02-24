@@ -506,7 +506,7 @@ export const router = createBrowserRouter([
               },
 
               {
-                path: 'IncomingPage',
+                path: 'accounting',
                 element: <AppAccounting/>,
                 children:[
                   {

@@ -1184,7 +1184,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     const result = part.slice(0, 3).join("/");
 
     // Only navigate if on `/dashboard/setting` but not already on any sub-route
-    if (result == "/dashboard_agent/IncomingPage") {
+    if (result == "/dashboard_agent/accounting") {
       handleClickOperation();
     }
     console.log("result", result);
@@ -1376,10 +1376,10 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     const result = part.slice(0, 3).join("/");
 
     // Only navigate if on `/dashboard/setting` but not already on any sub-route
-    if (result === "/dashboard_agent/IncomingPage"
+    if (result === "/dashboard_agent/accounting"
       &&
       ![
-        "/dashboard_agent/IncomingPage/account_supplier"
+        "/dashboard_agent/accounting/account_supplier"
       ].some((path) => pathName.startsWith(path))
     ) {
       handleClickAccounting();
@@ -1399,7 +1399,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
   useEffect(() => {
     const part = pathName.split("/");
     const result = part.slice(0, 4).join("/");
-    if (result == "/dashboard_agent/IncomingPage/account_supplier") {
+    if (result == "/dashboard_agent/accounting/account_supplier") {
       handleClickSuppliersAccount();
     }
   }, [location]);
@@ -1435,7 +1435,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     const part = pathName.split("/");
     const result = part.slice(0, 5).join("/");
     if (
-      result === "/dashboard_agent/IncomingPage/expenses/list_expenses") {
+      result === "/dashboard_agent/accounting/expenses/list_expenses") {
       handleClickListExpenses();
     }
   }, [location]);
@@ -1461,7 +1461,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       const part = pathName.split("/");
       const result = part.slice(0, 5).join("/");
       if (
-        result === "/dashboard_agent/IncomingPage/expenses/category_account") {
+        result === "/dashboard_agent/accounting/expenses/category_account") {
           handleClickCategory();
       }
     }, [location]);
@@ -1499,7 +1499,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       const part = pathName.split("/");
       const result = part.slice(0, 5).join("/");
       if (
-        result === "/dashboard_agent/IncomingPage/revenue/list_revenue") {
+        result === "/dashboard_agent/accounting/revenue/list_revenue") {
           handleClickListRevenue();
       }
     }, [location]);
@@ -1525,7 +1525,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
         const part = pathName.split("/");
         const result = part.slice(0, 5).join("/");
         if (
-          result === "/dashboard_agent/IncomingPage/revenue/category_revenue") {
+          result === "/dashboard_agent/accounting/revenue/category_revenue") {
             handleClickCategoryRevenue();
         }
       }, [location]);
@@ -1562,7 +1562,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       const part = pathName.split("/");
       const result = part.slice(0, 5).join("/");
       if (
-        result === "/dashboard_agent/IncomingPage/owner_transaction/owner") {
+        result === "/dashboard_agent/accounting/owner_transaction/owner") {
         handleClickOwner();
       }
     }, [location]);
@@ -1588,7 +1588,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
         const part = pathName.split("/");
         const result = part.slice(0, 5).join("/");
         if (
-          result === "/dashboard_agent/IncomingPage/owner_transaction/transaction") {
+          result === "/dashboard_agent/accounting/owner_transaction/transaction") {
             handleClickTransaction();
         }
       }, [location]);
@@ -1628,7 +1628,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       const part = pathName.split("/");
       const result = part.slice(0, 5).join("/");
       if (
-        result === "/dashboard_agent/IncomingPage/payable_to_supplier/payable_supplier") {
+        result === "/dashboard_agent/accounting/payable_to_supplier/payable_supplier") {
           handleClickPayableToSupplier();
       }
     }, [location]);
@@ -1654,7 +1654,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
         const part = pathName.split("/");
         const result = part.slice(0, 5).join("/");
         if (
-          result === "/dashboard_agent/IncomingPage/payable_to_supplier/paid_supplier") {
+          result === "/dashboard_agent/accounting/payable_to_supplier/paid_supplier") {
             handleClickPaidSupplier();
         }
       }, [location]);
@@ -1679,7 +1679,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
           const part = pathName.split("/");
           const result = part.slice(0, 5).join("/");
           if (
-            result === "/dashboard_agent/IncomingPage/payable_to_supplier/over_due") {
+            result === "/dashboard_agent/accounting/payable_to_supplier/over_due") {
               handleClickOverDue();
           }
         }, [location]);
@@ -2302,7 +2302,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
 
       {/* Operation */}     
       <Link
-        to="IncomingPage"
+        to="accounting"
         onMouseMove={() => setIsActiveOperationIcon(true)}
         onMouseOut={() => setIsActiveOperationIcon(false)}
         onClick={() => {handleClickOperation();}}
@@ -2656,7 +2656,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
        {/* Accounting */}
        
        <Link
-        to="IncomingPage"
+        to="accounting/account_supplier"
         onMouseMove={() => setIsActiveAccountingIcon(true)}
         onMouseOut={() => setIsActiveAccountingIcon(false)}
         onClick={handleClickAccounting}
@@ -2695,13 +2695,13 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
 
       <div
   className={`overflow-hidden w-full transition-all duration-700 ${
-    isOpenAccounting && !isSidebarCollapsed ? "max-h-[400px]" : "max-h-0"
+    isOpenAccounting && !isSidebarCollapsed ? "max-h-[800px]" : "max-h-0"
   }`}
 >
 <ul className="list-none pl-5 flex flex-col gap-y-2 transition-all duration-700">
   
   {/* Supplier Link */}
-  <Link to={"IncomingPage/account_supplier"} onClick={() => { handleClickSuppliersAccount(); onLinkClick(); }}>
+  <Link to={"accounting/account_supplier"} onClick={() => { handleClickSuppliersAccount(); onLinkClick(); }}>
     <li className={`text-lg font-medium px-4 py-2 rounded-lg transition-all duration-300 ${
       isActiveSupplierAccount ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
     }`}>
@@ -2735,7 +2735,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
   }`}>
     <ul className="pl-8 flex flex-col gap-y-2 transition-all duration-700">
       {/* List Expenses */}
-      <Link to={"IncomingPage/owner_transaction/owner"} onClick={() => { handleClickOwner(); onLinkClick(); }}>
+      <Link to={"accounting/owner_transaction/owner"} onClick={() => { handleClickOwner(); onLinkClick(); }}>
         <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
           isActiveOwner ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
         }`}>
@@ -2744,7 +2744,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       </Link>
 
       {/* Category */}
-      <Link to={"IncomingPage/owner_transaction/transaction"} onClick={() => { handleClickTransaction(); onLinkClick(); }}>
+      <Link to={"accounting/owner_transaction/transaction"} onClick={() => { handleClickTransaction(); onLinkClick(); }}>
         <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
           isActiveTransaction ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
         }`}>
@@ -2780,7 +2780,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
   }`}>
     <ul className="pl-8 flex flex-col gap-y-2 transition-all duration-700">
       {/* List Expenses */}
-      <Link to={"IncomingPage/payment_recivable/recivable"} onClick={() => { handleClickRecivable(); onLinkClick(); }}>
+      <Link to={"accounting/payment_recivable/recivable"} onClick={() => { handleClickRecivable(); onLinkClick(); }}>
         <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
           isActiveOwner ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
         }`}>
@@ -2816,7 +2816,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
   }`}>
     <ul className="pl-8 flex flex-col gap-y-2 transition-all duration-700">
       {/* List Expenses */}
-      <Link to={"IncomingPage/expenses/list_expenses"} onClick={() => { handleClickListExpenses(); onLinkClick(); }}>
+      <Link to={"accounting/expenses/list_expenses"} onClick={() => { handleClickListExpenses(); onLinkClick(); }}>
         <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
           isActiveListExpenses ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
         }`}>
@@ -2825,7 +2825,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       </Link>
 
       {/* Category */}
-      <Link to={"IncomingPage/expenses/category_account"} onClick={() => { handleClickCategory(); onLinkClick(); }}>
+      <Link to={"accounting/expenses/category_account"} onClick={() => { handleClickCategory(); onLinkClick(); }}>
         <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
           isActiveCategory ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
         }`}>
@@ -2861,7 +2861,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
   }`}>
     <ul className="pl-8 flex flex-col gap-y-2 transition-all duration-700">
       {/* List Revenue */}
-      <Link to={"IncomingPage/revenue/list_revenue"} onClick={() => { handleClickListRevenue(); onLinkClick(); }}>
+      <Link to={"accounting/revenue/list_revenue"} onClick={() => { handleClickListRevenue(); onLinkClick(); }}>
         <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
           isActiveListRevenue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
         }`}>
@@ -2870,7 +2870,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       </Link>
 
       {/* Category */}
-      <Link to={"IncomingPage/revenue/category_revenue"} onClick={() => { handleClickCategoryRevenue(); onLinkClick(); }}>
+      <Link to={"accounting/revenue/category_revenue"} onClick={() => { handleClickCategoryRevenue(); onLinkClick(); }}>
         <li className={`text-lg px-4 py-2 rounded-lg transition-all duration-300 ${
           isActiveCategoryRevenue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
         }`}>
@@ -2903,7 +2903,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
   {/* Payable Dropdown */}
   <div
                       className={`${
-                        isOpenPayable && !isSidebarCollapsed ? "h-17" : "h-0 "
+                        isOpenPayable && !isSidebarCollapsed ? "h-50" : "h-0 "
                       } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
                     >
                       <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-4">
@@ -2923,7 +2923,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
                           </li> */}
 
                               <Link
-                                to={"IncomingPage/payable_to_supplier/payable_supplier"}
+                                to={"accounting/payable_to_supplier/payable_supplier"}
                                 onClick={() => {
                                     handleClickPayableToSupplier();
                                     onLinkClick();
@@ -2942,7 +2942,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
                               </Link>
 
                               <Link
-                              to={"IncomingPage/payable_to_supplier/paid_supplier"}
+                              to={"accounting/payable_to_supplier/paid_supplier"}
                               onClick={() => {
                                 handleClickPaidSupplier();
                                 onLinkClick();
@@ -2961,7 +2961,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
                               </Link>
 
                               <Link
-                              to={"IncomingPage/payable_to_supplier/over_due"}
+                              to={"accounting/payable_to_supplier/over_due"}
                               onClick={() => {
                                 handleClickOverDue();
                                 onLinkClick();
