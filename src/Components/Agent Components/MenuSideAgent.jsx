@@ -360,6 +360,9 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
   const [isActiveFinancialAccount, setIsActiveFinancialAccount] = useState(
     stateLink.isActiveFinancialAccount ?? false
   );
+  const [isActiveAdminAccount, setIsActiveAdminAccount] = useState(
+    stateLink.isActiveAdminAccount ?? false
+  );
   const [isActiveWallet, setIsActiveWallet] = useState(
     stateLink.isActiveWallet ?? false
   );
@@ -430,6 +433,8 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       isOpenSetting,
       isActiveFinancialAccount,
       isActiveWallet,
+      isActiveAdminAccount,
+
       isActiveAccounting,
       isActiveAccountingIcon,
       isOpenAccounting,
@@ -554,6 +559,8 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isOpenSetting,
     isActiveFinancialAccount,
     isActiveWallet,
+    isActiveAdminAccount,
+
     isActiveCurrency,
     isActiveTax,
     isActiveGroup,
@@ -675,6 +682,8 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isOpenSetting,
     isActiveFinancialAccount,
     isActiveWallet,
+    isActiveAdminAccount,
+
     isActiveCurrency,
     isActiveTax,
     isActiveGroup,
@@ -847,6 +856,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActiveSettingIcon(false);
     setIsOpenSetting(false);
     setIsActiveFinancialAccount(false);
+    setIsActiveAdminAccount(false);
     
     setIsActiveInventoryRoom(false);
     setIsOpenInventoryRoom(false);
@@ -1736,6 +1746,8 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       ].some((path) => pathName.startsWith(path)) && ![
         "/dashboard_agent/setting/wallet",
       ].some((path) => pathName.startsWith(path)) && ![
+          "/dashboard_agent/setting/admin_account",
+      ].some((path) => pathName.startsWith(path)) && ![
         "/dashboard_agent/setting/currency",
       ].some((path) => pathName.startsWith(path)) && ![
         "/dashboard_agent/setting/tax",
@@ -1756,12 +1768,30 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActiveSetting(true);
     setIsActiveFinancialAccount(true)
     setIsActiveWallet(false)
+    setIsActiveAdminAccount(false)
   }, []);
   useEffect(() => {
     const part = pathName.split("/");
     const result = part.slice(0, 4).join("/");
     if (result == "/dashboard_agent/setting/financial_account") {
       handleClickFinancialAccount();
+    }
+  }, [location]);
+
+  const handleClickAdminAccount = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenSetting(true);
+    setIsActiveSettingIcon(true);
+    setIsActiveSetting(true);
+    setIsActiveAdminAccount(true)
+  }, []);
+
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 4).join("/");
+    if (result == "/dashboard_agent/setting/admin_account") {
+      handleClickAdminAccount();
     }
   }, [location]);
 
@@ -3019,6 +3049,25 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
           </Link>
 
           <Link
+            to={"setting/admin_account"}
+            onClick={() => {
+              handleClickAdminAccount();
+              onLinkClick();
+            }}
+          >
+            <li
+              className={`${
+                isActiveAdminAccount
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Admin Account
+            </li>
+          </Link>
+
+          <Link
             to={"setting/wallet"}
             onClick={() => {
               handleClickFinancialAccount();
@@ -3074,6 +3123,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
               Tax
             </li>
           </Link>
+
           <Link
             to={"setting/group"}
             onClick={() => {

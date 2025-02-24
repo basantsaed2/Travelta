@@ -77,6 +77,11 @@ export { default as EditFinancialAccountLayout } from "./AgentLayouts/Setting/Fi
 //Wallet
 export { default as WalletLayout } from "./AgentLayouts/Setting/Wallet/WalletLayout"; 
 export { default as AddWalletLayout } from "./AgentLayouts/Setting/Wallet/AddWalletLayout";
+//AdminsAccount
+export { default as AdminAccountLayout } from "./AgentLayouts/Setting/AdminAccount/AdminAccountLayout";
+export { default as AddAdminAccountLayout } from "./AgentLayouts/Setting/AdminAccount/AddAdminAccountLayout";
+export { default as EditAdminAccountLayout } from "./AgentLayouts/Setting/AdminAccount/EditAdminAccountLayout";
+
 //BookingPaymentLayout
 export { default as BookingPaymentLayout } from "./AgentLayouts/BookingPayments/BookingPaymentLayout";
 
