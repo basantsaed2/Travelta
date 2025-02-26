@@ -9,7 +9,7 @@ import SignUpAffilate from "./Pages/Authentication/SignUpAffilate"
 import Login from "./Pages/Authentication/Login";
 import AgentLayout from "./Layouts/AgentLayouts/AgentLayout";
 import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";  
-import {AddAdminAccountLayout, AddFinancialAccountLayout, AddLeadLayout, AddPositionLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddTourLayout, AddWalletLayout, AdminAccountLayout, BookingPaymentLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , EditAdminAccountLayout, EditFinancialAccountLayout, EditPositionLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, EditTourLayout, FinancialAccountLayout, HotelBookingDetailsLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, PositionLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
+import {AddAdminAccountLayout, AddAgentLayout, AddDepartmentLayout, AddEmployeeLayout, AddFinancialAccountLayout, AddLeadLayout, AddPositionLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddTourLayout, AddWalletLayout, AdminAccountLayout, BookingPaymentLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , DepartmentLayout, EditAdminAccountLayout, EditAgentLayout, EditDepartmentLayout, EditEmployeeLayout, EditFinancialAccountLayout, EditPositionLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, EditTourLayout, EmployeeLayout, FinancialAccountLayout, HotelBookingDetailsLayout, LeadLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, PositionLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
 import { LandingPage } from "./Pages/AllPages";
 import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 import ComingSoon from "./Pages/Dashboard/AgentDashboard/Accounting/ComingSoon";
@@ -131,6 +131,7 @@ import PaymentRecivableLayout from "./Layouts/AgentLayouts/Accounting/PaymentRec
 import ListRevenueLayout from "./Layouts/AgentLayouts/Accounting/AccountRevenueLayout/ListRevenueLayout";
 import CategoryRevenueLayout from "./Layouts/AgentLayouts/Accounting/AccountRevenueLayout/CategoryRevenueLayout";
 import RevenueLayout from "./Layouts/AgentLayouts/Accounting/AccountRevenueLayout/RevenueLayout";
+import AgentHRMLayout from "./Layouts/AgentLayouts/HRM/Agent/AgentHRMLayout";
 
 
 const AppLayoutAgent = () => (
@@ -441,6 +442,26 @@ const AppRevenue =() => (
   </>
 );
 const AppAdminAccount =() => (
+  <>
+  <Outlet />
+  </>
+);
+const AppHRM =() => (
+    <>
+    <Outlet />
+    </>
+);
+const AppHRMDepartment=() => (
+  <>
+  <Outlet />
+  </>
+);
+const AppHRMagency=() => (
+  <>            
+  <Outlet />
+  </>
+);
+const AppHRMEmployee=() => (
   <>
   <Outlet />
   </>
@@ -895,6 +916,68 @@ export const router = createBrowserRouter([
                     ]
                   },
 
+                ]
+              },
+
+
+              {
+                path: "hrm",
+                element: <AppHRM/>,
+                children:[
+                  {
+                    path: "department",
+                    element: <AppHRMDepartment/>,
+                    children:[
+                        {
+                          path: "",
+                          element: <DepartmentLayout/>,
+                        },       
+                        {
+                          path: "add",
+                          element: <AddDepartmentLayout/>,
+                        },
+                        {
+                        path: "edit/:departmentId",
+                        element: <EditDepartmentLayout/>,
+                        },
+                    ]
+                  },
+                  {
+                    path: "agency",
+                    element: <AppHRMagency/>,
+                    children:[
+                        {
+                          path: "",
+                          element: <AgentHRMLayout/>,
+                        },       
+                        {
+                          path: "add",
+                          element: <AddAgentLayout/>,
+                        },
+                        {
+                        path: "edit/:agencyId",
+                        element: <EditAgentLayout/>,
+                        },
+                    ]
+                  },
+                  {
+                    path: "employee",
+                    element: <AppHRMEmployee/>,
+                    children:[
+                        {
+                          path: "",
+                          element: <EmployeeLayout/>,
+                        },       
+                        {
+                          path: "add",
+                          element: <AddEmployeeLayout/>,
+                        },
+                        {
+                        path: "edit/:employeeId",
+                        element: <EditEmployeeLayout/>,
+                        },
+                    ]
+                  }
                 ]
               },
 

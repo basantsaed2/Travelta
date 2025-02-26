@@ -61,12 +61,25 @@ export { default as EditRoomGalleryLayout } from "./AgentLayouts/Inventory/Rooms
 export { default as RoomAvailabilityLayout } from "./AgentLayouts/Inventory/Rooms/RoomAvailability/RoomAvailabilityLayout";
 export { default as AddRoomAvailabilityLayout } from "./AgentLayouts/Inventory/Rooms/RoomAvailability/AddRoomAvailabilityLayout";
 export { default as EditRoomAvailabilityLayout } from "./AgentLayouts/Inventory/Rooms/RoomAvailability/EditRoomAvailabilityLayout";
-
 //Tours
 //Tour Review
 export { default as TourLayout } from "./AgentLayouts/Inventory/Tours/TourReview/TourPageLayout";
 export { default as AddTourLayout } from "./AgentLayouts/Inventory/Tours/TourReview/AddTourLayout";
 export { default as EditTourLayout } from "./AgentLayouts/Inventory/Tours/TourReview/EditTourLayout";
+
+//HRM
+//Department
+export { default as DepartmentLayout } from "./AgentLayouts/HRM/Department/DepartmentLayout";
+export { default as AddDepartmentLayout } from "./AgentLayouts/HRM/Department/AddDepartmentLayout";
+export { default as EditDepartmentLayout } from "./AgentLayouts/HRM/Department/EditDepartmentLayout";
+//Employee
+export { default as EmployeeLayout } from "./AgentLayouts/HRM/Employee/EmployeeLayout";
+export { default as AddEmployeeLayout } from "./AgentLayouts/HRM/Employee/AddEmployeeLayout";
+export { default as EditEmployeeLayout } from "./AgentLayouts/HRM/Employee/EditEmployeeLayout";
+//Agent
+export { default as AgentLayout } from "./AgentLayouts/HRM/Agent/AgentHRMLayout";
+export { default as AddAgentLayout } from "./AgentLayouts/HRM/Agent/AddAgentLayout";
+export { default as EditAgentLayout } from "./AgentLayouts/HRM/Agent/EditAgentLayout";
 
 //CheckOutProcess
 export { default as CheckOutProcessPage } from "./AgentLayouts/CheckOutProcess/CheckOutProcessLayout";

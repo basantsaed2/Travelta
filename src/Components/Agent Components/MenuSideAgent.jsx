@@ -14,6 +14,8 @@ import { FaCog } from 'react-icons/fa';
 import { MdOutlineBedroomChild } from "react-icons/md";
 import { MdOutlineFlight } from "react-icons/md";
 import { FaArrowTurnDown } from "react-icons/fa6";
+import { FaUserCog } from "react-icons/fa";
+import { set } from "date-fns";
 
 const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
   const auth = useAuth();
@@ -381,6 +383,30 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     stateLink.isActiveGroup ?? false
   );
 
+
+  // HRM
+  const [isOpenHRM, setIsOpenHRM] = useState(
+    stateLink.isOpenHRM ?? false
+  );
+  const [isActiveHRMIcon, setIsActiveHRMIcon] = useState(
+    stateLink.isActiveHRMIcon ?? false
+  );
+  const [isActiveHRM, setIsActiveHRM] = useState(
+    stateLink.isActiveHRM ?? false
+  );
+  //HRM Department
+  const [isActiveHRMDepartment, setIsActiveHRMDepartment] = useState(
+    stateLink.isActiveHRMDepartment ?? false
+  );
+  //HRM Employee
+  const [isActiveHRMEmployee, setIsActiveHRMEmployee] = useState(
+    stateLink.isActiveHRMEmployee ?? false
+  );
+  //HRM Agent
+  const [isActiveHRMAgent, setIsActiveHRMAgent] = useState(
+    stateLink.isActiveHRMAgent ?? false
+  );
+
   // Helper function to save the current active links state
   const saveActiveLinksState = useCallback(() => {
     const activeLinks = {
@@ -439,6 +465,13 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       isActiveAdminAccount,
       isActivePosition,
 
+      isOpenHRM,
+      isActiveHRMIcon,
+      isActiveHRM,
+      isActiveHRMDepartment,
+      isActiveHRMEmployee,
+      isActiveHRMAgent,
+
       isActiveAccounting,
       isActiveAccountingIcon,
       isOpenAccounting,
@@ -477,16 +510,12 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       isActiveOwnerTransactionIcon,
       isOpenOwnerTransaction,
       
-
       isActiveRecivable,
       isOpenRecivable,
       isActivePaymentRecivable,
       isActivePaymentRecivableIcon,
       isOpenOwnerPaymentRecivable,
       
-
-
-
       isActiveCurrency,
       isActiveTax,
       isActiveGroup,
@@ -565,6 +594,13 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveWallet,
     isActiveAdminAccount,
     isActivePosition,
+
+    isOpenHRM,
+    isActiveHRMIcon,
+    isActiveHRM,
+    isActiveHRMDepartment,
+    isActiveHRMEmployee,
+    isActiveHRMAgent,
 
     isActiveCurrency,
     isActiveTax,
@@ -689,6 +725,13 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveWallet,
     isActiveAdminAccount,
     isActivePosition,
+
+    isOpenHRM,
+    isActiveHRMIcon,
+    isActiveHRM,
+    isActiveHRMDepartment,
+    isActiveHRMEmployee,
+    isActiveHRMAgent,
 
     isActiveCurrency,
     isActiveTax,
@@ -864,6 +907,13 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActiveFinancialAccount(false);
     setIsActiveAdminAccount(false);
     setIsActivePosition(false);
+
+    setIsOpenHRM(false);
+    setIsActiveHRMIcon(false);
+    setIsActiveHRM(false);
+    setIsActiveHRMDepartment(false);
+    setIsActiveHRMEmployee(false);
+    setIsActiveHRMAgent(false);
     
     setIsActiveInventoryRoom(false);
     setIsOpenInventoryRoom(false);
@@ -1886,6 +1936,83 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     const result = part.slice(0, 4).join("/");
     if (result == "/dashboard_agent/setting/group") {
       handleClickGroup();
+    }
+  }, [location]);
+
+   // HRM
+   const handleClickHRM = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenHRM(true);
+    setIsActiveHRMIcon(true);
+    setIsActiveHRM(true);
+    setIsActiveHRMDepartment(true);
+    setIsActiveHRMEmployee(true)
+    setIsActiveHRMAgent(true)
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 3).join("/");
+
+    if (result === "/dashboard_agent/hrm" &&
+      ![
+        "/dashboard_agent/hrm/department",
+      ].some((path) => pathName.startsWith(path)) && ![
+        "/dashboard_agent/hrm/employee",
+      ].some((path) => pathName.startsWith(path)) && ![
+        "/dashboard_agent/hrm/agency",
+      ]
+    ) {
+      handleClickHRM();
+      navigate("/dashboard_agent/hrm/department");
+    }
+  }, [location]);
+
+  const handleClickHRMDepartment = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenHRM(true);
+    setIsActiveHRMIcon(true);
+    setIsActiveHRM(true);
+    setIsActiveHRMDepartment(true)
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 4).join("/");
+    if (result == "/dashboard_agent/hrm/department") {
+      handleClickHRMDepartment();
+    }
+  }, [location]);
+
+  const handleClickHRMEmployee = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenHRM(true);
+    setIsActiveHRMIcon(true);
+    setIsActiveHRM(true);
+    setIsActiveHRMEmployee(true)
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 4).join("/");
+    if (result == "/dashboard_agent/hrm/employee") {
+      handleClickHRMEmployee();
+    }
+  }, [location]);
+
+  const handleClickHRMAgent = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenHRM(true);
+    setIsActiveHRMIcon(true);
+    setIsActiveHRM(true);
+    setIsActiveHRMAgent(true)
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 4).join("/");
+    if (result == "/dashboard_agent/hrm/agency") {
+      handleClickHRMAgent();
     }
   }, [location]);
 
@@ -3011,6 +3138,110 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
 </div>
 
 
+  {/* HRM */}
+  <Link
+        to="hrm/department"
+        onMouseMove={() => setIsActiveHRMIcon(true)}
+        onMouseOut={() => setIsActiveHRMIcon(false)}
+        onClick={handleClickHRM}
+        className={`
+          ${isActiveHRM? "active" : ""}
+         flex items-center 
+         ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
+        hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+      >
+        <div className="flex font-semibold text-xl items-center gap-x-2">
+          <FaUserCog  
+            className={`${
+              isActiveHRMIcon || isActiveHRM
+                ? "text-mainColor"
+                : "text-white"
+            }`}
+          />
+          {!isSidebarCollapsed && (
+            <span
+              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
+                isActiveHRM ? "text-mainColor" : "text-white"
+              }`}
+            >
+              HRM
+            </span>
+          )}
+        </div>
+        {!isSidebarCollapsed && (
+          <IoIosArrowForward
+            className={`${
+              isActiveHRM ? "text-mainColor rotate-90" : "text-white rotate-0"
+            } text-xl transition-all duration-300 group-hover:text-mainColor`}
+          />
+        )}
+      </Link>
+      <div
+        className={`${
+          isOpenHRM && !isSidebarCollapsed ? "h-17" : "h-0 "
+        } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+      >
+        <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
+          <Link
+            to={"hrm/department"}
+            onClick={() => {
+              handleClickHRMDepartment();
+              onLinkClick();
+            }}
+          >
+            <li
+              className={`${
+                isActiveHRMDepartment
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Department
+            </li>
+          </Link>    
+
+            <Link
+            to={"hrm/agency"}
+            onClick={() => {
+              handleClickHRMAgent();
+              onLinkClick();
+            }}
+          >
+            <li
+              className={`${
+                isActiveHRMAgent
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Agency
+            </li>
+          </Link>   
+
+            <Link
+            to={"hrm/employee"}
+            onClick={() => {
+              handleClickHRMEmployee();
+              onLinkClick();
+            }}
+          >
+            <li
+              className={`${
+                isActiveHRMEmployee
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Employee
+            </li>
+          </Link>     
+        </ul>
+      </div>
+
+
          {/* Settings */}
          <Link
         to="setting"
@@ -3190,8 +3421,6 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
          
         </ul>
       </div>
-
-
 
     </div>
   );

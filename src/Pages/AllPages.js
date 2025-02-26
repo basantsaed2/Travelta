@@ -71,9 +71,19 @@ export { default as EditTourPage } from "./Dashboard/AgentDashboard/Inventory/To
 //CheckOutProcess
 export { default as CheckOutProcessPage } from "./Dashboard/AgentDashboard/CheckOutProcess/CheckOutProcessPage"; 
 
-
-
-
+//HRM
+//HRM > Department
+export { default as DepartmentPage } from "./Dashboard/AgentDashboard/HRM/Department/DepartmentPage";
+export { default as AddDepartmentPage } from "./Dashboard/AgentDashboard/HRM/Department/AddDepartmentPage";
+export { default as EditDepartmentPage } from "./Dashboard/AgentDashboard/HRM/Department/EditDepartmentPage";
+//HRM > Employee
+export { default as EmployeePage } from "./Dashboard/AgentDashboard/HRM/Employee/EmployeePage";
+export { default as AddEmployeePage } from "./Dashboard/AgentDashboard/HRM/Employee/AddEmployeePage";
+export { default as EditEmployeePage } from "./Dashboard/AgentDashboard/HRM/Employee/EditEmployeePage";
+//HRM > Agent
+export { default as AgentPage } from "./Dashboard/AgentDashboard/HRM/Agent/AgentPage";
+export { default as AddAgentPage } from "./Dashboard/AgentDashboard/HRM/Agent/AddAgentPage";
+export { default as EditAgentPage } from "./Dashboard/AgentDashboard/HRM/Agent/EditAgentPage";
 
 //Setting 
 //FinancialAccount
