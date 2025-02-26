@@ -1,18 +1,22 @@
 import React, { useState } from 'react'
 import TitlePage from '../../../../Components/TitlePage'
-import {AddEmployeePage, EmployeePage} from '../../../../Pages/AllPages'
-import TitleSection from '../../../../Components/TitleSection'
+import {EmployeePage } from '../../../../Pages/AllPages'
+import AddButton from '../../../../Components/Buttons/AddButton'
+import { Link } from 'react-router-dom'
 
 const EmployeeLayout = () => {
   const [update, setUpdate] = useState(false)
   return (
     <>
-      <TitlePage text={'Add Employee'} />
-      <AddEmployeePage update={update} setUpdate={setUpdate}/>
-      <TitleSection text={'Employee Table'} />
-      <EmployeePage refetch={update}/>
+    <div className='flex justify-between items-center'>
+    <TitlePage text={'Employee Table'} />
+    <Link to='add'>
+        <AddButton />
+      </Link>
+    </div>
+      <EmployeePage update={update} setUpdate={setUpdate}/>
     </>
   )
 }
 
-export default EmployeeLayout;
+export default EmployeeLayout

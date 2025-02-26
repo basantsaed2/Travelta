@@ -1,15 +1,8 @@
 import React, { useEffect,useState } from 'react';
 import StaticLoader from '../../../../../Components/StaticLoader';
 import { useGet } from '../../../../../Hooks/useGet';
-import { Switch} from "@mui/material";
 import {useChangeState} from '../../../../../Hooks/useChangeState';
 import {useDelete} from '../../../../../Hooks/useDelete';
-import { Link } from 'react-router-dom';
-import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
-import { MdDelete } from "react-icons/md";
-import { PiWarningCircle } from "react-icons/pi";
-import { FaEdit } from "react-icons/fa";
-import { FaExchangeAlt } from "react-icons/fa";
 import { TextField, MenuItem, Select, InputLabel, FormControl, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import { useAuth } from '../../../../../Context/Auth';
 import { usePost } from '../../../../../Hooks/usePostJson';
@@ -30,7 +23,7 @@ const DepartmentPage = ({ refetch, setUpdate }) => {
     useEffect(() => {
         if (departmentData && departmentData) {
                 console.log("Department Data:", departmentData);
-                // setFinancialAccount(financialAccountData.financials);
+                // setDepartments(departmentData.department);
         }
     }, [departmentData]); // Only run this effect when `data` changes\
 
