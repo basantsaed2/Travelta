@@ -31,9 +31,9 @@ const EditEmployeePage = ({ update, setUpdate }) => {
     }, [refetchDepartment,refetchEmployee,update]);
 
     useEffect(() => {
-        if (departmentData && departmentData) {
+        if (departmentData && departmentData.departments) {
                 console.log("Department Data:", departmentData);
-            // setDepartments(departmentData.department);
+            setDepartments(departmentData.departments);
         }
     }, [departmentData]);
 
@@ -48,7 +48,7 @@ const EditEmployeePage = ({ update, setUpdate }) => {
             setImageName(employee.image || '')
             setImageFile(employee.image_link || '') 
             }
-        console.log('employee', employee)
+        console.log('dataEmployee', dataEmployee)
     }, [dataEmployee]); // Only run this effect when `data` changes
         
     

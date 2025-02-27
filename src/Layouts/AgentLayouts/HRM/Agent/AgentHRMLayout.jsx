@@ -1,16 +1,20 @@
 import React, { useState } from 'react'
 import TitlePage from '../../../../Components/TitlePage'
-import {AddAgentPage, AgentPage} from '../../../../Pages/AllPages'
-import TitleSection from '../../../../Components/TitleSection'
+import {AgentPage } from '../../../../Pages/AllPages'
+import AddButton from '../../../../Components/Buttons/AddButton'
+import { Link } from 'react-router-dom'
 
 const AgentHRMLayout = () => {
   const [update, setUpdate] = useState(false)
   return (
     <>
-      <TitlePage text={'Add Agency'} />
-      <AddAgentPage update={update} setUpdate={setUpdate}/>
-      <TitleSection text={'Agency Table'} />
-      <AgentPage refetch={update}/>
+    <div className='flex justify-between items-center'>
+    <TitlePage text={'Agency Table'} />
+    <Link to='add'>
+        <AddButton />
+      </Link>
+    </div>
+      <AgentPage update={update} setUpdate={setUpdate}/>
     </>
   )
 }

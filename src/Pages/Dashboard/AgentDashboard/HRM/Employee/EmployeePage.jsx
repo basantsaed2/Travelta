@@ -22,9 +22,9 @@ const EmployeePage = ({ refetch, setUpdate }) => {
     }, [refetchEmployees, refetch]);
 
     useEffect(() => {
-        if (employeeData && employeeData.employee) {
+        if (employeeData && employeeData.employees) {
                 console.log("Employee Data:", employeeData);
-                setEmployees(employeeData.employee);
+                setEmployees(employeeData.employees);
         }
     }, [employeeData]); 
 
@@ -68,38 +68,47 @@ const EmployeePage = ({ refetch, setUpdate }) => {
               ))}
             </tr>
           </thead>
-          {/* <tbody className="w-full">
-            {financialAccount.length === 0 ? (
+          <tbody className="w-full">
+            {employees.length === 0 ? (
               <tr>
-                <td colSpan={12} className='text-center text-xl text-mainColor font-TextFontMedium  '>Not find Financial Account</td>
+                <td colSpan={12} className='text-center text-xl text-mainColor font-TextFontMedium  '>Not find Employees</td>
               </tr>
             ) : (
-                financialAccount.map((account, index) => ( 
+              employees.map((employee, index) => ( 
                 <tr className="w-full border-b-2" key={index}>
                     <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
                         {index + 1}
                     </td>
                     <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                        {account?.name|| '-'}
+                        {employee?.name|| '-'}
                     </td>
-                     <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 overflow-hidden">
-                        <div className="flex justify-center">
-                            <img src={account.logo_link}
-                                  className="rounded-md min-h-14 max-w-14 max-h-14"
-                                  alt="Logo"
-                            />
-                        </div>
-                      </td>
+                    <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 overflow-hidden">
+                      <div className="flex justify-center">
+                          <img src={employee.logo_link}
+                                className="rounded-md min-h-14 max-w-14 max-h-14"
+                                alt="Logo"
+                          />
+                      </div>
+                    </td>
+                    <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                        {employee?.email|| '-'}
+                    </td>
+                    <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                        {employee?.phone|| '-'}
+                    </td>
+                    <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                        {employee?.department?.name|| '-'}
+                    </td>
                     <td className="px-4 py-3 text-center">
                         <div className="flex items-center justify-center gap-3">
-                             <Link to={`edit/${account.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
+                             <Link to={`edit/${employee.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
                                 <button
                                     type="button"
-                                    onClick={() => handleOpenDelete(account.id)}
+                                    onClick={() => handleOpenDelete(employee.id)}
                                 >
                                     <MdDelete color='#D01025' size="24"/>
                                 </button>
-                                {openDelete === account.id && (
+                                {openDelete === employee.id && (
                                 <Dialog
                                     open={true}
                                     onClose={handleCloseDelete}
@@ -115,12 +124,12 @@ const EmployeePage = ({ refetch, setUpdate }) => {
                                             />
                                             <div className="flex items-center">
                                             <div className="mt-2 text-center">
-                                                You will delete account {account?.name || "-"}
+                                                You will delete employee {employee?.name || "-"}
                                             </div>
                                             </div>
                                         </div>
                                         <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                            <button className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto" onClick={() => handleDelete(account.id, account?.name)}>
+                                            <button className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto" onClick={() => handleDelete(employee.id, employee?.name)}>
                                             Delete
                                             </button>
         
@@ -144,7 +153,7 @@ const EmployeePage = ({ refetch, setUpdate }) => {
               ))
 
             )}
-          </tbody> */}
+          </tbody>
         </table>
       )}
     </div>

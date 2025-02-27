@@ -8,7 +8,7 @@ import { IoCloudUpload } from "react-icons/io5";
 
 const AddEmployeePage = ({ update, setUpdate }) => {
     const { postData, loadingPost, response } = usePost({ url: 'https://travelta.online/agent/hrm/employee/add' });
-    const { refetch: refetchDepartment, loading: loadingDepartment, data: departmentData } = useGet({url:'https://travelta.online/agent/hrm/department'});
+    const { refetch: refetchDepartment, loading: loadingDepartment, data: departmentData } = useGet({url:'https://travelta.online/agent/hrm/employee'});
     const [departments, setDepartments] = useState([])
     const [selectDepartment, setSelectDepartment] = useState('')
 
@@ -29,7 +29,7 @@ const AddEmployeePage = ({ update, setUpdate }) => {
     useEffect(() => {
         if (departmentData && departmentData) {
                 console.log("Department Data:", departmentData);
-            // setDepartments(departmentData.department);
+            setDepartments(departmentData.departments);
         }
     }, [departmentData]);
     

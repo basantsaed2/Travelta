@@ -3,9 +3,13 @@ import StaticLoader from '../../../../../Components/StaticLoader';
 import { useGet } from '../../../../../Hooks/useGet';
 import {useChangeState} from '../../../../../Hooks/useChangeState';
 import {useDelete} from '../../../../../Hooks/useDelete';
-import { TextField, MenuItem, Select, InputLabel, FormControl, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
+import { Switch} from "@mui/material";
 import { useAuth } from '../../../../../Context/Auth';
-import { usePost } from '../../../../../Hooks/usePostJson';
+import { Link } from 'react-router-dom';
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
+import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
+import { PiWarningCircle } from "react-icons/pi";
 
 const DepartmentPage = ({ refetch, setUpdate }) => {
     const { refetch: refetchDepartment, loading: loadingDepartment, data: departmentData } = useGet({url:'https://travelta.online/agent/hrm/department'});
@@ -23,7 +27,7 @@ const DepartmentPage = ({ refetch, setUpdate }) => {
     useEffect(() => {
         if (departmentData && departmentData) {
                 console.log("Department Data:", departmentData);
-                // setDepartments(departmentData.department);
+                setDepartments(departmentData.departments);
         }
     }, [departmentData]); // Only run this effect when `data` changes\
 
@@ -86,7 +90,7 @@ const DepartmentPage = ({ refetch, setUpdate }) => {
               ))}
             </tr>
           </thead>
-          {/* <tbody className="w-full">
+          <tbody className="w-full">
             {departments.length === 0 ? (
               <tr>
                 <td colSpan={12} className='text-center text-xl text-mainColor font-TextFontMedium  '>Not find Departments</td>
@@ -164,7 +168,7 @@ const DepartmentPage = ({ refetch, setUpdate }) => {
               ))
 
             )}
-          </tbody> */}
+          </tbody>
         </table>
       )}
     </div>
