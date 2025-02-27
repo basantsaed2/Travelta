@@ -109,7 +109,7 @@ const EditEmployeePage = ({ update, setUpdate }) => {
         formData.append('department_id', selectDepartment);
         formData.append('image', imageFile);
 
-        postData(formData, 'Employee Added Success');
+        postData(formData, 'Employee Updated Success');
     };
 
     return (

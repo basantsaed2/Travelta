@@ -25,34 +25,15 @@ const EditAgentPage = ({ update, setUpdate }) => {
     useEffect(() => {
         if (dataAgent && dataAgent.agent) {
             const agent = dataAgent.agent;
-            setName(agent.name || '')
-            setPassword(agent.phone || '')
+            setName(agent.user_name || '')
+            setPassword(agent.password || '')
             }
         console.log('dataAgent', dataAgent)
     }, [dataAgent]); // Only run this effect when `data` changes
-        
-    
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImageFile(file);
-            setImageName(file.name);
-        }
-    }; 
-    const handleImageClick = (ref) => {
-        if (ref.current) {
-               ref.current.click();
-        }
-    };
 
     const handleReset = () => {
         setName('');
-        setPhone('');
-        setEmail('');
-        setAddress('');
-        setImageFile('')
-        setImageName('')
-        setSelectDepartment('')
+        setPassword('');
     };
     const handleGoBack = () => {
       navigate(-1, { replace: true });
@@ -73,23 +54,14 @@ const EditAgentPage = ({ update, setUpdate }) => {
             alert('Please Enter Name');
             return;
         }
-        if (!phone) {
-            alert('Please Enter Phone');
-            return;
-        }
-        if (!email) {
-            alert('Please Enter The Email');
-            return;
-        }
+       
         const formData = new FormData();
-        formData.append('name', name);
-        formData.append('phone', phone);
-        formData.append('email', email);
-        formData.append('address', address);
-        formData.append('department_id', selectDepartment);
-        formData.append('image', imageFile);
+        formData.append('user_name', name);
+        {password !==null && password !=='' &&
+            formData.append('password', password)
+        }
 
-        postData(formData, 'Employee Added Success');
+        postData(formData, 'Agency Updated Success');
     };
 
     return (
@@ -124,7 +96,6 @@ const EditAgentPage = ({ update, setUpdate }) => {
                 variant="outlined"
                 type="password"
                 fullWidth
-                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"

@@ -57,7 +57,7 @@ const EditDepartmentPage = ({ update, setUpdate }) => {
         formData.append('name', name);
         formData.append('status', status || 0);
 
-        postData(formData, 'Department Added Success');
+        postData(formData, 'Department Updated Success');
     };
     
     return (
