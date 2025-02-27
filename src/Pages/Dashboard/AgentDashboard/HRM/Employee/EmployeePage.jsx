@@ -84,7 +84,7 @@ const EmployeePage = ({ refetch, setUpdate }) => {
                     </td>
                     <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 overflow-hidden">
                       <div className="flex justify-center">
-                          <img src={employee.logo_link}
+                          <img src={employee.image_link}
                                 className="rounded-md min-h-14 max-w-14 max-h-14"
                                 alt="Logo"
                           />
