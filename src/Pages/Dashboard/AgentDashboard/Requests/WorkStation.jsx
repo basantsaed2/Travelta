@@ -25,6 +25,9 @@ const WorkStation = () => {
   const [priorityList, setPriorityList] = useState([]);
   const [selectedPriority, setSelectedPriority] = useState('');
 
+  const [selectedToStage, setSelectedToStage] = useState(null);
+
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedAction, setSelectedAction] = useState(null);
   const [wonPopupOpen, setWonPopupOpen] = useState(false);
@@ -94,8 +97,10 @@ const WorkStation = () => {
     if (source.droppableId==='pending' && destination.droppableId==='price_quotation') {
       const item = stages[source.droppableId]?.[source.index];
       if (item) {
+        console.log("Selected Item:", item);
         setSelectedItem(item);
         setPopupOpen(true);
+        setSelectedToStage('price_quotation');
       }
     }
 
@@ -104,14 +109,7 @@ const WorkStation = () => {
       if (item) {
         setSelectedItem(item);
         setPopupOpen(true);
-      }
-    }
-
-    if (source.droppableId==='negotiation' && destination.droppableId==='price_quotation') {
-      const item = stages[source.droppableId]?.[source.index];
-      if (item) {
-        setSelectedItem(item);
-        setPopupOpen(true);
+        setSelectedToStage('negotiation');
       }
     }
 
@@ -124,49 +122,144 @@ const WorkStation = () => {
     // }
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    console.log(selectedItem.id);
+    console.log(selectedItem.stages);
   
-    const formData = new FormData();
-    let response = null;
+    let requestData = { stages: "" };
   
-      if (selectedAction === 'Won') {
-        // Make API request for 'Won' action
-        response = await changeState(
-          `https://travelta.online/agent/request/stages/${selectedItem.id}`,
-          `${selectedAction} Changed Status.`,
-          { code: wonCode, stages: 'Won' }
-        );
-      }else if (selectedAction === 'Lost') {
-        // You might want to send the formData in a POST request
-        response = await changeState(
-          `https://travelta.online/agent/request/stages/${selectedItem.id}`,
-          `${selectedAction} Changed Status.`,
-          { lost_reason: lostReason, stages: 'Lost' }
-        );
-      }else{
-        response = await changeState(
-          `https://travelta.online/agent/request/stages/${selectedItem.id}`,
-          `Changed Status.`,
-          {stages:stages==='pending'?'Pending':stages==='price_quotation'?'Price quotation':'Negotiation',action:formData.action ,message:message, priority:formData.priority , follow_up_date:formData.follow_up_date ,result:formData.result}
-        );
+    if (selectedAction === "Won") {
+      requestData = { stages: "Won", code: wonCode };
+    } else if (selectedAction === "Lost") {
+      requestData = { stages: "Lost", lost_reason: lostReason };
+    }
+    else {
+      requestData = {
+        stages:
+        selectedToStage === "Pending"
+            ? "Pending"
+            : selectedToStage === "price_quotation"
+            ? "Price quotation"
+            :selectedToStage === "negotiation"
+            ? "Negotiation" : selectedItem.stages,
+        action: formData.action,
+        follow_up_date: formData.follow_up_date,
+        result: formData.result,
+      };
+  
+      if (formData.action === "message") {
+        requestData.send_by = message;
+      } else if (formData.action === "assign_request") {
+        requestData.admin_agent_id = selectedAdmin;
       }
+    }
   
-      if (response) {
-        setWonPopupOpen(false)
-        setLostPopupOpen(false)
-        setPopupOpen(false)
+    const response = await changeState(
+      `https://travelta.online/agent/request/stages/${selectedItem.id}`,
+      `${selectedAction || "Changed"} Status.`,
+      requestData
+    );
+  
+    if (response) {
+      setWonPopupOpen(false);
+      setLostPopupOpen(false);
+      setPopupOpen(false);
 
-        setStages((prevStage) =>
-          prevStage.map((stage) =>
-            stage === stage ? { ...stage} : stage
-          )
-      );
-      }
-  
+      setStages((prevStages) => {
+        console.log("Previous Stages:", prevStages);
+        console.log("Selected Item:", selectedItem);
+        console.log("Request Data Stages (Before Fix):", requestData.stages);
+      
+        // Convert new stage key to lowercase and replace spaces with underscores
+        const newStageKey = requestData.stages.toLowerCase().replace(/\s+/g, "_");
+      
+        console.log("Fixed New Stage Key:", newStageKey);
+      
+        // Find the old stage key
+        const oldStageKey = Object.keys(prevStages).find((key) =>
+          prevStages[key].some((item) => item.id === selectedItem.id)
+        );
+      
+        console.log("Old Stage Key:", oldStageKey);
+      
+        if (!oldStageKey) {
+          console.warn("Item not found in any stage!");
+          return prevStages;
+        }
+      
+        if (!prevStages.hasOwnProperty(newStageKey)) {
+          console.warn("Invalid new stage:", newStageKey);
+          return prevStages;
+        }
+      
+        // Remove the item from the old stage
+        const updatedOldStage = prevStages[oldStageKey].filter(
+          (item) => item.id !== selectedItem.id
+        );
+      
+        // Update the stages
+        const updatedStages = {
+          ...prevStages,
+          [oldStageKey]: updatedOldStage,
+          [newStageKey]: [...prevStages[newStageKey], { ...selectedItem, stages: newStageKey }],
+        };
+      
+        console.log("Updated Stages:", updatedStages);
+        return updatedStages;
+      });
+      
+
+      
+    }
   };
+
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+    
+  //   console.log(selectedItem.id);
+  
+  //   const formData = new FormData();
+  //   let response = null;
+  
+  //     if (selectedAction === 'Won') {
+  //       // Make API request for 'Won' action
+  //       response = await changeState(
+  //         `https://travelta.online/agent/request/stages/${selectedItem.id}`,
+  //         `${selectedAction} Changed Status.`,
+  //         { code: wonCode, stages: 'Won' }
+  //       );
+  //     }else if (selectedAction === 'Lost') {
+  //       // You might want to send the formData in a POST request
+  //       response = await changeState(
+  //         `https://travelta.online/agent/request/stages/${selectedItem.id}`,
+  //         `${selectedAction} Changed Status.`,
+  //         { lost_reason: lostReason, stages: 'Lost' }
+  //       );
+  //     }
+  //     else{
+  //       response = await changeState(
+  //         `https://travelta.online/agent/request/stages/${selectedItem.id}`,
+  //         `Changed Status.`,
+  //         {stages:stages==='pending'?'Pending':stages==='price_quotation'?'Price quotation':'Negotiation',action:formData.action ,message:message, priority:formData.priority , follow_up_date:formData.follow_up_date ,result:formData.result}
+  //       );
+  //     }
+  
+  //     if (response) {
+  //       setWonPopupOpen(false)
+  //       setLostPopupOpen(false)
+  //       setPopupOpen(false)
+
+      //   setStages((prevStage) =>
+      //     prevStage.map((stage) =>
+      //       stage === stage ? { ...stage} : stage
+      //     )
+      // );
+  //     }
+  
+  // };
 
   return (
     <div className="w-full p-4 flex flex-wrap gap-8 justify-start items-start">
