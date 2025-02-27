@@ -9,9 +9,6 @@ const LedgerLayout = () => {
     <>
     <div className='flex justify-between items-center'>
     <TitlePage text={'General Ledger Table'} />
-    <Link to='add'>
-        <AddButton />
-      </Link>
     </div>
       <LedgerPage update={update} setUpdate={setUpdate}/>
     </>

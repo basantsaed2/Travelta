@@ -93,6 +93,8 @@ const ManualBooking = () => {
   const [countries, setCountries] = useState([]);
   const [selectedTaxId, setSelectedTaxId] = useState([]);
   const [specialRequest, setSpecialRequest] = useState("");
+  const [agents, setAgents] = useState([]);
+  const [selectAgent, setSelectAgent] = useState('');
 
   const handleSwitchChange = () => {
     setIsMarkupPercentage((prev) => (prev === 1 ? 0 : 1)); // Toggle between 1 and 0
@@ -592,6 +594,7 @@ const ManualBooking = () => {
       setTitle(bookingListData.adult_title);
       setSuppliers(suppliersData.suppliers);
       setCustomers(suppliersData.customers);
+      setAgents(bookingListData.employees);
     }
   }, [bookingListData, suppliersData]); // Only run this effect when `data` changes
 
@@ -722,6 +725,7 @@ const ManualBooking = () => {
       formData.append("to_customer_id", selectedToSupplier);
     }
     formData.append("special_request", specialRequest);
+    formData.append("agent_sales_id", selectAgent);
 
     // Append Hotal fields to FormData
     if (selectedService.service_name === "Hotel") {
@@ -1155,6 +1159,22 @@ const ManualBooking = () => {
               {taxesType.map((tax) => (
                 <MenuItem key={tax.value} value={tax.value}>
                   {tax.label}
+                </MenuItem>
+              ))}
+            </TextField>
+
+            <TextField
+              select
+              fullWidth
+              variant="outlined"
+              value={selectAgent}
+              onChange={(e) => setSelectAgent(e.target.value)} // Update the selected service                }
+              label="Select Agent Sales"
+              className="mb-6"
+            >
+              {agents.map((agent) => (
+                <MenuItem key={agent.id} value={agent.id}>
+                  {agent.name}
                 </MenuItem>
               ))}
             </TextField>
