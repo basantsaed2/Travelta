@@ -220,6 +220,11 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     stateLink.isActiveSupplierAccount ?? false
   );
 
+  //ledger
+  const [isActiveLedger, setIsActiveLedger] = useState(
+    stateLink.isActiveLedger ?? false
+  );
+
                 //Inventory Room
                 const [isOpenExpenses, setIsOpenExpenses] = useState(
                   stateLink.isOpenExpenses ?? false
@@ -483,6 +488,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       isActiveExpenses,
       isActiveExpensesIcon,
       isOpenExpenses,
+      isActiveLedger,
 
       isActiveCategoryRevenue,
       isOpenCategoryRevenue,
@@ -616,6 +622,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveExpenses,
     isActiveExpensesIcon,
     isOpenExpenses,
+    isActiveLedger,
 
     isActiveCategoryRevenue,
     isOpenCategoryRevenue,
@@ -750,6 +757,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveExpenses,
     isActiveExpensesIcon,
     isOpenExpenses,
+    isActiveLedger,
 
     isActiveCategoryRevenue,
     isOpenCategoryRevenue,
@@ -866,7 +874,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActiveExpenses(false)
     setIsActiveExpensesIcon(false)
     setIsOpenExpenses(false)
-
+    setIsActiveLeads(false)
 
     setIsActiveCategoryRevenue(false)
     setIsOpenCategoryRevenue(false)
@@ -1427,6 +1435,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsOpenAccounting(true);
     setIsActiveAccountingIcon(true);
     setIsActiveAccounting(true);
+    setIsActiveLedger(false);
   }, []);
   useEffect(() => {
     const part = pathName.split("/");
@@ -1452,6 +1461,8 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     setIsActiveAccountingIcon(true);
     setIsActiveAccounting(true);
     setIsActiveSupplierAccount(true);
+    setIsActiveLedger(false);
+
   }, []);
   useEffect(() => {
     const part = pathName.split("/");
@@ -1460,6 +1471,23 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       handleClickSuppliersAccount();
     }
   }, [location]);
+
+  const handleClickLedger = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenAccounting(true);
+    setIsActiveAccountingIcon(true);
+    setIsActiveAccounting(true);
+    setIsActiveLedger(true);
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 4).join("/");
+    if (result == "/dashboard_agent/accounting/ledger") {
+      handleClickLedger();
+    }
+  }, [location]);
+
 
   const handleClickExpenses = useCallback(() => {
     handleStateLinks();
@@ -2859,6 +2887,15 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       isActiveSupplierAccount ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
     }`}>
       Supplier
+    </li>
+  </Link>
+
+   {/* Ledger Link */}
+   <Link to={"accounting/ledger"} onClick={() => { handleClickLedger(); onLinkClick(); }}>
+    <li className={`text-lg font-medium px-4 py-2 rounded-lg transition-all duration-300 ${
+      isActiveLedger ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+    }`}>
+      General Ledger
     </li>
   </Link>
 

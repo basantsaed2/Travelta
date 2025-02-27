@@ -103,3 +103,7 @@ export { default as AddPositionPage } from "./Dashboard/AgentDashboard/Setting/P
 export { default as EditPositionPage } from "./Dashboard/AgentDashboard/Setting/Positions/EditPositionPage";
 //BookingPayment
 export {default as BookingPaymentPage} from './Dashboard/AgentDashboard/BookingPayments/BookingPaymentPage';
+
+
+//Ledger
+export { default as LedgerPage } from "./Dashboard/AgentDashboard/Accounting/Ledger/LedgerPage";
