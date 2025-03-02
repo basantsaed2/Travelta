@@ -21,8 +21,7 @@ const AddPositionPage = ({ update, setUpdate }) => {
     }, [refetchPositions, update]);
 
     useEffect(() => {
-        if (positionsData && positionsData.actions && positionsData.modules) {
-            setActions(positionsData.actions);
+        if (positionsData && positionsData.modules) {
             setModules(positionsData.modules);
         }
     }, [positionsData]);
@@ -88,18 +87,41 @@ const AddPositionPage = ({ update, setUpdate }) => {
         }
     };
 
-    const handleModuleChange = (index, value) => {
-        const newPositions = [...positions];
-        newPositions[index].module = value;
-        setPositions(newPositions);
+    // Handles module selection
+    const handleModuleChange = (index, selectedModule) => {
+        setPositions((prev) =>
+            prev.map((pos, i) =>
+                i === index ? { ...pos, module: selectedModule, actions: [] } : pos
+            )
+        );
     };
 
-    const handleActionChange = (index, value) => {
-        const newPositions = [...positions];
-        newPositions[index].actions = value;
-        setPositions(newPositions);
+    // Handles individual action selection
+    const handleActionChange = (index, selectedActions) => {
+        setPositions((prev) =>
+            prev.map((pos, i) =>
+                i === index ? { ...pos, actions: selectedActions } : pos
+            )
+        );
     };
 
+    // Handles "Select All" functionality
+    const handleSelectAll = (index) => {
+        setPositions((prev) =>
+            prev.map((pos, i) => {
+                if (i === index) {
+                    const allActions = modules[pos.module] || [];
+                    return {
+                        ...pos,
+                        actions: pos.actions.length === allActions.length ? [] : allActions,
+                    };
+                }
+                return pos;
+            })
+        );
+    };
+
+    
     return (
         <>
         {(loadingPost || loadingPositions) ? (
@@ -124,9 +146,10 @@ const AddPositionPage = ({ update, setUpdate }) => {
             </div>
           </div>
 
-          {/* Positions Section */}
-          {positions.map((position, index) => (
+       {/* Positions Section */}
+        {positions.map((position, index) => (
             <div key={index} className="flex sm:flex-col lg:flex-row flex-wrap items-start justify-start gap-5 border p-4 rounded-lg shadow-md">
+                
                 {/* Module Selection */}
                 <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
                     <TextField
@@ -138,19 +161,15 @@ const AddPositionPage = ({ update, setUpdate }) => {
                         label="Select Module"
                         className="mb-6"
                     >
-                        {modules.length > 0 ? (
-                            modules.map((module) => (
-                                <MenuItem key={module} value={module}>
-                                    {module}
-                                </MenuItem>
-                            ))
-                        ) : (
-                            <MenuItem disabled>No module available</MenuItem>
-                        )}
+                        {Object.keys(modules).map((module) => (
+                            <MenuItem key={module} value={module}>
+                                {module}
+                            </MenuItem>
+                        ))}
                     </TextField>
                 </div>
 
-                {/* Multi-Select Actions */}
+                {/* Multi-Select Actions with "Select All" Option */}
                 <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
                     <TextField
                         select
@@ -165,15 +184,30 @@ const AddPositionPage = ({ update, setUpdate }) => {
                         }}
                         className="mb-6"
                     >
-                        {actions.length > 0 ? (
-                            actions.map((action) => (
-                                <MenuItem key={action} value={action}>
-                                    <Checkbox checked={position.actions.includes(action)} />
-                                    <ListItemText primary={action} />
+                        {position.module && modules[position.module] ? (
+                            <>
+                                {/* Select All Option */}
+                                <MenuItem
+                                    value="select_all"
+                                    onClick={() => handleSelectAll(index)}
+                                >
+                                    <Checkbox 
+                                        checked={position.actions.length === modules[position.module].length} 
+                                        indeterminate={position.actions.length > 0 && position.actions.length < modules[position.module].length} 
+                                    />
+                                    <ListItemText primary="Select All" />
                                 </MenuItem>
-                            ))
+
+                                {/* Individual Action Options */}
+                                {modules[position.module].map((action) => (
+                                    <MenuItem key={action} value={action}>
+                                        <Checkbox checked={position.actions.includes(action)} />
+                                        <ListItemText primary={action} />
+                                    </MenuItem>
+                                ))}
+                            </>
                         ) : (
-                            <MenuItem disabled>No action available</MenuItem>
+                            <MenuItem disabled>No actions available</MenuItem>
                         )}
                     </TextField>
                 </div>
@@ -192,24 +226,25 @@ const AddPositionPage = ({ update, setUpdate }) => {
                     )}
                 </div>
             </div>
-          ))}
+        ))}
 
-          {/* Form Buttons */}
-         <div className="w-full flex items-center gap-x-4">
+        {/* Form Buttons */}
+        <div className="w-full flex items-center gap-x-4">
             <div className="">
                 <Button text={'Reset'} onClick={handleReset} className="bg-mainColor hover:bg-blue-600 hover:text-white">Reset</Button>
             </div>
             <div className="">
                 <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                className="bg-mainColor hover:bg-blue-600 text-white"
-            >
-                Submit
-            </Button>
+                    type="submit"
+                    variant="contained"
+                    fullWidth
+                    className="bg-mainColor hover:bg-blue-600 text-white"
+                >
+                    Submit
+                </Button>
             </div>
         </div>
+
         </form>
         </>
         )}
