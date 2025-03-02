@@ -9,7 +9,7 @@ const PositionLayout = () => {
   return (
     <>
     <div className='flex justify-between items-center'>
-    <TitlePage text={'Position Table'} />
+    <TitlePage text={'Role Table'} />
     <Link to='add'>
     <AddButton />
     </Link>

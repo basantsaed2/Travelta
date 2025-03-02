@@ -17,7 +17,7 @@ const AddPositionLayout = () => {
             >
                 <FaArrowLeft/>
             </button>
-    <TitlePage text={'Add Position'} />
+    <TitlePage text={'Add Role'} />
     
     </div>
     <AddPositionPage update={update} setUpdate={setUpdate} />

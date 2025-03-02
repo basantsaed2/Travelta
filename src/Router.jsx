@@ -903,7 +903,7 @@ export const router = createBrowserRouter([
                   },
 
                   {
-                    path: "positions",
+                    path: "roles",
                     element: <AppPosition/>,
                     children:[
                         {
@@ -915,7 +915,7 @@ export const router = createBrowserRouter([
                           element: <AddPositionLayout/>,
                         },
                         {
-                        path: "edit/:positionId",
+                        path: "edit/:roleId",
                         element: <EditPositionLayout/>,
                         },
                     ]

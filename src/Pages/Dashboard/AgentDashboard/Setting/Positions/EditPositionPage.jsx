@@ -8,9 +8,9 @@ import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { useNavigate, useParams } from 'react-router-dom';
 
 const EditPositionPage = ({ update, setUpdate }) => {
-    const { positionId } = useParams();
-    const { refetch: refetchPosition, loading: loadingPosition, data: dataPosition } = useGet({ url:`https://travelta.online/agent/admin/position/item/${positionId}` });
-    const { postData, loadingPost, response } = usePost({ url: `https://travelta.online/agent/admin/position/update/${positionId}` });
+    const { roleId } = useParams();
+    const { refetch: refetchPosition, loading: loadingPosition, data: dataPosition } = useGet({ url:`https://travelta.online/agent/admin/position/item/${roleId}` });
+    const { postData, loadingPost, response } = usePost({ url: `https://travelta.online/agent/admin/position/update/${roleId}` });
     const { refetch: refetchPositions, loading: loadingPositions, data: positionsData } = useGet({ url: 'https://travelta.online/agent/admin/position/lists' });
     const auth = useAuth();
 

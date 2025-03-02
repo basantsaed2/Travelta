@@ -1833,7 +1833,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       ].some((path) => pathName.startsWith(path)) && ![
           "/dashboard_agent/setting/admin_account",
       ].some((path) => pathName.startsWith(path)) && ![
-        "/dashboard_agent/setting/positions",
+        "/dashboard_agent/setting/roles",
       ].some((path) => pathName.startsWith(path)) && ![
         "/dashboard_agent/setting/currency",
       ].some((path) => pathName.startsWith(path)) && ![
@@ -1894,7 +1894,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
   useEffect(() => {
     const part = pathName.split("/");
     const result = part.slice(0, 4).join("/");
-    if (result == "/dashboard_agent/setting/positions") {
+    if (result == "/dashboard_agent/setting/roles") {
       handleClickPosition();
     }
   }, [location]);
@@ -3343,7 +3343,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
           </Link>
 
           <Link
-            to={"setting/positions"}
+            to={"setting/roles"}
             onClick={() => {
               handleClickPosition();
               onLinkClick();
@@ -3357,7 +3357,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
               }
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
             >
-              Positions
+              Roles
             </li>
           </Link>
 
