@@ -57,16 +57,16 @@ const BookingEngine = ({ update, setUpdate }) => {
   useEffect(() => {
     const today = new Date();
     const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1); // Set tomorrow's date
+    tomorrow.setDate(today.getDate() + 1);
 
     const todayString = today.toISOString().split("T")[0];
     const tomorrowString = tomorrow.toISOString().split("T")[0];
 
     setCheckIn(todayString);
-    setCheckOut(tomorrowString); // Set default check-out date to tomorrow
+    setCheckOut(tomorrowString);
   }, []);
 
-  const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+  const today = new Date().toISOString().split("T")[0]; 
 
   useEffect(() => {
     const hotels = hotelsData?.hotels?.map((h) => ({ type: "Hotel", name: h.name, id: h.id })) || [];
