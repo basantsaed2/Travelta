@@ -166,7 +166,7 @@ const BookingEngine = ({ update, setUpdate }) => {
 
         {/* Tabs for Hotel & Tour */}
       <Tabs className="mb-10 font-semibold text-2xl" value={tabValue} onChange={handleTabChange} variant="fullWidth">
-        <Tab label="Hotel" sx={{ fontWeight: "bold", fontSize: "1.0rem" }} />
+        <Tab label="Room" sx={{ fontWeight: "bold", fontSize: "1.0rem" }} />
         <Tab label="Tour" sx={{ fontWeight: "bold", fontSize: "1.0rem" }} />
       </Tabs>
       {tabValue === 0 && (
