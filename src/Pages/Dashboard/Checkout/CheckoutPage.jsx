@@ -31,6 +31,8 @@ const CheckoutPage = ({ refetch, setUpdate }) => {
         const location = useLocation();
         const { cartItems } = location.state || {};
         const { totalPrice } = location.state || {};
+        const { totalDiscountPrice } = location.state || {};
+
         const [isLoading, setIsLoading] = useState(false);
         const [selectedMethod, setSelectedMethod] = useState("");
         const [thumbnails, setThumbnails] = useState(null);
@@ -75,65 +77,52 @@ const CheckoutPage = ({ refetch, setUpdate }) => {
             auth.toastError("Please upload a receipt image.");
             return;
         }
-      const formData = new FormData();
-      const planIds = cartItems.map(item => item.id); // Create a comma-separated string of IDs
-      formData.append("plan_id", planIds); // Append the string to formData
-      
-      // Append basic data (payment method, amount)
-      formData.append("payment_method_id", selectedMethod.id);
+        const formData = new FormData();
+        const planIds = cartItems.map(item => item.id);
+        formData.append("plan_id", planIds);       
+        formData.append("payment_method_id", selectedMethod.id);
+        if (thumbnailFile) {formData.append("receipt", thumbnailFile);}
 
-        // Append invoice image (file)
-        if (thumbnailFile) {
-        formData.append("receipt", thumbnailFile);
-        }
-
-    for (let pair of formData.entries()) {
-        console.log(pair[0] + ', ' + pair[1]);
-    } 
-
-    try {
-        setIsLoading(true); // Set loading state
-        const response = await axios.post(
-          "https://travelta.online/agent/payment/make_payment",
-          // requestData, 
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${auth.user.token}`,
-            },
-          }
-        );
-  
-        if (response.status === 200) {
-          console.log(response.data);
-           // Show success modal
-          setShowSuccessModal(true);
-          dispatch(clearCart());
-
-          // Set timeout to ensure modal shows before navigation
-          setTimeout(() => {
-            handleGoBack(); // Optional, if you need to go back
-            navigate("/dashboard_user/cart"); // Navigate to the cart page
-          }, 3000); // Allow time for modal before navigating
-      
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
         } 
-    } catch (error) {
-        console.error("Error during order submission:", error);
-        // alert("An error occurred while submitting the order.");
-    } finally {
-    setIsLoading(false); // Reset loading state
-    }
+
+        try {
+            setIsLoading(true); // Set loading state
+            const response = await axios.post(
+              "https://travelta.online/agent/payment/make_payment",
+              // requestData, 
+              formData,
+              {
+                headers: {
+                  Authorization: `Bearer ${auth.user.token}`,
+                },
+              }
+            );
+      
+            if (response.status === 200) {
+              console.log(response.data);
+              // Show success modal
+              setShowSuccessModal(true);
+              dispatch(clearCart());
+
+              // Set timeout to ensure modal shows before navigation
+              setTimeout(() => {
+                handleGoBack(); // Optional, if you need to go back
+                navigate("/dashboard_user/cart"); // Navigate to the cart page
+              }, 3000); // Allow time for modal before navigating
+          
+            } 
+        } catch (error) {
+            console.error("Error during order submission:", error);
+            // alert("An error occurred while submitting the order.");
+        } finally {
+        setIsLoading(false); // Reset loading state
+        }
     } 
     
   };
-  
-//   if (!PaymentMethodData) {
-//     return (
-//       <div className="text-mainColor text-2xl font-bold w-full h-full flex items-center justify-center">
-//        No payment methods data available
-//       </div>
-//     );
-//   }
+
 
   return (
     <>
@@ -172,12 +161,12 @@ const CheckoutPage = ({ refetch, setUpdate }) => {
 
       <div className="flex justify-between text-lg text-gray-700 mb-3">
         <span className="font-medium">Discount:</span>
-        <span className="font-semibold text-red-600">{discount} EGP</span>
+        <span className="font-semibold text-red-600">{totalPrice-totalDiscountPrice} EGP</span>
       </div>
 
       <div className="flex justify-between text-lg font-bold text-gray-900">
         <span>Total Price After Discount:</span>
-        <span className="text-green-600">{discountedPrice} EGP</span>
+        <span className="text-green-600">{totalDiscountPrice} EGP</span>
       </div>
         </div>
 
@@ -207,33 +196,33 @@ const CheckoutPage = ({ refetch, setUpdate }) => {
 
     {/* Additional Input for Vodafone Cash */}
     {selectedMethod?.name === 'Vodafone Cash' &&
-  method?.name === 'Vodafone Cash' && (
-    <div className="relative w-full mt-2">
-      <input
-        type="text"
-        className="w-full p-2 border border-green-700 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-700"
-        value={thumbnails ? thumbnails : 'No file selected'}
-        readOnly={true}
-        onClick={handleInputClick} // Open file input dialog when clicked
-        placeholder="Upload Receipt"
-      />
+      method?.name === 'Vodafone Cash' && (
+        <div className="relative w-full mt-2">
+          <input
+            type="text"
+            className="w-full p-2 border border-green-700 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-700"
+            value={thumbnails ? thumbnails : 'No file selected'}
+            readOnly={true}
+            onClick={handleInputClick} // Open file input dialog when clicked
+            placeholder="Upload Receipt"
+          />
 
-      {/* Upload Icon */}
-      <FiUpload
-        onClick={handleInputClick} // Allow the icon to trigger file selection too
-        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-mainColor cursor-pointer"
-      />
+          {/* Upload Icon */}
+          <FiUpload
+            onClick={handleInputClick} // Allow the icon to trigger file selection too
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-mainColor cursor-pointer"
+          />
 
-      {/* Hidden File Input */}
-      <input
-        type="file"
-        className="hidden"
-        onChange={handleFileChange}
-        ref={uploadRef}
-        accept="image/*" // Optional: restrict to image file types
-      />
-    </div>
-)}
+          {/* Hidden File Input */}
+          <input
+            type="file"
+            className="hidden"
+            onChange={handleFileChange}
+            ref={uploadRef}
+            accept="image/*" // Optional: restrict to image file types
+          />
+        </div>
+    )}
   </div>
       ))}
 

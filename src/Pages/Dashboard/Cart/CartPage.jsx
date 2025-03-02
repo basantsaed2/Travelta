@@ -11,34 +11,26 @@ const CartPage = () => {
   const cartItems = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const [promoCode, setPromoCode] = useState("");
-  const [discount, setDiscount] = useState(0);
+//   const [discount, setDiscount] = useState(0);
   const [promoApplied, setPromoApplied] = useState(false);
 
-  const calculateTotal = () => {
-    const subtotal = cartItems.reduce((total, item) => total + Math.abs(item.price), 0);
-    return Math.abs(subtotal - discount);
-  };  
-  const calculateTotalDiscount = () => {
-    const subtotal = cartItems.reduce((total, item) => total + Math.abs(item.price_after_discount), 0);
-    return Math.abs(subtotal - discount);
-  };  
+    const calculateTotal = () => {
+        return cartItems.reduce((total, item) => total + Math.abs(item.price), 0);
+    };
 
-  const applyPromoCode = () => {
-    // if (promoCode.trim().toLowerCase() === "save20") {
-    //   setDiscount(20); // Apply a $20 discount
-    //   setPromoApplied(true);
-    //   auth.toastSuccess("Promo code applied successfully! $20 discount added.");
-    // } else {
-    //     auth.toastError("Invalid promo code");
-    // }
-  };
+    const calculateTotalDiscount = () => {
+        return cartItems.reduce((total, item) => total + Math.abs(item.DiscountPrice), 0);
+    };
+
+    // Proper subtraction and formatting
+    const totalPrice = calculateTotal();
+    const totalDiscountPrice = calculateTotalDiscount();  
 
   const handleRemoveItem = (item) => {
     dispatch(removeFromCart(item));
     localStorage.removeItem('selectedPlanId');
   };
 
-  const totalPrice = calculateTotal();
   
   return (
     <>
@@ -100,7 +92,7 @@ const CartPage = () => {
                         </div>
                     </td>
                     <td className="px-4 py-2 border-b border-gray-200 text-gray-800 font-semibold">
-                    {Math.abs(item.price).toFixed(2)} EGP
+                    {Math.abs(item.DiscountPrice ?item.DiscountPrice:item.price).toFixed(2)} EGP
                     </td>
                     <td className="px-4 py-2 border-b border-gray-200 text-center">
                         <button
@@ -119,7 +111,7 @@ const CartPage = () => {
 
         {/* Promo Code Section */}
         <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Promo Code</h2>
+            {/* <h2 className="text-xl font-bold text-gray-800 mb-4">Promo Code</h2>
             <div className="flex flex-col xl:flex-row items-center gap-4 mb-6">
             <input
                 type="text"
@@ -140,13 +132,23 @@ const CartPage = () => {
             <p className="text-green-600 font-semibold">
                 🎉 Promo code applied! You saved $.
             </p>
-            )}
-            <div className="border-t pt-4">
+            )} */}
+            {/* <div className="border-t pt-4"> */}
             <div className="flex justify-between">
-                <span className="text-lg font-semibold text-gray-700">Subtotal:</span>
-                <span className="text-lg font-bold text-gray-800">{calculateTotal().toFixed(2)} EGP</span>
+                <span className="text-lg font-semibold text-gray-700">Total:</span>
+                <span className="text-lg font-bold text-gray-800">{totalPrice} EGP</span>
             </div>
+            <div className="flex justify-between">
+                <span className="text-lg font-semibold text-gray-700">Discount:</span>
+                <span className="text-lg font-bold text-gray-800">  {(totalPrice - totalDiscountPrice).toFixed(2)} EGP
+                </span>
             </div>
+            <div className="flex justify-between">
+                <span className="text-lg font-semibold text-gray-700">Total After Discount:</span>
+                <span className="text-lg font-bold text-gray-800">  {(totalDiscountPrice).toFixed(2)} EGP
+                </span>
+            </div>
+            {/* </div> */}
         </div>
         </div>
 
@@ -159,7 +161,7 @@ const CartPage = () => {
             >
             Clear Cart
             </button>
-            <Link to="/dashboard/checkout" state={{ cartItems, totalPrice }} className="flex-1 text-center px-6 py-3 bg-mainColor text-white rounded-lg shadow-lg hover:bg-blue-700 transition-all">
+            <Link to="/dashboard/checkout" state={{ cartItems, totalPrice ,totalDiscountPrice}} className="flex-1 text-center px-6 py-3 bg-mainColor text-white rounded-lg shadow-lg hover:bg-blue-700 transition-all">
             Proceed to Checkout
             </Link>
         </div>

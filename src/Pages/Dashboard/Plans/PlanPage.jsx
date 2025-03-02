@@ -54,7 +54,8 @@ const PlanPage = ({ refetch, setUpdate }) => {
     const planWithPeriodAndPrice = {
       ...plan,
       period: plan.period_in_days,
-      price: plan.price_after_discount?plan.price_after_discount : plan.price,
+      price: plan.price,
+      DiscountPrice:plan.price_after_discount,
   };
 
   // Update cart based on the selected plan
@@ -96,29 +97,8 @@ const handleLogout = () => {
   return (
     <>
       <div className="w-full flex flex-col h-screen">
-          {/* <nav className="bg-mainColor shadow-md px-4 py-2 flex items-center justify-around">
-
-          <div className='flex items-center space-x-4'>
-          <div className="w-10 h-10 rounded-full flex items-center justify-center">
-              <Logo />
-            </div>
-            <span className="text-xl font-semibold text-white">Travelta</span>
-          </div>
-
-          <h1 className="text-xl font-semibold text-white">Hello, <span>{auth.user.name}</span></h1>
-
-          <div className="relative">
-            <Link to="/dashboard/cart">
-              <FaShoppingCart className='text-white' size={32} />
-              {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white text-xs font-bold">
-                {cartCount}
-              </span>
-              )}
-            </Link>
-          </div>
-          </nav> */}
-           <nav className="bg-mainColor shadow-md px-4 py-2 flex items-center justify-around">
+         
+  <nav className="bg-mainColor shadow-md px-4 py-2 flex items-center justify-around">
     <div className="flex items-center space-x-4">
       <div className="w-10 h-10 rounded-full flex items-center justify-center">
         <Logo />
@@ -189,11 +169,11 @@ const handleLogout = () => {
                           <div className="text-lg font-semibold text-gray-800">
                             {plan.price_after_discount ? (
                               <div className="flex items-center">
-                                <span className="text-sm text-gray-500 line-through mr-2">${plan.price}</span>
-                                <span className="text-3xl font-bold text-green-600">${plan.price_after_discount}</span>
+                                <span className="text-sm text-gray-500 line-through mr-2">{plan.price} EGP</span>
+                                <span className="text-3xl font-bold text-green-600">{plan.price_after_discount} EGP</span>
                               </div>
                             ) : (
-                              <span className="text-3xl font-bold text-green-600">${plan.price}</span>
+                              <span className="text-3xl font-bold text-green-600">{plan.price} EGP</span>
                             )}
                           </div>
                           {plan.discount_value && plan.discount_type === 'fixed' && (
@@ -236,7 +216,7 @@ const handleLogout = () => {
                             <i className="fas fa-cogs text-mainColor text-xl"></i>
                             <div className="flex-1">
                               <p className="text-gray-800 text-sm font-semibold inline">{`Admin Cost:`}</p>
-                              <span className="text-lg font-bold text-gray-700 inline ml-2">${plan.admin_cost}</span>
+                              <span className="text-lg font-bold text-gray-700 inline ml-2">{plan.admin_cost} EGP</span>
                             </div>
                           </div>
 
@@ -245,7 +225,7 @@ const handleLogout = () => {
                             <i className="fas fa-briefcase text-mainColor text-xl"></i>
                             <div className="flex-1">
                               <p className="text-gray-800 text-sm font-semibold inline">{`Branch Cost:`}</p>
-                              <span className="text-lg font-bold text-gray-700 inline ml-2">${plan.branch_cost}</span>
+                              <span className="text-lg font-bold text-gray-700 inline ml-2">{plan.branch_cost} EGP</span>
                             </div>
                           </div>
                         </div>
