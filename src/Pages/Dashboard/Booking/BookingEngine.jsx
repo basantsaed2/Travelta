@@ -357,82 +357,82 @@ const BookingEngine = ({ update, setUpdate }) => {
           <p className="text-lg text-gray-600">Unfortunately, no hotels match your search criteria. Please try again with different filters.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-6">
-        {hotels.map((hotel) => (
-       <div key={hotel.hotel_id} className="bg-white rounded-xl shadow-xl overflow-hidden transition-transform transform hover:scale-90">
-       {/* Hotel Image Carousel */}
-       <Splide options={options} className="w-full">
-      {hotel.images.map((image, index) => (
-        <SplideSlide key={index} className="w-full flex justify-center">
-          <img
-            src={image}
-            alt={hotel.hotel_name}
-            className="w-full h-full object-fit"
-          />
-        </SplideSlide>
-      ))}
-    </Splide>
-     
-       {/* Hotel Info */}
-       <div className="p-6 space-y-4">
-         <div className="flex items-center justify-between">
-           <div className="flex items-center space-x-3">
-             {/* Hotel Logo */}
-             <img
-               src={hotel.hotel_logo || 'https://via.placeholder.com/50'}
-               alt={hotel.hotel_name}
-               className="w-12 h-12 rounded-full object-cover"
-             />
-             <h2 className="text-2xl font-semibold text-gray-800">{hotel.hotel_name}</h2>
-           </div>
-     
-           {/* Stars Rating */}
-           <div className="flex items-center text-yellow-400">
-             {Array.from({ length: hotel.hotel_stars }).map((_, index) => (
-               <FaStar key={index} className="text-xl" />
-             ))}
-           </div>
-         </div>
-     
-         <p className="text-gray-600">{hotel.description}</p>
-     
-         {/* Facilities and Room Details */}
-         <div className="space-y-3">
-           {hotel.hotel_facilities.map((facility) => (
-             <div key={facility.id} className="flex items-center text-gray-700 space-x-2">
-               <FaBed className="text-mainColor" />
-               <span>{facility.name}</span>
-             </div>
-           ))}
-           {/* <div className="flex items-center text-gray-700 space-x-2">
-             <FaMoneyBillWave className="text-green-500" />
-             <span className="font-semibold">Price: ${hotel.available_rooms[0]?.price}</span>
-           </div> */}
-         </div>
-     
-         {/* Policies */}
-         {/* <div className="space-y-2">
-           {hotel.hotel_policies.map((policy) => (
-             <div key={policy.id} className="flex items-center text-gray-600">
-               <FaRegCreditCard className="mr-2 text-blue-500" />
-               <span>{policy.title}: {policy.description}</span>
-             </div>
-           ))}
-         </div> */}
-     
-         {/* Button to Get More Details */}
-         <Link to={"details"} state={{hotel:hotel}} className="inline-block w-full mt-4">
-           <button className="bg-blue-600 text-white py-2 px-6 rounded-md w-full hover:bg-blue-700 transition duration-300 ease-in-out">
-             <FaInfoCircle className="inline-block mr-2" />
-             View More Details
-           </button>
-         </Link>
-       </div>
-     </div>
-     
-        ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-6">
+      {hotels.map((hotel) => (
+      <div key={hotel.hotel_id} className="bg-white rounded-xl shadow-xl overflow-hidden transition-transform transform hover:scale-90">
+      {/* Hotel Image Carousel */}
+      <Splide options={options} className="w-full">
+    {hotel.images.map((image, index) => (
+      <SplideSlide key={index} className="w-full flex justify-center">
+        <img
+          src={image}
+          alt={hotel.hotel_name}
+          className="w-full h-full object-fit"
+        />
+      </SplideSlide>
+    ))}
+  </Splide>
+    
+      {/* Hotel Info */}
+      <div className="p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            {/* Hotel Logo */}
+            <img
+              src={hotel.hotel_logo || 'https://via.placeholder.com/50'}
+              alt={hotel.hotel_name}
+              className="w-12 h-12 rounded-full object-cover"
+            />
+            <h2 className="text-2xl font-semibold text-gray-800">{hotel.hotel_name}</h2>
+          </div>
+    
+          {/* Stars Rating */}
+          <div className="flex items-center text-yellow-400">
+            {Array.from({ length: hotel.hotel_stars }).map((_, index) => (
+              <FaStar key={index} className="text-xl" />
+            ))}
+          </div>
         </div>
-  )}
+    
+        <p className="text-gray-600">{hotel.description}</p>
+    
+        {/* Facilities and Room Details */}
+        <div className="space-y-3">
+          {hotel.hotel_facilities.map((facility) => (
+            <div key={facility.id} className="flex items-center text-gray-700 space-x-2">
+              <FaBed className="text-mainColor" />
+              <span>{facility.name}</span>
+            </div>
+          ))}
+          {/* <div className="flex items-center text-gray-700 space-x-2">
+            <FaMoneyBillWave className="text-green-500" />
+            <span className="font-semibold">Price: ${hotel.available_rooms[0]?.price}</span>
+          </div> */}
+        </div>
+    
+        {/* Policies */}
+        {/* <div className="space-y-2">
+          {hotel.hotel_policies.map((policy) => (
+            <div key={policy.id} className="flex items-center text-gray-600">
+              <FaRegCreditCard className="mr-2 text-blue-500" />
+              <span>{policy.title}: {policy.description}</span>
+            </div>
+          ))}
+        </div> */}
+    
+        {/* Button to Get More Details */}
+        <Link to={"details"} state={{hotel:hotel}} className="inline-block w-full mt-4">
+          <button className="bg-blue-600 text-white py-2 px-6 rounded-md w-full hover:bg-blue-700 transition duration-300 ease-in-out">
+            <FaInfoCircle className="inline-block mr-2" />
+            View More Details
+          </button>
+        </Link>
+      </div>
+    </div>
+    
+      ))}
+      </div>
+    )}
    
     </>
 
