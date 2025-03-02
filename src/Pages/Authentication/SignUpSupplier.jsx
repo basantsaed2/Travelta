@@ -271,36 +271,38 @@ const SignUpSupplier = () => {
           } else {
               toast.error('Unexpected error occurred during sign-up.');
           }
-   } catch (error) {
-          console.error('Error submitting form:', error);
-          // if(error.response.data.errors.owner_phone.includes("The owner phone has already been taken.")){
-          //   toast.error('The owner phone has already been taken.');
-          // }
-          // else if (error.response.data.errors.phone.includes("The phone has already been taken.")){
-          //   toast.error('The phone has already been taken.');
-          // }
-          // else if (error.response.data.errors.owner_email.includes("he owner email has already been taken.")){
-          //   toast.error('he owner email has already been taken.');
-          // }
-          if (
-            error.response.data.errors.owner_phone &&
-            error.response.data.errors.owner_phone[0] === "The owner phone has already been taken."
-          ) {
-            toast.error("The owner phone has already been taken.");
-          } else if (
-            error.response.data.errors.phone &&
-            error.response.data.errors.phone[0] === "The phone has already been taken."
-          ) {
-            toast.error("The phone has already been taken.");
-          } else if (
-            error.response.data.errors.owner_email &&
-            error.response.data.errors.owner_email[0] === "The owner email has already been taken."
-          ) {
-            toast.error("The owner email has already been taken.");
+   }
+   catch (error) {
+    console.error('Error post JSON:', error);
+  
+    // Check if the error response contains 'errors' or just a message
+    if (error?.response?.data?.errors) {
+      // Check if errors are an object (field-based errors)
+      if (typeof error.response.data.errors === 'object') {
+        Object.entries(error.response.data.errors).forEach(([field, messages]) => {
+          // If messages is an array, loop through them
+          if (Array.isArray(messages)) {
+            messages.forEach(message => {
+              auth.toastError(message); // Display the error messages
+            });
           } else {
-            toast.error(error?.response?.data?.error || 'Network error');
+            // If it's not an array, display the message directly
+            auth.toastError(messages);
           }
-      } finally {
+        });
+      } else {
+        // If errors is not an object, assume it's just a message
+        auth.toastError(error.response.data.errors);
+      }
+    } else if (error?.response?.data?.message) {
+      // If there's a general message outside of the 'errors' object
+      auth.toastError(error.response.data.message); // Display the general error message
+    } else {
+      // If no specific error messages are found, just display a fallback message
+      auth.toastError('An unknown error occurred.');
+    }
+  }
+      finally {
           setIsLoading(false);
       }
   };
