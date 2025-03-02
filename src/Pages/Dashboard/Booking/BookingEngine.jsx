@@ -102,19 +102,19 @@ const BookingEngine = ({ update, setUpdate }) => {
     setShowDropdown(false);
   };
 
-    // Example settings for Splide carousel
-    const options = {
-      type: 'loop',    
-      perPage: 1, // Show only 1 image per slide
-      perMove: 1, 
-      pagination: false,
-      arrows: false,
-      autoplay: true,
-      pauseOnHover: true,
-      heightRatio: 0.8, 
-      gap: '0px',  // Ensure no gap between slides
-      trimSpace: false, // Prevents extra space that might show next slide
-    };
+  // Example settings for Splide carousel
+  const options = {
+    type: 'loop',    
+    perPage: 1, // Show only 1 image per slide
+    perMove: 1, 
+    pagination: false,
+    arrows: false,
+    autoplay: true,
+    pauseOnHover: true,
+    heightRatio: 0.8, 
+    gap: '0px',  // Ensure no gap between slides
+    trimSpace: false, // Prevents extra space that might show next slide
+  };
     
   const handleSubmit = (e) => {
     e.preventDefault();
