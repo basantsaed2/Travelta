@@ -19,6 +19,9 @@ const BookingEngine = ({ update, setUpdate }) => {
   const { refetch: refetchCityList, data: cityData } = useGet({
     url: "https://travelta.online/agent/getcities",
   });
+  const { refetch: refetchTourList, data: tourData } = useGet({
+    url: "https://travelta.online/agent/gettourtypes ",
+  });
   const { postData, loadingPost:loadingSearch, response:responseSearch} = usePost({
     url: "https://travelta.online/agent/agent/avalibleRooms",
   });
