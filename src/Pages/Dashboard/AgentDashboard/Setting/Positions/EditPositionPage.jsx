@@ -33,20 +33,26 @@ const EditPositionPage = ({ update, setUpdate }) => {
     useEffect(() => {
         if (dataPosition && dataPosition.position) {
             const position = dataPosition.position;
-    
             setName(position.name || '');
     
-            setPositions(
-                position.perimitions?.map((perm) => ({
-                    module: perm.module,
-                    actions: [perm.action] // Convert single action into array format
-                })) || []
+            // Extract modules
+            const formattedPositions = Object.entries(dataPosition.module || {}).map(
+                ([module, actions]) => ({
+                    module,
+                    actions,
+                })
             );
-        }
     
-        console.log('dataPosition', dataPosition);
-    }, [dataPosition]);    
+            setPositions(formattedPositions);
 
+            // ✅ Ensure modules state is set correctly
+            setModules(dataPosition.module || {});
+            
+            console.log("Updated modules from API:", dataPosition.module); // Debugging
+        }
+    }, [dataPosition]);
+    
+    
     const handleReset = () => {
         setName('');
         setPositions([{ module: "", actions: [] }]);
@@ -117,15 +123,21 @@ const EditPositionPage = ({ update, setUpdate }) => {
         );
     };
 
-    // Handles individual action selection
-    const handleActionChange = (index, selectedActions) => {
+    const handleActionChange = (index, selectedAction) => {
         setPositions((prev) =>
-            prev.map((pos, i) =>
-                i === index ? { ...pos, actions: selectedActions } : pos
-            )
+            prev.map((pos, i) => {
+                if (i === index) {
+                    const newActions = pos.actions.includes(selectedAction)
+                        ? pos.actions.filter(action => action !== selectedAction) // Remove if already selected
+                        : [...pos.actions, selectedAction]; // Add if not selected
+    
+                    return { ...pos, actions: newActions };
+                }
+                return pos;
+            })
         );
     };
-
+    
     // Handles "Select All" functionality
     const handleSelectAll = (index) => {
         setPositions((prev) =>
@@ -191,20 +203,21 @@ const EditPositionPage = ({ update, setUpdate }) => {
 
                 {/* Multi-Select Actions with "Select All" Option */}
                 <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
-                    <TextField
-                        select
-                        fullWidth
-                        variant="outlined"
-                        value={position.actions}
-                        onChange={(e) => handleActionChange(index, e.target.value)}
-                        label="Select Actions"
-                        SelectProps={{
-                            multiple: true,
-                            renderValue: (selected) => selected.join(" , "),
-                        }}
-                        className="mb-6"
-                    >
-                        {position.module && modules[position.module] ? (
+                <TextField
+                    select
+                    fullWidth
+                    variant="outlined"
+                    value={position.actions}
+                    onChange={(e) => handleActionChange(index, e.target.value)}
+                    label="Select Actions"
+                    SelectProps={{
+                        multiple: true,
+                        renderValue: (selected) => selected.join(" , "),
+                    }}
+                    className="mb-6"
+                >
+
+                    {position.module && Array.isArray(modules[position.module]) ? (
                             <>
                                 {/* Select All Option */}
                                 <MenuItem
@@ -219,12 +232,13 @@ const EditPositionPage = ({ update, setUpdate }) => {
                                 </MenuItem>
 
                                 {/* Individual Action Options */}
-                                {modules[position.module].map((action) => (
-                                    <MenuItem key={action} value={action}>
+                                {modules[position.module]?.map((action) => (
+                                    <MenuItem key={action} value={action} onClick={() => handleActionChange(index, action)}>
                                         <Checkbox checked={position.actions.includes(action)} />
                                         <ListItemText primary={action} />
                                     </MenuItem>
                                 ))}
+
                             </>
                         ) : (
                             <MenuItem disabled>No actions available</MenuItem>

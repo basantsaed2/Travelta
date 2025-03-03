@@ -97,11 +97,18 @@ const AddPositionPage = ({ update, setUpdate }) => {
     };
 
     // Handles individual action selection
-    const handleActionChange = (index, selectedActions) => {
+    const handleActionChange = (index, selectedAction) => {
         setPositions((prev) =>
-            prev.map((pos, i) =>
-                i === index ? { ...pos, actions: selectedActions } : pos
-            )
+            prev.map((pos, i) => {
+                if (i === index) {
+                    const newActions = pos.actions.includes(selectedAction)
+                        ? pos.actions.filter(action => action !== selectedAction) // Remove if already selected
+                        : [...pos.actions, selectedAction]; // Add if not selected
+    
+                    return { ...pos, actions: newActions };
+                }
+                return pos;
+            })
         );
     };
 
@@ -172,17 +179,17 @@ const AddPositionPage = ({ update, setUpdate }) => {
                 {/* Multi-Select Actions with "Select All" Option */}
                 <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
                     <TextField
-                        select
-                        fullWidth
-                        variant="outlined"
-                        value={position.actions}
-                        onChange={(e) => handleActionChange(index, e.target.value)}
-                        label="Select Actions"
-                        SelectProps={{
-                            multiple: true,
-                            renderValue: (selected) => selected.join(" , "),
-                        }}
-                        className="mb-6"
+                      select
+                      fullWidth
+                      variant="outlined"
+                      value={position.actions}
+                      onChange={(e) => handleActionChange(index, e.target.value)}
+                      label="Select Actions"
+                      SelectProps={{
+                          multiple: true,
+                          renderValue: (selected) => selected.join(" , "),
+                      }}
+                      className="mb-6"
                     >
                         {position.module && modules[position.module] ? (
                             <>
@@ -199,12 +206,12 @@ const AddPositionPage = ({ update, setUpdate }) => {
                                 </MenuItem>
 
                                 {/* Individual Action Options */}
-                                {modules[position.module].map((action) => (
-                                    <MenuItem key={action} value={action}>
-                                        <Checkbox checked={position.actions.includes(action)} />
-                                        <ListItemText primary={action} />
-                                    </MenuItem>
-                                ))}
+                                 {modules[position.module]?.map((action) => (
+                                   <MenuItem key={action} value={action} onClick={() => handleActionChange(index, action)}>
+                                       <Checkbox checked={position.actions.includes(action)} />
+                                       <ListItemText primary={action} />
+                                   </MenuItem>
+                               ))}
                             </>
                         ) : (
                             <MenuItem disabled>No actions available</MenuItem>

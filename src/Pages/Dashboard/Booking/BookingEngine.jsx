@@ -39,6 +39,7 @@ const BookingEngine = ({ update, setUpdate }) => {
   const [children, setChildren] = useState(0);
 
   const [hotels, setHotels] = useState([]);
+  const [tours, setTours] = useState([]);
 
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
@@ -91,6 +92,13 @@ const BookingEngine = ({ update, setUpdate }) => {
       setHotels(responseSearchRoom?.data?.hotels)
     }
   },[responseSearchRoom,update])
+
+  useEffect(()=>{
+    if(!loadingSearchTour && responseSearchTour){
+      // console.log(responseSearch)
+      setTours(responseSearchTour?.data?.tours)
+    }
+  },[responseSearchTour,update])
 
   const handleTabChange = (_, newValue) => {
     setTabValue(newValue);
@@ -429,6 +437,73 @@ const BookingEngine = ({ update, setUpdate }) => {
         </Link>
       </div>
     </div>
+    
+      ))}
+      </div>
+    )}
+
+    {responseSearchTour && tours.length === 0 ? (
+        <div className="flex justify-center items-center p-6">
+          <p className="text-lg text-gray-600">Unfortunately, no hotels match your search criteria. Please try again with different filters.</p>
+        </div>
+      ) : (
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-6">
+      {tours.map((tour) => (
+        <div key={tour.tour_id} className="bg-white rounded-xl shadow-xl overflow-hidden transition-transform transform hover:scale-90">
+        <Splide options={options} className="w-full">
+          {tour.tour_images.map((image, index) => (
+            <SplideSlide key={index} className="w-full flex justify-center">
+              <img
+                src={image}
+                alt={tour.name}
+                className="w-full h-full object-fit"
+              />
+            </SplideSlide>
+          ))}
+        </Splide>
+      
+        {/* Tour Info */}
+        <div className="p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              {/* Tour Logo */}
+              {/* <img
+                src={tour.hotel_logo || 'https://via.placeholder.com/50'}
+                alt={tour.hotel_name}
+                className="w-12 h-12 rounded-full object-cover"
+              /> */}
+              <h2 className="text-2xl font-semibold text-gray-800">{tour.name}</h2>
+            </div>
+      
+            {/* Stars Rating */}
+            <div className="flex items-center text-yellow-400">
+              {Array.from({ length: tour.hotel_stars }).map((_, index) => (
+                <FaStar key={index} className="text-xl" />
+              ))}
+            </div>
+          </div>
+      
+          <p className="text-gray-600">{tour.description}</p>
+      
+          {/* Facilities and Room Details */}
+          {/* <div className="space-y-3">
+            {hotel.hotel_facilities.map((facility) => (
+              <div key={facility.id} className="flex items-center text-gray-700 space-x-2">
+                <FaBed className="text-mainColor" />
+                <span>{facility.name}</span>
+              </div>
+            ))}
+          </div> */}
+      
+          {/* Button to Get More Details */}
+          {/* <Link to={"details"} state={{hotel:hotel}} className="inline-block w-full mt-4">
+            <button className="bg-blue-600 text-white py-2 px-6 rounded-md w-full hover:bg-blue-700 transition duration-300 ease-in-out">
+              <FaInfoCircle className="inline-block mr-2" />
+              View More Details
+            </button>
+          </Link> */}
+        </div>
+      </div>
     
       ))}
       </div>
