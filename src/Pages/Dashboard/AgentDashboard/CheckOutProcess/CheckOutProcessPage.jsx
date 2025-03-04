@@ -140,24 +140,33 @@ const CheckOutProcessPage = () => {
 
         if(paymentType === "Full"){
             formData.append('payment_type', 'full');
-            formData.append("payment_methods", JSON.stringify(selectedPaymentMethods.map((method) => ({
-                payment_method_id: method.id,
-                amount: method.amount,
-              }))));
+            {selectedPaymentMethods&&
+                formData.append("payment_methods", JSON.stringify(selectedPaymentMethods.map((method) => ({
+                    payment_method_id: method.id,
+                    amount: method.amount,
+                  }))));
+            }
         }
         else if (paymentType === "Partial"){
             formData.append('payment_type', 'partial');
-            formData.append('payments', JSON.stringify(payments));
+            {
+                payments&&
+                formData.append('payments', JSON.stringify(payments));
+            }
             // formData.append('amount', amountPaid);
-            formData.append("payment_methods", JSON.stringify(selectedPaymentMethods.map((method) => ({
-                payment_method_id: method.id,
-                amount: method.amount,
-              }))));
+            {selectedPaymentMethods&&
+                formData.append("payment_methods", JSON.stringify(selectedPaymentMethods.map((method) => ({
+                    payment_method_id: method.id,
+                    amount: method.amount,
+                  }))));
+            }
         }
-        else{
+        else if(paymentType === "Later"){
             formData.append('payment_type', 'later');
-            formData.append('payments', JSON.stringify(payments));
-        }
+            {
+                payments&&
+                formData.append('payments', JSON.stringify(payments));
+            }        }
 
         postData(formData, "Booking Checkout Added Successfully");
 

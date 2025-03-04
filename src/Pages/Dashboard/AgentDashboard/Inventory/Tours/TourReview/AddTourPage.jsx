@@ -70,6 +70,7 @@ const AddTourPage = ({ update, setUpdate }) => {
         tour_phone:'',
         tour_website:'',
         tour_address:'',
+        thumbnail: null,
     });
     const tourType = [
         { value: "private", label: "Private Tour" },
@@ -248,18 +249,48 @@ const AddTourPage = ({ update, setUpdate }) => {
       const updatedCapacities = [...roomCapacities];
       updatedCapacities[index][name] = value;
       setRoomCapacities(updatedCapacities);
-    };  
+    }; 
     
+    const handleMainImageUpload = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          setTourDetails((prevState) => ({
+            ...prevState,
+            thumbnail: reader.result, // Store Base64 string instead of file
+          }));
+        };
+      }
+    };
+    const handleMainRemoveImage = () => {
+      setTourDetails((prevState) => ({
+        ...prevState,
+        thumbnail: null,
+      }));
+    
+      // Clear the file input field
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    };
+        
     const handleImageUpload = (e, index) => {
       const file = e.target.files[0];
       if (file) {
-        setTourItinerary((prevList) => {
-          const updatedList = [...prevList];
-          updatedList[index] = { ...updatedList[index], itinerary_image: file };
-          return updatedList;
-        });
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          setTourItinerary((prevList) => {
+            const updatedList = [...prevList];
+            updatedList[index] = { ...updatedList[index], itinerary_image: reader.result }; // Store Base64
+            return updatedList;
+          });
+        };
       }
-    };    
+    };
+    
     const handleRemoveImage = (index) => {
       setTourItinerary((prevList) => {
         const updatedList = [...prevList];
@@ -268,8 +299,10 @@ const AddTourPage = ({ update, setUpdate }) => {
       });
     
       // Clear the file input field
-      fileInputRef.current.value = '';
-    };
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    };    
     
     useEffect(() => {
       refetchList();
@@ -497,8 +530,6 @@ const AddTourPage = ({ update, setUpdate }) => {
     const removeExcludes = (index) => {
         setExcludes((prevList) => prevList.filter((_, i) => i !== index));
     };
-  
-
       
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -507,6 +538,7 @@ const AddTourPage = ({ update, setUpdate }) => {
 
   // Basic Tour Details
     formData.append("name", tourDetails.name);
+    formData.append("image", tourDetails.thumbnail);
     formData.append("description", tourDetails.description);
     formData.append("video_link", tourDetails.videoLink);
     formData.append("tour_type",tourDetails.selectedTourType); // 'private' or 'group'
@@ -546,7 +578,7 @@ const AddTourPage = ({ update, setUpdate }) => {
     tourAvailability.forEach((avail, index) => {
       formData.append(`availability[${index}][date]`, avail.date);
       formData.append(`availability[${index}][last_booking]`, avail.last_booking);
-      formData.append(`availability[${index}][quantity]`, avail.quantity || 0);
+      formData.append(`availability[${index}][quantity]`, quantity);
     });
 
     includes.forEach((inc, index) => {
@@ -676,6 +708,37 @@ const AddTourPage = ({ update, setUpdate }) => {
       <div className="mt-6">
         {activeTab === 'General Details' && (
                 <div className="p-4">
+
+                    {/* Image Upload Section */}
+                        <div className="mb-4">
+                          <Button variant="contained" component="label">
+                            Upload Image
+                            <input
+                              type="file"
+                              hidden
+                              accept="image/*"
+                              onChange={handleMainImageUpload}
+                              ref={fileInputRef} // Reference to the input field
+                            />
+                          </Button>
+                          {tourDetails.thumbnail && (
+                            <div className="flex flex-col xl:flex-row gap-5 items-center mt-4">
+                              <img
+                                src={tourDetails.thumbnail} // Directly use Base64 string
+                                alt="Room Preview"
+                                className="h-80 w-96 object-cover mr-4"
+                              />
+                              <button
+                                type="button"
+                                onClick={handleMainRemoveImage}
+                                className="remove-supplement-btn bg-red-500 text-white px-4 py-2 rounded-md"
+                              >
+                                Remove Image
+                              </button>
+                            </div>
+                          )}
+                        </div>
+
                         <TextField
                           name="description"
                           label="Tour Description"
@@ -1123,7 +1186,6 @@ const AddTourPage = ({ update, setUpdate }) => {
         {activeTab === 'Itinerary' && (
             <div className="p-4 bg-gray-100 rounded-lg shadow-md">
                      <h1 className="font-semibold text-2xl text-[#0D47A1] mb-6">Itinerary</h1>
-         
                      {tourItinerary.map((itinerary, index) => (
                          <div key={index} className="bg-white p-4 rounded-lg shadow-sm mb-4">
                              <div className="flex flex-col md:flex-row gap-4">
@@ -1146,8 +1208,8 @@ const AddTourPage = ({ update, setUpdate }) => {
                                           alt="Tour Preview"
                                           className="h-80 w-96 object-cover mr-4"
                                         /> */}
-                                         <img
-                                          src={typeof itinerary.itinerary_image === 'string' ? itinerary.itinerary_image : URL.createObjectURL(itinerary.itinerary_image)}
+                                        <img
+                                          src={itinerary.itinerary_image} // Directly use Base64 string
                                           alt="Tour Preview"
                                           className="h-80 w-96 object-cover mr-4"
                                         />

@@ -57,7 +57,7 @@ const TourGallery = ({update, id }) => {
               className="relative rounded-lg shadow-md overflow-hidden group"
             >
               <img
-                src={image.thumbnail_link || 'https://via.placeholder.com/150'}
+                src={image.image_link}
                 alt={`Thumbnail ${image.id}`}
                 className="w-full h-48 object-cover transition-transform duration-300 "
               />

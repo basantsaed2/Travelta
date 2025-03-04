@@ -9,7 +9,7 @@ import SignUpAffilate from "./Pages/Authentication/SignUpAffilate"
 import Login from "./Pages/Authentication/Login";
 import AgentLayout from "./Layouts/AgentLayouts/AgentLayout";
 import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";  
-import {AddAdminAccountLayout, AddAgentLayout, AddDepartmentLayout, AddEmployeeLayout, AddFinancialAccountLayout, AddLeadLayout, AddPositionLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddTourLayout, AddWalletLayout, AdminAccountLayout, BookingPaymentLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , DepartmentLayout, EditAdminAccountLayout, EditAgentLayout, EditDepartmentLayout, EditEmployeeLayout, EditFinancialAccountLayout, EditPositionLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, EditTourLayout, EmployeeLayout, FinancialAccountLayout, HotelBookingDetailsLayout, LeadLayout, LedgerLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, PositionLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
+import {AddAdminAccountLayout, AddAgentLayout, AddDepartmentLayout, AddEmployeeLayout, AddFinancialAccountLayout, AddLeadLayout, AddPositionLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddTourLayout, AddWalletLayout, AdminAccountLayout, BookingPaymentLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , DepartmentLayout, EditAdminAccountLayout, EditAgentLayout, EditDepartmentLayout, EditEmployeeLayout, EditFinancialAccountLayout, EditPositionLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, EditTourLayout, EmployeeLayout, FinancialAccountLayout, HotelBookingDetailsLayout, InvoiceAgentLayout, LeadLayout, LedgerLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, PositionLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
 import { LandingPage } from "./Pages/AllPages";
 import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 import ComingSoon from "./Pages/Dashboard/AgentDashboard/Accounting/ComingSoon";
@@ -78,8 +78,6 @@ import GroupLayout from "./Layouts/AgentLayouts/Setting/Group/GroupLayout";
 import AddGroupLayout from "./Layouts/AgentLayouts/Setting/Group/AddGroupLayout";
 import InvoiceLayout from "./Layouts/SuperAdminLayouts/FinancialLayout/InvoiceLayout/InvoiceLayout";
 import AddInvoiceLayout from "./Layouts/SuperAdminLayouts/FinancialLayout/InvoiceLayout/AddInvoiceLayout";
-import InvoiceAgentLayout from "./Layouts/AgentLayouts/Financial/Invoice/InvoiceAgentLayout";
-import AddInvoiceAgentLayout from "./Layouts/AgentLayouts/Financial/Invoice/AddInvoiceAgentLayout";
 import FlightProfileLayout from "./Layouts/BookingListLayout/Upcoming/FlightDeatilsLayout";
 import VisaProfileLayout from "./Layouts/BookingListLayout/Upcoming/VisaDetailsLayout";
 import TourProfileLayout from "./Layouts/BookingListLayout/Upcoming/TourDetailsLayout";
@@ -351,6 +349,11 @@ const AppInvoice= () => (
 );
 
 const AppFinancialagent= () => (
+  <>
+  <Outlet />
+  </>
+);
+const AppSubscriptionAgentLayout= () => (
   <>
   <Outlet />
   </>
@@ -768,9 +771,35 @@ export const router = createBrowserRouter([
                 ]
               },
 
+              // {
+              //   path: "financial",
+              //   element: <AppFinancialagent/>,
+              //   children:[
+              //     {
+              //       path: "invoice",
+              //       element: <AppInvoiceAgent/>,
+              //       children:[
+              //           {
+              //             path: "",
+              //             element: <InvoiceAgentLayout/>,
+              //           },       
+              //           {
+              //             path: "add",
+              //             element: <AddInvoiceAgentLayout/>,
+              //           },
+              //           {
+              //           path: "edit/:accountId",
+              //           element: <EditFinancialAccountLayout/>,
+              //           },
+              //       ]
+              //     },
+              //   ]
+              // },
+
+              
               {
-                path: "financial",
-                element: <AppFinancialagent/>,
+                path: "subscriptions",
+                element: <AppSubscriptionAgentLayout/>,
                 children:[
                   {
                     path: "invoice",
@@ -780,14 +809,6 @@ export const router = createBrowserRouter([
                           path: "",
                           element: <InvoiceAgentLayout/>,
                         },       
-                        {
-                          path: "add",
-                          element: <AddInvoiceAgentLayout/>,
-                        },
-                        {
-                        path: "edit/:accountId",
-                        element: <EditFinancialAccountLayout/>,
-                        },
                     ]
                   },
                 ]

@@ -103,3 +103,7 @@ export { default as BookingPaymentLayout } from "./AgentLayouts/BookingPayments/
 
 //Ledger
 export { default as LedgerLayout } from "./AgentLayouts/Accounting/LedgerLayout/LedgerLayout";
+
+//Subscription
+//Invoice
+export { default as InvoiceAgentLayout } from "./AgentLayouts/Subscription/Invoice/InvoiceAgentLayout";

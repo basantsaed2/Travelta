@@ -412,6 +412,21 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     stateLink.isActiveHRMAgent ?? false
   );
 
+  //Subscriptions
+  const [isOpenSubscriptions, setIsOpenSubscriptions] = useState(
+    stateLink.isOpenSubscriptions ?? false
+  );
+  const [isActiveSubscription, setIsActiveSubscription] = useState(
+    stateLink.isActiveSubscription ?? false
+  );
+  const [isActiveSubscriptionIcon, setIsActiveSubscriptionIcon] = useState(
+    stateLink.isActiveSubscriptionIcon ?? false
+  );
+  //Subscriptions Invoice
+  const [isActiveSubscriptionInvoice, setIsActiveSubscriptionInvoice] = useState(
+    stateLink.isActiveSubscriptionInvoice ?? false  
+  );
+
   // Helper function to save the current active links state
   const saveActiveLinksState = useCallback(() => {
     const activeLinks = {
@@ -541,7 +556,12 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       isActiveInventoryRoomPreview,
 
       isOpenInventoryTourPreview,
-      isActiveInventoryTourPreview
+      isActiveInventoryTourPreview,
+
+      isOpenSubscriptions,
+      isActiveSubscription,
+      isActiveSubscriptionIcon,
+      isActiveSubscriptionInvoice,
 
     };
     auth.sidebar = JSON.stringify(activeLinks);
@@ -671,7 +691,12 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveInventoryRoomPreview,
 
     isOpenInventoryTourPreview,
-    isActiveInventoryTourPreview
+    isActiveInventoryTourPreview,
+
+    isOpenSubscriptions,
+    isActiveSubscription,
+    isActiveSubscriptionIcon,
+    isActiveSubscriptionInvoice,
   ]);
 
   // Save state to sidebar at auth when any link state changes
@@ -806,7 +831,12 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
     isActiveInventoryRoomPreview,
 
     isOpenInventoryTourPreview,
-    isActiveInventoryTourPreview
+    isActiveInventoryTourPreview,
+
+    isOpenSubscriptions,
+    isActiveSubscription,
+    isActiveSubscriptionIcon,
+    isActiveSubscriptionInvoice,
   ]);
 
   // Handler functions to manage all state
@@ -936,6 +966,11 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
 
     setIsActiveInventoryRoomPreview(false);
     setIsOpenInventoryRoomPreview(false);
+
+    setIsOpenSubscriptions(false);
+    setIsActiveSubscription(false);
+    setIsActiveSubscriptionIcon(false);
+    setIsActiveSubscriptionInvoice(false);
 
   };
 
@@ -2045,6 +2080,45 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
   }, [location]);
 
 
+     // Subscription
+     const handleClickSubscription = useCallback(() => {
+      handleStateLinks();
+  
+      setIsOpenSubscriptions(true);
+      setIsActiveSubscriptionIcon(true);
+      setIsActiveSubscription(true);
+      setIsActiveSubscriptionInvoice(true);
+    }, []);
+    useEffect(() => {
+      const part = pathName.split("/");
+      const result = part.slice(0, 3).join("/");
+  
+      if (result === "/dashboard_agent/subscriptions" &&
+        ![
+          "/dashboard_agent/subscriptions/invoice",
+        ]
+      ) {
+        handleClickSubscription();
+        navigate("/dashboard_agent/subscriptions/invoice");
+      }
+    }, [location]);
+  
+    const handleClickSubscriptionInvoice = useCallback(() => {
+      handleStateLinks();
+  
+      setIsOpenSubscriptions(true);
+      setIsActiveSubscriptionIcon(true);
+      setIsActiveSubscription(true);
+      setIsActiveSubscriptionInvoice(true);
+    }, []);
+    useEffect(() => {
+      const part = pathName.split("/");
+      const result = part.slice(0, 4).join("/");
+      if (result == "/dashboard_agent/subscriptions/invoice") {
+        handleClickSubscriptionInvoice();
+      }
+    }, [location]);
+
   return (
     <div className="space-y-4 w-full h-full">
       {/* Home */}
@@ -2367,7 +2441,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
           </Link>
         </ul>
       </div>
- {/* Booking payment */}
+      {/* Booking payment */}
       <Link
         to="booking_payments"
         onMouseMove={() => setIsActiveBookingPaymentIcon(true)}
@@ -2411,7 +2485,7 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
       </Link>
 
         {/* Financial List */}
-        <Link
+        {/* <Link
         to="financial"
         onMouseMove={() => setIsActiveFinancialIcon(true)}
         onMouseOut={() => setIsActiveFinancialIcon(false)}
@@ -2478,6 +2552,76 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
           </Link>
       
        
+        </ul>
+      </div> */}
+
+
+       {/* Subscription List */}
+      <Link
+        to="subscriptions"
+        onMouseMove={() => setIsActiveSubscriptionIcon(true)}
+        onMouseOut={() => setIsActiveSubscriptionIcon(false)}
+        onClick={() => {
+          handleClickSubscription();
+        }}
+        className={`
+          ${isActiveSubscription ? "active" : ""}
+         flex items-center 
+         ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
+        hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+      >
+        <div className="flex font-semibold text-xl items-center gap-x-2">
+          <FaFileArchive
+            className={`${
+              isActiveSubscriptionIcon || isActiveSubscription
+                ? "text-mainColor"
+                : "text-white"
+            }`}
+          />
+          {!isSidebarCollapsed && (
+            <span
+              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
+                isActiveSubscription ? "text-mainColor" : "text-white"
+              }`}
+            >
+              Subscription
+            </span>
+          )}
+        </div>
+        {!isSidebarCollapsed && (
+          <IoIosArrowForward
+            className={`${
+              isActiveSubscription
+                ? "text-mainColor rotate-90"
+                : "text-white rotate-0"
+            } text-xl transition-all duration-300 group-hover:text-mainColor`}
+          />
+        )}
+      </Link>
+      <div
+        className={`${
+          isOpenSubscriptions && !isSidebarCollapsed ? "h-17" : "h-0 "
+        } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+      >
+        <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
+          <Link
+            to={"invoice"}
+            onClick={() => {
+              handleClickSubscriptionInvoice();
+              onLinkClick();
+            }}
+          >
+            <li
+              className={`${
+                isActiveSubscriptionInvoice
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Invoice
+            </li>
+          </Link> 
         </ul>
       </div>
 
@@ -2808,35 +2952,8 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
         </ul>
       </div>
 
-
-
-      {/* <div
-        className={`${
-          isOpenInventoryRoom && !isSidebarCollapsed ? "h-17" : "h-0 "
-        } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
-      >
-        <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
-          <Link
-            to={"inventory/room"}
-            onClick={handleClickInventoryRoomSetting}
-          >
-            <li
-              className={`${
-                isActiveInventoryRoomSetting
-                  ? "rounded-xl bg-white text-mainColor"
-                  : "text-white"
-              }
-                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
-            >
-              Room Type
-            </li>
-          </Link>
-        </ul>
-      </div> */}
-
-       {/* Accounting */}
-       
-       <Link
+      {/* Accounting */}  
+      <Link
         to="accounting/account_supplier"
         onMouseMove={() => setIsActiveAccountingIcon(true)}
         onMouseOut={() => setIsActiveAccountingIcon(false)}
@@ -2873,7 +2990,6 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
           />
         )}
       </Link>
-
       <div
   className={`overflow-hidden w-full transition-all duration-700 ${
     isOpenAccounting && !isSidebarCollapsed ? "max-h-[620px]" : "max-h-0"
@@ -3172,11 +3288,10 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
                     </div>
 </ul>
 
-</div>
+      </div>
 
-
-  {/* HRM */}
-  <Link
+      {/* HRM */}
+      <Link
         to="hrm/department"
         onMouseMove={() => setIsActiveHRMIcon(true)}
         onMouseOut={() => setIsActiveHRMIcon(false)}
@@ -3278,9 +3393,8 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
         </ul>
       </div>
 
-
-         {/* Settings */}
-         <Link
+      {/* Settings */}
+      <Link
         to="setting"
         onMouseMove={() => setIsActiveSettingIcon(true)}
         onMouseOut={() => setIsActiveSettingIcon(false)}

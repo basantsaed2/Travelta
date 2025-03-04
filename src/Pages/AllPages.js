@@ -107,3 +107,6 @@ export {default as BookingPaymentPage} from './Dashboard/AgentDashboard/BookingP
 
 //Ledger
 export { default as LedgerPage } from "./Dashboard/AgentDashboard/Accounting/Ledger/LedgerPage";
+
+//Subscriptions
+export { default as InvoicePage } from "./Dashboard/AgentDashboard/Subscription/Invoice/InvoicePage";

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useGet } from "../../../../../Hooks/useGet";
 
-const Invoice = ({ update }) => {
+const InvoicePage = ({ update }) => {
   const { refetch: refetchInvoice, loading: loadingInvoice, data: DataInvoice } = useGet({ url: 'https://www.travelta.online/agent/invoice' });
   
   const [data, setData] = useState(null);
@@ -102,4 +102,4 @@ const Invoice = ({ update }) => {
   );
 };
 
-export default Invoice;
+export default InvoicePage;
