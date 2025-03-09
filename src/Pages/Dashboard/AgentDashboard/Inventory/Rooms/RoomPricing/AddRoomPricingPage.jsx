@@ -62,6 +62,10 @@ const AddRoomPricingPage =({ update, setUpdate })=>{
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        console.log("nationalityType",nationalityType)
+        console.log("selectedNationality",selectedNationality)
+
     
         const formData = new FormData();
         formData.append('room_id', roomId);
@@ -82,8 +86,8 @@ const AddRoomPricingPage =({ update, setUpdate })=>{
             });
         }
         else if(nationalityType === 'nationality'){
-            selectedGroup.forEach((id) => {
-                formData.append('groups_id[]', id);
+            selectedNationality.forEach((id) => {
+                formData.append('nationality_id[]', id);
             });  
         }
         else if (nationalityType === 'group'){

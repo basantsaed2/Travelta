@@ -6,7 +6,10 @@ import { MdHotel } from "react-icons/md";
 import { FaGlobe, FaCity, FaUser, FaChild } from "react-icons/fa";
 import { FaStar ,FaBed, FaMoneyBillWave, FaRegCreditCard, FaInfoCircle } from 'react-icons/fa';
 import { Link } from "react-router-dom";
-import { Splide, SplideSlide } from '@splidejs/react-splide';
+import { MdLocationOn, MdNightsStay } from "react-icons/md"; // Location & Nights
+import { FaRegMoneyBillAlt } from "react-icons/fa"; // Price icon
+import { AiOutlineStar } from "react-icons/ai"; // Featured
+import { IoIosTime } from "react-icons/io"; // Timeimport { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css'; // Import Splide styles
 // Installing modules
 const BookingEngine = ({ update, setUpdate }) => {
@@ -117,8 +120,8 @@ const BookingEngine = ({ update, setUpdate }) => {
     perMove: 1, 
     pagination: false,
     arrows: false,
-    autoplay: true,
-    pauseOnHover: true,
+    autoplay: false,
+    pauseOnHover: false,
     heightRatio: 0.8, 
     gap: '0px',  // Ensure no gap between slides
     trimSpace: false, // Prevents extra space that might show next slide
@@ -170,7 +173,7 @@ const BookingEngine = ({ update, setUpdate }) => {
   
   return (
     <>
-    <div className="p-8 w-full bg-white shadow-xl rounded-xl border border-gray-200">
+    <div className="md:p-8 p-4 w-full bg-white shadow-xl rounded-xl border border-gray-200">
 
         {/* Tabs for Hotel & Tour */}
       <Tabs className="mb-10 font-semibold text-2xl" value={tabValue} onChange={handleTabChange} variant="fullWidth">
@@ -359,14 +362,14 @@ const BookingEngine = ({ update, setUpdate }) => {
         </form>
       )}
     </div>
-
-    {responseSearchRoom && hotels.length === 0 ? (
+    {tabValue ===0 && responseSearchRoom &&
+       hotels.length === 0 ? (
         <div className="flex justify-center items-center p-6">
           <p className="text-lg text-gray-600">Unfortunately, no hotels match your search criteria. Please try again with different filters.</p>
         </div>
       ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-6">
-      {hotels.map((hotel) => (
+        {hotels.map((hotel) => (
       <div key={hotel.hotel_id} className="bg-white rounded-xl shadow-xl overflow-hidden transition-transform transform hover:scale-90">
       {/* Hotel Image Carousel */}
       <Splide options={options} className="w-full">
@@ -438,76 +441,95 @@ const BookingEngine = ({ update, setUpdate }) => {
       </div>
     </div>
     
-      ))}
+        ))}
       </div>
     )}
 
-    {responseSearchTour && tours.length === 0 ? (
-        <div className="flex justify-center items-center p-6">
-          <p className="text-lg text-gray-600">Unfortunately, no hotels match your search criteria. Please try again with different filters.</p>
-        </div>
-      ) : (
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-6">
-      {tours.map((tour) => (
-        <div key={tour.tour_id} className="bg-white rounded-xl shadow-xl overflow-hidden transition-transform transform hover:scale-90">
-        <Splide options={options} className="w-full">
-          {tour.tour_images.map((image, index) => (
-            <SplideSlide key={index} className="w-full flex justify-center">
-              <img
-                src={image}
-                alt={tour.name}
-                className="w-full h-full object-fit"
-              />
-            </SplideSlide>
-          ))}
-        </Splide>
-      
-        {/* Tour Info */}
-        <div className="p-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              {/* Tour Logo */}
-              {/* <img
-                src={tour.hotel_logo || 'https://via.placeholder.com/50'}
-                alt={tour.hotel_name}
-                className="w-12 h-12 rounded-full object-cover"
-              /> */}
-              <h2 className="text-2xl font-semibold text-gray-800">{tour.name}</h2>
-            </div>
-      
-            {/* Stars Rating */}
-            <div className="flex items-center text-yellow-400">
-              {Array.from({ length: tour.hotel_stars }).map((_, index) => (
-                <FaStar key={index} className="text-xl" />
-              ))}
-            </div>
+    {tabValue ===1 && responseSearchTour &&
+      tours.length === 0 ? (
+          <div className="flex justify-center items-center p-6">
+            <p className="text-lg text-gray-600">Unfortunately, no hotels match your search criteria. Please try again with different filters.</p>
           </div>
-      
-          <p className="text-gray-600">{tour.description}</p>
-      
-          {/* Facilities and Room Details */}
-          {/* <div className="space-y-3">
-            {hotel.hotel_facilities.map((facility) => (
-              <div key={facility.id} className="flex items-center text-gray-700 space-x-2">
-                <FaBed className="text-mainColor" />
-                <span>{facility.name}</span>
+        ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:p-6 p-2  pt-0">
+          {tours.map((tour) => (
+        <div 
+          key={tour.tour_id} 
+          className="bg-mainBgColor rounded-xl shadow-xl overflow-hidden transition-transform transform hover:scale-90"
+        >
+          <div className="w-full p-4">
+            {/* Tour Header */}
+            <div className="w-full flex gap-4">
+              <div>
+                <img 
+                  src={tour.image_link} 
+                  className="w-16 h-16 object-cover rounded-full" 
+                  alt={tour.name}
+                />
               </div>
-            ))}
-          </div> */}
-      
-          {/* Button to Get More Details */}
-          {/* <Link to={"details"} state={{hotel:hotel}} className="inline-block w-full mt-4">
-            <button className="bg-blue-600 text-white py-2 px-6 rounded-md w-full hover:bg-blue-700 transition duration-300 ease-in-out">
-              <FaInfoCircle className="inline-block mr-2" />
-              View More Details
-            </button>
-          </Link> */}
+              <div className="w-full flex flex-col">
+                <div className="flex justify-between">
+                  <h2 className="text-2xl text-mainColor">{tour.name}</h2>
+                  <h2 className="text-xl text-mainColor underline cursor-pointer">
+                    Details
+                  </h2>
+                </div>
+                <p className="text-sm text-gray-500">{tour.description}</p>
+              </div>
+            </div>
+
+            {/* Tour Info */}
+          <div className="space-y-3 mt-3">
+            
+            {/* Location */}
+            <div className="flex items-center text-gray-700 font-medium">
+              <MdLocationOn className="text-xl  text-gray-700 mr-2" />
+              <span>{tour.destinations[0]?.city?.name}, {tour.destinations[0]?.country?.name}</span>
+            </div>
+
+            {/* Destination Type */}
+            {/* <div className="flex items-center text-gray-600">
+              <IoIosTime className="text-lg  text-gray-700 mr-2" />
+              <span className="text-sm"><strong>Type:</strong> {tour.destination_type}</span>
+            </div> */}
+
+            {/* Nights & Price */}
+            <div className="flex justify-between items-center text-gray-700">
+              <div className="flex items-center gap-2">
+                <MdNightsStay className="text-lg  text-gray-700" />
+                <span className="text-sm"><strong>Nights:</strong> {tour.nights}</span>
+              </div>
+              <div className="flex items-center gap-2 font-bold">
+                <FaRegMoneyBillAlt className="text-lg" />
+                <span>{tour.price} {tour.currency?.name}</span>
+              </div>
+            </div>
+
+            {/* Featured Badge & Period */}
+            {tour.featured === "yes" && (
+              <div className="flex items-center gap-3 bg-mainColor p-3 rounded-lg">
+                {/* <AiOutlineStar className="text-xl text-white" /> */}
+                <div className="flex flex-col text-sm">
+                  <span className="font-semibold text-white">Featured Period</span>
+                  <div className="flex gap-4 text-white">
+                    <span className="flex items-center gap-1">
+                      📅 From: {new Date(tour.featured_from).toLocaleDateString()}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      📅 To: {new Date(tour.featured_to).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          </div>
+          </div>
         </div>
-      </div>
-    
-      ))}
-      </div>
-    )}
+          ))}
+        </div>
+      )
+    }
    
     </>
 

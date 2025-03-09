@@ -350,7 +350,7 @@ const EditTourPage = ({ update, setUpdate }) => {
   
               setSelectedTours(tour.tour_type_id || '');
               setSelectedDestinationType(tour.destination_type || '');
-              setQuantity(tour.availability?.[0]?.quantity || '');
+              setQuantity(tour.availability?.[0]?.quantity || 0);
               setPaymentOption(tour.payments_options || '');
               setTourArrival(tour.arrival || '');
   

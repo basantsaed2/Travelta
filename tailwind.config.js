@@ -20,7 +20,7 @@ export default {
         '4xl': '0 10px 30px rgba(0, 0, 0, 0.5)', // Customize this as needed
       },
       backgroundColor: {
-        mainBgColor: "#E5E5E5",
+        mainBgColor: "#E5ECF6",
         secoundBgColor: "#F5F5F5",
         thirdBgColor: "#9D9D9D",
         fourthColor:'#E7F1F8',

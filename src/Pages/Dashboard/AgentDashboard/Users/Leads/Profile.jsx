@@ -42,7 +42,7 @@ const Profile = ({ id }) => {
    
          {/* Expandable User Info Section */}
          
-           <div className="bg-white shadow-md rounded-lg p-6 border border-gray-200 transition-all">
+        <div className="bg-white shadow-md rounded-lg p-6 border border-gray-200 transition-all">
              <p className="flex items-center gap-2 text-gray-700">
                <FaEnvelope className="text-mainColor" /> 
                <strong>Email:</strong> {data?.customer_info?.email || "-"}
@@ -59,9 +59,6 @@ const Profile = ({ id }) => {
                <strong>Total Booking:</strong> {data?.customer_info?.total_booking || "-"}
              </p>
            </div>
-      
-   
-     
        </div>
 
       {/* Request Details Table */}

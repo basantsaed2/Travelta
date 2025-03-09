@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useGet } from '../../../../../Hooks/useGet';
 import StaticLoader from '../../../../../Components/StaticLoader';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa6';
-import { FaEnvelope, FaPhone, FaUser } from 'react-icons/fa';
+import { FaEnvelope, FaUser, FaPhone, FaCalendarCheck,FaFlag ,FaMapMarkerAlt ,FaWhatsapp } from "react-icons/fa";
 
 const ProfileCustomer = ({ id }) => {
   const { refetch: refetchLeadProfile, loading: loadingLeadProfile, data: LeadProfile } = useGet({
@@ -23,8 +23,8 @@ const ProfileCustomer = ({ id }) => {
   }, [refetchLeadProfile]);
 
   useEffect(() => {
-    if (LeadProfile && LeadProfile.requests) {
-      setData(LeadProfile); // Entire response
+    if (LeadProfile && LeadProfile.requests && LeadProfile.customer_info) {
+      setData(LeadProfile.customer_info); // Entire response
       setRequests(LeadProfile?.requests || []); // Safely set requests array
       serBooking(LeadProfile?.manuel_booking || [])
       setPaper(LeadProfile?.legal_papers || [])
@@ -36,40 +36,59 @@ const ProfileCustomer = ({ id }) => {
   }
 
   return (
-    <div className=" p-4 space-y-6">
-    <div className="shadow-lg rounded-2xl p-6 border border-gray-300 transition-all hover:shadow-2xl  relative">
-      {/* Header with Toggle */}
-      <h2
-        className="mt-4 mb-5 flex items-center justify-between text-mainColor text-3xl px-4 py-2 rounded-lg w-full font-semibold cursor-pointer  transition"
-        onClick={() => setShowInfo((prev) => !prev)}
-      >
-        <span>User Info</span>
-    
-      </h2>
+    <div className="p-2">
 
-      {/* Expandable User Info Section */}
-      
-        <div className="bg-white shadow-md rounded-lg p-6 border border-gray-200 transition-all">
-          <p className="flex items-center gap-2 text-gray-700">
-            <FaEnvelope className="text-mainColor" /> 
-            <strong>Email:</strong> {data?.customer_info?.email || "-"}
-          </p>
-          <p className="flex items-center gap-2 text-gray-700">
-            <FaUser className="text-mainColor" /> 
-            <strong>Name:</strong> {data?.customer_info?.name || "-"}
-          </p>
-          <p className="flex items-center gap-2 text-gray-700">
-            <FaPhone className="text-mainColor" /> 
-            <strong>Phone:</strong> {data?.customer_info?.phone || "-"}
-          </p>
-          <p className="flex items-center gap-2 text-gray-700">
-            <strong>Total Booking:</strong> {data?.customer_info?.total_booking || "-"}
-          </p>
-        </div>
-   
+<div className="shadow-lg w-full lg:w-[70%] rounded-2xl p-4 md:p-6  border border-gray-300 transition-all hover:shadow-2xl relative bg-white flex flex-col md:flex-row gap-6 items-center">
+  {/* Left: Profile Image */}
+  <div className='w-full md:w-1/2 flex flex-col gap-3'>
+  <div className="relative flex justify-center ">
+    <img
+      src={data?.image_link || "https://via.placeholder.com/150"}
+      alt="User Profile"
+      className="w-36 h-36  object-fit rounded-lg border border-gray-300 shadow-md"
+    />
+  </div>
+  <h3 className="text-xl font-semibold text-mainColor text-center">{data?.name || '_'}</h3>
+  </div>
 
-  
+  {/* Right: User Details */}
+  <div className="w-full space-y-2">
+    <span className="inline-block bg-green-200 text-green-700 text-sm font-medium px-3 py-1 rounded-full">Active</span>
+
+    {/* Contact Info */}
+    <div className=" grid grid-cols-2">
+      <p className="flex items-center gap-3 text-gray-700">
+        <FaPhone className="text-mainColor" />
+        {data?.phone || "-"}
+      </p>
+      <p className="flex items-center gap-3 text-gray-700">
+        <FaWhatsapp className="text-mainColor" />
+        {data?.watts || "-"}
+      </p>
+      <p className="flex items-center gap-3 text-gray-700">
+        <FaEnvelope className="text-mainColor" />
+        {data?.email || "-"}
+      </p>
+      <p className="flex items-center gap-3 text-gray-700">
+        <FaFlag className="text-mainColor" />
+        {data?.nationality?.name || "-"}
+      </p>
+      <p className="flex items-center gap-3 text-gray-700">
+        <FaFlag className="text-mainColor" />
+        {data?.country?.name || "-"}
+      </p>
+      <p className="flex items-center gap-3 text-gray-700">
+        <FaMapMarkerAlt className="text-mainColor" />
+        {data?.city?.name || "-"}
+      </p>
     </div>
+
+    {/* Button */}
+    <button className="bg-blue-600 text-white px-5 py-2 rounded-lg mt-4 hover:bg-blue-700">
+      View Attachments
+    </button>
+  </div>
+</div>
 
     <div className="p-5">
       {/* Tabs */}

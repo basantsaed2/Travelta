@@ -99,6 +99,10 @@ const EditRoomPricingPage =({ update, setUpdate })=>{
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        console.log("nationalityType",nationalityType)
+        console.log("selectedNationality",selectedNationality)
+
     
         const formData = new FormData();
         formData.append('room_id', roomId);
@@ -109,7 +113,7 @@ const EditRoomPricingPage =({ update, setUpdate })=>{
         formData.append('price', price);
         formData.append('currency_id', selectedCurrency);
         formData.append('pricing_data_id', selectedPricingData);
-
+        
         if(nationalityType === 'nationality&group'){
             selectedGroup.forEach((id) => {
                 formData.append('groups_id[]', id);
@@ -119,8 +123,8 @@ const EditRoomPricingPage =({ update, setUpdate })=>{
             });
         }
         else if(nationalityType === 'nationality'){
-            selectedGroup.forEach((id) => {
-                formData.append('groups_id[]', id);
+            selectedNationality.forEach((id) => {
+                formData.append('nationality_id[]', id);
             });  
         }
         else if (nationalityType === 'group'){
@@ -128,8 +132,7 @@ const EditRoomPricingPage =({ update, setUpdate })=>{
                 formData.append('groups_id[]', id);
             }); 
         }
-
-        postData(formData, 'Pricing Room Added Success');
+        postData(formData, 'Pricing Room Updated Success');
     };
 
     return(
@@ -340,7 +343,7 @@ const EditRoomPricingPage =({ update, setUpdate })=>{
                                 className="mb-6"
                                 SelectProps={{
                                     multiple: true,  // Enable multi-select
-                                    renderValue: (selected) => selected.map((id) => groups.find((group) => group.id === id).name).join(', ')  // Display selected tax names
+                                    renderValue: (selected) => selected.map((id) => groups.find((group) => group.id === id).name).join(', ')  
                                 }}
                                 >
                                 {groups.length > 0 ? (
