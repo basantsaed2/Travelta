@@ -7,14 +7,21 @@ import { MdDelete } from "react-icons/md";
 import { PiWarningCircle } from "react-icons/pi";
 import { FaWhatsapp, FaEdit, FaEnvelope, FaPhone, FaUserCircle, FaCopy,FaFileExcel ,FaSearch ,FaGlobe ,FaCity,FaFilter } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
+import {useChangeState} from '../../../../../Hooks/useChangeState';
+import { Switch} from "@mui/material";
+import * as XLSX from "xlsx";
 
 const LeadPage = ({ update, setUpdate }) => {
     const { refetch: refetchLead, loading: loadingLead, data: dataLead } = useGet({url:'https://travelta.online/agent/leads'});
+    const { changeState, loadingChange, responseChange } = useChangeState();
     const [leads, setLeads] = useState([])
     const { deleteData, loadingDelete, responseDelete } = useDelete();
     const [openDelete, setOpenDelete] = useState(null);
     const [copiedPhone, setCopiedPhone] = useState(null);
-    
+    const [searchText, setSearchText] = useState("");
+    const [selectedCountry, setSelectedCountry] = useState("");
+    const [selectedCity, setSelectedCity] = useState("");
+    const [filterMode, setFilterMode] = useState("both");
     const navigate= useNavigate()
     useEffect(() => {
         refetchLead();
@@ -49,32 +56,80 @@ const LeadPage = ({ update, setUpdate }) => {
         console.log('data leads', leads)
       };
 
-        // Copy phone number to clipboard
-          const copyToClipboard = (phone) => {
-            navigator.clipboard.writeText(phone);
-            setCopiedPhone(phone);
-            setTimeout(() => setCopiedPhone(null), 2000);
-          };
-        
-          // Export filtered data to Excel
-          const exportToExcel = () => {
-            const worksheet = XLSX.utils.json_to_sheet(
-              customers.map((customer, index) => ({
-                SL: index + 1,
-                Name: customer.name || "-",
-                Email: customer.email || "-",
-                Phone: customer.phone || "-",
-                WhatsApp: customer.watts || "-",
-                Country: customer.country?.name || "-",
-                City: customer.city?.name || "-",
-              }))
-            );
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Customers");
-            XLSX.writeFile(workbook, "Customers.xlsx");
-          };
+    // Get unique country & city lists
+       const uniqueCountries = [...new Set(leads.map(lead => lead.country?.name).filter(Boolean))];
+       const uniqueCities = [...new Set(leads.map(lead => lead.city?.name).filter(Boolean))];
+       
+       // Handle input changes
+       const handleSearch = (e) => setSearchText(e.target.value.toLowerCase());
+       const handleFilterCountry = (e) => setSelectedCountry(e.target.value);
+       const handleFilterCity = (e) => setSelectedCity(e.target.value);
+       const handleFilterMode = (e) => setFilterMode(e.target.value);
+       
+       // Filtering customers
+       const filteredLeads = leads.filter((lead) => {
+         const matchesSearch =
+         lead?.name?.toLowerCase().includes(searchText) || 
+         lead?.phone?.includes(searchText);
+       
+         const countryMatch = selectedCountry ? lead.country?.name === selectedCountry : true;
+         const cityMatch = selectedCity ? lead.city?.name === selectedCity : true;
+       
+         if (filterMode === "both") return matchesSearch && countryMatch && cityMatch;
+         if (filterMode === "countryOnly") return matchesSearch && countryMatch;
+         if (filterMode === "cityOnly") return matchesSearch && cityMatch;
+         return matchesSearch;
+       });
+       
+       // Copy phone number to clipboard
+       const copyToClipboard = (phone) => {
+         navigator.clipboard.writeText(phone);
+         setCopiedPhone(phone);
+         setTimeout(() => setCopiedPhone(null), 2000);
+       };
+     
+       // Export filtered data to Excel
+       const exportToExcel = () => {
+         const worksheet = XLSX.utils.json_to_sheet(
+          leads.map((lead, index) => ({
+             SL: index + 1,
+             Name: lead.name || "-",
+             Email: lead.email || "-",
+             Phone: lead.phone || "-",
+             WhatsApp: lead.watts || "-",
+             Service: lead.service?.service_name || "-",
+             Agent: lead.agent_sales?.name || "-",
+             Source: lead.source?.source || "-",
+             Country: lead.country?.name || "-",
+             City: lead.city?.name || "-",
+             Status: lead.status=== 1?"Active":"UnActive" || "-",
+           }))
+         );
+         const workbook = XLSX.utils.book_new();
+         XLSX.utils.book_append_sheet(workbook, worksheet, "Leads");
+         XLSX.writeFile(workbook, "Leads.xlsx");
+       };
+     
+      // Change status 
+    const handleChangeStaus = async (id, name, status) => {
+      const response = await changeState(
+              ` https://travelta.online/agent/leads/status/${id}`,
+              `${name} Changed Status.`,
+              { status } // Pass status as an object if changeState expects an object
+      );
+  
+          if (response) {
+                  // Update categories only if changeState succeeded
+                  setLeads((prevLead) =>
+                    prevLead.map((lead) =>
+                      lead.id === id ? { ...lead, status: status } : lead
+                      )
+                  );
+          }
+  
+      };
 
-      const headers = ['Name','Email','Phone',"Whatshapp","Service","Agent","Source","Country","City","Profile","Action"];
+      const headers = ['Name','Email','Phone',"Whatshapp","Service","Agent","Source","Country","City","Status","Profile","Action"];
 
   return (
     <div className="w-full pb-5 flex items-start justify-start overflow-x-scroll scrollSection">
@@ -85,6 +140,64 @@ const LeadPage = ({ update, setUpdate }) => {
       ) : (
 
               <div className="w-full sm:min-w-0">
+
+              {/* Search & Filter Section */}
+                  <div className="flex flex-wrap items-center gap-4 bg-white p-6 shadow-lg rounded-xl mb-6 border border-gray-200">
+                    {/* Search Input */}
+                    <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-lg w-full md:w-[280px] border border-gray-300">
+                      <FaSearch className="text-gray-500" />
+                      <input
+                        type="text"
+                        placeholder="Search by name or phone..."
+                        value={searchText}
+                        onChange={handleSearch}
+                        className="bg-transparent outline-none w-full text-gray-700 placeholder-gray-500"
+                      />
+                    </div>
+            
+                    {/* Filter by Country */}
+                    <div className="relative w-full md:w-[240px]">
+                      <select
+                        onChange={handleFilterCountry}
+                        value={selectedCountry}
+                        className="appearance-none w-full bg-gray-50 text-gray-700 px-4 py-2 rounded-lg border border-gray-300 outline-none cursor-pointer focus:ring-2 focus:ring-blue-300"
+                      >
+                        <option value="">Filter by Country</option>
+                        {uniqueCountries.map((country, index) => (
+                          <option key={index} value={country}>
+                            {country}
+                          </option>
+                        ))}
+                      </select>
+                      <FaGlobe className="absolute right-3 top-3 text-gray-500 pointer-events-none" />
+                    </div>
+            
+                    {/* Filter by City */}
+                    <div className="relative w-full md:w-[240px]">
+                      <select
+                        onChange={handleFilterCity}
+                        value={selectedCity}
+                        className="appearance-none w-full bg-gray-50 text-gray-700 px-4 py-2 rounded-lg border border-gray-300 outline-none cursor-pointer focus:ring-2 focus:ring-blue-300"
+                      >
+                        <option value="">Filter by City</option>
+                        {uniqueCities.map((city, index) => (
+                          <option key={index} value={city}>
+                            {city}
+                          </option>
+                        ))}
+                      </select>
+                      <FaCity className="absolute right-3 top-3 text-gray-500 pointer-events-none" />
+                    </div>
+            
+                    {/* Export to Excel Button */}
+                    <button
+                      onClick={exportToExcel}
+                      className="flex items-center gap-2 bg-green-500 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-600 transition-all"
+                    >
+                      <FaFileExcel className="w-5 h-5" />
+                      Export to Excel
+                    </button>
+                  </div>
               <div className="w-full sm:min-w-0 block overflow-x-scroll scrollSection border-collapse">
                 <table className="w-full min-w-[600px]">
                       {/* Table Header */}
@@ -106,14 +219,14 @@ const LeadPage = ({ update, setUpdate }) => {
         
                       {/* Table Body */}
                       <tbody>
-                        {leads.length === 0 ? ( // 👈 Use filteredleads
+                        {filteredLeads.length === 0 ? ( // 👈 Use filteredleads
                           <tr>
                             <td colSpan={headers.length} className="text-center text-xl text-gray-500 py-4">
                               No Leads Found
                             </td>
                           </tr>
                         ) : (
-                          leads.map((lead, index) => ( // 👈 Use filteredleads
+                          filteredLeads.map((lead, index) => ( // 👈 Use filteredleads
                             <tr
                               key={index}
                               className={`border-b ${index % 2 === 0 ? "bg-white" : "bg-gray-100"} transition hover:bg-gray-100`}
@@ -142,7 +255,7 @@ const LeadPage = ({ update, setUpdate }) => {
                               </td>
                               <td className="text-center py-2 text-gray-600">
                                 {lead?.phone ? (
-                                  <div className="flex items-center justify-center gap-2">
+                                  <div className="flex items-center justify-center gap-1">
                                     <span>{lead.phone}</span>
                                     <FaCopy
                                       className="text-gray-500 hover:text-blue-500 cursor-pointer"
@@ -160,9 +273,9 @@ const LeadPage = ({ update, setUpdate }) => {
                                     href={`https://wa.me/${lead.watts}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center justify-center gap-2 text-green-500 hover:text-green-700"
+                                    className="flex items-center justify-center gap-1 text-green-500 hover:text-green-700"
                                   >
-                                    <FaWhatsapp className="w-5 h-5" />
+                                    <FaWhatsapp className="w-3 h-3" />
                                     <span>{lead.watts}</span>
                                   </a>
                                 ) : (
@@ -174,6 +287,15 @@ const LeadPage = ({ update, setUpdate }) => {
                               <td className="text-center py-2 text-gray-600">{lead?.source?.source || "-"}</td>
                               <td className="text-center py-2 text-gray-600">{lead?.country?.name || "-"}</td>
                               <td className="text-center py-2 text-gray-600">{lead?.city?.name || "-"}</td>
+                              <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
+                                <Switch
+                                  checked={lead.status === 1}
+                                  onChange={() => {
+                                      handleChangeStaus(lead.id, lead.name, lead.status === 1 ? 0 : 1);
+                                  }}
+                                  color="primary"
+                                  />
+                              </td>
                               <td className="text-center py-2">
                                 <button onClick={() => navigate(`/dashboard_agent/users/leads/profiles/${lead?.id}`)}>
                                   <FaUserCircle className="w-7 h-7 text-gray-700 hover:text-blue-500 transition-all cursor-pointer" />
