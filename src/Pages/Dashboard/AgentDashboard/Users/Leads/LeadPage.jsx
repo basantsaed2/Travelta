@@ -138,7 +138,6 @@ const LeadPage = ({ update, setUpdate }) => {
           <StaticLoader />
         </div>
       ) : (
-
               <div className="w-full sm:min-w-0">
 
               {/* Search & Filter Section */}
@@ -297,9 +296,9 @@ const LeadPage = ({ update, setUpdate }) => {
                                   />
                               </td>
                               <td className="text-center py-2">
-                                <button onClick={() => navigate(`/dashboard_agent/users/leads/profiles/${lead?.id}`)}>
+                                <Link to={`profile/${lead.id}`} className='flex justify-center'>
                                   <FaUserCircle className="w-7 h-7 text-gray-700 hover:text-blue-500 transition-all cursor-pointer" />
-                                </button>
+                                </Link>
                               </td>
                               <td className="text-center py-2">
                                 <div className="flex items-center justify-center gap-1">

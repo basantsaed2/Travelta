@@ -10,15 +10,15 @@ const AddWalletLayout = () => {
   return (
     <>
       <div className="flex gap-3">
- <button
+      <button
         onClick={() => navigate(-1)}
         className=" top-2 text-mainColor text-2xl cursor-pointer hover:text-blue-500 transition-all"
       >
         <FaArrowLeft/>
       </button>
- <TitlePage text={'Add Wallet'} />
+      <TitlePage text={'Add Wallet'} />
    
- </div>
+      </div>
       <AddWalletPage update={update} setUpdate={setUpdate}/>
     </>
   )

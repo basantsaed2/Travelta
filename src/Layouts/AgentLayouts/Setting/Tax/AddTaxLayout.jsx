@@ -1,28 +1,26 @@
 import React, { useState } from 'react'
 import TitlePage from '../../../../Components/TitlePage'
-import { AddWalletPage } from '../../../../Pages/AllPages'
-import AddTax from '../../../../Pages/Dashboard/AgentDashboard/Setting/Tax/AddTax'
-import { IconButton } from '@mui/material'
-import { IoArrowBack } from 'react-icons/io5'
+import { AddTaxPage } from '../../../../Pages/AllPages'
 import { useNavigate } from 'react-router-dom'
+import { FaArrowLeft } from 'react-icons/fa'
 
 const AddTaxLayout = () => {
   const [update, setUpdate] = useState(false)
   const navigate = useNavigate()
-  const handleGoBack=()=>{
-    navigate(-1);
-  }
   return (
     <>
-          <div className="flex mb-5 mt-4">
-      {/* <IconButton onClick={handleGoBack} color="primary">
-          <IoArrowBack />
-        </IconButton>
-      <TitlePage text={'Add Tax'} /> */}
-      </div>
-      <AddTax update={update} />
+    <div className="flex gap-3">
+        <button
+            onClick={() => navigate(-1)}
+            className=" top-2 text-mainColor text-2xl cursor-pointer hover:text-blue-500 transition-all"
+        >
+            <FaArrowLeft/>
+        </button>
+        <TitlePage text={'Add Tax'} />
+    </div>
+    <AddTaxPage update={update} setUpdate={setUpdate}/>
     </>
   )
 }
 
-export default AddTaxLayout
+export default AddTaxLayout;

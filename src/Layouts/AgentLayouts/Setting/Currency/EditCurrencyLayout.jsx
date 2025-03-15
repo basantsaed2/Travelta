@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import TitlePage from '../../../../Components/TitlePage'
-import { AddGroupPage } from '../../../../Pages/AllPages'
+import { EditCurrencyPage } from '../../../../Pages/AllPages'
 import { useNavigate } from 'react-router-dom'
 import { FaArrowLeft } from 'react-icons/fa'
 
-const AddGroupLayout = () => {
+const EditCurrencyLayout = () => {
   const [update, setUpdate] = useState(false)
   const navigate = useNavigate()
   return (
@@ -16,11 +16,11 @@ const AddGroupLayout = () => {
         >
             <FaArrowLeft/>
         </button>
-        <TitlePage text={'Add Group'} />
+        <TitlePage text={'Edit Currency'} />
     </div>
-    <AddGroupPage update={update} setUpdate={setUpdate}/>
+    <EditCurrencyPage update={update} setUpdate={setUpdate}/>
     </>
   )
 }
 
-export default AddGroupLayout;
+export default EditCurrencyLayout;

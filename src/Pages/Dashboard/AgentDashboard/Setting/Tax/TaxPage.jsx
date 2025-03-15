@@ -9,84 +9,92 @@ import { FaEdit, FaEnvelope,FaFileExcel ,FaSearch ,FaGlobe ,FaFilter } from "rea
 import { Link} from 'react-router-dom';
 import {useChangeState} from '../../../../../Hooks/useChangeState';
 import * as XLSX from "xlsx";
-import { GrCurrency } from "react-icons/gr";
+import { TbTaxEuro } from "react-icons/tb";
 
-const CurrencyPage = ({ update, setUpdate }) => {
-    const { refetch: refetchCurrecy, loading: loadingCurrecy, data: Currency } = useGet({url: `https://travelta.online/agent/settings/currency`,});
-    const [currency, setCurrency] = useState([])
+const TaxPage = ({ update, setUpdate }) => {
+    const { refetch: refetchTax, loading: loadingTax, data: Tax } = useGet({url: `https://travelta.online/agent/settings/tax`,});    const [group, setGroup] = useState([]);
+    const [tax, setTax] = useState([]);
+    const [country, setCountry] = useState([]);
+
     const { deleteData, loadingDelete, responseDelete } = useDelete();
     const [openDelete, setOpenDelete] = useState(null);
     const [searchText, setSearchText] = useState("");
-    const [selectedCurrency, setSelectedCurrency] = useState("");
+    const [selectedTax, setSelectedTax] = useState("");
+    const [selectedCountry, setSelectedCountry] = useState("");
 
     //Pagination State
       const [rowsPerPage, setRowsPerPage] = useState(5);
       const [currentPage, setCurrentPage] = useState(1);
 
-      useEffect(() => {
-        refetchCurrecy()
-      }, [refetchCurrecy,update])
+    useEffect(() => {
+      refetchTax();
+    }, [refetchTax,update]);
 
-      useEffect(() => {
-        if(Currency){
-          setCurrency(Currency.currency_agent)
-        }
-        console.log("data currency" , Currency)
-      }, [Currency])
+    useEffect(() => {
+      if (Tax && Tax.tax) {
+        setTax(Tax.tax);
+        setCountry(Tax.countries);
+      }
+    }, [Tax]);
     
-      const handleOpenDelete = (item) => {
-        setOpenDelete(item);
-      };
-      const handleCloseDelete = () => {
-        setOpenDelete(null);
-      };
+    const handleOpenDelete = (item) => {
+      setOpenDelete(item);
+    };
+    const handleCloseDelete = () => {
+      setOpenDelete(null);
+    };
 
-      const handleDelete = async (id, name) => {
-        const success = await deleteData(`https://travelta.online/agent/settings/currency/delete/${id}`, `${name} Deleted Success.`);
-    
-        if (success) {
-            setCurrency(
-            currency.filter((cur) =>
-              cur.id !== id
-            )
-          );
-        }
-      };
+    const handleDelete = async (id, name) => {
+      const success = await deleteData(
+        `https://travelta.online/agent/settings/tax/delete/${id}`,
+        `${name} Deleted Successfully.`
+      );
 
-      // Get unique lists
-      const uniqueCurrency = [...new Set(currency.map(currency => currency.name).filter(Boolean))];
+      if (success) {
+        setTax(tax.filter((taxItem) => taxItem.id !== id));
+      }
+    };
 
-      // Handle input changes
-      const handleSearch = (e) => setSearchText(e.target.value.toLowerCase());
-      const handleFilterCurrency = (e) => setSelectedCurrency(e.target.value);
+    // Get unique lists
+    const uniqueTex = [...new Set(tax.map(tax => tax.name).filter(Boolean))];
+    const uniqueCountry = [...new Set(country.map(country => country.name).filter(Boolean))];
 
-    const filteredCurrency = currency.filter((currency) => {
+    // Handle input changes
+    const handleSearch = (e) => setSearchText(e.target.value.toLowerCase());
+    const handleFilterTax = (e) => setSelectedTax(e.target.value);
+    const handleFilterCountry = (e) => setSelectedCountry(e.target.value);
+
+    const filteredTax = tax.filter((tax) => {
       const matchesSearch =
-      currency?.name?.toLowerCase().includes(searchText) 
+      tax?.name?.toLowerCase().includes(searchText) || 
+      tax?.country?.name.toLowerCase().includes(searchText);
     
-      const currencyMatch = selectedCurrency ? currency.name === selectedCurrency : true;
+      const countryMatch = selectedCountry ? tax.country?.name === selectedCountry : true;
+      const taxMatch = selectedTax ? tax.name === selectedTax : true;
 
-      return matchesSearch && currencyMatch ;
+      return matchesSearch && countryMatch && taxMatch;
     });
        
        // Export filtered data to Excel
        const exportToExcel = () => {
          const worksheet = XLSX.utils.json_to_sheet(
-          currency.map((currency, index) => ({
+          tax.map((tax, index) => ({
              SL: index + 1,
-             Currency_Name: currency.name  || "-",
-             Decimal_Precision: currency.point  || "-",
+             Tax_Name: tax.name || "-",
+             Tax_Amount: tax?.amount || "-",
+             Tax_Type: tax?.type || "-",
+             Country: tax?.country?.name || "-",
             }))
           );
          const workbook = XLSX.utils.book_new();
-         XLSX.utils.book_append_sheet(workbook, worksheet, "Currencies");
-         XLSX.writeFile(workbook, "Currencies.xlsx");
+         XLSX.utils.book_append_sheet(workbook, worksheet, "Taxes");
+         XLSX.writeFile(workbook, "Taxes.xlsx");
        };
 
 
       // Pagination Logic
-      const totalPages = Math.ceil(filteredCurrency.length / rowsPerPage);
-      const paginatedData = filteredCurrency.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+      const totalPages = Math.ceil(filteredTax.length / rowsPerPage);
+      const paginatedData = filteredTax.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
       const handleNextPage = () => setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
       const handlePrevPage = () => setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
@@ -94,25 +102,13 @@ const CurrencyPage = ({ update, setUpdate }) => {
         setRowsPerPage(Number(e.target.value));
         setCurrentPage(1); // Reset to first page when rows per page changes
       };
-      const [anchorEl, setAnchorEl] = useState(null);
-  const [search, setSearch] = useState("");
-
-      const filteredCurrencies = uniqueCurrency.filter((currency) =>
-        currency.toLowerCase().includes(search.toLowerCase())
-      );
-      const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-      };
-    
-      const handleClose = (currency) => {
-        if (currency) handleFilterCurrency(currency);
-        setAnchorEl(null);
-      };
-      const headers = ['Currency Name',"Decimal Precision","Action"];
+     
+     
+      const headers = ['Tax Name','Amount','Type', 'Country',"Action"];
 
   return (
     <div className="w-full pb-5 flex items-start justify-start overflow-x-scroll scrollSection">
-      {loadingCurrecy || loadingDelete ? (
+      {loadingTax || loadingDelete ? (
         <div className="w-full h-56 flex justify-center items-center">
           <StaticLoader />
         </div>
@@ -125,30 +121,47 @@ const CurrencyPage = ({ update, setUpdate }) => {
                     <FaSearch className="text-gray-500" />
                     <input
                       type="text"
-                      placeholder="Search by currency name..."
+                      placeholder="Search by tax name or country..."
                       value={searchText}
                       onChange={handleSearch}
                       className="bg-transparent outline-none w-full text-gray-700 placeholder-gray-500"
                     />
                   </div>
 
-                   {/* Filter by Currency */}
+                   {/* Filter by Tax */}
                    <div className="relative w-full md:w-[240px]">
                     <select
-                      onChange={handleFilterCurrency}
-                      value={selectedCurrency}
+                      onChange={handleFilterTax}
+                      value={selectedTax}
                       className="appearance-none w-full bg-gray-50 text-gray-700 px-4 py-2 rounded-lg border border-gray-300 outline-none cursor-pointer focus:ring-2 focus:ring-blue-300"
                     >
-                      <option value="">Filter by Currency</option>
-                      {uniqueCurrency.map((currency, index) => (
-                        <option key={index} value={currency}>
-                          {currency}
+                      <option value="">Filter by Tax</option>
+                      {uniqueTex.map((tax, index) => (
+                        <option key={index} value={tax}>
+                          {tax}
                         </option>
                       ))}
                     </select>
-                    <GrCurrency className="absolute right-3 top-3 text-gray-500 pointer-events-none" />
+                    <TbTaxEuro className="absolute right-3 top-3 text-gray-500 pointer-events-none" />
                   </div>
           
+                  {/* Filter by Country */}
+                  <div className="relative w-full md:w-[240px]">
+                    <select
+                      onChange={handleFilterCountry}
+                      value={selectedCountry}
+                      className="appearance-none w-full bg-gray-50 text-gray-700 px-4 py-2 rounded-lg border border-gray-300 outline-none cursor-pointer focus:ring-2 focus:ring-blue-300"
+                    >
+                      <option value="">Filter by Country</option>
+                      {uniqueCountry.map((country, index) => (
+                        <option key={index} value={country}>
+                          {country}
+                        </option>
+                      ))}
+                    </select>
+                    <FaGlobe className="absolute right-3 top-3 text-gray-500 pointer-events-none" />
+                  </div>
+                      
                   {/* Export to Excel Button */}
                   <button
                     onClick={exportToExcel}
@@ -199,29 +212,31 @@ const CurrencyPage = ({ update, setUpdate }) => {
                      {paginatedData.length === 0 ? (
                           <tr>
                           <td colSpan="4" className="text-center text-xl text-gray-500 py-4">
-                            No Currency Found
+                            No Tax Found
                           </td>
                         </tr>
                       ) : (
-                        paginatedData.map((currency, index) => ( // 👈 Use filteredleads
+                        paginatedData.map((tax, index) => ( // 👈 Use filteredleads
                           <tr
                             key={index}
                             className={`border-b ${index % 2 === 0 ? "bg-white" : "bg-gray-100"} transition hover:bg-gray-100`}
                           >
                             <td className="text-center py-2 text-gray-600">{index + 1}</td>
-                            <td className="text-center py-2 text-gray-600">{currency?.name || "-"}</td>
-                            <td className="text-center py-2 text-gray-600">{currency?.point || "-"}</td>
+                            <td className="text-center py-2 text-gray-600">{tax?.name || "-"}</td>
+                            <td className="text-center py-2 text-gray-600">{tax?.amount || "-"}</td>
+                            <td className="text-center py-2 text-gray-600">{tax?.type || "-"}</td>
+                            <td className="text-center py-2 text-gray-600">{tax?.country?.name || "-"}</td>
                             <td className="text-center py-2">
                               <div className="flex items-center justify-center gap-1">
-                              <Link to={`edit/${currency.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
+                              <Link to={`edit/${tax.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
                                 <button
                                   type="button"
-                                  onClick={() => handleOpenDelete(currency.id)}
+                                  onClick={() => handleOpenDelete(tax.id)}
                                 >
                                   <MdDelete color='#D01025' size="24"/>
                                 </button>
                  
-                                {openDelete === currency.id && (
+                                {openDelete === tax.id && (
                                   <Dialog
                                     open={true}
                                     onClose={handleCloseDelete}
@@ -237,12 +252,12 @@ const CurrencyPage = ({ update, setUpdate }) => {
                                             />
                                             <div className="flex items-center">
                                               <div className="mt-2 text-center">
-                                                You will delete currency {currency?.name || "-"}
+                                                You will delete tax {tax?.name || "-"}
                                               </div>
                                             </div>
                                           </div>
                                           <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                            <button className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto" onClick={() => handleDelete(currency.id, currency?.name)}>
+                                            <button className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto" onClick={() => handleDelete(tax.id, tax?.name)}>
                                               Delete
                                             </button>
           
@@ -294,4 +309,4 @@ const CurrencyPage = ({ update, setUpdate }) => {
   );
 }
 
-export default CurrencyPage;
+export default TaxPage;

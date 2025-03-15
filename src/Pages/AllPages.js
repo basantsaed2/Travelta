@@ -101,9 +101,21 @@ export { default as EditAdminAccountPage } from "./Dashboard/AgentDashboard/Sett
 export { default as PositionPage } from "./Dashboard/AgentDashboard/Setting/Positions/PositionPage";
 export { default as AddPositionPage } from "./Dashboard/AgentDashboard/Setting/Positions/AddPositionPage";
 export { default as EditPositionPage } from "./Dashboard/AgentDashboard/Setting/Positions/EditPositionPage";
+//Group
+export {default as GroupPage} from './Dashboard/AgentDashboard/Setting/Group/GroupPage';
+export {default as AddGroupPage} from './Dashboard/AgentDashboard/Setting/Group/AddGroupPage';
+export {default as EditGroupPage} from './Dashboard/AgentDashboard/Setting/Group/EditGroupPage';
+//Taxes
+export {default as TaxPage} from './Dashboard/AgentDashboard/Setting/Tax/TaxPage';
+export {default as AddTaxPage} from './Dashboard/AgentDashboard/Setting/Tax/AddTaxPage';
+export {default as EditTaxPage} from './Dashboard/AgentDashboard/Setting/Tax/EditTaxPage';
+//Currency
+export {default as CurrencyPage} from './Dashboard/AgentDashboard/Setting/Currency/CurrencyPage';
+export {default as AddCurrencyPage} from './Dashboard/AgentDashboard/Setting/Currency/AddCurrencyPage';
+export {default as EditCurrencyPage} from './Dashboard/AgentDashboard/Setting/Currency/EditCurrencyPage';
+
 //BookingPayment
 export {default as BookingPaymentPage} from './Dashboard/AgentDashboard/BookingPayments/BookingPaymentPage';
-
 
 //Ledger
 export { default as LedgerPage } from "./Dashboard/AgentDashboard/Accounting/Ledger/LedgerPage";

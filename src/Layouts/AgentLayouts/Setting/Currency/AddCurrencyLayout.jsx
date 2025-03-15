@@ -1,28 +1,26 @@
 import React, { useState } from 'react'
 import TitlePage from '../../../../Components/TitlePage'
-import { AddWalletPage } from '../../../../Pages/AllPages'
-import AddCurrency from '../../../../Pages/Dashboard/AgentDashboard/Setting/Currency/AddCurrency'
+import { AddCurrencyPage } from '../../../../Pages/AllPages'
 import { useNavigate } from 'react-router-dom'
-import { IconButton } from '@mui/material'
-import { IoArrowBack } from 'react-icons/io5'
+import { FaArrowLeft } from 'react-icons/fa'
 
 const AddCurrencyLayout = () => {
   const [update, setUpdate] = useState(false)
   const navigate = useNavigate()
-  const handleGoBack=()=>{
-    navigate(-1);
-  }
   return (
     <>
-      <div className="flex mb-5 mt-4">
-      <IconButton onClick={handleGoBack} color="primary">
-          <IoArrowBack />
-        </IconButton>
-      <TitlePage text={'Add Currency'} />
-      </div>
-      <AddCurrency update={update} setUpdate={setUpdate}/>
+    <div className="flex gap-3">
+        <button
+            onClick={() => navigate(-1)}
+            className=" top-2 text-mainColor text-2xl cursor-pointer hover:text-blue-500 transition-all"
+        >
+            <FaArrowLeft/>
+        </button>
+        <TitlePage text={'Add Currency'} />
+    </div>
+    <AddCurrencyPage update={update} setUpdate={setUpdate}/>
     </>
   )
 }
 
-export default AddCurrencyLayout
+export default AddCurrencyLayout;

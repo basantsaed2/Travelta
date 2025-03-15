@@ -1,10 +1,8 @@
 import React from 'react'
 import TitlePage from '../../../../Components/TitlePage'
-import { WalletPage } from '../../../../Pages/AllPages'
 import AddButton from '../../../../Components/Buttons/AddButton'
 import { Link } from 'react-router-dom'
-import Tax from '../../../../Pages/Dashboard/AgentDashboard/Setting/Tax/Tax'
-import Group from '../../../../Pages/Dashboard/AgentDashboard/Setting/Group/Group'
+import { GroupPage } from '../../../../Pages/AllPages'
 
 const GroupLayout = () => {
   return (
@@ -16,7 +14,7 @@ const GroupLayout = () => {
         <AddButton />
       </Link>
     </div>
-    <Group/>
+    <GroupPage/>
     </>
   )
 }

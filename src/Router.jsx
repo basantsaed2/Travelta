@@ -9,7 +9,7 @@ import SignUpAffilate from "./Pages/Authentication/SignUpAffilate"
 import Login from "./Pages/Authentication/Login";
 import AgentLayout from "./Layouts/AgentLayouts/AgentLayout";
 import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";  
-import {AddAdminAccountLayout, AddAgentLayout, AddDepartmentLayout, AddEmployeeLayout, AddFinancialAccountLayout, AddLeadLayout, AddPositionLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddTourLayout, AddWalletLayout, AdminAccountLayout, BookingPaymentLayout, CartLayout, CheckoutLayout, CurrentBookingLayout, CustomersLayout , DepartmentLayout, EditAdminAccountLayout, EditAgentLayout, EditDepartmentLayout, EditEmployeeLayout, EditFinancialAccountLayout, EditPositionLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, EditTourLayout, EmployeeLayout, FinancialAccountLayout, HotelBookingDetailsLayout, InvoiceAgentLayout, LeadLayout, LedgerLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, PositionLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
+import {AddAdminAccountLayout, AddAgentLayout, AddCurrencyLayout, AddDepartmentLayout, AddEmployeeLayout, AddFinancialAccountLayout, AddGroupLayout, AddLeadLayout, AddPositionLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddTaxLayout, AddTourLayout, AddWalletLayout, AdminAccountLayout, BookingPaymentLayout, CartLayout, CheckoutLayout, CurrencyAgentLayout, CurrentBookingLayout, CustomersLayout , DepartmentLayout, EditAdminAccountLayout, EditAgentLayout, EditCurrencyLayout, EditDepartmentLayout, EditEmployeeLayout, EditFinancialAccountLayout, EditGroupLayout, EditPositionLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, EditTaxLayout, EditTourLayout, EmployeeLayout, FinancialAccountLayout, GroupLayout, HotelBookingDetailsLayout, InvoiceAgentLayout, LeadLayout, LedgerLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, PositionLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, TaxLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
 import { LandingPage } from "./Pages/AllPages";
 import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 import ComingSoon from "./Pages/Dashboard/AgentDashboard/Accounting/ComingSoon";
@@ -70,12 +70,6 @@ import AddPaymentMethod from "./Pages/SuperAdmin/Settings/Tabs/PaymentMethod/Add
 import RequestListLayout from "./Layouts/AgentLayouts/Requests/RequestListLayout";
 import NewRequestLayout from "./Layouts/AgentLayouts/Requests/NewRequestLayout";
 import WorkStationLayout from "./Layouts/AgentLayouts/Requests/WorkStationLayout";
-import AddCurrencyLayout from "./Layouts/AgentLayouts/Setting/Currency/AddCurrencyLayout";
-import TaxLayout from "./Layouts/AgentLayouts/Setting/Tax/TaxLayout";
-import AddTaxLayout from "./Layouts/AgentLayouts/Setting/Tax/AddTaxLayout";
-import CurrencyLayoutPage from "./Layouts/AgentLayouts/Setting/Currency/CurrencyLayoutPage";
-import GroupLayout from "./Layouts/AgentLayouts/Setting/Group/GroupLayout";
-import AddGroupLayout from "./Layouts/AgentLayouts/Setting/Group/AddGroupLayout";
 import InvoiceLayout from "./Layouts/SuperAdminLayouts/FinancialLayout/InvoiceLayout/InvoiceLayout";
 import AddInvoiceLayout from "./Layouts/SuperAdminLayouts/FinancialLayout/InvoiceLayout/AddInvoiceLayout";
 import FlightProfileLayout from "./Layouts/BookingListLayout/Upcoming/FlightDeatilsLayout";
@@ -658,7 +652,7 @@ export const router = createBrowserRouter([
                       {path: 'add',
                         element: <AddLeadLayout/>
                       },
-                      {path: 'profilee/:id',
+                      {path: 'profile/:id',
                         element: <ProfileLayout/>
                       },
                       {path: 'edit/:leadId',
@@ -854,20 +848,22 @@ export const router = createBrowserRouter([
                   },
 
                   {
-                    path: 'currency',
-                    element: <AppCurrencyLayout/>,
-                    children:[
+                    path: "currency",
+                    element: <AppCurrency />,
+                    children: [
                       {
                         path: "",
-                        element: <CurrencyLayoutPage/>,
+                        element: <CurrencyAgentLayout />, // Default payment list page
                       },
                       {
                         path: "add",
-                        element: <AddCurrencyLayout/>,
+                        element: <AddCurrencyLayout />, // Add new payment (without tabs)
                       },
-
-                    ]
-    
+                      {
+                        path: "edit/:currency_Id",
+                        element: <EditCurrencyLayout />, // Edit existing payment
+                      },
+                    ],
                   },
 
                   {
@@ -882,7 +878,10 @@ export const router = createBrowserRouter([
                         path: "add",
                         element: <AddTaxLayout/>,
                       },
-
+                      {
+                        path: "edit/:taxId",
+                        element: <EditTaxLayout/>,
+                      },
                     ]
     
                   },
@@ -899,7 +898,10 @@ export const router = createBrowserRouter([
                         path: "add",
                         element: <AddGroupLayout/>,
                       },
-
+                      {
+                        path: "edit/:groupId",
+                        element: <EditGroupLayout/>,
+                      },
                     ]
     
                   },
@@ -1518,6 +1520,12 @@ export const router = createBrowserRouter([
           },
         ],
       },
+
+
+
+
+
+      
 
       // Super Admin Routes
 

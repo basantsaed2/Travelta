@@ -98,6 +98,19 @@ export { default as EditAdminAccountLayout } from "./AgentLayouts/Setting/AdminA
 export { default as PositionLayout } from "./AgentLayouts/Setting/Positions/PositionLayout";
 export { default as AddPositionLayout } from "./AgentLayouts/Setting/Positions/AddPositionLayout";
 export { default as EditPositionLayout } from "./AgentLayouts/Setting/Positions/EditPositionLayout";
+//Group
+export { default as GroupLayout } from "./AgentLayouts/Setting/Group/GroupLayout";
+export { default as AddGroupLayout } from "./AgentLayouts/Setting/Group/AddGroupLayout";
+export { default as EditGroupLayout } from "./AgentLayouts/Setting/Group/EditGroupLayout";
+//Tax
+export { default as TaxLayout } from "./AgentLayouts/Setting/Tax/TaxLayout";
+export { default as AddTaxLayout } from "./AgentLayouts/Setting/Tax/AddTaxLayout";
+export { default as EditTaxLayout } from "./AgentLayouts/Setting/Tax/EditTaxLayout";
+//Currency
+export { default as CurrencyAgentLayout } from "./AgentLayouts/Setting/Currency/CurrencyAgentLayout";
+export { default as AddCurrencyLayout } from "./AgentLayouts/Setting/Currency/AddCurrencyLayout";
+export { default as EditCurrencyLayout } from "./AgentLayouts/Setting/Currency/EditCurrencyLayout";
+
 //BookingPaymentLayout
 export { default as BookingPaymentLayout } from "./AgentLayouts/BookingPayments/BookingPaymentLayout";
 

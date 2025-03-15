@@ -1,24 +1,22 @@
-import React, { useState } from 'react'
+import React from 'react'
 import TitlePage from '../../../../Components/TitlePage'
-import { WalletPage } from '../../../../Pages/AllPages'
 import AddButton from '../../../../Components/Buttons/AddButton'
 import { Link } from 'react-router-dom'
+import { CurrencyPage } from '../../../../Pages/AllPages'
 
-const WalletLayout = () => {
-    const [update, setUpdate] = useState(false);
-  
+const CurrencyAgentLayout = () => {
   return (
     <>
     <div className="flex justify-between">
  
-    <TitlePage text={'Wallet'} />
+    <TitlePage text={'Currency'} />
     <Link to='add'>
         <AddButton />
       </Link>
     </div>
-    <WalletPage update={update} setUpdate={setUpdate}/>
+    <CurrencyPage/>
     </>
   )
 }
 
-export default WalletLayout;
+export default CurrencyAgentLayout;

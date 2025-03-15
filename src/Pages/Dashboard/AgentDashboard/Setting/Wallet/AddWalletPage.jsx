@@ -1,127 +1,127 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useAuth } from '../../../../../Context/Auth';
-import { usePost } from '../../../../../Hooks/usePostJson';
+import { Button, CircularProgress, MenuItem, TextField ,Autocomplete} from '@mui/material'
+import React, { useEffect, useState } from 'react'
 import { useGet } from '../../../../../Hooks/useGet';
+import { usePost } from '../../../../../Hooks/usePostJson';
+import { useNavigate } from 'react-router-dom';
+import StaticLoader from '../../../../../Components/StaticLoader';
+import { useAuth } from "../../../../../Context/Auth";
 
-const AddWallet = () => {
-  // State to hold form data
-  const [currencyId, setCurrencyId] = useState('');
-  const [message, setMessage] = useState('');
-  const [wallet, setWallet] = useState(null); // State to hold the wallet data
-  const [currencyList, setCurrencyList] = useState([]);
-  const auth = useAuth();
-    const { postData, loadingPost, response } = usePost({
-        url: 'https://travelta.online/agent/wallet/add',
-      });
-       const {
-          refetch: refetchAddWallet,
-          loading,
-          data: dataAddWallet,
-        } = useGet({
-          url: "https://travelta.online/agent/wallet",
-        });
+const AddWalletPage = ({update,setUpdate}) => {
 
-         useEffect(() => {
-            refetchAddWallet()
-          
-          }, [refetchAddWallet])
-        
-          useEffect(() => {
-            if(dataAddWallet){
-                setCurrencyList(dataAddWallet.currencies)
-              
-                console.log(`data wallet ${dataAddWallet} `)
-            }
-            console.log(`data wallet ${dataAddWallet} `)
-          }, [dataAddWallet])
+    const {refetch: refetchAddWallet,loading:loadingWallet,data: dataAddWallet,} = useGet({url: "https://travelta.online/agent/wallet",});
+    const { postData, loadingPost, response } = usePost({url: 'https://travelta.online/agent/wallet/add',});         
+    const [currencyId, setCurrencyId] = useState('');
+    const [currencyList, setCurrencyList] = useState([]);
+    const auth = useAuth();
+    const navigate = useNavigate()
 
-          
-  // Handle form submission
-  useEffect(() => {
-    if(!loadingPost){
-        console.log(response)
-    }
+    useEffect(() => {
+      refetchAddWallet()
+    }, [refetchAddWallet,update])
   
-  }, [loadingPost,response])
+    useEffect(() => {
+      if(dataAddWallet){
+          setCurrencyList(dataAddWallet.currencies)
+          console.log(`data wallet ${dataAddWallet} `)
+      }
+      console.log(`data wallet ${dataAddWallet} `)
+    }, [dataAddWallet])
+         
+    // Handle form submission
+    useEffect(() => {
+      if(!loadingPost){
+        if (response) {
+          navigate(-1); // Navigate back only when the response is successful
+        } else {
+          console.error("Response does not indicate success:", response);
+        }      }
+    
+    }, [loadingPost,response])
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!currencyId) {
-      auth.toastError('Please select a currency');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('currancy_id', currencyId);
-    postData(formData ,'added successful');
-    // console.log('all data' , formData)
-
-    // try {
-    //   // Make the POST request to add the wallet, sending only currency_id
-    //   const response = await axios.post('https://travelta.online/agent/wallet/add', {
-    //     currancy_id: currencyId,
-    //   });
-
-    //   if (response.status === 200) {
-    //     auth.toastSuccess('Wallet added successfully');
-    //     setWallet(response.data); 
-    //     setCurrencyId('');
-    //   } else {
-    //     auth.toastError('Failed to add wallet');
-    //   }
-    // } catch (error) {
-    //   auth.toastError('Error adding wallet');
-    //   console.error(error);
-    // }
-  };
+    const handleReset = () => {
+      setCurrencyId('');
+    };
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+  
+      if (!currencyId) {
+        auth.toastError('Please select a currency');
+        return;
+      }
+      const formData = new FormData();
+      formData.append('currancy_id', currencyId);
+      postData(formData ,'Wallet added successfully');
+  
+    };
 
   return (
-    <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-semibold mb-4">Add Wallet</h2>
+      <>
+          {(loadingPost || loadingWallet )? (
+                 <div className="w-full h-56 flex justify-center items-center">
+                        <StaticLoader />
+                 </div>
+          ) : (
+          <>
+          <form
+            className="w-full flex flex-col gap-5 p-6"
+            onSubmit={handleSubmit}
+            >
+            <div
+              className="w-full flex sm:flex-col lg:flex-row flex-wrap items-start justify-start gap-5"
+            >
+            <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
+              <Autocomplete
+                options={currencyList} // Country list
+                getOptionLabel={(option) => option.name} // Show country name in dropdown
+                value={currencyList.find((c) => c.id === currencyId) || null} // Match selected country
+                onChange={(event, newValue) => setCurrencyId(newValue ? newValue.id : "")} // Update ID
+                loading={loadingWallet} // Show loader if fetching data
+                className="w-full shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Select Currency"
+                    variant="outlined"
+                    fullWidth
+                    required
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <>
+                          {loadingWallet ? <CircularProgress size={20} /> : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
+                  />
+                )}
+              />
+            </div>
+            </div>
+            <div className="w-full flex items-center gap-x-4">
+              <div className="">
+                  <Button text={'Reset'} onClick={handleReset} className="bg-mainColor hover:bg-blue-600 hover:text-white">Reset</Button>
+              </div>
+              <div className="">
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                className="bg-mainColor hover:bg-blue-600 text-white"
+                color="primary"
+                onClick={handleSubmit}
+                disabled={loadingPost || !currencyId } // Ensure button is disabled if no currency is selected
+              >
+                {loadingPost ? "Submitting..." : "Submit"}
+              </Button>
+              </div>
+            </div>
+          </form>
+         </>
+          )}
+      </>
+  )
+}
 
-      {/* Message */}
-      {message && (
-        <div className="mb-4 p-2 text-white bg-red-500 rounded">
-          {message}
-        </div>
-      )}
-
-      {/* Wallet Form */}
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg">
-        {/* Currency ID */}
-        <div className="mb-4">
-          <label htmlFor="currencyId" className="block text-sm font-medium text-gray-700">Currency</label>
-          <select
-            id="currencyId"
-            value={currencyId}
-            onChange={(e) => setCurrencyId(e.target.value)}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-lg"
-          >
-             <option value="">Select Currency</option>
-        {currencyList.map((currency) => (
-          <option key={currency.id} value={currency.id}>
-            {currency.name} 
-          </option>
-        )
-        )
-    }
-            
-          </select>
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="bg-mainColor text-white py-2 px-4 rounded-lg w-full"
-        >
-          Add Wallet
-        </button>
-      </form>
-
-    </div>
-  );
-};
-
-export default AddWallet;
+export default AddWalletPage;
