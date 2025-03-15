@@ -1,16 +1,18 @@
 import React, { useState, useEffect ,useRef } from "react";
-import { TextField, MenuItem, Button, Switch ,InputAdornment, IconButton  } from "@mui/material";
+import { TextField, MenuItem, Button, Switch ,InputAdornment, IconButton ,Autocomplete } from "@mui/material";
 import { usePost } from '../../../../../Hooks/usePostJson';
 import { useGet } from '../../../../../Hooks/useGet';
 import { IoMdPersonAdd } from "react-icons/io";
 import { IoCloudUpload } from "react-icons/io5";
 import StaticLoader from '../../../../../Components/StaticLoader';
+import { useNavigate } from 'react-router-dom';
 
 const AddFinancialAccountPage = ({ update, setUpdate }) => {
     const { postData, loadingPost, response } = usePost({ url: 'https://travelta.online/agent/financial/add' });
     const { refetch: refetchFinancialAccount, loading: loadingFinancialAccount, data: financialAccountData } = useGet({url:'https://travelta.online/agent/financial'});
     const [currency, setCurrency] = useState([])
     const ImageRef = useRef();
+    const navigate = useNavigate()
 
     const [name, setName] = useState("");
     const [details, setDetails] = useState("");
@@ -57,12 +59,13 @@ const AddFinancialAccountPage = ({ update, setUpdate }) => {
         setLogoName('')
     };
 
-    useEffect(() => {
+      useEffect(() => {
         if (!loadingPost) {
-            handleReset();
-            setUpdate(!update);
-        }
-    }, [response]);
+            if (response) {
+              navigate(-1); // Navigate back only when the response is successful
+            }
+          }
+        }, [loadingPost, response, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -85,7 +88,7 @@ const AddFinancialAccountPage = ({ update, setUpdate }) => {
         formData.append('details', details);
         formData.append('balance', balance);
         formData.append('currency_id', selectedCurrency);
-        formData.append('status', status);
+        formData.append('status', status || 0);
         formData.append('logo', logoFile);
 
         postData(formData, 'Financial Account Added Success');
@@ -138,47 +141,24 @@ const AddFinancialAccountPage = ({ update, setUpdate }) => {
               value={balance}
               inputProps={{
                 min: "0",
-      }}
+            }}
               onChange={(e) => setBalance(e.target.value)}
               className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
             />
           </div>
           <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
-            <TextField
-                select
-                fullWidth
-                variant="outlined"
-                value={selectedCurrency}
-                onChange={(e) => setSelectedCurrency(e.target.value)} // Update the selected service                }
-                label="Select Currancy"
-                className="mb-6"
-                >
-                {currency.map((currancy) => (
-                    <MenuItem key={currancy.id} value={currancy.id}>
-                    {currancy.name}
-                    </MenuItem>
-                ))}
-            </TextField>
-          </div>
-          {/* <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center">
-            <TextField
-                id="logo-upload"
-                fullWidth
-                type="file"
-                label="Logo"
-                variant="outlined"
-                value={logoName}
-                InputLabelProps={{ shrink: true }}
-                inputProps={{ accept: 'image/*' }}
-                // onChange={handleImageChange}
-                onClick={() => handleImageClick(ImageRef)}
-                onChange={(e) => {
-                setLogoName(e.target.value);
-                handleImageChange(e);
-                }}
-                className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-            />
-        </div> */}
+          <Autocomplete
+            options={currency} // List of currencies
+            getOptionLabel={(option) => option.name} // Display currency name
+            value={currency.find((curr) => curr.id === selectedCurrency) || null}
+            onChange={(event, newValue) => setSelectedCurrency(newValue ? newValue.id : "")}
+            className="w-full"
+            renderInput={(params) => (
+            <TextField {...params} label="Select Currency" variant="outlined" className="mb-6" />
+            )}
+        />
+            </div>
+
         <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
           {/* File input hidden, triggered by custom button */}
                 <input
@@ -217,21 +197,24 @@ const AddFinancialAccountPage = ({ update, setUpdate }) => {
                 />
           </div>
           </div>
-          <div className="w-full flex items-center gap-x-4">
-            <div className="">
-                <Button text={'Reset'} onClick={handleReset} className="bg-mainColor hover:bg-blue-600 hover:text-white">Reset</Button>
-            </div>
-            <div className="">
+             <div className="w-full flex items-center gap-x-4">
+                <div className="">
+                    <Button text={'Reset'} onClick={handleReset} className="bg-mainColor hover:bg-blue-600 hover:text-white">Reset</Button>
+                </div>
+                <div className="">
                 <Button
                 type="submit"
-                variant="contained"
                 fullWidth
+                variant="contained"
                 className="bg-mainColor hover:bg-blue-600 text-white"
-            >
-                Submit
-            </Button>
+                color="primary"
+                onClick={handleSubmit}
+                disabled={loadingPost || !selectedCurrency || !name || !details || !balance} // Ensure button is disabled if no currency is selected
+                >
+                {loadingPost ? "Submitting..." : "Submit"}
+                </Button>
+                </div>
             </div>
-          </div>
         </form>
        </>
         )}

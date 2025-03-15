@@ -1,7 +1,7 @@
 import React, { useState, useEffect,useRef } from "react";
 import { usePost } from '../../../../../Hooks/usePostJson';
 import { useGet } from '../../../../../Hooks/useGet';
-import { TextField, MenuItem, Button, Switch ,InputAdornment, IconButton  } from "@mui/material";
+import { TextField, MenuItem, Button, Switch ,InputAdornment, IconButton ,Autocomplete } from "@mui/material";
 import { IoMdPersonAdd } from "react-icons/io";
 import { useNavigate, useParams } from 'react-router-dom';
 import StaticLoader from '../../../../../Components/StaticLoader';
@@ -23,6 +23,7 @@ const EditFinancialAccountPage = ({ update, setUpdate }) => {
     const [status, setStatus] = useState(0);
     const [logoFile, setLogoFile] = useState(null);
     const [logoName, setLogoName] = useState("");
+    const navigate = useNavigate()
 
     useEffect(() => {
         refetchFinancialAccount();
@@ -78,13 +79,13 @@ const EditFinancialAccountPage = ({ update, setUpdate }) => {
         setLogoFile(null);
         setLogoName('')
     };
-
-    useEffect(() => {
+        useEffect(() => {
         if (!loadingPost) {
-            handleReset();
-            setUpdate(!update);
-        }
-    }, [response]);
+            if (response) {
+              navigate(-1); // Navigate back only when the response is successful
+            }
+          }
+        }, [loadingPost, response, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -107,7 +108,7 @@ const EditFinancialAccountPage = ({ update, setUpdate }) => {
         formData.append('details', details);
         formData.append('balance', balance);
         formData.append('currency_id', selectedCurrency);
-        formData.append('status', status);
+        formData.append('status', status || 0);
         formData.append('logo', logoFile);
 
         postData(formData, 'Financial Account Added Success');
@@ -123,67 +124,63 @@ const EditFinancialAccountPage = ({ update, setUpdate }) => {
         ) : (
         <>
         <form
-                 className="w-full flex flex-col gap-5 p-6"
-                 onSubmit={handleSubmit}
-                 >
-                 <div
-                   className="w-full flex sm:flex-col lg:flex-row flex-wrap items-start justify-start gap-5"
-                 >
-                 <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
-                   <TextField
-                     label="Account Name"
-                     variant="outlined"
-                     fullWidth
-                     required
-                     value={name}
-                     onChange={(e) => setName(e.target.value)}
-                     className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-                     />
-                 </div>
-                 <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
-                   <TextField
-                     label="Account Details"
-                     variant="outlined"
-                     type="tel"
-                     fullWidth
-                     required
-                     value={details}
-                     onChange={(e) => setDetails(e.target.value)}
-                     className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-                   />
-                 </div>
-                 <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
-                   <TextField
-                     label="Balance"
-                     variant="outlined"
-                     type="number"
-                     fullWidth
-                     value={balance}
-                     onChange={(e) => setBalance(e.target.value)}
-                     inputProps={{
-                        min: "0",
-              }}
-                     className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-                   />
-                 </div>
-                 <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
-                   <TextField
-                       select
-                       fullWidth
-                       variant="outlined"
-                       value={selectedCurrency}
-                       onChange={(e) => setSelectedCurrency(e.target.value)} // Update the selected service                }
-                       label="Select Currancy"
-                       className="mb-6"
-                       >
-                       {currency.map((currancy) => (
-                           <MenuItem key={currancy.id} value={currancy.id}>
-                           {currancy.name}
-                           </MenuItem>
-                       ))}
-                   </TextField>
-                 </div>
-                 <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
+          className="w-full flex flex-col gap-5 p-6"
+          onSubmit={handleSubmit}
+          >
+          <div
+            className="w-full flex sm:flex-col lg:flex-row flex-wrap items-start justify-start gap-5"
+          >
+          <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
+            <TextField
+              label="Account Name"
+              variant="outlined"
+              fullWidth
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+              />
+          </div>
+          <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
+            <TextField
+              label="Account Details"
+              variant="outlined"
+              type="tel"
+              fullWidth
+              required
+              value={details}
+              onChange={(e) => setDetails(e.target.value)}
+              className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+            />
+          </div>
+          <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
+            <TextField
+              label="Balance"
+              variant="outlined"
+              type="number"
+              fullWidth
+              value={balance}
+              inputProps={{
+                min: "0",
+            }}
+              onChange={(e) => setBalance(e.target.value)}
+              className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+            />
+          </div>
+          <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
+          <Autocomplete
+            options={currency} // List of currencies
+            getOptionLabel={(option) => option.name} // Display currency name
+            value={currency.find((curr) => curr.id === selectedCurrency) || null}
+            onChange={(event, newValue) => setSelectedCurrency(newValue ? newValue.id : "")}
+            className="w-full"
+            renderInput={(params) => (
+            <TextField {...params} label="Select Currency" variant="outlined" className="mb-6" />
+            )}
+        />
+            </div>
+
+        <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
           {/* File input hidden, triggered by custom button */}
                 <input
                     type="file"
@@ -192,50 +189,53 @@ const EditFinancialAccountPage = ({ update, setUpdate }) => {
                     onChange={handleImageChange}
                     className="hidden"
                 />
-                <div className="w-full flex flex-col items-start justify-center">
-                        <TextField
-                            label="Upload Logo"
-                            variant="outlined"
-                            fullWidth
-                            value={logoName}
-                            onClick={() => handleImageClick(ImageRef)} // Open file dialog when clicked
-                            InputProps={{
-                                endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton> 
-                                    < IoCloudUpload/>
-                                    </IconButton>
-                                </InputAdornment>
-                                ),
-                            }}
-                            className="w-full shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-                            />
-                    </div>
+            <div className="w-full flex flex-col items-start justify-center">
+                <TextField
+                    label="Upload Logo"
+                    variant="outlined"
+                    fullWidth
+                    value={logoName}
+                    onClick={() => handleImageClick(ImageRef)} // Open file dialog when clicked
+                    InputProps={{
+                        endAdornment: (
+                        <InputAdornment position="end">
+                            <IconButton> 
+                            < IoCloudUpload/>
+                             </IconButton>
+                         </InputAdornment>
+                        ),
+                    }}
+                    className="w-full shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+                    />
+            </div>
+        </div>
+          <div className="sm:w-full lg:w-[30%] flex items-center ml-5 mt-2">
+             <span className="text-mainColor text-lg font-semibold">Status : </span>
+                <Switch
+                    checked={status === 1}
+                    onChange={handleSwitchChange}
+                    color="primary"
+                />
+          </div>
+          </div>
+             <div className="w-full flex items-center gap-x-4">
+                <div className="">
+                    <Button text={'Reset'} onClick={handleReset} className="bg-mainColor hover:bg-blue-600 hover:text-white">Reset</Button>
                 </div>
-                 <div className="sm:w-full lg:w-[30%] flex items-center ml-5 mt-2">
-                    <span className="text-mainColor text-lg font-semibold">Status : </span>
-                       <Switch
-                           checked={status === 1}
-                           onChange={handleSwitchChange}
-                           color="primary"
-                       />
-                 </div>
-                 </div>
-                 <div className="w-full flex items-center gap-x-4">
-                   <div className="">
-                       <Button text={'Reset'} onClick={handleReset} className="bg-mainColor hover:bg-blue-600 hover:text-white">Reset</Button>
-                   </div>
-                   <div className="">
-                       <Button
-                       type="submit"
-                       variant="contained"
-                       fullWidth
-                       className="bg-mainColor hover:bg-blue-600 text-white"
-                   >
-                       Submit
-                   </Button>
-                   </div>
-                 </div>
+                <div className="">
+                <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                className="bg-mainColor hover:bg-blue-600 text-white"
+                color="primary"
+                onClick={handleSubmit}
+                disabled={loadingPost || !selectedCurrency || !name || !details || !balance} // Ensure button is disabled if no currency is selected
+                >
+                {loadingPost ? "Submitting..." : "Submit"}
+                </Button>
+                </div>
+            </div>
         </form>
        </>
         )}
