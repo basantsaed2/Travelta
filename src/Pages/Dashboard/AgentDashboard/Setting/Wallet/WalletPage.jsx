@@ -404,7 +404,7 @@ const WalletPage = ({ update, setUpdate }) => {
                                         </div>
                                       </div>
                                       <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                        <button className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto" onClick={() => handleDelete(currency.id, currency?.name)}>
+                                        <button className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto" onClick={() => handleDelete(currency.id, currency?.currancy?.currancy_name )}>
                                           Delete
                                         </button>
       

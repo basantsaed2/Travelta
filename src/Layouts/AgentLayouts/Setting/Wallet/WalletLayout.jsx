@@ -11,7 +11,7 @@ const WalletLayout = () => {
     <>
     <div className="flex justify-between">
  
-    <TitlePage text={'Wallet'} />
+    <TitlePage text={'Wallet Table'} />
     <Link to='add'>
         <AddButton />
       </Link>
