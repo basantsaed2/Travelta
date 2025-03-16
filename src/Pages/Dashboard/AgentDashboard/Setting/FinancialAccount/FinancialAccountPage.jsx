@@ -347,7 +347,7 @@ const FinancialAccountPage = ({ update, setUpdate }) => {
                             <td className="text-center py-2 text-gray-600">
                                 <div className="flex justify-center">
                                   <img src={account.logo_link}
-                                        className="rounded-md h-14 object-fit w-24"
+                                        className="rounded-md h-14 object-cover w-24"
                                         alt="Logo"
                                   />
                               </div>

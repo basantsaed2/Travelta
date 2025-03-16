@@ -14,6 +14,7 @@ const EditDepartmentPage = ({ update, setUpdate }) => {
 
     const [name, setName] = useState("");
     const [status, setStatus] = useState(0);
+    const navigate = useNavigate()
 
     useEffect(() => {
     refetchDepartment();
@@ -38,12 +39,13 @@ const EditDepartmentPage = ({ update, setUpdate }) => {
         setStatus(0)
     };
 
-    useEffect(() => {
-        if (!loadingPost) {
-            handleReset();
-            setUpdate(!update);
-        }
-    }, [response]);
+   useEffect(() => {
+         if (!loadingPost) {
+             if (response) {
+             navigate(-1); // Navigate back only when the response is successful
+             }
+         }
+         }, [loadingPost, response, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -62,7 +64,7 @@ const EditDepartmentPage = ({ update, setUpdate }) => {
     
     return (
         <>
-        {(loadingPost )? (
+        {(loadingPost || loadingDepartment )? (
                <div className="w-full h-56 flex justify-center items-center">
                       <StaticLoader />
                </div>
@@ -96,20 +98,23 @@ const EditDepartmentPage = ({ update, setUpdate }) => {
           </div>
           </div>
           <div className="w-full flex items-center gap-x-4">
-            <div className="">
-                <Button text={'Reset'} onClick={handleReset} className="bg-mainColor hover:bg-blue-600 hover:text-white">Reset</Button>
-            </div>
-            <div className="">
-                <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                className="bg-mainColor hover:bg-blue-600 text-white"
-            >
-                Submit
-            </Button>
-            </div>
-          </div>
+                     <div className="">
+                         <Button text={'Reset'} onClick={handleReset} className="bg-mainColor hover:bg-blue-600 hover:text-white">Reset</Button>
+                     </div>
+                     <div className="">
+                     <Button
+                     type="submit"
+                     fullWidth
+                     variant="contained"
+                     className="bg-mainColor hover:bg-blue-600 text-white"
+                     color="primary"
+                     onClick={handleSubmit}
+                     disabled={loadingPost || !name } // Ensure button is disabled if no currency is selected
+                     >
+                     {loadingPost ? "Submitting..." : "Submit"}
+                     </Button>
+                     </div>
+                 </div>
         </form>
        </>
         )}

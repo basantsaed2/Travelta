@@ -1,16 +1,20 @@
 import React, { useState } from 'react'
 import TitlePage from '../../../../Components/TitlePage'
-import {AddDepartmentPage, DepartmentPage} from '../../../../Pages/AllPages'
-import TitleSection from '../../../../Components/TitleSection'
+import {DepartmentPage} from '../../../../Pages/AllPages'
+import { Link } from 'react-router-dom'
+import AddButton from '../../../../Components/Buttons/AddButton'
 
 const DepartmentLayout = () => {
   const [update, setUpdate] = useState(false)
   return (
     <>
-      <TitlePage text={'Add Department'} />
-      <AddDepartmentPage update={update} setUpdate={setUpdate}/>
-      <TitleSection text={'Department Table'} />
-      <DepartmentPage refetch={update}/>
+    <div className='flex justify-between items-center'>
+    <TitlePage text={'Department Table'} />
+    <Link to='add'>
+        <AddButton />
+      </Link>
+    </div>
+      <DepartmentPage update={update} setUpdate={setUpdate}/>
     </>
   )
 }

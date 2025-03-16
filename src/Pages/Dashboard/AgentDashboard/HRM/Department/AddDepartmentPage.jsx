@@ -5,12 +5,14 @@ import { useGet } from '../../../../../Hooks/useGet';
 import { IoMdPersonAdd } from "react-icons/io";
 import { IoCloudUpload } from "react-icons/io5";
 import StaticLoader from '../../../../../Components/StaticLoader';
+import { useNavigate } from 'react-router-dom';
 
 const AddDepartmentPage = ({ update, setUpdate }) => {
     const { postData, loadingPost, response } = usePost({ url: 'https://travelta.online/agent/hrm/department/add' });
 
     const [name, setName] = useState("");
     const [status, setStatus] = useState(0);
+    const navigate = useNavigate()
 
     const handleSwitchChange = () => {
         setStatus((prev) => (prev === 1 ? 0 : 1)); // Toggle between 1 and 0
@@ -21,12 +23,13 @@ const AddDepartmentPage = ({ update, setUpdate }) => {
         setStatus(0)
     };
 
-    useEffect(() => {
+     useEffect(() => {
         if (!loadingPost) {
-            handleReset();
-            setUpdate(!update);
+            if (response) {
+            navigate(-1); // Navigate back only when the response is successful
+            }
         }
-    }, [response]);
+        }, [loadingPost, response, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -78,21 +81,24 @@ const AddDepartmentPage = ({ update, setUpdate }) => {
                 />
           </div>
           </div>
-          <div className="w-full flex items-center gap-x-4">
+        <div className="w-full flex items-center gap-x-4">
             <div className="">
                 <Button text={'Reset'} onClick={handleReset} className="bg-mainColor hover:bg-blue-600 hover:text-white">Reset</Button>
             </div>
             <div className="">
-                <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                className="bg-mainColor hover:bg-blue-600 text-white"
+            <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            className="bg-mainColor hover:bg-blue-600 text-white"
+            color="primary"
+            onClick={handleSubmit}
+            disabled={loadingPost || !name } // Ensure button is disabled if no currency is selected
             >
-                Submit
+            {loadingPost ? "Submitting..." : "Submit"}
             </Button>
             </div>
-          </div>
+        </div>
         </form>
        </>
         )}
