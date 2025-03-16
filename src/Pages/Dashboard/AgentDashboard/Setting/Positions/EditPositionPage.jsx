@@ -355,7 +355,7 @@ const EditPositionPage = ({ update, setUpdate }) => {
             return;
         }
     
-        let permissions = [];
+        let premisions = [];
         
         for (const position of positions) {
             if (!position.module) {
@@ -368,11 +368,11 @@ const EditPositionPage = ({ update, setUpdate }) => {
             }
     
             position.actions.forEach((action) => {
-                permissions.push({ module: position.module, action });
+                premisions.push({ module: position.module, action });
             });
         }
     
-        const payload = { name, permissions };
+        const payload = { name, premisions };
         postData(payload, "Position Updated Successfully");
     };    
 

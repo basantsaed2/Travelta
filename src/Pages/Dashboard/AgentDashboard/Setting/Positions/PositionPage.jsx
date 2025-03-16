@@ -269,7 +269,7 @@ const PositionPage = ({ update, setUpdate }) => {
 
     // Delete Language
     const handleDelete = async (id, name) => {
-        const success = await deleteData(`https://travelta.online/agent/admin/delete/${id}`, `${name} Deleted Success.`);
+        const success = await deleteData(`https://travelta.online/agent/admin/position/delete/${id}`, `${name} Deleted Success.`);
 
         if (success) {
             // Update Discounts only if changeState succeeded
