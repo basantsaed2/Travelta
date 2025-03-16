@@ -9,7 +9,7 @@ const AgentHRMLayout = () => {
   return (
     <>
     <div className='flex justify-between items-center'>
-    <TitlePage text={'Agency Table'} />
+    <TitlePage text={'Agent Table'} />
     <Link to='add'>
         <AddButton />
       </Link>

@@ -16,7 +16,7 @@ const EditAgentLayout = () => {
         >
             <FaArrowLeft/>
         </button>
-    <TitlePage text={'Edit Agency'} />
+    <TitlePage text={'Edit Agent'} />
     
     </div>
     <EditAgentPage update={update} setUpdate={setUpdate} />
