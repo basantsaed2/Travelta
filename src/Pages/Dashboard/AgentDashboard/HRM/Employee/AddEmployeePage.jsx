@@ -1,5 +1,5 @@
 import React, { useState, useEffect ,useRef } from "react";
-import { TextField, MenuItem, Button, InputAdornment, IconButton} from "@mui/material";
+import { TextField, MenuItem, Button, InputAdornment, IconButton, Autocomplete} from "@mui/material";
 import { usePost } from '../../../../../Hooks/usePostJson';
 import { useGet } from '../../../../../Hooks/useGet';
 import { useNavigate } from 'react-router-dom';
@@ -58,30 +58,17 @@ const AddEmployeePage = ({ update, setUpdate }) => {
     const handleGoBack = () => {
       navigate(-1, { replace: true });
     };
-
     useEffect(() => {
-            if (!loadingPost) {
-                handleReset();
-                setUpdate(!update);
+        if (!loadingPost) {
+            if (response) {
+            navigate(-1); // Navigate back only when the response is successful
             }
-        }, [response]);
-
+        }
+        }, [loadingPost, response, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!name) {
-            alert('Please Enter Name');
-            return;
-        }
-        if (!phone) {
-            alert('Please Enter Phone');
-            return;
-        }
-        if (!email) {
-            alert('Please Enter The Email');
-            return;
-        }
         const formData = new FormData();
         formData.append('name', name);
         formData.append('phone', phone);
@@ -154,26 +141,34 @@ const AddEmployeePage = ({ update, setUpdate }) => {
                 className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
               />
           </div>
-          <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
-           <TextField
-                select
-                fullWidth
-                variant="outlined"
-                value={selectDepartment}
-                onChange={(e) => setSelectDepartment(e.target.value)} // Update the selected service                }
-                label="Select Department"
-                className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-                >
-                {departments.length > 0 ? (
-                    departments.map((department) => (
-                        <MenuItem key={department.id} value={department.id}>
-                            {department.name}
-                        </MenuItem>
-                    ))
-                ) : (
-                    <MenuItem disabled>No departments available</MenuItem>
+
+         <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
+            <Autocomplete
+                options={Array.isArray(departments) && departments.length > 0 ? departments : [{ id: "", name: "No Departments" }]} 
+                getOptionLabel={(option) => option.name} 
+                value={departments.find((department) => department.id === selectDepartment) || null}
+                onChange={(event, newValue) => {setSelectDepartment(newValue ? newValue.id : ""); }}
+                loading={loadingDepartment} 
+                className="w-full shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+                renderInput={(params) => (
+                <TextField
+                    {...params}
+                    label="Select Department"
+                    variant="outlined"
+                    fullWidth
+                    required
+                    InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                        <>
+                        {loadingDepartment ? <CircularProgress size={20} /> : null}
+                        {params.InputProps.endAdornment}
+                        </>
+                    ),
+                    }}
+                />
                 )}
-            </TextField>
+            />
         </div>
        
         <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
@@ -206,21 +201,24 @@ const AddEmployeePage = ({ update, setUpdate }) => {
             </div>
         </div>
           </div>
-          <div className="w-full flex items-center gap-x-4">
-            <div className="">
-                <Button text={'Reset'} onClick={handleReset} className="bg-mainColor hover:bg-blue-600 hover:text-white">Reset</Button>
-            </div>
-            <div className="">
-                <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                className="bg-mainColor hover:bg-blue-600 text-white"
-            >
-                Submit
-            </Button>
-            </div>
-          </div>
+           <div className="w-full flex items-center gap-x-4">
+                    <div className="">
+                        <Button text={'Reset'} onClick={handleReset} className="bg-mainColor hover:bg-blue-600 hover:text-white">Reset</Button>
+                    </div>
+                    <div className="">
+                    <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    className="bg-mainColor hover:bg-blue-600 text-white"
+                    color="primary"
+                    onClick={handleSubmit}
+                    disabled={loadingPost || !name ||!phone ||!selectDepartment} // Ensure button is disabled if no currency is selected
+                    >
+                    {loadingPost ? "Submitting..." : "Submit"}
+                    </Button>
+                    </div>
+                </div>
         </form>
        </>
         )}
