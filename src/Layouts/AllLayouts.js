@@ -120,3 +120,18 @@ export { default as LedgerLayout } from "./AgentLayouts/Accounting/LedgerLayout/
 //Subscription
 //Invoice
 export { default as InvoiceAgentLayout } from "./AgentLayouts/Subscription/Invoice/InvoiceAgentLayout";
+
+//Accounting
+//Revenu
+export { default as ListRevenueLayout } from "./AgentLayouts/Accounting/AccountRevenueLayout/ListRevenueLayout";
+//Revenu Category
+export { default as CategoryRevenueLayout } from "./AgentLayouts/Accounting/AccountRevenueLayout/CategoryRevenue/CategoryRevenueLayout";
+export { default as AddCategoryRevenueLayout } from "./AgentLayouts/Accounting/AccountRevenueLayout/CategoryRevenue/AddCategoryRevenueLayout";
+export { default as EditCategoryRevenueLayout } from "./AgentLayouts/Accounting/AccountRevenueLayout/CategoryRevenue/EditCategoryRevenueLayout";
+
+//Expenses
+export { default as ListExpensesLayout } from "./AgentLayouts/Accounting/AccountExpensesLayout/ListExpensesLayout";
+//Expenses Category
+export { default as CategoryExpensesLayout } from "./AgentLayouts/Accounting/AccountExpensesLayout/CategoryExpenses/CategoryExpensesLayout";
+export { default as AddCategoryExpensesLayout } from "./AgentLayouts/Accounting/AccountExpensesLayout/CategoryExpenses/AddCategoryExpensesLayout";
+export { default as EditCategoryExpensesLayout } from "./AgentLayouts/Accounting/AccountExpensesLayout/CategoryExpenses/EditCategoryExpensesLayout";

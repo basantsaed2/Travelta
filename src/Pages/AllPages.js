@@ -122,3 +122,18 @@ export { default as LedgerPage } from "./Dashboard/AgentDashboard/Accounting/Led
 
 //Subscriptions
 export { default as InvoicePage } from "./Dashboard/AgentDashboard/Subscription/Invoice/InvoicePage";
+
+//Accounting
+//Revenu
+export { default as ListRevenuePage } from "./Dashboard/AgentDashboard/Accounting/AccountRevenue/ListRevenuePage";
+//Category Revenue
+export { default as CategoryRevenuePage } from "./Dashboard/AgentDashboard/Accounting/AccountRevenue/CategoryRevenue/CategoryRevenuePage";
+export { default as AddCategoryRevenuePage } from "./Dashboard/AgentDashboard/Accounting/AccountRevenue/CategoryRevenue/AddCategoryRevenuePage";
+export { default as EditCategoryRevenuePage } from "./Dashboard/AgentDashboard/Accounting/AccountRevenue/CategoryRevenue/EditCategoryRevenuePage";
+
+//Expenses
+export { default as ListExpensesPage } from "./Dashboard/AgentDashboard/Accounting/AccountExpenses/ListExpensesPage";
+//Category Expenses
+export { default as CategoryExpensesPage } from "./Dashboard/AgentDashboard/Accounting/AccountExpenses/CategoryExpenses/CategoryExpensesPage";
+export { default as AddCategoryExpensesPage } from "./Dashboard/AgentDashboard/Accounting/AccountExpenses/CategoryExpenses/AddCategoryExpensesPage";
+export { default as EditCategoryExpensesPage } from "./Dashboard/AgentDashboard/Accounting/AccountExpenses/CategoryExpenses/EditCategoryExpensesPage";

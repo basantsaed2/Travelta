@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { FaPlus, FaFilter, FaTrash, FaEdit } from "react-icons/fa";
-import { useGet } from "../../../../../Hooks/useGet";
-import { usePost } from "../../../../../Hooks/usePostJson";
+import { useGet } from "../../../../../../Hooks/useGet";
+import { usePost } from "../../../../../../Hooks/usePostJson";
 import { MenuItem, TextField } from "@mui/material";
-import { useDelete } from "../../../../../Hooks/useDelete";
-import { useAuth } from "../../../../../Context/Auth";
+import { useDelete } from "../../../../../../Hooks/useDelete";
+import { useAuth } from "../../../../../../Context/Auth";
 import { FaTrashCan } from "react-icons/fa6";
-import StaticLoader from "../../../../../Components/StaticLoader";
+import StaticLoader from "../../../../../../Components/StaticLoader";
 
-const CategoryExpensis = () => {
+const CategoryExpensesPage = () => {
   const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -246,4 +246,4 @@ const CategoryExpensis = () => {
   );
 };
 
-export default CategoryExpensis;
+export default CategoryExpensesPage;

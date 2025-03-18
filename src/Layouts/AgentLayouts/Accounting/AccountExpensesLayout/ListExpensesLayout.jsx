@@ -1,25 +1,19 @@
 import React from 'react'
-import ListExpenses from '../../../../Pages/Dashboard/AgentDashboard/Accounting/AccountExpenses/ListExpenses'
-import { useNavigate } from 'react-router-dom'
-import { FaArrowLeft } from 'react-icons/fa';
-import TitlePage from '../../../../Components/TitlePage';
+import TitlePage from '../../../../Components/TitlePage'
+import { ListExpensesPage } from '../../../../Pages/AllPages'
 
 const ListExpensesLayout = () => {
-    const navigate = useNavigate();
+  const [update, setUpdate] = useState(false)
   return (
     <>
-          <div className="flex gap-3">
- <button
-        onClick={() => navigate(-1)}
-        className=" top-2 text-mainColor text-2xl cursor-pointer hover:text-blue-500 transition-all"
-      >
-        <FaArrowLeft/>
-      </button>
- <TitlePage text={'List Expenses'} />
-   
- </div>
-    <ListExpenses/></>
+    <div className='flex justify-between items-center'>
+    <TitlePage text={'Expenses Table'} />
+    <Link to='add'>
+        <AddButton />
+      </Link>
+    </div>
+      <ListExpensesPage update={update} setUpdate={setUpdate}/>
+    </>
   )
 }
-
-export default ListExpensesLayout
+export default ListExpensesLayout;

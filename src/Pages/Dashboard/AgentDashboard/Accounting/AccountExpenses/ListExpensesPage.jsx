@@ -8,23 +8,22 @@ import { usePost } from "../../../../../Hooks/usePostJson";
 import { useDelete } from "../../../../../Hooks/useDelete";
 import { useAuth } from "../../../../../Context/Auth";
 import StaticLoader from "../../../../../Components/StaticLoader";
-import axios from "axios";
 
-const ListRevenue = () => {
-  const { refetch: refetchListRevenue, loading: loadingListRevenue, data: DataListRevenue } = useGet({
-    url: `https://travelta.online/agent/accounting/revenue`,
+const ListExpensesPage = () => {
+  const { refetch: refetchListExpenses, loading: loadingListExpenses, data: DataListExpenses } = useGet({
+    url: `https://travelta.online/agent/accounting/expenses`,
   });
 
   const { refetch: refetchList, loading: loadingList, data: DataList } = useGet({
-    url: `https://travelta.online/agent/accounting/revenue/lists`,
+    url: `https://travelta.online/agent/accounting/expenses/lists`,
   });
-   const { postData: postRevenue ,loadingPost,response } = usePost({ url: `https://travelta.online/agent/accounting/revenue/add` });
-   const { postData: postFilter ,loadingPost:loadingFilter,response:resFilter } = usePost({ url: `https://travelta.online/agent/accounting/revenue/filter` });
+   const { postData: postexpenses ,loadingPost,response } = usePost({ url: `https://travelta.online/agent/accounting/expenses/add` });
+   const { postData: postFilter ,loadingPost:loadingFilter,response:resFilter } = usePost({ url: `https://travelta.online/agent/accounting/expenses/filter` });
   const [list,setList] = useState([])
-  const [revenue, setRevenue] = useState([]);
+  const [expenses, setExpenses] = useState([]);
   const [openAdd, setOpenAdd] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
-  const [selectedRevenue, setSelectedRevenue] = useState(null);
+  const [selectedExpense, setSelectedExpense] = useState(null);
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [financialAccount, setFinancialAccount] = useState('');
@@ -49,16 +48,15 @@ const ListRevenue = () => {
 
 
   useEffect(() => {
-    refetchListRevenue();
+    refetchListExpenses();
     refetchList();
-  }, [refetchListRevenue,refetchList]);
+  }, [refetchListExpenses,refetchList]);
 
   useEffect(() => {
-    if (DataListRevenue) {
-      setRevenue(DataListRevenue.revenue);
+    if (DataListExpenses) {
+      setExpenses(DataListExpenses.expenses);
     }
-    console.log("data",DataListRevenue)
-  }, [DataListRevenue]);
+  }, [DataListExpenses]);
 
   useEffect(() => {
     if (DataList) {
@@ -74,17 +72,17 @@ const ListRevenue = () => {
   const handleOpenAdd = () => setOpenAdd(true);
   const handleCloseAdd = () => setOpenAdd(false);
 
-  const handleOpenUpdate = (Revenue) => {
-    setSelectedRevenue(Revenue);
+  const handleOpenUpdate = (expense) => {
+    setSelectedExpense(expense);
     setOpenUpdate(true);
   };
   const handleCloseUpdate = () => setOpenUpdate(false);
 
   const handleUpdateChange = (e) => {
-    setSelectedRevenue({ ...selectedRevenue, [e.target.name]: e.target.value });
+    setSelectedExpense({ ...selectedExpense, [e.target.name]: e.target.value });
   };
 
-  const AddRevenue = async (e) => {
+  const AddExpenses = async (e) => {
     e.preventDefault();
 
     const formData= new FormData()
@@ -95,7 +93,7 @@ const ListRevenue = () => {
     formData.append("date",date)
     formData.append("amount",amount);
     formData.append("description",description)
-    postRevenue(formData, "data added successful")
+    postexpenses(formData, "data added successful")
     .then(() => {
       // Close the popup
       setOpenAdd(false);
@@ -108,34 +106,33 @@ const ListRevenue = () => {
        setAmount('');
        setCurrency('');
        setDescription('');
-       refetchListRevenue();
       
    
     })
   };
-  const handleUpdateRevenue = async () => {
+  const handleUpdateExpense = async () => {
     try {
       // Prepare the updated expense object
-      const updatedRevenue = {
-        title: selectedRevenue.title,
-        category_id: selectedRevenue.category?.id, // category id
-        financiale_id: selectedRevenue.financiale?.id, // financial account id
-        date: selectedRevenue.date,
-        amount: selectedRevenue.amount,
-        currency_id: selectedRevenue.currency?.id, // currency id
-        description: selectedRevenue.description,
+      const updatedExpense = {
+        title: selectedExpense.title,
+        category_id: selectedExpense.category?.id, // category id
+        financiale_id: selectedExpense.financiale?.id, // financial account id
+        date: selectedExpense.date,
+        amount: selectedExpense.amount,
+        currency_id: selectedExpense.currency?.id, // currency id
+        description: selectedExpense.description,
       };
   
       // Send PUT request to update the expense
       const response = await fetch(
-        `https://travelta.online/agent/accounting/revenue/update/${selectedRevenue.id}`, // dynamic endpoint with expense id
+        `https://travelta.online/agent/accounting/expenses/update/${selectedExpense.id}`, // dynamic endpoint with expense id
         {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json', // Specify content type
             'Authorization': `Bearer ${auth.user?.token || ''}`, // Include authorization token
           },
-          body: JSON.stringify(updatedRevenue), // Pass the updated Revenue as JSON in the body
+          body: JSON.stringify(updatedExpense), // Pass the updated expense as JSON in the body
         }
       );
   
@@ -144,7 +141,7 @@ const ListRevenue = () => {
         // Success! Update was successful
         auth.toastSuccess('Expense updated successfully');
         // Close the update form or perform any other actions
-        refetchListRevenue()
+        refetchListExpenses()
         handleCloseUpdate();
       } else {
         // If the response is not ok, throw an error
@@ -163,11 +160,11 @@ const ListRevenue = () => {
 
   const handleDelete = async (id) => {
     const success = await deleteData(
-      `https://travelta.online/agent/accounting/revenue/delete/${id}`,
+      `https://travelta.online/agent/accounting/expenses/delete/${id}`,
       `Category Deleted Successfully.`
     );
     if (success) {
-        setRevenue(revenue.filter((item) => item.id !== id));
+        setExpenses(expenses.filter((item) => item.id !== id));
     }
   };
 
@@ -179,8 +176,8 @@ const ListRevenue = () => {
   
       const response = await postFilter(formData, "filtered successfully"); // Await the API call
   
-      if (resFilter?.data?.revenue !== undefined) {
-        setRevenue(resFilter.data.revenue); // Update the table with filtered data
+      if (resFilter?.data?.expenses !== undefined) {
+        setExpenses(resFilter.data.expenses); // Update the table with filtered data
       } else {
         console.error("Revenue data is missing in the response");
       }
@@ -190,10 +187,8 @@ const ListRevenue = () => {
       console.error("Error fetching filtered data:", error);
     }
   };
-  
-  
 
-  if(loadingListRevenue){
+  if(loadingListExpenses){
     return <StaticLoader/>
   }
 
@@ -201,110 +196,96 @@ const ListRevenue = () => {
   return (
     <div className="p-5">
      <div className="flex justify-between mb-4">
-          {/* Filter Button */}
-      <button
-        className="bg-blue-500 text-white px-4 py-2 rounded flex items-center gap-2"
-        onClick={() => setShowFilter(true)}
-      >
-        <FaFilter /> Filter
-      </button>
+               <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded flex items-center gap-2"
+                  onClick={() => setShowFilter(true)}
+                >
+                  <FaFilter /> Filter
+                </button>
            <button
              className="bg-green-500 text-white px-4 py-2 rounded flex items-center gap-2"
              onClick={() => setOpenAdd(true)}
            >
-             <FaPlus /> Add New Revenue
+             <FaPlus /> Add New Expenses
            </button>
          </div>
 
     {/* Add New Expense Form Popup */}
-    {openAdd && (
+{openAdd && (
   <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
     <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-      <h3 className="text-xl font-semibold mb-4">Add New Revenue</h3>
-
+      <h3 className="text-xl font-semibold mb-4">Add New Expense</h3>
       <TextField
         label="Title"
         name="title"
         fullWidth
         margin="normal"
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={(e)=>setTitle(e.target.value)}
       />
-
-      {/* Two in Row - Category & Financial Account */}
-      <div className="flex gap-4">
-        <TextField
-          select
-          fullWidth
-          label="Select Category"
-          value={category}
-          margin="normal"
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          {list?.categories.map((category) => (
-            <MenuItem key={category.id} value={category.id}>
-              {category.name}
-            </MenuItem>
-          ))}
-        </TextField>
-
-        <TextField
-          select
-          fullWidth
-          label="Select Financial Account"
-          value={financialAccount}
-          margin="normal"
-          onChange={(e) => setFinancialAccount(e.target.value)}
-        >
-          {list?.finantiols.map((fin) => (
-            <MenuItem key={fin.id} value={fin.id}>
-              {fin.name}
-            </MenuItem>
-          ))}
-        </TextField>
-      </div>
-
-      {/* Two in Row - Date & Amount */}
-      <div className="flex gap-4">
-        <TextField
-          type="date"
-          name="date"
-          fullWidth
-          margin="normal"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
-        <TextField
-          label="Amount"
-          type="number"
-          name="amount"
-          fullWidth
-          margin="normal"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          inputProps={{
-            min: "0",
-          }}
-        />
-      </div>
-
-      {/* Currency Dropdown */}
+      <div className="grid grid-cols-2 gap-4">    <TextField
+              select
+              fullWidth
+              label="Select Category"
+              value={category}
+              margin="normal"
+              onChange={(e)=>setCategory(e.target.value)}
+            >
+              {list?.categories.map((category) => (
+                <MenuItem key={category.id} value={category.id}>
+                  {category.name}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              select
+              fullWidth
+              label="Select finantiols "
+              value={financialAccount}
+              margin="normal"
+              onChange={(e)=>setFinancialAccount(e.target.value)}
+            >
+              {list?.finantiols.map((fin) => (
+                <MenuItem key={fin.id} value={fin.id}>
+                  {fin.name}
+                </MenuItem>
+              ))}
+            </TextField></div>
+    
       <TextField
-        select
+        type="date"
+        name="date"
         fullWidth
-        label="Select Currency"
-        value={currency}
         margin="normal"
-        onChange={(e) => setCurrency(e.target.value)}
-      >
-        {list?.currencies.map((currency) => (
-          <MenuItem key={currency.id} value={currency.id}>
-            {currency.name}
-          </MenuItem>
-        ))}
-      </TextField>
-
-      {/* Description Field */}
+        value={date}
+        onChange={(e)=>setDate(e.target.value)}
+      />
+      <TextField
+        label="Amount"
+        type="number"
+        name="amount"
+        fullWidth
+        margin="normal"
+        value={amount}
+        onChange={(e)=>setAmount(e.target.value)}
+        inputProps={{
+          min: "0", // Set the minimum value for the number input
+}}
+      />
+        <TextField
+              select
+              fullWidth
+              label="Select Currency "
+              value={currency}
+              margin="normal"
+              onChange={(e)=>setCurrency(e.target.value)}
+            >
+              {list?.currencies.map((fin) => (
+                <MenuItem key={fin.id} value={fin.id}>
+                  {fin.name}
+                </MenuItem>
+              ))}
+            </TextField>
       <TextField
         label="Description"
         name="description"
@@ -313,13 +294,11 @@ const ListRevenue = () => {
         multiline
         rows={3}
         value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        onChange={(e)=>setDescription(e.target.value)}
       />
-
-      {/* Buttons */}
       <div className="flex justify-between mt-4">
-        <Button onClick={AddRevenue} variant="contained" color="primary">
-          Add Revenue
+        <Button onClick={AddExpenses} variant="contained" color="primary">
+          Add Expense
         </Button>
         <Button onClick={handleCloseAdd} color="secondary">
           Cancel
@@ -329,56 +308,38 @@ const ListRevenue = () => {
   </div>
 )}
 
-
-{/* Update Revenue Form Popup */}
-{openUpdate && selectedRevenue && (
+{/* Update Expense Form Popup */}
+{openUpdate && selectedExpense && (
   <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
     <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-      <h3 className="text-xl font-semibold mb-4">Update Revenue</h3>
+      <h3 className="text-xl font-semibold mb-4">Update Expense</h3>
 
-      {/* Two Fields in a Row */}
-      <div className="grid grid-cols-2 gap-4">
-        <TextField
-          label="Title"
-          name="title"
-          fullWidth
-          margin="normal"
-          value={selectedRevenue.title}
-          onChange={(e) =>
-            setSelectedRevenue((prevRevenue) => ({
-              ...prevRevenue,
-              title: e.target.value,
-            }))
-          }
-        />
-
-        <TextField
-          type="date"
-          name="date"
-          fullWidth
-          margin="normal"
-          value={selectedRevenue.date}
-          onChange={(e) =>
-            setSelectedRevenue((prevRevenue) => ({
-              ...prevRevenue,
-              date: e.target.value,
-            }))
-          }
-        />
-      </div>
-
-      {/* Single Column Fields */}
+      
+      <TextField
+        label="Title"
+        name="title"
+        fullWidth
+        margin="normal"
+        value={selectedExpense.title}
+        onChange={(e) =>
+          setSelectedExpense((prevExpense) => ({
+            ...prevExpense,
+            title: e.target.value,
+          }))
+        }
+      />
+<div className="grid grid-cols-2 gap-4">      {/* Category dropdown */}
       <TextField
         select
         label="Category"
         name="category"
         fullWidth
         margin="normal"
-        value={selectedRevenue.category?.id || ""}
+        value={selectedExpense.category?.id || ""}
         onChange={(e) =>
-          setSelectedRevenue((prevRevenue) => ({
-            ...prevRevenue,
-            category: { ...prevRevenue.category, id: e.target.value },
+          setSelectedExpense((prevExpense) => ({
+            ...prevExpense,
+            category: { ...prevExpense.category, id: e.target.value },
           }))
         }
       >
@@ -393,17 +354,18 @@ const ListRevenue = () => {
         )}
       </TextField>
 
+      {/* Financial Account dropdown */}
       <TextField
         select
         label="Financial Account"
         name="financialAccount"
         fullWidth
         margin="normal"
-        value={selectedRevenue.financiale?.id || ""}
+        value={selectedExpense.financiale?.id || ""}
         onChange={(e) =>
-          setSelectedRevenue((prevRevenue) => ({
-            ...prevRevenue,
-            financiale: { ...prevRevenue.financiale, id: e.target.value },
+          setSelectedExpense((prevExpense) => ({
+            ...prevExpense,
+            financiale: { ...prevExpense.financiale, id: e.target.value },
           }))
         }
       >
@@ -416,35 +378,51 @@ const ListRevenue = () => {
         ) : (
           <MenuItem value="" disabled>No financial accounts available</MenuItem>
         )}
-      </TextField>
+      </TextField></div>
 
+
+      <TextField
+        type="date"
+        name="date"
+        fullWidth
+        margin="normal"
+        value={selectedExpense.date}
+        onChange={(e) =>
+          setSelectedExpense((prevExpense) => ({
+            ...prevExpense,
+            date: e.target.value,
+          }))
+        }
+      />
+      
       <TextField
         label="Amount"
         type="number"
         name="amount"
         fullWidth
         margin="normal"
-        value={selectedRevenue.amount}
+        value={selectedExpense.amount}
         onChange={(e) =>
-          setSelectedRevenue((prevRevenue) => ({
-            ...prevRevenue,
+          setSelectedExpense((prevExpense) => ({
+            ...prevExpense,
             amount: e.target.value,
           }))
         }
         inputProps={{
-          min: "0",
-        }}
+          min: "0", // Set the minimum value for the number input
+}}
       />
-
+      
+      {/* Currency dropdown */}
       <TextField
         select
         fullWidth
         label="Select Currency"
-        value={selectedRevenue.currency?.id || ""}
+        value={selectedExpense.currency?.id || ""}
         onChange={(e) =>
-          setSelectedRevenue((prevRevenue) => ({
-            ...prevRevenue,
-            currency: { ...prevRevenue.currency, id: e.target.value },
+          setSelectedExpense((prevExpense) => ({
+            ...prevExpense,
+            currency: { ...prevExpense.currency, id: e.target.value },
           }))
         }
         margin="normal"
@@ -468,17 +446,17 @@ const ListRevenue = () => {
         margin="normal"
         multiline
         rows={3}
-        value={selectedRevenue.description}
+        value={selectedExpense.description}
         onChange={(e) =>
-          setSelectedRevenue((prevRevenue) => ({
-            ...prevRevenue,
+          setSelectedExpense((prevExpense) => ({
+            ...prevExpense,
             description: e.target.value,
           }))
         }
       />
 
       <div className="flex justify-between mt-4">
-        <Button onClick={handleUpdateRevenue} variant="contained" color="primary">
+        <Button onClick={handleUpdateExpense} variant="contained" color="primary">
           Update Expense
         </Button>
         <Button onClick={handleCloseUpdate} color="secondary">
@@ -489,8 +467,8 @@ const ListRevenue = () => {
   </div>
 )}
 
-      {/* Filter Popup */}
-      {showFilter && (
+     {/* Filter Popup */}
+     {showFilter && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h3 className="text-xl font-semibold mb-4">Filter Revenue</h3>
@@ -536,7 +514,6 @@ const ListRevenue = () => {
 
 
 
-
       {/* Expense Table */}
       <div className="overflow-x-auto">
         <table className="w-full bg-white border rounded-lg shadow-md">
@@ -553,7 +530,7 @@ const ListRevenue = () => {
     </tr>
   </thead>
   <tbody>
-    {revenue.map((expense, index) => (
+    {expenses.map((expense, index) => (
       <tr key={expense.id} className={`text-center ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-gray-100 transition duration-200`}>
         <td className="p-4 border-b text-sm">{expense.id}</td>
         <td className="p-4 border-b text-sm">{expense.title}</td>
@@ -562,19 +539,19 @@ const ListRevenue = () => {
         <td className="p-4 border-b text-sm">{expense.category.name}</td>
         <td className="p-4 border-b text-sm">{expense.currency.name}</td>
         <td className="p-4 border-b text-sm flex items-center justify-center">
-          <img src={expense.financial.logo_link} alt={expense.financial.name} className="w-8 h-8 object-cover mr-2" />
-          {expense.financial.name}
+          <img src={expense.financial?.logo_link} alt={expense.financial?.name} className="w-8 h-8 object-cover mr-2" />
+          {expense.financial?.name}
         </td>
-        <td className="p-4 border-b text-sm">
-          <div className="flex justify-center space-x-2">
-            <button onClick={() => handleOpenUpdate(expense)} className="text-left p-2 hover:bg-gray-100 text-mainColor flex items-center gap-2">
-              <FaEdit />
-            </button>
-            <button onClick={() => handleDelete(expense.id)} className="text-left p-2 hover:bg-red-100 flex items-center gap-2 text-red-500">
-              <FaTrashCan />
-            </button>
-          </div>
-        </td>
+       <td className="p-4 border-b text-sm">
+               <div className="flex justify-center space-x-2">
+                 <button onClick={() => handleOpenUpdate(expense)} className="text-left p-2 hover:bg-gray-100 text-mainColor flex items-center gap-2">
+                   <FaEdit />
+                 </button>
+                 <button onClick={() => handleDelete(expense.id)} className="text-left p-2 hover:bg-red-100 flex items-center gap-2 text-red-500">
+                   <FaTrashCan />
+                 </button>
+               </div>
+             </td>
       </tr>
     ))}
   </tbody>
@@ -584,4 +561,4 @@ const ListRevenue = () => {
   );
 };
 
-export default ListRevenue;
+export default ListExpensesPage;
