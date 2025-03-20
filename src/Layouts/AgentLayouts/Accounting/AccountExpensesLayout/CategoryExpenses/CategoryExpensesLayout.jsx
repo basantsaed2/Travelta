@@ -9,7 +9,7 @@ const CategoryExpensesLayout = () => {
   return (
     <>
     <div className='flex justify-between items-center'>
-    <TitlePage text={'Expenses Table'} />
+    <TitlePage text={'Expenses Categories'} />
     <Link to='add'>
         <AddButton />
       </Link>

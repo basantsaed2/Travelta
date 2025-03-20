@@ -9,7 +9,7 @@ import SignUpAffilate from "./Pages/Authentication/SignUpAffilate"
 import Login from "./Pages/Authentication/Login";
 import AgentLayout from "./Layouts/AgentLayouts/AgentLayout";
 import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";  
-import {AddAdminAccountLayout, AddAgentLayout, AddCurrencyLayout, AddDepartmentLayout, AddEmployeeLayout, AddFinancialAccountLayout, AddGroupLayout, AddLeadLayout, AddPositionLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddTaxLayout, AddTourLayout, AddWalletLayout, AdminAccountLayout, BookingPaymentLayout, CartLayout, CheckoutLayout, CurrencyAgentLayout, CurrentBookingLayout, CustomersLayout , DepartmentLayout, EditAdminAccountLayout, EditAgentLayout, EditCurrencyLayout, EditDepartmentLayout, EditEmployeeLayout, EditFinancialAccountLayout, EditGroupLayout, EditPositionLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, EditTaxLayout, EditTourLayout, EmployeeLayout, FinancialAccountLayout, GroupLayout, HotelBookingDetailsLayout, InvoiceAgentLayout, LeadLayout, LedgerLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, PositionLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, TaxLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
+import {AddAdminAccountLayout, AddAgentLayout, AddCategoryExpensesLayout, AddCategoryRevenueLayout, AddCurrencyLayout, AddDepartmentLayout, AddEmployeeLayout, AddFinancialAccountLayout, AddGroupLayout, AddLeadLayout, AddPositionLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddTaxLayout, AddTourLayout, AddWalletLayout, AdminAccountLayout, BookingPaymentLayout, CartLayout, CategoryExpensesLayout, CategoryRevenueLayout, CheckoutLayout, CurrencyAgentLayout, CurrentBookingLayout, CustomersLayout , DepartmentLayout, EditAdminAccountLayout, EditAgentLayout, EditCategoryExpensesLayout, EditCategoryRevenueLayout, EditCurrencyLayout, EditDepartmentLayout, EditEmployeeLayout, EditFinancialAccountLayout, EditGroupLayout, EditPositionLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, EditTaxLayout, EditTourLayout, EmployeeLayout, FinancialAccountLayout, GroupLayout, HotelBookingDetailsLayout, InvoiceAgentLayout, LeadLayout, LedgerLayout, ListExpensesLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, PositionLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, TaxLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
 import { LandingPage } from "./Pages/AllPages";
 import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 import ComingSoon from "./Pages/Dashboard/AgentDashboard/Accounting/ComingSoon";
@@ -109,10 +109,6 @@ import DetailsTransactionLayout from "./Layouts/AgentLayouts/Users/Suppliers/Det
 import AccountSupplierLayout from "./Layouts/AgentLayouts/Accounting/AccountSupplierLayout";
 import TransactionAccountLayout from "./Layouts/AgentLayouts/Accounting/TransactionAccountLayout";
 import InvoiceAccountLayout from "./Layouts/AgentLayouts/Accounting/InvoiceAccountLayout";
-import CategoryExpenses from "./Layouts/AgentLayouts/Accounting/AccountExpensesLayout/CategoryExpensesLayout";
-import CategoryExpensesLayout from "./Layouts/AgentLayouts/Accounting/AccountExpensesLayout/CategoryExpensesLayout";
-import ListExpensesLayout from "./Layouts/AgentLayouts/Accounting/AccountExpensesLayout/ListExpensesLayout";
-import ExpensesLayout from "./Layouts/AgentLayouts/Accounting/AccountExpensesLayout/ExpensesLayout";
 import PayableToSupplierLayout from "./Layouts/AgentLayouts/Accounting/PayableToSupplierLayout/PayableToSupplierLayout";
 import PaidSupplierLayout from "./Layouts/AgentLayouts/Accounting/PayableToSupplierLayout/PaidSupplierLayout";
 import OverDueLayout from "./Layouts/AgentLayouts/Accounting/PayableToSupplierLayout/OverDueLayout";
@@ -121,8 +117,6 @@ import OwnerLayout from "./Layouts/AgentLayouts/Accounting/OwnerTransaction/Owne
 import TransactionLayoutO from "./Layouts/AgentLayouts/Accounting/OwnerTransaction/TransactionLayoutO";
 import PaymentRecivableLayout from "./Layouts/AgentLayouts/Accounting/PaymentRecivableLayout/PaymentRecivableLayout";
 import ListRevenueLayout from "./Layouts/AgentLayouts/Accounting/AccountRevenueLayout/ListRevenueLayout";
-import CategoryRevenueLayout from "./Layouts/AgentLayouts/Accounting/AccountRevenueLayout/CategoryRevenueLayout";
-import RevenueLayout from "./Layouts/AgentLayouts/Accounting/AccountRevenueLayout/RevenueLayout";
 import AgentHRMLayout from "./Layouts/AgentLayouts/HRM/Agent/AgentHRMLayout";
 
 
@@ -463,6 +457,16 @@ const AppHRMEmployee=() => (
   <Outlet />
   </>
 );
+const AppCategoryRevenueLayout =() => (
+  <>
+  <Outlet />
+  </>
+);
+const AppCategoryExpensesLayout=() => (
+  <>
+  <Outlet />
+  </>
+);
 export const router = createBrowserRouter([
 
     {
@@ -535,94 +539,115 @@ export const router = createBrowserRouter([
                     path:"",
                     element: <ComingSoon/>
                   },
-                  {
-                    path:"account_supplier",
-                    element: <AccountSupplierLayout/>
-                  },
-                  {
-                    path:"account_transaction/:id",
-                    element: <TransactionAccountLayout/>
-                  },
-                  {
-                    path:"account_invoice",
-                    element: <InvoiceAccountLayout/>
-                  },
-                 {
-                  path:"expenses",
-                  element:<AppExpenses/>,
-                  children:[
-                    {
-                      path:"",
-                      element:<ExpensesLayout/>,
-                    },
-                    {
-                      path:"category_account",
-                      element:<CategoryExpensesLayout/>,
-                    },
-                    {
-                      path:"list_expenses",
-                      element:<ListExpensesLayout/>,
-                    }
-                  ]
-                  },
-                  {path:"revenue",
-                        element:<AppRevenue/>,
-                        children:[
-                          {
-                            path:"",
-                            element:<RevenueLayout/>,
-                          },
-                          {
-                            path:"list_revenue",
-                            element:<ListRevenueLayout/>,
-                          },
-                          {
-                            path:"category_revenue",
-                            element:<CategoryRevenueLayout/>,
-                          },
-                  ]},
-                  {path:"payable_to_supplier",
-                        element:<AppPayable/>,
-                        children:[
-                          {
-                            path:"payable_supplier",
-                            element:<PayableToSupplierLayout/>,
-                          },
-                          {
-                            path:"paid_supplier",
-                            element:<PaidSupplierLayout/>,
-                          },
-                          {
-                            path:"over_due",
-                            element:<OverDueLayout/>,
-                          }
-                  ]},
-                  {path:"owner_transaction",
-                      element:<AppOwnerTransaction/>,
-                      children:[
-                        {
-                          path:"owner",
-                          element:<OwnerLayout/>,
-                        },
-                        {
-                          path:"transaction",
-                          element:<TransactionLayoutO/>,
-                        },
-                  ]},
-                  {path:"payment_recivable",
-                    element:<AppPaymentRecivable/>,
-                    children:[
-                      {
-                        path:"recivable",
-                        element:<PaymentRecivableLayout/>,
-                      },
-                  ]},
+                  // {
+                  //   path:"account_supplier",
+                  //   element: <AccountSupplierLayout/>
+                  // },
+                  // {
+                  //   path:"account_transaction/:id",
+                  //   element: <TransactionAccountLayout/>
+                  // },
 
                   {
                     path:"ledger",
                     element: <LedgerLayout/>
                   },
+                  {
+                    path:"payment_recivable",
+                    element:<PaymentRecivableLayout/>,
+                  },
+                  {path:"owner_transaction",
+                    element:<AppOwnerTransaction/>,
+                    children:[
+                      {
+                        path:"owner",
+                        element:<OwnerLayout/>,
+                      },
+                      {
+                        path:"transaction",
+                        element:<TransactionLayoutO/>,
+                      },
+                  ]},
 
+                  {path:"payable_to_supplier",
+                    element:<AppPayable/>,
+                    children:[
+                      {
+                        path:"payable_supplier",
+                        element:<PayableToSupplierLayout/>,
+                      },
+                      {
+                        path:"paid_supplier",
+                        element:<PaidSupplierLayout/>,
+                      },
+                      {
+                        path:"over_due",
+                        element:<OverDueLayout/>,
+                      }
+                  ]},
+
+                  {
+                    path:"revenue",
+                    element:<AppRevenue/>,
+                    children:[
+                      {
+                        path:"list_revenue",
+                        element:<ListRevenueLayout/>,
+                      },
+                      {
+                        path:"category_revenue",
+                        element:<AppCategoryRevenueLayout/>,
+                        children :[
+                          {
+                            path:"",
+                            element:<CategoryRevenueLayout/>,
+                          },
+                          {
+                            path:"add",
+                            element:<AddCategoryRevenueLayout/>,
+                          },
+                          {
+                            path:"edit/:categoryRevenueId",
+                            element:<EditCategoryRevenueLayout/>,
+                          },
+                        ]
+                      }             
+                  ]},
+                  {
+                    path:"expenses",
+                    element:<AppExpenses/>,
+                    children:[
+                      {
+                        path:"category_expenses",
+                        element:<AppCategoryExpensesLayout/>,
+                        children :[
+                          {
+                            path:"",
+                            element:<CategoryExpensesLayout/>,
+                          },
+                          {
+                            path:"add",
+                            element:<AddCategoryExpensesLayout/>,
+                          },
+                          {
+                            path:"edit/:categoryExpensesId",
+                            element:<EditCategoryExpensesLayout/>,
+                          },
+                        ]
+                      },
+                      {
+                        path:"list_expenses",
+                        element:<ListExpensesLayout/>,
+                      }
+                    ]
+                  },
+             
+
+
+                  {
+                    path:"account_invoice",
+                    element: <InvoiceAccountLayout/>
+                  },
                 ]
               },
    
@@ -970,7 +995,7 @@ export const router = createBrowserRouter([
                     ]
                   },
                   {
-                    path: "agency",
+                    path: "agent",
                     element: <AppHRMagency/>,
                     children:[
                         {
