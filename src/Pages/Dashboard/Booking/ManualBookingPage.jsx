@@ -1,38 +1,26 @@
-import React, { useState, useEffect } from "react";
-import {
-  TextField,
-  MenuItem,
-  Switch,
-  selectClasses,
-  Button,
-  Checkbox,
-  ListItemText,
-} from "@mui/material";
+import React, { useState, useEffect} from "react";
+import {TextField,MenuItem,Switch,Button,Checkbox,Autocomplete,CircularProgress} from "@mui/material";
 import { useGet } from "../../../Hooks/useGet";
 import { usePost } from "../../../Hooks/usePostJson";
 import { useAuth } from "../../../Context/Auth";
-import axios from "axios";
 import { MdAttachMoney } from "react-icons/md";
 import { FiPercent } from "react-icons/fi";
 import { AddSupplierPage } from "../../AllPages";
+import { AddLeadPage } from "../../AllPages";
 import { Link, useNavigate } from 'react-router-dom';
-import {AddSupplierLayout}  from "../../../Layouts/AllLayouts";
+import VisaServicePage from "./Services/VisaServicePage";
+import FlightServicePage from "./Services/FlightServicePage";
+import HotelServicePage from "./Services/HotelServicePage";
+import BusServicePage from "./Services/BusServicePage";
+import TourServicePage from "./Services/TourServicePage";
 const ManualBooking = () => {
-  const {
-    refetch: refetchBookingList,
-    loading: loadingBookingList,
-    data: bookingListData,
-  } = useGet({ url: "https://travelta.online/agent/manual_booking/lists" });
-  const {
-    refetch: refetchSuppliers,
-    loading: loadingSuppliers,
-    data: suppliersData,
-  } = useGet({
-    url: "https://travelta.online/agent/manual_booking/supplier_customer",
-  });
-  const { postData, loadingPost, response } = usePost({
-    url: "https://travelta.online/agent/manual_booking/cart",
-  });
+  const {refetch: refetchBookingList,loading: loadingBookingList,data: bookingListData,} = useGet({ url: "https://travelta.online/agent/manual_booking/lists" });
+  const {refetch: refetchSuppliers,loading: loadingSuppliers,data: suppliersData,} = useGet({url: "https://travelta.online/agent/manual_booking/supplier_customer",});
+  const { postData, loadingPost, response } = usePost({url: "https://travelta.online/agent/manual_booking/cart",});
+  const [selectedService, setSelectedService] = useState(""); // Selected service
+  const {postData:postCustomerServices,loading:loadingPostCustomerServices,response:responseCustomerServicesData,} = usePost({url:`https://travelta.online/agent/manual_booking/service_supplier`});
+  const [selectedCountry, setSelectedCountry] = useState(""); // Selected service
+  const {postData: postTaxes,loading: loadingPostTaxes,response:responseTaxesData,} = usePost({url:`https://travelta.online/agent/manual_booking/taxes`});
   const auth = useAuth();
   const navigate = useNavigate();   
 
@@ -41,20 +29,12 @@ const ManualBooking = () => {
   const [customers, setCustomers] = useState([]);
   const [secondMenuData, setSecondMenuData] = useState([]); // Data for the second dropdown
   const [category, setCategory] = useState(""); // To track B2B or B2C
-  // const [ValueBus, setValueBus] = useState(""); // To track Bus or Flight
-  const [selectedToSupplier, setSelectedToSupplier] = useState(""); // To track the selected supplier or customer
+  const [selectedToSupplier, setSelectedToSupplier] = useState(null); // To track the selected supplier or customer
   const [bookingList, setBookingList] = useState([]);
   const [update, setUpdate] = useState(false);
-
-  const [selectedService, setSelectedService] = useState(""); // Selected service
-  const {postData:postCustomerServices,loading:loadingPostCustomerServices,response:responseCustomerServicesData,} = usePost({url:`https://travelta.online/agent/manual_booking/service_supplier`});
-
-  const [selectedCountry, setSelectedCountry] = useState(""); // Selected service
-  const {postData: postTaxes,loading: loadingPostTaxes,response:responseTaxesData,} = usePost({url:`https://travelta.online/agent/manual_booking/taxes`});
-
   const [title, setTitle] = useState([]);
   const [selectedTitle, setSelectedTitle] = useState("");
-
+  const [visibleSection, setVisibleSection] = useState("");
   const [details, setDetails] = useState({
     flight: false,
     bus: false,
@@ -63,475 +43,115 @@ const ManualBooking = () => {
     tour: false,
   });
 
-  const [visibleSection, setVisibleSection] = useState("");
-
-  // This function will toggle the section visibility
-  const toggleSection = (section) => {
-    setVisibleSection(visibleSection === section ? "" : section);
-  };
-
   // From Data
-  const [services, setServices] = useState([]);
-  const [customerServices, setCustomerServices] = useState([]);
-  const [selectedFromSupplier, setSelectedFromSupplier] = useState(""); // To track the selected supplier or customer
-  const [cost, setCost] = useState(""); // To track the selected supplier or customer
-  const [price, setPrice] = useState(0); // To track the selected supplier or customer
-  const [totalPrice, setTotalPrice] = useState(""); // To track the selected supplier or customer
-  const [isMarkupPercentage, setIsMarkupPercentage] = useState(1); // 1 for %, 0 for $
-  const [markupValue, setMarkupValue] = useState(""); // 1 for %, 0 for $
-  const [selectedTaxType, setSelectedTaxType] = useState("");
-  const [selectedTaxAmount, setSelectedTaxAmount] = useState("");
-  const taxesType = [
-    { value: "include", label: "Include Tax" },
-    { value: "exclude", label: "Exclude Tax" },
-  ];
-  const [cities, setCities] = useState([]);
-  const [selectedCity, setSelectedCity] = useState([]);
-  const [currencies, setCurrencies] = useState([]);
-  const [selectedCurrency, setSelectedCurrency] = useState([]);
-  const [taxes, setTaxes] = useState([]);
-  const [countries, setCountries] = useState([]);
-  const [selectedTaxId, setSelectedTaxId] = useState([]);
-  const [specialRequest, setSpecialRequest] = useState("");
-  const [agents, setAgents] = useState([]);
-  const [selectAgent, setSelectAgent] = useState('');
+    const [services, setServices] = useState([]);
+    const [customerServices, setCustomerServices] = useState([]);
+    const [selectedFromSupplier, setSelectedFromSupplier] = useState("");
+    const [cost, setCost] = useState(""); 
+    const [price, setPrice] = useState(0);
+    const [totalPrice, setTotalPrice] = useState(""); 
+    const [isMarkupPercentage, setIsMarkupPercentage] = useState(1); // 1 for %, 0 for $
+    const [markupValue, setMarkupValue] = useState(""); // 1 for %, 0 for $
+    const [selectedTaxType, setSelectedTaxType] = useState("");
+    const [selectedTaxAmount, setSelectedTaxAmount] = useState("");
+    const taxesType = [
+      { value: "include", label: "Include Tax" },
+      { value: "exclude", label: "Exclude Tax" },
+    ];
+    const [cities, setCities] = useState([]);
+    const [selectedCity, setSelectedCity] = useState([]);
+    const [currencies, setCurrencies] = useState([]);
+    const [selectedCurrency, setSelectedCurrency] = useState([]);
+    const [taxes, setTaxes] = useState([]);
+    const [countries, setCountries] = useState([]);
+    const [selectedTaxId, setSelectedTaxId] = useState([]);
+    const [specialRequest, setSpecialRequest] = useState("");
+    const [agents, setAgents] = useState([]);
+    const [selectAgent, setSelectAgent] = useState('');
 
-  const handleSwitchChange = () => {
-    setIsMarkupPercentage((prev) => (prev === 1 ? 0 : 1)); // Toggle between 1 and 0
-  };
-
-  const handleAddSupplier = (newSupplier) => {
-    setSuppliers((prevSuppliers) => [...prevSuppliers, newSupplier]);
-    setShowPopup(false);
-  };
-
-  // To track the hotel details
-  const [hotelName, setHotelName] = useState("");
-  const [checkInDate, setCheckInDate] = useState("");
-  const [checkOutDate, setCheckOutDate] = useState("");
-  const [totalNights, setTotalNights] = useState("");
-  const [roomType, setRoomType] = useState("");
-  const [roomQuantity, setRoomQuantity] = useState("");
-  const [adultsHotelNumber, setAdultsHotelNumber] = useState(0);
-  const [childrenHotelNumber, setChildrenHotelNumber] = useState(0);
-  const [roomTypes, setRoomTypes] = useState([]); 
-
-  const [hotelAdults, setHotelAdults] = useState([]);
-  const [hotelChildren, setHotelChildren] = useState([]);
-
-  // Handle change in number of adults for hotel
-  const handleAdultsHotelNumberChange = (e) => {
-    const number = parseInt(e.target.value, 10) || 0;
-    setAdultsHotelNumber(number);
-
-    // Preserve existing data while adding/removing fields based on number of adults
-    setHotelAdults((prevAdults) => {
-      const updatedAdults = [...prevAdults];
-
-      // If the number of adults is more, add empty objects
-      while (updatedAdults.length < number) {
-        updatedAdults.push({ title: "", firstName: "", lastName: "" });
-      }
-
-      // If the number of adults is less, trim the excess fields
-      updatedAdults.length = number;
-
-      return updatedAdults;
-    });
-  };
-
-
-  // Handle change in number of children for hotel
-  const handleChildrenHotelNumberChange = (e) => {
-    const number = parseInt(e.target.value, 10) || 0;
-    setChildrenHotelNumber(number);
-
-    // Preserve existing data while adding/removing fields based on number of children
-    setHotelChildren((prevChildren) => {
-      const updatedChildren = [...prevChildren];
-
-      // If the number of children is more, add empty objects
-      while (updatedChildren.length < number) {
-        updatedChildren.push({ age: "", firstName: "", lastName: "" });
-      }
-
-      // If the number of children is less, trim the excess fields
-      updatedChildren.length = number;
-
-      return updatedChildren;
-    });
-  };
-
-  // Function to handle adult details change
-  const handleAdultHotelChange = (index, field, value) => {
-    const updatedAdults = [...hotelAdults];
-    updatedAdults[index][field] = value;
-    setHotelAdults(updatedAdults);
-  };
-
-  // Function to handle child details change
-  const handleChildHotelChange = (index, field, value) => {
-    const updatedChildren = [...hotelChildren];
-    updatedChildren[index][field] = value;
-    setHotelChildren(updatedChildren);
-  };
-
-  const handleQuantityChange = (e) => {
-    const quantity = Math.max(0, Number(e.target.value)); // Ensure quantity is non-negative
-    setRoomQuantity(quantity);
-
-    // Adjust the roomTypes array to match the quantity
-    const newRoomTypes = Array(quantity)
-      .fill('')
-      .map((_, idx) => roomTypes[idx] || ''); // Keep existing values if any
-    setRoomTypes(newRoomTypes);
-  };
-
-  const handleRoomTypeChange = (index, value) => {
-    const newRoomTypes = [...roomTypes];
-    newRoomTypes[index] = value; // Update the specific room type
-    setRoomTypes(newRoomTypes);
-  };
-
-  // To track the bus details
-  const [busFrom, setBusFrom] = useState("");
-  const [busTo, setBusTo] = useState("");
-  const [departure, setDeparture] = useState("");
-  const [arrival, setArrival] = useState("");
-  const [busAdultsNumber, setBusAdultsNumber] = useState(0);
-  const [busChildrenNumber, setBusChildrenNumber] = useState(0);
-  const [adultPrice, setAdultPrice] = useState("");
-  const [childPrice, setChildPrice] = useState("");
-  const [busName, setBusName] = useState("");
-  const [busNumber, setBusNumber] = useState("");
-  const [driverPhone, setDriverPhone] = useState("");
-
-  const [busAdults, setBusAdults] = useState([]);
-  const [busChildren, setBusChildren] = useState([]);
-
-  const handleBusAdultsNumberChange = (e) => {
-    const number = parseInt(e.target.value, 10) || 0;
-    setBusAdultsNumber(number);
-
-    // Preserve existing data while adding/removing fields based on the number of adults
-    setBusAdults((prevAdults) => {
-      const updatedAdults = [...prevAdults];
-
-      // Add empty objects if the number of adults is more
-      while (updatedAdults.length < number) {
-        updatedAdults.push({ selectedTitle: "", firstName: "", lastName: "" });
-      }
-
-      // Trim excess fields if the number of adults is less
-      updatedAdults.length = number;
-
-      return updatedAdults;
-    });
-  };
-
-  const handleBusChildrenNumberChange = (e) => {
-    const number = parseInt(e.target.value, 10) || 0;
-    setBusChildrenNumber(number);
-
-    // Preserve existing data while adding/removing fields based on the number of children
-    setBusChildren((prevChildren) => {
-      const updatedChildren = [...prevChildren];
-
-      // Add empty objects if the number of children is more
-      while (updatedChildren.length < number) {
-        updatedChildren.push({ age: "", firstName: "", lastName: "" });
-      }
-
-      // Trim excess fields if the number of children is less
-      updatedChildren.length = number;
-
-      return updatedChildren;
-    });
-  };
-  const handleAdultChangeBus = (index, field, value) => {
-    const updatedAdults = [...busAdults];
-    updatedAdults[index][field] = value;
-    setBusAdults(updatedAdults);
-  };
-
-  const handleChildChangeBus = (index, field, value) => {
-    const updatedChildren = [...busChildren];
-    updatedChildren[index][field] = value;
-    setBusChildren(updatedChildren);
-  };
+  // Visa state declarations
+    const [visaCountry, setVisaCountry] = useState("");
+    const [visaTravelDate, setVisaTravelDate] = useState("");
+    const [visaAppointmentDate, setVisaAppointmentDate] = useState("");
+    const [visaAdultsNumber, setVisaAdultsNumber] = useState('');
+    const [visaChildrenNumber, setVisaChildrenNumber] = useState('');
+    const [visaAdults, setVisaAdults] = useState([]);
+    const [visaChildren, setVisaChildren] = useState([]);
+    const [visaNotes, setVisaNotes] = useState("");
 
   // To track the flight details
-  const flightType = [
-    { value: "domestic", label: "Domestic" },
-    { value: "international", label: "International" },
-  ];
-  const [selectedFlightType, setSelectedFlightType] = useState("");
+    const flightType = [
+      { value: "domestic", label: "Domestic" },
+      { value: "international", label: "International" },
+    ];
+    const flightDirection = [
+      { value: "one_way", label: "one Way" },
+      { value: "round_trip", label: "Return Trip" },
+      { value: "multi_city", label: "Multi City" },
+    ];
+    const [selectedFlightType, setSelectedFlightType] = useState("");
+    const [selectedFlightDirection, setSelectedFlightDirection] = useState("");
+    const [flightDeparture, setFlightDeparture] = useState("");
+    const [flightArrival, setFlightArrival] = useState("");
+    const [multiCityFlights, setMultiCityFlights] = useState([{ from: "", to: "" }]);
+    const [flightChildrenNumber, setFlightChildrenNumber] = useState("");
+    const [flightAdultsNumber, setFlightAdultsNumber] = useState("");
+    const [flightAdults, setFlightAdults] = useState([]);
+    const [flightChildren, setFlightChildren] = useState([]);
+    const [flightInfants, setFlightInfants] = useState("");
+    const [flightAdultPrice, setFlightAdultPrice] = useState("");
+    const [flightChildPrice, setFlightChildPrice] = useState("");
+    const [flightClass, setFlightClass] = useState("");
+    const [flightAirline, setFlightAirline] = useState("");
+    const [flightTicketNumber, setFlightTicketNumber] = useState("");
+    const [flightRefPNR, setFlightRefPNR] = useState("");
 
-  const flightDirection = [
-    { value: "one_way", label: "one Way" },
-    { value: "round_trip", label: "Return Trip" },
-    { value: "multi_city", label: "Multi City" },
-  ];
-  const [selectedFlightDirection, setselectedFlightDirection] = useState("");
-  const [flightDeparture, setFlightDeparture] = useState("");
-  const [flightArrival, setFlightArrival] = useState("");
+  // To track the hotel details
+    const [hotelName, setHotelName] = useState("");
+    const [checkInDate, setCheckInDate] = useState("");
+    const [checkOutDate, setCheckOutDate] = useState("");
+    const [totalNights, setTotalNights] = useState("");
+    const [roomType, setRoomType] = useState("");
+    const [roomQuantity, setRoomQuantity] = useState("");
+    const [adultsHotelNumber, setAdultsHotelNumber] = useState('');
+    const [childrenHotelNumber, setChildrenHotelNumber] = useState('');
+    const [roomTypes, setRoomTypes] = useState([]); 
+    const [hotelAdults, setHotelAdults] = useState([]);
+    const [hotelChildren, setHotelChildren] = useState([]);
 
-  const [multiCityFlights, setMultiCityFlights] = useState([
-    { from: "", to: "" },
-  ]);
+  // To track the bus details
+    const [busFrom, setBusFrom] = useState("");
+    const [busTo, setBusTo] = useState("");
+    const [departure, setDeparture] = useState("");
+    const [arrival, setArrival] = useState("");
+    const [busAdultsNumber, setBusAdultsNumber] = useState('');
+    const [busChildrenNumber, setBusChildrenNumber] = useState('');
+    const [adultPrice, setAdultPrice] = useState("");
+    const [childPrice, setChildPrice] = useState("");
+    const [busName, setBusName] = useState("");
+    const [busNumber, setBusNumber] = useState("");
+    const [driverPhone, setDriverPhone] = useState("");
+    const [busAdults, setBusAdults] = useState([]);
+    const [busChildren, setBusChildren] = useState([]);
 
-  const handleMultiCityChange = (index, field, value) => {
-    setMultiCityFlights((prev) =>
-      prev.map((flight, i) =>
-        i === index ? { ...flight, [field]: value } : flight
-      )
-    );
-  };
-
-  const addNewMultiCityFlight = () => {
-    setMultiCityFlights((prev) => [...prev, { from: "", to: "" }]);
-  };
-  const [flightChildrenNumber, setFlightChildrenNumber] = useState(0);
-  const [flightAdultsNumber, setFlightAdultsNumber] = useState(0);
-  const [flightAdults, setFlightAdults] = useState([]);
-  const [flightChildren, setFlightChildren] = useState([]);
-  const [flightInfants, setFlightInfants] = useState("");
-  const [flightAdultPrice, setFlightAdultPrice] = useState("");
-  const [flightChildPrice, setFlightChildPrice] = useState("");
-  const [flightClass, setFlightClass] = useState("");
-  const [flightAirline, setFlightAirline] = useState("");
-  const [flightTicketNumber, setFlightTicketNumber] = useState("");
-  const [flightRefPNR, setFlightRefPNR] = useState("");
-
-  // Function to handle number of adults change
-  const handleFlightAdultsNumberChange = (e) => {
-    const number = parseInt(e.target.value, 10) || 0;
-    setFlightAdultsNumber(number);
-
-    // Preserve existing data while adding/removing fields based on number of adults
-    setFlightAdults((prevAdults) => {
-      const updatedAdults = [...prevAdults];
-
-      // If the number of adults is more, add empty objects
-      while (updatedAdults.length < number) {
-        updatedAdults.push({ selectedTitle: "", firstName: "", lastName: "" });
-      }
-
-      // If the number of adults is less, trim the excess fields
-      updatedAdults.length = number;
-
-      return updatedAdults;
-    });
-  };
-
-  // Function to handle adult details change
-  const handleAdultChange = (index, field, value) => {
-    const updatedAdults = [...flightAdults];
-    updatedAdults[index][field] = value;
-    setFlightAdults(updatedAdults);
-  };
-
-  // Function to handle number of children change
-  const handleFlightChildrenNumberChange = (e) => {
-    const number = parseInt(e.target.value, 10) || 0;
-    setFlightChildrenNumber(number);
-
-    // Preserve existing data while adding/removing fields based on number of children
-    setFlightChildren((prevChildren) => {
-      const updatedChildren = [...prevChildren];
-
-      // If the number of children is more, add empty objects
-      while (updatedChildren.length < number) {
-        updatedChildren.push({ age: "", firstName: "", lastName: "" });
-      }
-
-      // If the number of children is less, trim the excess fields
-      updatedChildren.length = number;
-
-      return updatedChildren;
-    });
-  };
-
-  // Function to handle children details change
-  const handleChildChange = (index, field, value) => {
-    const updatedChildren = [...flightChildren];
-    updatedChildren[index][field] = value;
-    setFlightChildren(updatedChildren);
-  };
-  // To track the visa details
-  const [visaCountry, setVisaCountry] = useState("");
-  const [visaChildrenNumber, setVisaChildrenNumber] = useState(0);
-  const [visaAdultsNumber, setVisaAdultsNumber] = useState(0);
-  const [visaAdults, setVisaAdults] = useState([]);
-  const [visaChildren, setVisaChildren] = useState([]);
-
-  const [visaTravelDate, setVisaTravelDate] = useState("");
-  const [visaAppointmentDate, setVisaAppointmentDate] = useState("");
-  const [visaNumber, setVisaNumber] = useState("");
-  const [visaCustomers, setVisaCustomers] = useState([]);
-  const [visaNotes, setVisaNotes] = useState("");
-
-  // Function to handle number of adults change
-  const handleVisaAdultsNumberChange = (e) => {
-    const number = parseInt(e.target.value, 10) || 0;
-    setVisaAdultsNumber(number);
-
-    // Preserve existing data while adding/removing fields based on number of adults
-    setVisaAdults((prevAdults) => {
-      const updatedAdults = [...prevAdults];
-
-      // If the number of adults is more, add empty objects
-      while (updatedAdults.length < number) {
-        updatedAdults.push({ selectedTitle: "", firstName: "", lastName: "" });
-      }
-
-      // If the number of adults is less, trim the excess fields
-      updatedAdults.length = number;
-
-      return updatedAdults;
-    });
-  };
-
-  // Function to handle adult details change
-  const handleAdulVisaChange = (index, field, value) => {
-    const updatedAdults = [...visaAdults];
-    updatedAdults[index][field] = value;
-    setVisaAdults(updatedAdults);
-  };
-
-   // Function to handle number of children change
-   const handleVisaChildrenNumberChange = (e) => {
-    const number = parseInt(e.target.value, 10) || 0;
-    setVisaChildrenNumber(number);
-
-    // Preserve existing data while adding/removing fields based on number of children
-    setVisaChildren((prevChildren) => {
-      const updatedChildren = [...prevChildren];
-
-      // If the number of children is more, add empty objects
-      while (updatedChildren.length < number) {
-        updatedChildren.push({ age: "", firstName: "", lastName: "" });
-      }
-
-      // If the number of children is less, trim the excess fields
-      updatedChildren.length = number;
-
-      return updatedChildren;
-    });
-  };
-
-  // Function to handle children details change
-  const handleChildVisaChange = (index, field, value) => {
-    const updatedChildren = [...visaChildren];
-    updatedChildren[index][field] = value;
-    setVisaChildren(updatedChildren);
-  };
   //To track the tour details
-  const [tour, setTour] = useState("");
-  const tourType = [
-    { value: "domestic", label: "Domestic" },
-    { value: "international", label: "International" },
-  ];
-  const [selectedTourType, setSelectedTourType] = useState("");
-  // const [tourChildren, setTourChildren] = useState("");
-  // const [tourAdults, setTourAdults] = useState("");
-  const [tourAdultPrice, setTourAdultPrice] = useState("");
-  const [tourChildPrice, setTourChildPrice] = useState("");
-  const [transportationDeparture, setTransportationDeparture] = useState("");
-  const [tourChildrenNumber, setTourChildrenNumber] = useState(0);
-  const [tourAdultsNumber, setTourAdultsNumber] = useState(0);
-  const [tourAdults, setTourAdults] = useState([]);
-  const [tourChildren, setTourChildren] = useState([]);
-  const [hotels, setHotels] = useState([
-    {
-      destination: "",
-      hotel_name: "",
-      room_type: "",
-      check_in: "",
-      check_out: "",
-      nights: "",
-    },
-  ]);
-
-   
-    // Function to handle number of adults change
-    const handleTourAdultsNumberChange = (e) => {
-      const number = parseInt(e.target.value, 10) || 0;
-      setTourAdultsNumber(number);
-  
-      // Preserve existing data while adding/removing fields based on number of adults
-      setTourAdults((prevAdults) => {
-        const updatedAdults = [...prevAdults];
-  
-        // If the number of adults is more, add empty objects
-        while (updatedAdults.length < number) {
-          updatedAdults.push({ selectedTitle: "", firstName: "", lastName: "" });
-        }
-  
-        // If the number of adults is less, trim the excess fields
-        updatedAdults.length = number;
-  
-        return updatedAdults;
-      });
-    };
-    // Function to handle adult details change
-    const handleAdulTourChange = (index, field, value) => {
-      const updatedAdults = [...tourAdults];
-      updatedAdults[index][field] = value;
-      setTourAdults(updatedAdults);
-    };
-  
-     // Function to handle number of children change
-     const handleTourChildrenNumberChange = (e) => {
-      const number = parseInt(e.target.value, 10) || 0;
-      setTourChildrenNumber(number);
-  
-      // Preserve existing data while adding/removing fields based on number of children
-      setTourChildren((prevChildren) => {
-        const updatedChildren = [...prevChildren];
-  
-        // If the number of children is more, add empty objects
-        while (updatedChildren.length < number) {
-          updatedChildren.push({ age: "", firstName: "", lastName: "" });
-        }
-  
-        // If the number of children is less, trim the excess fields
-        updatedChildren.length = number;
-  
-        return updatedChildren;
-      });
-    };
-  
-    // Function to handle children details change
-    const handleChildTourChange = (index, field, value) => {
-      const updatedChildren = [...tourChildren];
-      updatedChildren[index][field] = value;
-      setTourChildren(updatedChildren);
-    };
-
-
-  const [buses, setBuses] = useState([{ transportation: "", seats: "" }]);
-
-  // Handle changes in hotel fields
-  const handleHotelChange = (index, field, value) => {
-    setHotels((prev) =>
-      prev.map((hotel, i) =>
-        i === index ? { ...hotel, [field]: value } : hotel
-      )
-    );
-  };
-
-  // Handle changes in bus fields
-  const handleBusChange = (index, field, value) => {
-    setBuses((prev) =>
-      prev.map((bus, i) => (i === index ? { ...bus, [field]: value } : bus))
-    );
-  };
-
-  // Add a new hotel
-  const addNewHotel = () => {
-    setHotels((prev) => [
-      ...prev,
+    const [tour, setTour] = useState("");
+    const tourType = [
+      { value: "domestic", label: "Domestic" },
+      { value: "international", label: "International" },
+    ];
+    const [selectedTourType, setSelectedTourType] = useState("");
+    // const [tourChildren, setTourChildren] = useState("");
+    // const [tourAdults, setTourAdults] = useState("");
+    const [tourAdultPrice, setTourAdultPrice] = useState("");
+    const [tourChildPrice, setTourChildPrice] = useState("");
+    const [transportationDeparture, setTransportationDeparture] = useState("");
+    const [tourChildrenNumber, setTourChildrenNumber] = useState('');
+    const [tourAdultsNumber, setTourAdultsNumber] = useState('');
+    const [tourAdults, setTourAdults] = useState([]);
+    const [tourChildren, setTourChildren] = useState([]);
+    const [buses, setBuses] = useState([{ transportation: "", seats: "" }]);
+    const [hotels, setHotels] = useState([
       {
         destination: "",
         hotel_name: "",
@@ -541,168 +161,133 @@ const ManualBooking = () => {
         nights: "",
       },
     ]);
-  };
 
-  // Add a new bus
-  const addNewBus = () => {
-    setBuses((prev) => [...prev, { transportation: "", seats: "" }]);
-  };
+    const today = new Date().toISOString().slice(0, 10);
 
-  // Remove hotel (only removes newly added hotels, not the first one)
-  const removeHotel = (index) => {
-    if (index !== 0) {
-      // Don't allow removal of the first hotel
-      setHotels((prev) => prev.filter((hotel, i) => i !== index));
-    }
-  };
-
-  // Remove bus (only removes newly added buses, not the first one)
-  const removeBus = (index) => {
-    if (index !== 0) {
-      // Don't allow removal of the first bus
-      setBuses((prev) => prev.filter((bus, i) => i !== index));
-    }
-  };
-
-  const handleVisaNumberChange = (e) => {
-    const number = parseInt(e.target.value, 10) || 0;
-    setVisaNumber(number);
-
-    // Adjust the customer inputs dynamically based on the number entered
-    setVisaCustomers(Array(number).fill(""));
-  };
-
-  const handleVisaCustomerNameChange = (index, value) => {
-    const updatedCustomers = [...visaCustomers];
-    updatedCustomers[index] = value;
-    setVisaCustomers(updatedCustomers);
-  };
-
-  useEffect(() => {
-    refetchBookingList();
-    refetchSuppliers();
-  }, [refetchBookingList, refetchSuppliers, update]);
-
-  useEffect(() => {
-    if (bookingListData && suppliersData) {
-      console.log("Booking List Data:", bookingListData);
-      console.log("Suppliers Data:", suppliersData);
-      setServices(bookingListData.services);
-      setCountries(bookingListData.contries);
-      setCities(bookingListData.cities);
-      setCurrencies(bookingListData.currencies);
-      setTitle(bookingListData.adult_title);
-      setSuppliers(suppliersData.suppliers);
-      setCustomers(suppliersData.customers);
-      setAgents(bookingListData.employees);
-    }
-  }, [bookingListData, suppliersData]); // Only run this effect when `data` changes
-
-  // Update the second dropdown based on the selected category
-  useEffect(() => {
-    if (category === "B2B") {
-      setSecondMenuData(suppliers);
-    } else if (category === "B2C") {
-      setSecondMenuData(customers);
-    } else {
-      setSecondMenuData([]);
-    }
-  }, [category, suppliers, customers]);
-
-  useEffect(() => {
-    if (selectedService) {
-      postCustomerServices({ service_id: selectedService.id });
-    } else {
-      setCustomerServices([]); // Clear customer services if no service is selected
-    }
-  }, [selectedService,update]);
-
-  useEffect(() => {
-    if (selectedCountry) {
-      postTaxes({ country_id: selectedCountry});
-    } else {
-      setTaxes([]); // Clear customer services if no service is selected
-    }
-  }, [selectedCountry]);
-
-  useEffect(() => {
-    if (selectedService && !loadingPostCustomerServices) {
-      console.log("Response Data Supplier service:", responseCustomerServicesData.data.supplier);
-      if (responseCustomerServicesData.data.supplier) {
-        setCustomerServices(responseCustomerServicesData.data.supplier); // Update the customers list
+    // Update the second dropdown based on the selected category
+    useEffect(() => {
+      if (category === "B2B") {
+        setSecondMenuData(suppliers);
+      } else if (category === "B2C") {
+        setSecondMenuData(customers);
+      } else {
+        setSecondMenuData([]);
       }
-    }
-  }, [responseCustomerServicesData]); // Runs when data or loading state changes
+    }, [category, suppliers, customers]);
 
-  useEffect(() => {
-    if (selectedCountry && !loadingPostTaxes) {
-      console.log("Response Data Country Taxes:", responseTaxesData.data.taxes);
-      if (responseTaxesData?.data?.taxes) {
-        setTaxes(responseTaxesData?.data?.taxes); // Update the customers list
+    useEffect(() => {
+      refetchBookingList();
+      refetchSuppliers();
+    }, [refetchBookingList, refetchSuppliers, update]);
+  
+    useEffect(() => {
+      if (bookingListData && suppliersData) {
+        console.log("Booking List Data:", bookingListData);
+        console.log("Suppliers Data:", suppliersData);
+        setServices(bookingListData.services);
+        setCountries(bookingListData.contries);
+        setCities(bookingListData.cities);
+        setCurrencies(bookingListData.currencies);
+        setTitle(bookingListData.adult_title);
+        setSuppliers(suppliersData.suppliers);
+        setCustomers(suppliersData.customers);
+        setAgents(bookingListData.employees);
       }
-      else{
-        setTaxes([])
+    }, [bookingListData, suppliersData]); // Only run this effect when `data` changes
+  
+    useEffect(() => {
+      if (selectedService) {
+        setSelectedFromSupplier(null);
+        postCustomerServices({ service_id: selectedService.id });
+      } else {
+        setCustomerServices([]); // Clear customer services if no service is selected
       }
-    }
-  }, [responseTaxesData]); // Runs when data or loading state changes
-
-  // const [visibleSection, setVisibleSection] = useState('');
-  // const toggleSection = (section) => {
-  //   setVisibleSection(visibleSection === section ? '' : section);
-  // };
-
-  // const selectedTaxes = taxes.filter((tax) => selectedTaxId.includes(tax.id));
-
-  useEffect(() => {
-    // Parse cost and markupValue as floats, fallback to 0 if not set
-    const parsedCost = parseFloat(cost || 0);
-    const parsedMarkupValue = parseFloat(markupValue || 0);
-
-    // Check if isMarkupPercentage is 1, treat markupValue as percentage
-    const calculatedMarkupValue = isMarkupPercentage === 1
-      ? (parsedMarkupValue / 100) * parsedCost // Calculate percentage of the cost
-      : parsedMarkupValue; // Use markupValue directly if it's not a percentage
-
-    const calculatedPrice = parsedCost + calculatedMarkupValue;
-
-    // Calculate total tax amount
-    let totalTaxAmount = 0;
-
-    selectedTaxId.forEach((id) => {
-      const tax = taxes?.find((tax) => tax.id === id); // Find tax object by ID
-      if (tax) {
-        if (tax.type === "precentage") {
-          totalTaxAmount += (parseFloat(tax.amount) / 100) * calculatedPrice; // Apply percentage tax to calculated price
-        } else if (tax.type === "value") {
-          totalTaxAmount += parseFloat(tax.amount || 0); // Add fixed value tax
+    }, [selectedService,update]);
+  
+    useEffect(() => {
+      if (selectedCountry) {
+        postTaxes({ country_id: selectedCountry});
+      } else {
+        setTaxes([]); // Clear customer services if no service is selected
+      }
+    }, [selectedCountry]);
+  
+    useEffect(() => {
+      if (selectedService && !loadingPostCustomerServices) {
+        console.log("Response Data Supplier service:", responseCustomerServicesData.data?.supplier);
+        if (responseCustomerServicesData.data?.supplier) {
+          setCustomerServices(responseCustomerServicesData.data?.supplier); // Update the customers list
         }
       }
-    });
-    
-    const calculatedTotalPrice = calculatedPrice + totalTaxAmount;    
+    }, [responseCustomerServicesData]); // Runs when data or loading state changes
+  
+    useEffect(() => {
+      if (selectedCountry && !loadingPostTaxes) {
+        console.log("Response Data Country Taxes:", responseTaxesData.data.taxes);
+        if (responseTaxesData?.data?.taxes) {
+          setTaxes(responseTaxesData?.data?.taxes); // Update the customers list
+        }
+        else{
+          setTaxes([])
+        }
+      }
+    }, [responseTaxesData]); // Runs when data or loading state changes
+  
+    useEffect(() => {
+      // Parse cost and markupValue as floats, fallback to 0 if not set
+      const parsedCost = parseFloat(cost || 0);
+      const parsedMarkupValue = parseFloat(markupValue || 0);
+  
+      // Check if isMarkupPercentage is 1, treat markupValue as percentage
+      const calculatedMarkupValue = isMarkupPercentage === 1
+        ? (parsedMarkupValue / 100) * parsedCost // Calculate percentage of the cost
+        : parsedMarkupValue; // Use markupValue directly if it's not a percentage
+  
+      const calculatedPrice = parsedCost + calculatedMarkupValue;
+  
+      // Calculate total tax amount
+      let totalTaxAmount = 0;
+  
+      selectedTaxId.forEach((id) => {
+        const tax = taxes?.find((tax) => tax.id === id); // Find tax object by ID
+        if (tax) {
+          if (tax.type === "precentage") {
+            totalTaxAmount += (parseFloat(tax.amount) / 100) * parsedCost; // Apply percentage tax to calculated price
+          } else if (tax.type === "value") {
+            totalTaxAmount += parseFloat(tax.amount || 0); // Add fixed value tax
+          }
+        }
+      });
+      
+      const calculatedTotalPrice = calculatedPrice + totalTaxAmount;    
+  
+      // Update the state with calculated values
+      setPrice(calculatedPrice.toFixed(2));
+      setTotalPrice(calculatedTotalPrice.toFixed(2));
+    }, [cost, markupValue, selectedTaxId, isMarkupPercentage, taxes]);
+  
+    useEffect(() => {
+      if (!loadingPost && response && response.data) {
+        console.log('Response Submit:', response);
+        navigate('/dashboard_agent/checkOut_process', { state: { cartData: response.data } });
+      }
+    }, [response, loadingPost, navigate]);
 
-    // Update the state with calculated values
-    setPrice(calculatedPrice.toFixed(2));
-    setTotalPrice(calculatedTotalPrice.toFixed(2));
-  }, [cost, markupValue, selectedTaxId, isMarkupPercentage, taxes]);
-
-  useEffect(() => {
-    if (!loadingPost && response && response.data) {
-      console.log('Response Submit:', response);
-      navigate('/dashboard_agent/checkOut_process', { state: { cartData: response.data } });
-    }
-  }, [response, loadingPost, navigate]);
-
-  const today = new Date().toISOString().slice(0, 10);
+    // This function will toggle the section visibility
+    const toggleSection = (section) => {
+      setVisibleSection(visibleSection === section ? "" : section);
+    };
+    const handleSwitchChange = () => {
+      setIsMarkupPercentage((prev) => (prev === 1 ? 0 : 1)); // Toggle between 1 and 0
+    };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Create FormData object to append the form data
     const formData = new FormData();
-    // console.log('service:', selectedService);
-
+    console.log('from_supplier_id:', selectedFromSupplier);
     // Append form fields to FormData
-    formData.append("from_supplier_id", selectedFromSupplier);
+    formData.append("from_supplier_id", selectedFromSupplier.id);
     formData.append("from_service_id", selectedService.id);
     if (isMarkupPercentage === 1) {
       formData.append("mark_up_type", "precentage");
@@ -712,20 +297,20 @@ const ManualBooking = () => {
     formData.append("mark_up", markupValue);
     formData.append("price", price);
     formData.append("country_id", selectedCountry);
-    formData.append("city_id", selectedCity);
+    // formData.append("city_id", ' ');
     formData.append("taxes", JSON.stringify(selectedTaxId));
     formData.append("tax_type", selectedTaxType);
-    formData.append("currency_id", selectedCurrency);
+    formData.append("currency_id", selectedCurrency.id);
     formData.append("cost", cost);
     formData.append("total_price", totalPrice);
     // Append To fields to FormData
     if (category === "B2B") {
-      formData.append("to_supplier_id", selectedToSupplier);
+      formData.append("to_supplier_id", selectedToSupplier.id);
     } else if (category === "B2C") {
-      formData.append("to_customer_id", selectedToSupplier);
+      formData.append("to_customer_id", selectedToSupplier.id);
     }
-    formData.append("special_request", specialRequest);
-    formData.append("agent_sales_id", selectAgent);
+    formData.append("special_request", '');
+    formData.append("agent_sales_id", selectAgent.id);
 
     // Append Hotal fields to FormData
     if (selectedService.service_name === "Hotel") {
@@ -756,6 +341,76 @@ const ManualBooking = () => {
       formData.append("adults_data", JSON.stringify(adults_data));
       formData.append("children_data", JSON.stringify(children_data));
     }
+
+    else if (selectedService?.service_name === "Visa") {
+      formData.append("country", visaCountry);
+      formData.append("travel_date", visaTravelDate);
+      formData.append("appointment_date", visaAppointmentDate);
+      formData.append("notes", visaNotes);
+      formData.append("childreen", visaChildrenNumber);
+      formData.append("adults", visaAdultsNumber);
+      const adults_data = visaAdults.map((adult) => ({
+          title: adult.selectedTitle,
+          first_name: adult.firstName,
+          last_name: adult.lastName,
+      }));
+      const children_data = visaChildren.map((child) => ({
+          age: child.age,
+          first_name: child.firstName,
+          last_name: child.lastName,
+      }));
+      formData.append("adults_data", JSON.stringify(adults_data));
+      formData.append("children_data", JSON.stringify(children_data));
+    }
+
+    // Append Flight fields to FormData 
+    else if (selectedService.service_name === 'Flight') {
+      formData.append("type", selectedFlightType);
+      formData.append("departure", flightDeparture);
+      formData.append("direction", selectedFlightDirection);
+      formData.append("childreen", flightChildrenNumber);
+      formData.append("adults", flightAdultsNumber);
+      formData.append("infants", flightInfants);
+      formData.append("adult_price", flightAdultPrice);
+      formData.append("child_price", flightChildPrice);
+      formData.append("class", flightClass);
+      formData.append("airline", flightAirline);
+      formData.append("ticket_number", flightTicketNumber);
+      formData.append("ref_pnr", flightRefPNR);
+
+      const adults_data = flightAdults.map((adult) => ({
+        title: adult.selectedTitle,
+        first_name: adult.firstName,
+        last_name: adult.lastName,
+      }));
+      const children_data = flightChildren.map((child) => ({
+        age: child.age,
+        first_name: child.firstName,
+        last_name: child.lastName,
+      }));
+      formData.append("adults_data", JSON.stringify(adults_data));
+      formData.append("children_data", JSON.stringify(children_data));
+
+      if (selectedFlightDirection === "round_trip" || selectedFlightDirection === "multi_city") {
+        formData.append("arrival", flightArrival);
+      }
+      const formattedFlights = JSON.stringify(
+        multiCityFlights.map((flight) => ({
+          from: flight.from,
+          to: flight.to,
+        }))
+      );
+      formData.append("from_to", formattedFlights);
+    }
+
+
+
+
+
+
+
+
+
     // Append Bus fields to FormData
     else if (selectedService.service_name === "Bus") {
       formData.append("from", busFrom);
@@ -788,72 +443,10 @@ const ManualBooking = () => {
       formData.append("adults_data", JSON.stringify(adults_data));
       formData.append("children_data", JSON.stringify(children_data));
     }
-    // Append Visa fields to FormData
-    else if (selectedService.service_name === "Visa") {
-      formData.append("country", visaCountry);
-      formData.append("travel_date", visaTravelDate);
-      formData.append("appointment_date", visaAppointmentDate);
-      formData.append("notes", visaNotes);
-      formData.append('childreen', visaChildrenNumber);
-      formData.append('adults', visaAdultsNumber);
-      const adults_data = visaAdults.map((adult) => ({
-        title: adult.selectedTitle,
-        first_name: adult.firstName,
-        last_name: adult.lastName,
-      }));
-      const children_data = visaChildren.map((child) => ({
-        age: child.age,
-        first_name: child.firstName,
-        last_name: child.lastName,
-      }));
-      formData.append("adults_data", JSON.stringify(adults_data));
-      formData.append("children_data", JSON.stringify(children_data));
-    }
 
-    // Append Flight fields to FormData 
-    else if (selectedService.service_name === 'Flight') {
-      formData.append('type', selectedFlightType);
-      formData.append('departure', flightDeparture);
-      formData.append('direction', selectedFlightDirection);
-      formData.append('childreen', flightChildrenNumber);
-      formData.append('adults', flightAdultsNumber);
-      formData.append('infants', flightInfants);
-      formData.append('adult_price', flightAdultPrice);
-      formData.append('child_price', flightChildPrice);
-      formData.append('class', flightClass);
-      formData.append('airline', flightAirline);
-      formData.append('ticket_number', flightTicketNumber);
-      formData.append('ref_pnr', flightRefPNR);
 
-      const adults_data = flightAdults.map((adult) => ({
-        title: adult.selectedTitle,
-        first_name: adult.firstName,
-        last_name: adult.lastName,
-      }));
 
-      // Prepare children_data
-      const children_data = flightChildren.map((child) => ({
-        age: child.age,
-        first_name: child.firstName,
-        last_name: child.lastName,
-      }));
-      formData.append("adults_data", JSON.stringify(adults_data));
-      formData.append("children_data", JSON.stringify(children_data));
 
-      if (
-        selectedFlightDirection === "round_trip" ||
-        selectedFlightDirection === "multi_city"
-      ) {
-        formData.append("arrival", flightArrival);
-      }
-      const formattedFlights = JSON.stringify(
-        multiCityFlights.map((flight) => ({
-          from: flight.from,
-          to: flight.to,
-        }))
-      );
-      formData.append("from_to", formattedFlights);
-    }
     // Append Tour fields to FormData
     else if (selectedService.service_name === "Tour") {
       formData.append("tour", tour);
@@ -907,288 +500,10 @@ const ManualBooking = () => {
     // Call the postData function to send the data to the backend
     postData(formData, "Booking Added Successfully");
   };
-
   return (
     <form onSubmit={handleSubmit} className="bg-gray-100 flex justify-center items-center">
       <div className="bg-white shadow-lg rounded-lg w-full p-4 lg:p-8">
         {/* <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Manual Booking</h1> */}
-
-        {/* From Section */}
-        <button
-          type="button"
-          onClick={() => toggleSection("from")}
-          className="w-full text-left px-4 py-2 bg-gray-200 text-gray-800 font-medium hover:bg-gray-300 mb-4"
-        >
-          From
-        </button>
-        {visibleSection === "from" && (
-          <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-5">
-            {/* First Dropdown: Select Service */}
-            <TextField
-              select
-              fullWidth
-              variant="outlined"
-              value={selectedService}
-              onChange={(e) => setSelectedService(e.target.value)} // Update the selected service                }
-              label="Select Service"
-              required
-            >
-              {services.map((service) => (
-                <MenuItem key={service.id} label={service.service_name} value={service}>
-                  {service.service_name}
-                </MenuItem>
-              ))}
-            </TextField>
-
-            {/* Second Dropdown: Select Customer based on selected service */}
-            <TextField
-              select
-              fullWidth
-              variant="outlined"
-              label="Select Supplier"
-              disabled={!selectedService} // Disable until service is selected
-              className="mb-6"
-              // required
-              value={selectedFromSupplier}
-              onChange={(e) => setSelectedFromSupplier(e.target.value)} // Update the selected service                }
-              onClick={(e) => {
-                if (!selectedService) {
-                  // Show alert if no service is selected
-                  auth.toastError("Please select a service first");
-                }
-              }}
-            >
-              {customerServices.length > 0 ? (
-                customerServices
-                .filter((customer) => customer.id !== selectedToSupplier)
-                .map((customer) => (
-                  <MenuItem key={customer.id} value={customer.id}>
-                    {customer.agent}
-                  </MenuItem>
-                ))
-              ) : (
-                <MenuItem value="">
-                  <em>No supplier available</em>
-                </MenuItem>
-              )}
-            </TextField>
-            <Button
-              type="button"
-              variant="contained"
-              color="primary"
-              onClick={() => setShowPopup(true)}
-              size="small"
-              className="w-full"
-            >
-            Add Supplier
-            </Button>                           
-            {showPopup && (
-             <div className="w-full fixed p-4 inset-0 z-50 bg-gray-600 bg-opacity-50 overflow-y-auto">
-                <div className="bg-white p-4 rounded-lg shadow-lg w-full overflow-y-auto max-w-4xl">
-                  <div className="flex justify-between items-center mt-4">
-                    <h2 className="text-xl font-semibold">Add Supplier</h2>
-                    <Button
-                      onClick={() => setShowPopup(false)}
-                      className="text-red-500"
-                    >
-                      Close
-                    </Button>
-                  </div>
-
-                  <AddSupplierPage update={update} setUpdate={setUpdate} />
-                </div>
-              </div>
-            )}
-            <TextField
-              select
-              fullWidth
-              variant="outlined"
-              value={selectedCurrency}
-              onChange={(e) => setSelectedCurrency(e.target.value)} // Update the selected service                }
-              label="Select Currency"
-              className="mb-6"
-            >
-              {currencies.map((Currency) => (
-                <MenuItem key={Currency.id} value={Currency.id}>
-                  {Currency.name}
-                </MenuItem>
-              ))}
-            </TextField>
-
-            <TextField
-              label="Agent Cost"
-              variant="outlined"
-              fullWidth
-              required
-              value={cost}
-              onChange={(e) => setCost(e.target.value)}
-            />
-
-            {/* Switch Button with Icons */}
-            <div className="flex items-center">
-              <span className="text-mainColor font-semibold">Mark Up : </span>
-              <MdAttachMoney
-                className={`ml-2 ${isMarkupPercentage ? "text-gray-500" : "text-green-500"
-                  }`}
-              />
-              <Switch
-                checked={isMarkupPercentage === 1}
-                onChange={handleSwitchChange}
-                color="primary"
-              />
-              <FiPercent
-                className={`ml-2 ${isMarkupPercentage ? "text-blue-500" : "text-gray-500"
-                  }`}
-              />
-            </div>
-
-            <TextField
-              label="MarkUp Value"
-              variant="outlined"
-              fullWidth
-              required
-              value={markupValue}
-              onChange={(e) => setMarkupValue(e.target.value)}
-            />
-
-            <TextField
-              select
-              fullWidth
-              variant="outlined"
-              value={selectedCountry}
-              onChange={(e) => setSelectedCountry(e.target.value)} // Update the selected service                }
-              label="Select Country"
-              className="mb-6"
-              required
-            >
-              {countries.map((country) => (
-                <MenuItem key={country.id} value={country.id}>
-                  {country.name}
-                </MenuItem>
-              ))}
-            </TextField>
-
-            <TextField
-              select
-              fullWidth
-              variant="outlined"
-              value={selectedCity}
-              onChange={(e) => setSelectedCity(e.target.value)} // Update the selected service                }
-              label="Select City"
-              className="mb-6"
-            >
-              {cities.map((city) => (
-                <MenuItem key={city.id} value={city.id}>
-                  {city.name}
-                </MenuItem>
-              ))}
-            </TextField>
-
-            <TextField
-              label="Special Request"
-              variant="outlined"
-              fullWidth
-              value={specialRequest}
-              onChange={(e) => setSpecialRequest(e.target.value)}
-            />
-
-            <TextField
-              label="Select Taxes"
-              disabled={!selectedCountry} // Disable until service is selected
-              fullWidth
-              select
-              value={selectedTaxId} // Array of selected tax IDs
-              onChange={(e) => setSelectedTaxId(e.target.value)} // Update selected tax IDs
-              onClick={(e) => {
-                if (!selectedCountry) {
-                  // Show alert if no service is selected
-                  auth.toastError("Please select a country first");
-                }
-              }}
-              SelectProps={{
-                multiple: true,
-                renderValue: (selected) =>
-                  selected
-                    .map((id) => taxes?.find((tax) => tax.id === id)?.name) // Get the tax names based on selected IDs
-                    .join(" , "), // Join the selected tax names with a comma
-              }}
-              variant="outlined"
-            className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-            >
-              {taxes?.length > 0 ? (
-                taxes?.map((tax) => (
-                  <MenuItem key={tax.id} value={tax.id}>
-                    <Checkbox checked={selectedTaxId.includes(tax.id)} />{" "}
-                    <ListItemText primary={tax.name} />{" "}
-                  </MenuItem>
-                ))
-              ) : (
-              <MenuItem value="" disabled>
-                  No Taxes available
-              </MenuItem>              
-              )}
-            </TextField>
-
-            {(selectedTaxId.length > 0 && taxes.length>0) && (
-              <TextField
-                label="Tax Amount"
-                variant="outlined"
-                fullWidth
-                required
-                value={`${selectedTaxId
-                  .map((id) => {
-                    const tax = taxes.find((tax) => tax.id === id);
-                    return tax?.type === "precentage"
-                      ? `${tax.amount}%`
-                      : `${tax.amount}`;
-                  })
-                  .join(" , ")}`}
-              // disabled
-              />
-            )}
-
-            <TextField
-              select
-              fullWidth
-              variant="outlined"
-              value={selectedTaxType}
-              onChange={(e) => setSelectedTaxType(e.target.value)} // Update the selected service                }
-              label="Select Tax Type"
-              className="mb-6"
-            >
-              {taxesType.map((tax) => (
-                <MenuItem key={tax.value} value={tax.value}>
-                  {tax.label}
-                </MenuItem>
-              ))}
-            </TextField>
-
-            <TextField
-              select
-              fullWidth
-              variant="outlined"
-              value={selectAgent}
-              onChange={(e) => setSelectAgent(e.target.value)} // Update the selected service                }
-              label="Select Agent Sales"
-              className="mb-6"
-            >
-              {agents.map((agent) => (
-                <MenuItem key={agent.id} value={agent.id}>
-                  {agent.name}
-                </MenuItem>
-              ))}
-            </TextField>
-
-            <div className="flex flex-col justify-end">
-              <strong className="flex text-mainColor justify-center items-center">
-                Price :{price}
-              </strong>
-              <strong className="flex text-green-700 justify-center items-center">
-                Total Price :{totalPrice}
-              </strong>
-            </div>
-          </div>
-        )}
         {/* To Section */}
         <button
           type="button"
@@ -1198,123 +513,489 @@ const ManualBooking = () => {
           To
         </button>
         {visibleSection === "to" && (
-          <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-5">
-            {/* First Dropdown */}
+          <>
+          <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-5 p-4 bg-gray-50 rounded-xl shadow-md">
+           {/* First Dropdown for Category */}
+           <TextField
+             select
+             variant="outlined"
+             value={category}
+             onChange={(e) => setCategory(e.target.value)}
+             label="Select Category"
+             fullWidth
+             className="mb-6"
+             InputProps={{
+              sx: {
+                "& fieldset": { borderRadius: "10px" }, // Rounded corners
+                "&:hover fieldset": { borderColor: "#1E88E5" }, // Hover effect
+                "&.Mui-focused fieldset": { borderColor: "#1565C0" }, // Focus effect
+              },
+            }}
+           >
+             <MenuItem value="B2B">B2B</MenuItem>
+             <MenuItem value="B2C">B2C</MenuItem>
+           </TextField>
+   
+           {/* Second Autocomplete for Supplier/Lead */}
+           <Autocomplete
+              fullWidth
+              options={secondMenuData}
+              getOptionLabel={(option) =>
+                option?.name ? `${option.name}` : ""
+              }
+              value={selectedToSupplier}
+              onChange={(e, newValue) => setSelectedToSupplier(newValue)}
+              disabled={!category}
+              isOptionEqualToValue={(option, value) => option.id === value?.id}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={`Select ${category === "B2B" ? "Supplier" : "Customer"}`}
+                  variant="outlined"
+                  className="mb-6"
+                  placeholder={`Search or Select ${
+                    category === "B2B" ? "Supplier" : "Customer"
+                  }`}
+                  onClick={() => {
+                    if (!category) {
+                      auth.toastError("Please select a category first");
+                    }
+                  }}
+                  InputProps={{
+                    ...params.InputProps,
+                    sx: {
+                      "& fieldset": { borderRadius: "10px" }, // Rounded corners
+                      "&:hover fieldset": { borderColor: "#1E88E5" }, // Hover effect
+                      "&.Mui-focused fieldset": { borderColor: "#1565C0" }, // Focus effect
+                    },
+                    endAdornment: (
+                      <>
+                        {loadingBookingList ? <CircularProgress size={20} /> : null}
+                      </>
+                    ),
+                  }}
+                />
+              )}
+            />
+
+           {/* Conditional Add Button */}
+           <Button
+              type="button"
+              variant="contained"
+              onClick={() => setShowPopup(true)}
+              fullWidth
+              className={`relative flex items-center justify-center gap-2 px-6 py-3 rounded-lg 
+              text-white font-semibold text-lg transition-all duration-300 
+              ${
+                category
+                  ? "bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 active:scale-95 shadow-lg"
+                  : "bg-gray-400 cursor-not-allowed"
+              }`}
+            disabled={!category}
+          >
+            {category === "B2B" ? (
+              <>
+                Add Supplier
+              </>
+            ) : (
+              <>
+                Add Lead
+              </>
+            )}
+          </Button>
+
+         </div>
+         {/* Popup Modal */}
+         {showPopup && (
+          <div className="w-full fixed p-4 inset-0 z-50 bg-gray-600 bg-opacity-50 overflow-y-auto">
+          <div className="bg-white p-4 rounded-lg shadow-lg w-full overflow-y-auto max-w-4xl">
+            <div className="flex justify-between items-center mt-4">
+                <h2 className="text-2xl font-semibold">
+                   {category === "B2B" ? "Add Supplier" : "Add Lead"}
+                </h2>
+                 <Button onClick={() => setShowPopup(false)} className="text-red-500">
+                   Close
+                 </Button>
+               </div>
+               {/* Conditionally render the AddSupplierPage or AddLeadPage */}
+               {category === "B2B" ? (
+                 <AddSupplierPage update={update} setUpdate={setUpdate} />
+               ) : (
+                 <AddLeadPage update={update} setUpdate={setUpdate} />
+               )}
+             </div>
+           </div>
+         )}
+         </>
+        )}
+        {/* From Section */}
+        <button
+          type="button"
+          onClick={() => toggleSection("from")}
+          className="w-full text-left px-4 py-2 bg-gray-200 text-gray-800 font-medium hover:bg-gray-300 mb-4"
+        >
+          From
+        </button>
+        {visibleSection === "from" && (
+        <div className="p-6 bg-gray-50 rounded-xl shadow-md space-y-6">
+          {/* First Row: Service, Supplier, Add Supplier */}
+          <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Service Selector */}
             <TextField
               select
+              fullWidth
               variant="outlined"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              label="Select Category"
-              className="mb-6"
+              value={selectedService?.id || ""} // Ensure it's a valid value
+              onChange={(e) => {
+                const selectedId = e.target.value;
+                const fullService = services.find(service => service.id === selectedId);
+                setSelectedService(fullService);
+              }}              
+              // onChange={(e) => setSelectedService(e.target.value)}
+              label="Select Service"
+              required
+              InputProps={{ sx: { "& fieldset": { borderRadius: "10px" } } }}
             >
-              <MenuItem value="B2B">B2B</MenuItem>
-              <MenuItem value="B2C">B2C</MenuItem>
+              {services.map((service) => (
+                <MenuItem key={service.id} value={service.id}>
+                  {service.service_name}
+                </MenuItem>
+              ))}
             </TextField>
 
-            {/* Second Dropdown */}
-            {/* {secondMenuData.length > 0? ( */}
-              <>
-              <TextField
-                select
+            {/* Supplier Autocomplete */}
+            <Autocomplete
+              fullWidth
+              options={customerServices.filter(
+                (customer) => customer.id !== (selectedToSupplier?.id || "")
+              )}
+              getOptionLabel={(option) => option?.agent || ""}
+              value={selectedFromSupplier}
+              onChange={(e, newValue) => setSelectedFromSupplier(newValue)}
+              disabled={!selectedService}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Select Supplier"
+                  placeholder="Select or Search Supplier"
+                  variant="outlined"
+                  onClick={() => {
+                    if (!selectedService) {
+                      auth.toastError("Please select a service first");
+                    }
+                  }}
+                  InputProps={{
+                    ...params.InputProps,
+                    sx: {
+                      "& fieldset": { borderRadius: "10px" },
+                      "&:hover fieldset": { borderColor: "#1E88E5" },
+                      "&.Mui-focused fieldset": { borderColor: "#1565C0" },
+                    },
+                    endAdornment: (
+                      <>
+                        {loadingPostCustomerServices ? <CircularProgress size={20} /> : null}
+                        {params.InputProps.endAdornment}
+                      </>
+                    ),
+                  }}
+                />
+              )}
+            />
+
+            {/* Add Supplier Button */}
+            <Button
+              type="button"
+              variant="contained"
+              color="primary"
+              onClick={() => setShowPopup(true)}
+              size="small"
+              fullWidth
+              className="shadow-md"
+            >
+              Add Supplier
+            </Button>
+          </div>
+
+          {/* Second Row: Agent Sales and Country */}
+          <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Agent Sales Autocomplete */}
+            <Autocomplete
+              fullWidth
+              options={agents}
+              getOptionLabel={(option) => option?.name || ""}
+              value={selectAgent}
+              onChange={(e, newValue) => setSelectAgent(newValue)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Select Agent Sales"
+                  placeholder="Select or Search Agent Sales"
+                  variant="outlined"
+                  InputProps={{
+                    ...params.InputProps,
+                    sx: { "& fieldset": { borderRadius: "10px" } },
+                  }}
+                />
+              )}
+            />
+
+            {/* Country Autocomplete */}
+            <Autocomplete
+              fullWidth
+              options={countries}
+              getOptionLabel={(option) => option.name || ""}
+              value={
+                countries.find((country) => country.id === selectedCountry) ||
+                null
+              }
+              onChange={(e, newValue) =>
+                setSelectedCountry(newValue ? newValue.id : null)
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Select Country"
+                  placeholder="Select or Search Country"
+                  variant="outlined"
+                  InputProps={{
+                    ...params.InputProps,
+                    sx: { "& fieldset": { borderRadius: "10px" } },
+                  }}
+                />
+              )}
+            />
+          </div>
+
+          {/* Popup Modal for Adding Supplier */}
+          {showPopup && (
+            <div className="fixed inset-0 z-50 p-4 bg-gray-600 bg-opacity-50 overflow-y-auto">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-semibold">Add Supplier</h2>
+                  <Button
+                    onClick={() => setShowPopup(false)}
+                    className="text-red-500"
+                  >
+                    Close
+                  </Button>
+                </div>
+                <AddSupplierPage update={update} setUpdate={setUpdate} />
+              </div>
+            </div>
+          )}
+
+          {/* Cost & Markup Section (Appears under Agent & Country) */}
+          <div className="p-4 bg-blue-50 rounded-lg shadow-sm border border-blue-200">
+            <h3 className="text-lg font-bold text-blue-700 mb-2">
+              Cost & Markup Details
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Currency Autocomplete */}
+              <Autocomplete
                 fullWidth
+                options={currencies}
+                getOptionLabel={(option) => option?.name || ""}
+                // Look up the full object based on the stored value (if storing an id, adjust accordingly)
+                value={selectedCurrency} 
+                onChange={(e, newValue) => setSelectedCurrency(newValue)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Select Currency"
+                    placeholder="Select or Search Currency"
+                    variant="outlined"
+                    InputProps={{
+                      ...params.InputProps,
+                      sx: { "& fieldset": { borderRadius: "10px" } },
+                    }}
+                  />
+                )}
+              />
+
+              {/* Agent Cost */}
+              <TextField
+                label="Agent Cost"
                 variant="outlined"
-                value={selectedToSupplier}
-                onChange={(e) => setSelectedToSupplier(e.target.value)}
-                label={`Select ${category === "B2B" ? "Supplier" : "Customer"}`}
-                disabled={!category}
-                className="mb-6"
-                onClick={(e) => {
-                  if (!category) {
-                    auth.toastError("Please select a category first");
-                  }
+                fullWidth
+                required
+                value={cost}
+                onChange={(e) => setCost(e.target.value)}
+                InputProps={{
+                  sx: { "& fieldset": { borderRadius: "10px" } },
                 }}
-              >
-              {secondMenuData
-                  .filter((supplier) => supplier.id !== selectedFromSupplier)
-                  .map((supplier) => (
-                    <MenuItem key={supplier.id} value={supplier.id}>
-                      {supplier.name}
+              />
+
+              {/* Markup Value & Type */}
+              <div className="flex flex-col space-y-2">
+                <TextField
+                  label="Markup Value"
+                  variant="outlined"
+                  fullWidth
+                  required
+                  value={markupValue}
+                  onChange={(e) => setMarkupValue(e.target.value)}
+                  InputProps={{
+                    sx: { "& fieldset": { borderRadius: "10px" } },
+                  }}
+                />
+                <div className="flex items-center space-x-2">
+                  <span className="font-semibold text-gray-700">
+                    Markup Type:
+                  </span>
+                  <Switch
+                    checked={isMarkupPercentage === 1}
+                    onChange={handleSwitchChange}
+                    color="primary"
+                  />
+                  <span className="text-sm text-gray-600">
+                    {isMarkupPercentage ? "Percentage" : "Value"}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 text-right text-blue-700 font-semibold">
+              Total Cost: {price}{" "}
+              {selectedCurrency ? selectedCurrency.name : ""}
+            </div>
+          </div>
+
+          {/* Tax Details Section (Appears when a country is selected) */}
+          {selectedCountry && (
+            <div className="p-4 bg-yellow-50 rounded-lg shadow-sm border border-yellow-200 mt-6">
+              <h3 className="text-lg font-bold text-yellow-700 mb-2">
+                Tax Details
+              </h3>
+              {/* Tax Type & Taxes Selection */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <TextField
+                  select
+                  fullWidth
+                  variant="outlined"
+                  value={selectedTaxType}
+                  onChange={(e) => setSelectedTaxType(e.target.value)}
+                  label="Select Tax Type"
+                  InputProps={{
+                    sx: { "& fieldset": { borderRadius: "10px" } },
+                  }}
+                >
+                  {taxesType.map((tax) => (
+                    <MenuItem key={tax.value} value={tax.value}>
+                      {tax.label}
                     </MenuItem>
                   ))}
-              </TextField>
-              <Button
-                type="button"
-                variant="contained"
-                color="primary"
-                onClick={() => setShowPopup(true)}
-                className="w-full"
-              >
-                Add Supplier
-              </Button>
-              {showPopup && (
-              <div className="w-full fixed p-4 inset-0 z-50 bg-gray-600 bg-opacity-50 overflow-y-auto">
-                  <div className="bg-white p-4 rounded-lg shadow-lg w-full overflow-y-auto max-w-4xl">
-                    <div className="flex justify-between items-center mt-4">
-                      <h2 className="text-xl font-semibold">Add Supplier</h2>
-                      <Button
-                        onClick={() => setShowPopup(false)}
-                        className="text-red-500"
-                      >
-                        Close
-                      </Button>
-                    </div>
-
-                    <AddSupplierPage update={update} setUpdate={setUpdate} />
-                  </div>
+                </TextField>
+                <Autocomplete
+                  multiple
+                  fullWidth
+                  options={taxes || []}
+                  disableCloseOnSelect
+                  getOptionLabel={(option) => option.name || ""}
+                  value={taxes.filter((tax) => selectedTaxId.includes(tax.id))}
+                  onChange={(event, newValue) =>
+                    setSelectedTaxId(newValue.map((tax) => tax.id))
+                  }
+                  disabled={!selectedCountry}
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props} key={option.id}>
+                      <Checkbox
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.name}
+                    </li>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Taxes"
+                      variant="outlined"
+                      placeholder="Search or select taxes"
+                      InputProps={{
+                        ...params.InputProps,
+                        sx: { "& fieldset": { borderRadius: "10px" } },
+                      }}
+                    />
+                  )}
+                />
                 </div>
-              )}
+              {/* Tax Summary */}
+              <div className="mt-4 text-right text-yellow-800 font-semibold">
+                Total Tax Amount:{" "}
+                {selectedTaxId.length > 0 && taxes.length > 0
+                  ? selectedTaxId
+                      .reduce((acc, id) => {
+                        const tax = taxes.find((tax) => tax.id === id);
+                        if (tax) {
+                          const taxValue =
+                            tax.type === "precentage"
+                              ? (parseFloat(tax.amount) / 100) *
+                                parseFloat(cost || 0)
+                              : parseFloat(tax.amount);
+                          return acc + (isNaN(taxValue) ? 0 : taxValue);
+                        }
+                        return acc;
+                      }, 0)
+                      .toFixed(2)
+                  : "0"}{" "}
+                {selectedCurrency ? selectedCurrency.name : ""}
+              </div>
+            </div>
+          )}
 
-              </>      
-            {/* // )
-            //  : (
-            //   <>
-            //     <TextField
-            //       select
-            //       variant="outlined"
-            //       value={selectedToSupplier}
-            //       onChange={(e) => setSelectedToSupplier(e.target.value)}
-            //       label="No Supplier"
-            //       disabled
-            //       className="mb-6 w-[60%]"
-            //     />
-            //     <Button
-            //         type="button"
-            //         variant="contained"
-            //         color="primary"
-            //         onClick={() => setShowPopup(true)}
-            //         size="small"
-            //         style={{
-            //           padding: "15px 2px",
-            //           fontSize: "0.75rem",
-            //           width: "20%",
-            //         }}
-            //       >
-            //         Add Supplier
-            //     </Button>                           
-            //     {showPopup && (
-            //     <div className="w-full fixed p-4 inset-0 z-50 bg-gray-600 bg-opacity-50 overflow-y-auto">
-            //         <div className="bg-white p-4 rounded-lg shadow-lg w-full overflow-y-auto max-w-4xl">
-            //           <div className="flex justify-between items-center mt-4">
-            //             <h2 className="text-xl font-semibold">Add Supplier</h2>
-            //             <Button
-            //               onClick={() => setShowPopup(false)}
-            //               className="text-red-500"
-            //             >
-            //               Close
-            //             </Button>
-            //           </div>
-
-            //           <AddSupplierPage update={update} setUpdate={setUpdate} />
-            //         </div>
-            //       </div>
-            //     )}
-
-            //   </>
-            // ) */}
-            {/* } */}
+          {/* Final Overall Summary Section */}
+          <div className="p-4 bg-green-50 rounded-lg shadow-md border border-green-200 mt-6">
+            <div className="flex justify-between items-center">
+              <span className="font-bold text-green-700">
+                Total Taxes + Cost:
+              </span>
+              <span className="text-green-700">
+                {(
+                  parseFloat(cost || 0) +
+                  (selectedTaxId.length > 0 && taxes.length > 0
+                    ? selectedTaxId.reduce((acc, id) => {
+                        const tax = taxes.find((tax) => tax.id === id);
+                        if (tax) {
+                          const taxValue =
+                            tax.type === "precentage"
+                              ? (parseFloat(tax.amount) / 100) *
+                                parseFloat(cost || 0)
+                              : parseFloat(tax.amount);
+                          return acc + (isNaN(taxValue) ? 0 : taxValue);
+                        }
+                        return acc;
+                      }, 0)
+                    : 0)
+                ).toFixed(2)}
+              </span>
+            </div>
+            <div className="flex justify-between items-center mt-2">
+              <span className="font-bold text-green-700">
+                Grand Total (Cost + Taxes + Markup):
+              </span>
+              <span className="text-green-700">
+                {(
+                  parseFloat(price || 0) +
+                  (selectedTaxId.length > 0 && taxes.length > 0
+                    ? selectedTaxId.reduce((acc, id) => {
+                        const tax = taxes.find((tax) => tax.id === id);
+                        if (tax) {
+                          const taxValue =
+                            tax.type === "precentage"
+                              ? (parseFloat(tax.amount) / 100) *
+                                parseFloat(cost || 0)
+                              : parseFloat(tax.amount);
+                          return acc + (isNaN(taxValue) ? 0 : taxValue);
+                        }
+                        return acc;
+                      }, 0)
+                    : 0) 
+                ).toFixed(2)}
+              </span>
+            </div>
           </div>
+        </div>
         )}
+
         {/* Details Section */}
         <button
           type="button"
@@ -1323,1780 +1004,180 @@ const ManualBooking = () => {
         >
           Details
         </button>
-        {visibleSection === "details" && (
-          <div>
-            <div className="space-y-4 p-2 lg:p-6">
+          {selectedService && (
+            <div>
+              <div className="space-y-4 p-2 lg:p-6">
+
+              {/* Visa  Details */}
+              {selectedService?.service_name === "Visa" && (
+                  <VisaServicePage
+                      countries={countries}
+                      today={today}
+                      title={title}
+                      visaCountry={visaCountry}
+                      setVisaCountry={setVisaCountry}
+                      visaTravelDate={visaTravelDate}
+                      setVisaTravelDate={setVisaTravelDate}
+                      visaAppointmentDate={visaAppointmentDate}
+                      setVisaAppointmentDate={setVisaAppointmentDate}
+                      visaAdultsNumber={visaAdultsNumber}
+                      setVisaAdultsNumber={setVisaAdultsNumber}
+                      visaChildrenNumber={visaChildrenNumber}
+                      setVisaChildrenNumber={setVisaChildrenNumber}
+                      visaAdults={visaAdults}
+                      setVisaAdults={setVisaAdults}
+                      visaChildren={visaChildren}
+                      setVisaChildren={setVisaChildren}
+                      visaNotes={visaNotes}
+                      setVisaNotes={setVisaNotes}
+                  />
+              )}
+
+              {/* Flight  Details */}
+              {selectedService?.service_name === "Flight" && (
+                <FlightServicePage
+                  today={today}
+                  auth={auth}
+                  title={title}
+                  flightType={flightType}
+                  flightDirection={flightDirection}
+                  selectedFlightType={selectedFlightType}
+                  setSelectedFlightType={setSelectedFlightType}
+                  selectedFlightDirection={selectedFlightDirection}
+                  setSelectedFlightDirection={setSelectedFlightDirection}
+                  flightDeparture={flightDeparture}
+                  setFlightDeparture={setFlightDeparture}
+                  flightArrival={flightArrival}
+                  setFlightArrival={setFlightArrival}
+                  multiCityFlights={multiCityFlights}
+                  setMultiCityFlights={setMultiCityFlights}
+                  flightChildrenNumber={flightChildrenNumber}
+                  setFlightChildrenNumber={setFlightChildrenNumber}
+                  flightAdultsNumber={flightAdultsNumber}
+                  setFlightAdultsNumber={setFlightAdultsNumber}
+                  flightAdults={flightAdults}
+                  setFlightAdults={setFlightAdults}
+                  flightChildren={flightChildren}
+                  setFlightChildren={setFlightChildren}
+                  flightInfants={flightInfants}
+                  setFlightInfants={setFlightInfants}
+                  flightAdultPrice={flightAdultPrice}
+                  setFlightAdultPrice={setFlightAdultPrice}
+                  flightChildPrice={flightChildPrice}
+                  setFlightChildPrice={setFlightChildPrice}
+                  flightClass={flightClass}
+                  setFlightClass={setFlightClass}
+                  flightAirline={flightAirline}
+                  setFlightAirline={setFlightAirline}
+                  flightTicketNumber={flightTicketNumber}
+                  setFlightTicketNumber={setFlightTicketNumber}
+                  flightRefPNR={flightRefPNR}
+                  setFlightRefPNR={setFlightRefPNR}
+                />
+              )}
+
               {/* Hotel Details */}
               {selectedService.service_name === "Hotel" && (
-                <div className="border rounded-lg overflow-hidden shadow-lg">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setDetails({ ...details, hotel: !details.hotel })
-                    }
-                    className="w-full flex justify-between items-center px-6 py-3 bg-blue-50 text-blue-700 font-semibold hover:bg-blue-100 transition-all duration-300"
-                  >
-                    <span>Hotel Details</span>
-                    <span>{details.hotel ? "-" : "+"}</span>
-                  </button>
-                  {details.hotel && (
-                  <div className="flex flex-col">
-                      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-                      {/* Hotel Name */}
-                      <TextField
-                        fullWidth
-                        label="Hotel Name"
-                        value={hotelName}
-                        onChange={(e) => setHotelName(e.target.value)}
-                        variant="outlined"
-                        placeholder="Enter hotel name"
-                        className="w-full"
-                      />
-
-                      {/* Check-in Date */}
-                      <TextField
-                        fullWidth
-                        label="Check-in Date"
-                        value={checkInDate}
-                        onChange={(e) => setCheckInDate(e.target.value)}
-                        variant="outlined"
-                        type="date"
-                        InputLabelProps={{ shrink: true }}
-                        className="w-full"
-                      />
-
-                      {/* Check-out Date */}
-                      <TextField
-                        fullWidth
-                        label="Check-out Date"
-                        value={checkOutDate}
-                        onChange={(e) => setCheckOutDate(e.target.value)}
-                        variant="outlined"
-                        type="date"
-                        InputLabelProps={{ shrink: true }}
-                        className="w-full"
-                      />
-
-                      {/* Total Nights */}
-                      <TextField
-                        fullWidth
-                        label="Total Nights"
-                        value={totalNights}
-                        onChange={(e) => setTotalNights(e.target.value)}
-                        variant="outlined"
-                        type="number"
-                        placeholder="Enter total nights"
-                        className="w-full"
-                        inputProps={{ min: 0 }} // Prevent typing values below 0
-                      />
-
-                        {/* Room Quantity */}
-                        <TextField
-        fullWidth
-        label="Room Quantity"
-        value={roomQuantity}
-        onChange={handleQuantityChange}
-        variant="outlined"
-        type="number"
-        placeholder="Enter number of rooms"
-        inputProps={{ min: 0 }}
-      />
-
-        {/* Room Types Inputs */}
-        {roomTypes.length > 0 &&
-  roomTypes.map((type, index) => (
-<TextField
-  select
-  key={index}
-  fullWidth
-  label={`Room Type for Room ${index + 1}`}
-  value={type}
-  onChange={(e) => handleRoomTypeChange(index, e.target.value)}
-  variant="outlined"
-  placeholder="Select Room Type"
->
-<MenuItem value="domestic">Domestic</MenuItem>
-  <MenuItem value="international">International</MenuItem>
-</TextField>
-  ))
-}
-
-
-                      {/* Room Type */}
-
-                      {/* <TextField
-                        fullWidth
-                        label="Room Type"
-                        value={roomType}
-                        onChange={(e) => setRoomType(e.target.value)}
-                        variant="outlined"
-                        type="number"
-                        placeholder="Enter room type (e.g., 1 for single, 2 for double)"
-                        className="w-full"
-                        inputProps={{ min: 0 }} // Prevent typing values below 0
-                      /> 
-                      */}
-
-                    
-
-                      {/* Adults */}
-                      {/* <TextField
-                            fullWidth
-                            label="Adults"
-                            value={adultsHotelNumber}
-                            onChange={(e) => setAdultsHotelNumber(e.target.value)}
-                            variant="outlined"
-                            type="number"
-                            placeholder="Enter number of adults"
-                            className="w-full"
-                            inputProps={{ min: 0 }} // Prevent typing values below 0
-                        /> */}
-
-                      {/* Children */}
-                      {/* <TextField
-                            fullWidth
-                            label="Children"
-                            value={childrenHotelNumber}
-                            onChange={(e) => setChildrenHotelNumber(e.target.value)}
-                            variant="outlined"
-                            type="number"
-                            placeholder="Enter number of children"
-                            className="w-full"
-                            inputProps={{ min: 0 }} // Prevent typing values below 0
-                        /> */}
-
-                      {/* Adults */}
-                      <div className="mb-4">
-                        <TextField
-                          label="Adults"
-                          type="number"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={adultsHotelNumber}
-                          onChange={handleAdultsHotelNumberChange}
-                          placeholder="Enter number of adults"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div>
-
-
-
-                      {/* Children */}
-                      <div className="mb-4">
-                        <TextField
-                          label="Children"
-                          type="number"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={childrenHotelNumber}
-                          onChange={handleChildrenHotelNumberChange}
-                          placeholder="Enter number of children"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col md:flex-row gap-6">
-                      {/* Adult Details Inputs */}
-                      {adultsHotelNumber>0 && 
-                        <div className="flex-1 shadow-md p-6 rounded-lg bg-white">
-                        <h2 className="text-xl font-semibold text-gray-700 mb-4">Adults</h2>
-                        {hotelAdults.map((adult, index) => (
-                          <div
-                            key={index}
-                            className="mb-6 w-full shadow-md p-6 rounded-lg bg-gray-50"
-                          >
-                            <h1 className="text-lg font-semibold text-gray-700">
-                              Adult {index + 1} 
-                            </h1>
-                            <div className="w-full flex flex-col md:flex-row gap-4">     <div className="mb-4">
-                              <TextField
-                                select
-                                label={`Title for Adult ${index + 1}`}
-                                variant="outlined"
-                                fullWidth
-                                value={adult.title}
-                                className="w-full"
-                                onChange={(e) =>
-                                  handleAdultHotelChange(index, "title", e.target.value)
-                                }
-                              >
-                                {title.map((title, idx) => (
-                                  <MenuItem key={idx} value={title}>
-                                    {title}
-                                  </MenuItem>
-                                ))}
-                              </TextField>
-                            </div>
-
-                            <div className="mb-4">
-                              <TextField
-                                label={`First Name for Adult ${index + 1}`}
-                                variant="outlined"
-                                fullWidth
-                                className="w-full"
-                                value={adult.firstName}
-                                onChange={(e) =>
-                                  handleAdultHotelChange(index, "firstName", e.target.value)
-                                }
-                              />
-                            </div>
-
-                            <div className="mb-4">
-                              <TextField
-                                label={`Last Name for Adult ${index + 1}`}
-                                variant="outlined"
-                                fullWidth
-                                className="w-full"
-                                value={adult.lastName}
-                                onChange={(e) =>
-                                  handleAdultHotelChange(index, "lastName", e.target.value)
-                                }
-                              />
-                            </div>
-                            </div>
-
-                      
-                          </div>
-                        ))}
-                      </div>
-                      }
-                      {/* Children Details Inputs */}
-                      {childrenHotelNumber>0 && 
-                        <div className="flex-1 shadow-md p-6 rounded-lg bg-white">
-                        <h2 className="text-xl font-semibold text-gray-700 mb-4">Children</h2>
-                        {hotelChildren.map((child, index) => (
-                          <div
-                            key={index}
-                            className="mb-6 w-full shadow-md p-6 rounded-lg bg-gray-50"
-                          >
-                            <h1 className="text-lg font-semibold text-gray-700">
-                              Child {index + 1} 
-                            </h1>
-                            <div className="w-full flex flex-col md:flex-row gap-4">       <div className="mb-4">
-                              <TextField
-                                label={`Age for Child ${index + 1}`}
-                                variant="outlined"
-                                fullWidth
-                                className="w-full"
-                                value={child.age}
-                                onChange={(e) =>
-                                  handleChildHotelChange(index, "age", e.target.value)
-                                }
-                              />
-                            </div>
-
-                            <div className="mb-4">
-                              <TextField
-                                label={`First Name for Child ${index + 1}`}
-                                variant="outlined"
-                                fullWidth
-                                className="w-full"
-                                value={child.firstName}
-                                onChange={(e) =>
-                                  handleChildHotelChange(index, "firstName", e.target.value)
-                                }
-                              />
-                            </div>
-
-                            <div className="mb-4">
-                              <TextField
-                                label={`Last Name for Child ${index + 1}`}
-                                variant="outlined"
-                                fullWidth
-                                className="w-full"
-                                value={child.lastName}
-                                onChange={(e) =>
-                                  handleChildHotelChange(index, "lastName", e.target.value)
-                                }
-                              />
-                            </div>
-                            </div>
-
-                          </div>
-                        ))}
-                      </div>
-                      }
-                    </div>
-                  </div>
-                  )}
-                </div>
+                <HotelServicePage
+                today={today}
+                hotelName={hotelName}
+                setHotelName={setHotelName}
+                checkInDate={checkInDate}
+                setCheckInDate={setCheckInDate}
+                checkOutDate={checkOutDate}
+                setCheckOutDate={setCheckOutDate}
+                totalNights={totalNights}
+                setTotalNights={setTotalNights}
+                roomQuantity={roomQuantity}
+                setRoomQuantity={setRoomQuantity}
+                roomTypes={roomTypes}
+                setRoomTypes={setRoomTypes}
+                adultsHotelNumber={adultsHotelNumber}
+                setAdultsHotelNumber={setAdultsHotelNumber}
+                childrenHotelNumber={childrenHotelNumber}
+                setChildrenHotelNumber={setChildrenHotelNumber}
+                hotelAdults={hotelAdults}
+                setHotelAdults={setHotelAdults}
+                hotelChildren={hotelChildren}
+                setHotelChildren={setHotelChildren}
+                title={title}
+              />
               )}
 
               {/* Bus Details */}
-              {selectedService.service_name === "Bus" && (
-                <div className="flex flex-col gap-3"> 
-                   <div className="border rounded-lg overflow-hidden shadow-lg">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setDetails({ ...details, bus: !details.bus })
-                    }
-                    className="w-full flex justify-between items-center px-6 py-3 bg-blue-50 text-blue-700 font-semibold hover:bg-blue-100 transition-all duration-300"
-                  >
-                    <span>Bus Details</span>
-                    <span>{details.bus ? "-" : "+"}</span>
-                  </button>
-                  {details.bus && (
-                    <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 bg-gray-50">
-                      {/* From */}
-                      <TextField
-                        fullWidth
-                        label="From"
-                        value={busFrom}
-                        onChange={(e) => setBusFrom(e.target.value)}
-                        variant="outlined"
-                        placeholder="Enter departure city"
-                        className="w-full"
-                      />
-
-                      {/* To */}
-                      <TextField
-                        fullWidth
-                        label="To"
-                        value={busTo}
-                        onChange={(e) => setBusTo(e.target.value)}
-                        variant="outlined"
-                        placeholder="Enter destination city"
-                        className="w-full"
-                      />
-
-                      {/* Departure */}
-                      <TextField
-                        fullWidth
-                        label="Departure Date & Time"
-                        value={departure}
-                        onChange={(e) => setDeparture(e.target.value)}
-                        variant="outlined"
-                        type="datetime-local"
-                        InputLabelProps={{ shrink: true }}
-                        className="w-full"
-                      />
-
-                      {/* Arrival */}
-                      <TextField
-                        fullWidth
-                        label="Arrival Date & Time"
-                        value={arrival}
-                        onChange={(e) => setArrival(e.target.value)}
-                        variant="outlined"
-                        type="datetime-local"
-                        InputLabelProps={{ shrink: true }}
-                        className="w-full"
-                      />
-
-                      {/* Adults */}
-                      <div className="mb-4">
-                        <TextField
-                          label="Adults"
-                          type="number"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={busAdultsNumber}
-                          onChange={handleBusAdultsNumberChange}
-                          placeholder="Enter number of adults"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div>
-
-
-
-                      {/* Children */}
-                      <div className="mb-4">
-                        <TextField
-                          label="Children"
-                          type="number"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={busChildrenNumber}
-                          onChange={handleBusChildrenNumberChange}
-                          placeholder="Enter number of children"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div>
-
-                  
-
-                      {/* Adult Price */}
-                      <TextField
-                        fullWidth
-                        label="Adult Price"
-                        value={adultPrice}
-                        onChange={(e) => setAdultPrice(e.target.value)}
-                        variant="outlined"
-                        type="number"
-                        placeholder="Enter price per adult"
-                        className="w-full"
-                        inputProps={{ min: 0 }} // Prevent typing values below 0
-                      />
-
-                      {/* Child Price */}
-                      <TextField
-                        fullWidth
-                        label="Child Price"
-                        value={childPrice}
-                        onChange={(e) => setChildPrice(e.target.value)}
-                        variant="outlined"
-                        type="number"
-                        placeholder="Enter price per child"
-                        className="w-full"
-                        inputProps={{ min: 0 }} // Prevent typing values below 0
-                      />
-
-                      {/* Bus Name */}
-                      <TextField
-                        fullWidth
-                        label="Bus Name"
-                        value={busName}
-                        onChange={(e) => setBusName(e.target.value)}
-                        variant="outlined"
-                        placeholder="Enter bus name"
-                        className="w-full"
-                      />
-
-                      {/* Bus Number */}
-                      <TextField
-                        fullWidth
-                        label="Bus Number"
-                        value={busNumber}
-                        onChange={(e) => setBusNumber(e.target.value)}
-                        variant="outlined"
-                        placeholder="Enter bus number"
-                        className="w-full"
-                      />
-
-                      {/* Driver Phone */}
-                      <TextField
-                        fullWidth
-                        label="Driver Phone"
-                        value={driverPhone}
-                        onChange={(e) => setDriverPhone(e.target.value)}
-                        variant="outlined"
-                        placeholder="Enter driver phone number"
-                        className="w-full"
-                      />
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-col md:flex-row gap-6">
-                    {/* Adult Details Inputs */}
-                    {busAdultsNumber>0 && <div className="flex-1 shadow-md p-6 rounded-lg bg-white">
-                      <h2 className="text-xl font-semibold text-gray-700 mb-4">Adults</h2>
-                      {busAdults.map((adult, index) => (
-                        <div
-                          key={index}
-                          className="mb-6 w-full shadow-md p-6 rounded-lg bg-gray-50"
-                        >
-                          <h1 className="text-lg font-semibold text-gray-700">
-                            Adult {index + 1}
-                          </h1>
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">   <div className="mb-4">
-                            <TextField
-                              select
-                              label={`Title for Adult ${index + 1}`}
-                              variant="outlined"
-                              fullWidth
-                              value={adult.selectedTitle}
-                              onChange={(e) =>
-                                handleAdultChangeBus(index, "selectedTitle", e.target.value)
-                              }
-                              className="w-full"
-                            >
-                              {title.map((title, idx) => (
-                                <MenuItem key={idx} value={title}>
-                                  {title}
-                                </MenuItem>
-                              ))}
-                            </TextField>
-                          </div>
-
-                          <div className="mb-4">
-                            <TextField
-                              label={`First Name for Adult ${index + 1}`}
-                              variant="outlined"
-                              fullWidth
-                              value={adult.firstName}
-                              onChange={(e) =>
-                                handleAdultChangeBus(index, "firstName", e.target.value)
-                              }
-                            />
-                          </div>
-
-                          <div className="mb-4">
-                            <TextField
-                              label={`Last Name for Adult ${index + 1}`}
-                              variant="outlined"
-                              fullWidth
-                              value={adult.lastName}
-                              onChange={(e) =>
-                                handleAdultChangeBus(index, "lastName", e.target.value)
-                              }
-                            />
-                          </div>
-                          </div>
-                      
-                        </div>
-                      ))}
-                    </div>
-                    }
-                  
-
-                    {/* Children Details Inputs */}
-                    {busChildrenNumber >0 &&  <div className="flex-1 shadow-md p-6 rounded-lg bg-white">
-                      <h2 className="text-xl font-semibold text-gray-700 mb-4">Children</h2>
-                      {busChildren.map((child, index) => (
-                        <div
-                          key={index}
-                          className="mb-6 w-full shadow-md p-6 rounded-lg bg-gray-50"
-                        >
-                          <h1 className="text-lg font-semibold text-gray-700">
-                            Child {index + 1}
-                          </h1>
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">  <div className="mb-4">
-                            <TextField
-                              label={`Age for Child ${index + 1}`}
-                              type="number"
-                              variant="outlined"
-                              fullWidth
-                              value={child.age}
-                              inputProps={{
-                                min: "0",
-                      }}
-                              onChange={(e) =>
-                                handleChildChangeBus(index, "age", e.target.value)
-                              }
-                              className="w-full"
-                            />
-                          </div>
-
-                          <div className="mb-4">
-                            <TextField
-                              label={`First Name for Child ${index + 1}`}
-                              variant="outlined"
-                              fullWidth
-                              value={child.firstName}
-                              onChange={(e) =>
-                                handleChildChangeBus(index, "firstName", e.target.value)
-                              }
-                              className="w-full"
-                            />
-                          </div>
-
-                          <div className="mb-4">
-                            <TextField
-                              label={`Last Name for Child ${index + 1}`}
-                              variant="outlined"
-                              fullWidth
-                              value={child.lastName}
-                              onChange={(e) =>
-                                handleChildChangeBus(index, "lastName", e.target.value)
-                              }
-                              className="w-full"
-                            />
-                          </div>
-                          </div>
-                        
-                        </div>
-                      ))}
-                    </div>}
-                  
-                  </div>
-                </div>
-            
+              {selectedService?.service_name === "Bus" && (
+                <BusServicePage
+                  today={today}
+                  details={details}
+                  setDetails={setDetails}
+                  busFrom={busFrom}
+                  setBusFrom={setBusFrom}
+                  busTo={busTo}
+                  setBusTo={setBusTo}
+                  departure={departure}
+                  setDeparture={setDeparture}
+                  arrival={arrival}
+                  setArrival={setArrival}
+                  busAdultsNumber={busAdultsNumber}
+                  setBusAdultsNumber={setBusAdultsNumber}
+                  busChildrenNumber={busChildrenNumber}
+                  setBusChildrenNumber={setBusChildrenNumber}
+                  adultPrice={adultPrice}
+                  setAdultPrice={setAdultPrice}
+                  childPrice={childPrice}
+                  setChildPrice={setChildPrice}
+                  busName={busName}
+                  setBusName={setBusName}
+                  busNumber={busNumber}
+                  setBusNumber={setBusNumber}
+                  driverPhone={driverPhone}
+                  setDriverPhone={setDriverPhone}
+                  busAdults={busAdults}
+                  setBusAdults={setBusAdults}
+                  busChildren={busChildren}
+                  setBusChildren={setBusChildren}
+                  title={title}
+                />
               )}
-              {/* Visa Details */}
-              {selectedService.service_name === "Visa" && (
-                <div className="border rounded-lg overflow-hidden shadow-lg">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setDetails({ ...details, visa: !details.visa })
-                    }
-                    className="w-full flex justify-between items-center px-6 py-3 bg-blue-50 text-blue-700 font-semibold hover:bg-blue-100 transition-all duration-300"
-                  >
-                    <span>Visa Details</span>
-                    <span>{details.visa ? "-" : "+"}</span>
-                  </button>
-                  {details.visa && (
-                    <div className="flex flex-col">
-                    <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 bg-gray-50">
-                      {/* Country */}
-                      <div>
-                          <TextField
-                          select
-                          fullWidth
-                          variant="outlined"
-                          value={visaCountry}
-                          onChange={(e) => setVisaCountry(e.target.value)} // Update the selected service                }
-                          label="Select Country"
-                          required
-                          placeholder="Select Country Name"
-                        >
-                          {countries.map((country) => (
-                            <MenuItem key={country.id} value={country.name}>
-                              {country.name}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      </div>
-                      {/* Travel Date */}
-                      <div>
-                        <TextField
-                          label="Travel Date & Time"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          type="datetime-local"
-                          InputLabelProps={{ shrink: true }}
-                          value={visaTravelDate}
-                          onChange={(e) => setVisaTravelDate(e.target.value)}
-                          placeholder="Enter Travel Date"
-                          inputProps={{
-                            min: `${today}T00:00`, // Disable past dates
-                          }}
-                        />
-                      </div>
-                      {/* Appointment Date */}
-                      <div>
-                        <TextField
-                          label="Appointment Date & Time"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          type="datetime-local"
-                          InputLabelProps={{ shrink: true }}
-                          value={visaAppointmentDate}
-                          onChange={(e) =>
-                            setVisaAppointmentDate(e.target.value)
-                          }
-                          placeholder="Enter Appointment Date"
-                          inputProps={{
-                            min: `${today}T00:00`, // Disable past dates
-                          }}
-                        />
-                      </div>
-                      {/* Adults */}
-                      <div>
-                        <TextField
-                          label="Adults"
-                          type="number"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={visaAdultsNumber}
-                          onChange={handleVisaAdultsNumberChange}
-                          placeholder="Enter number of children"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div>
-                      {/* children */}
-                      <div>
-                        <TextField
-                          label="Children"
-                          type="number"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={visaChildrenNumber}
-                          onChange={handleVisaChildrenNumberChange}
-                          placeholder="Enter number of children"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div>
-                      {/* Notes */}
-                      <div>
-                        <TextField
-                          label="Notes"
-                          multiline
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={visaNotes}
-                          onChange={(e) => setVisaNotes(e.target.value)}
-                          placeholder="Enter additional notes"
-                        />
-                      </div>
-                    </div>
 
-                    <div className="flex flex-col md:flex-row gap-6">
-                          {/* Adults Section */}
-                        {visaAdultsNumber >0 && 
-                          <div className="w-full md:w-1/2 shadow-md p-4 rounded-lg bg-white">
-                          <h2 className="text-xl font-semibold text-gray-700 mb-4">Adults</h2>
-                          {visaAdults.map((adult, index) => (
-                            <div
-                              key={index}
-                              className="mb-6 w-full flex flex-col gap-4 shadow-md p-4 rounded-lg bg-gray-50"
-                            >
-                              <h1 className="text-lg font-semibold text-gray-700">
-                                Adult {index + 1}
-                              </h1>
-
-                              <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 p-2">
-                                {/* Title */}
-                                <div>
-                                  <TextField
-                                    select
-                                    label="Title"
-                                    variant="outlined"
-                                    fullWidth
-                                    value={adult.selectedTitle}
-                                    onChange={(e) =>
-                                      handleAdulVisaChange(index, "selectedTitle", e.target.value)
-                                    }
-                                    className="w-full"
-                                  >
-                                    {title.map((title, idx) => (
-                                      <MenuItem key={idx} value={title}>
-                                        {title}
-                                      </MenuItem>
-                                    ))}
-                                  </TextField>
-                                </div>
-                                {/* First Name */}
-                                <div>
-                                  <TextField
-                                    label="First Name"
-                                    variant="outlined"
-                                    fullWidth
-                                    value={adult.firstName}
-                                    onChange={(e) =>
-                                      handleAdulVisaChange(index, "firstName", e.target.value)
-                                    }
-                                    className="w-full"
-                                  />
-                                </div>
-                                {/* Last Name */}
-                                <div>
-                                  <TextField
-                                    label="Last Name"
-                                    variant="outlined"
-                                    fullWidth
-                                    value={adult.lastName}
-                                    onChange={(e) =>
-                                      handleAdulVisaChange(index, "lastName", e.target.value)
-                                    }
-                                    className="w-full"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        }
-
-                          {/* Children Section */}
-                        {visaChildrenNumber >0 &&
-                          <div className="w-full md:w-1/2 shadow-md p-4 rounded-lg bg-white">
-                          <h2 className="text-xl font-semibold text-gray-700 mb-4">Childreen</h2>
-                          {visaChildren.map((child, index) => (
-                            <div
-                              key={index}
-                              className="mb-6 w-full flex flex-col gap-4 shadow-md p-4 rounded-lg bg-gray-50"
-                            >
-                              <h1 className="text-lg font-semibold text-gray-700">
-                                Child {index + 1}
-                              </h1>
-
-                              <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 p-2">
-                                {/* Age */}
-                                <div>
-                                  <TextField
-                                    label="Age"
-                                    type="number"
-                                    variant="outlined"
-                                    fullWidth
-                                    value={child.age}
-                                    onChange={(e) =>
-                                      handleChildVisaChange(index, "age", e.target.value)
-                                    }
-                                    inputProps={{ min: 0 }} // Prevents negative values
-                                    className="w-full"
-                                  />
-                                </div>
-                                {/* First Name */}
-                                <div>
-                                  <TextField
-                                    label="First Name"
-                                    variant="outlined"
-                                    fullWidth
-                                    value={child.firstName}
-                                    onChange={(e) =>
-                                      handleChildVisaChange(index, "firstName", e.target.value)
-                                    }
-                                    className="w-full"
-                                  />
-                                </div>
-                                {/* Last Name */}
-                                <div>
-                                  <TextField
-                                    label="Last Name"
-                                    variant="outlined"
-                                    fullWidth
-                                    value={child.lastName}
-                                    onChange={(e) =>
-                                      handleChildVisaChange(index, "lastName", e.target.value)
-                                    }
-                                    className="w-full"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        }
-                    </div>
-                    </div>
-          
-                  )}
-                </div>
+              {/* Tour Details */}
+              {selectedService?.service_name === "Tour" && (
+                <TourServicePage
+                  tour={tour}
+                  setTour={setTour}
+                  tourType={tourType}
+                  selectedTourType={selectedTourType}
+                  setSelectedTourType={setSelectedTourType}
+                  tourAdultsNumber={tourAdultsNumber}
+                  setTourAdultsNumber={setTourAdultsNumber}
+                  tourChildrenNumber={tourChildrenNumber}
+                  setTourChildrenNumber={setTourChildrenNumber}
+                  tourAdultPrice={tourAdultPrice}
+                  setTourAdultPrice={setTourAdultPrice}
+                  tourChildPrice={tourChildPrice}
+                  setTourChildPrice={setTourChildPrice}
+                  tourAdults={tourAdults}
+                  setTourAdults={setTourAdults}
+                  tourChildren={tourChildren}
+                  setTourChildren={setTourChildren}
+                  title={title}
+                  hotels={hotels}
+                  setHotels={setHotels}
+                  buses={buses}
+                  setBuses={setBuses}
+                  today={today}
+                />
               )}
-              {/* Flight  Details */}
-              {selectedService.service_name === "Flight" && (
-                <div className="flex flex-col gap-6">
-                  
-                  <div className="border rounded-lg overflow-hidden shadow-lg">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setDetails({ ...details, flight: !details.flight })
-                    }
-                    className="w-full flex justify-between items-center px-6 py-3 bg-blue-50 text-blue-700 font-semibold hover:bg-blue-100 transition-all duration-300"
-                  >
-                    <span>Flight Details</span>
-                    <span>{details.flight ? "-" : "+"}</span>
-                  </button>
-                  {details.flight && (
-                    <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 bg-gray-50">
-                      {/* Flight Type */}
-                      <TextField
-                        select
-                        fullWidth
-                        variant="outlined"
-                        value={selectedFlightType}
-                        onChange={(e) => setSelectedFlightType(e.target.value)}
-                        label={"Select Flight Type"}
-                        className="w-full"
-                        placeholder="Enter Flight Type"
-                      >
-                        {flightType.map((flight) => (
-                          <MenuItem key={flight.value} value={flight.value}>
-                            {flight.label}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                      <TextField
-                        select
-                        fullWidth
-                        variant="outlined"
-                        value={selectedFlightDirection}
-                        onChange={(e) =>
-                          setselectedFlightDirection(e.target.value)
-                        }
-                        label="Select Flight Direction"
-                        className="w-full"
-                        placeholder="Select Flight Direction"
-                      >
-                        {flightDirection.map((flight) => (
-                          <MenuItem key={flight.value} value={flight.value}>
-                            {flight.label}
-                          </MenuItem>
-                        ))}
-                      </TextField>
 
-                      {/* Departure Date */}
-                      <div className="mb-4">
-                        <TextField
-                          type="datetime-local"
-                          label="Departure Date & Time"
-                          value={flightDeparture}
-                          onChange={(e) => setFlightDeparture(e.target.value)}
-                          placeholder="Enter Departure Date & Time"
-                          className="w-full"
-                          variant="outlined"
-                          fullWidth
-                          InputLabelProps={{ shrink: true }}
-                        />
-                      </div>
-
-                      {/* Conditionally Render Fields */}
-                      {(selectedFlightDirection === "round_trip" ||
-                        selectedFlightDirection === "multi_city") && (
-                          <div className="mb-4">
-                            <TextField
-                              type="datetime-local"
-                              label="Arrival Date & Time"
-                              value={flightArrival}
-                              onChange={(e) => setFlightArrival(e.target.value)}
-                              placeholder="Enter Arrival Date & Time"
-                              variant="outlined"
-                              fullWidth
-                              InputLabelProps={{ shrink: true }}
-                              className="w-full"
-                            />
-                          </div>
-                        )}
-
-                      {/* From and To Inputs */}
-                      {(selectedFlightDirection === "one_way" ||
-                        selectedFlightDirection === "round_trip") && (
-                          <>
-                            <div className="mb-4">
-                              <TextField
-                                label="From"
-                                variant="outlined"
-                                fullWidth
-                                className="w-full"
-                                value={multiCityFlights[0].from}
-                                onChange={(e) =>
-                                  handleMultiCityChange(0, "from", e.target.value)
-                                }
-                                placeholder="Enter Flight From"
-                              />
-                            </div>
-                            <div className="mb-4">
-                              <TextField
-                                label="To"
-                                variant="outlined"
-                                fullWidth
-                                className="w-full"
-                                value={multiCityFlights[0].to}
-                                onChange={(e) =>
-                                  handleMultiCityChange(0, "to", e.target.value)
-                                }
-                                placeholder="Enter Flight To"
-                              />
-                            </div>
-                          </>
-                        )}
-
-                      {/* Multi-City Inputs */}
-                      {selectedFlightDirection === "multi_city" && (
-                        <>
-                          {multiCityFlights.map((flight, index) => (
-                            <div
-                              key={index}
-                              className="flex lg:flex-row flex-col gap-2"
-                            >
-                              <TextField
-                                label={`From (${index + 1})`}
-                                variant="outlined"
-                                fullWidth
-                                className="w-full"
-                                value={flight.from}
-                                onChange={(e) =>
-                                  handleMultiCityChange(
-                                    index,
-                                    "from",
-                                    e.target.value
-                                  )
-                                }
-                                placeholder={`Enter From (${index + 1})`}
-                              />
-                              <TextField
-                                label={`To (${index + 1})`}
-                                variant="outlined"
-                                fullWidth
-                                className="w-full"
-                                value={flight.to}
-                                onChange={(e) =>
-                                  handleMultiCityChange(
-                                    index,
-                                    "to",
-                                    e.target.value
-                                  )
-                                }
-                                placeholder={`Enter To (${index + 1})`}
-                              />
-                            </div>
-                          ))}
-                          <button
-                            type="button"
-                            onClick={addNewMultiCityFlight}
-                            className="bg-mainColor w-full h-14 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 ease-in-out"
-                          >
-                            + Add Another Trip
-                          </button>
-                        </>
-                      )}
-
-                       {/* adults */}
-                       <div className="mb-4">
-                        <TextField
-                          label="Adults"
-                          type="number"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={flightAdultsNumber}
-                          onChange={handleFlightAdultsNumberChange}
-                          placeholder="Enter number of Adults"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div>
-
-                      {/* Children */}
-                      <div className="mb-4">
-                        <TextField
-                          label="Children"
-                          type="number"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={flightChildrenNumber}
-                          onChange={handleFlightChildrenNumberChange}
-                          placeholder="Enter number of children"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div>
-
-                      {/* Infants */}
-                      <div className="mb-4">
-                        <TextField
-                          label="Infants"
-                          type="number"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={flightInfants}
-                          onChange={(e) => setFlightInfants(e.target.value)}
-                          placeholder="Enter number of infants"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div>
-
-                      {/* Adult Price */}
-                      <div className="mb-4">
-                        <TextField
-                          label="Adult Price"
-                          type="number"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={flightAdultPrice}
-                          onChange={(e) => setFlightAdultPrice(e.target.value)}
-                          placeholder="Enter Adult Price"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div>
-
-                      {/* Child Price */}
-                      <div className="mb-4">
-                        <TextField
-                          label="Child Price"
-                          type="number"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={flightChildPrice}
-                          onChange={(e) => setFlightChildPrice(e.target.value)}
-                          placeholder="Enter Child Price"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div>
-
-                      {/* Class */}
-                      <div className="mb-4">
-  {/* Dropdown Menu with Three Defined MenuItems */}
-  <TextField
-    select
-    label="Select Flight Class"
-    variant="outlined"
-    fullWidth
-    className="w-full"
-    value={flightClass}
-    onChange={(e) => setFlightClass(e.target.value)}
-  >
-    <MenuItem value="first">First</MenuItem>
-    <MenuItem value="economy">Economy</MenuItem>
-    <MenuItem value="business">Business</MenuItem>
-  </TextField>
-</div>
-
-                      {/* Airline */}
-                      <div className="mb-4">
-                        <TextField
-                          label="Airline"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={flightAirline}
-                          onChange={(e) => setFlightAirline(e.target.value)}
-                          placeholder="Enter Airline"
-                        />
-                      </div>
-
-                      {/* Ticket Number */}
-                      <div className="mb-4">
-                        <TextField
-                          label="Ticket Number"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={flightTicketNumber}
-                          onChange={(e) =>
-                            setFlightTicketNumber(e.target.value)
-                          }
-                          placeholder="Enter Ticket Number"
-                        />
-                      </div>
-
-                      {/* Ref PNR */}
-                      <div className="mb-4">
-                        <TextField
-                          label="Ref PNR"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={flightRefPNR}
-                          onChange={(e) => setFlightRefPNR(e.target.value)}
-                          placeholder="Enter Ref PNR"
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex flex-col md:flex-row gap-6">
-                  {/* Adults Section */}
-                  {flightAdultsNumber >0 && 
-                  <div className="w-full md:w-1/2 shadow-lg p-6 rounded-lg bg-white">
-                    <h2 className="text-xl font-semibold text-gray-700 mb-4">Adults</h2>
-                    {flightAdults.map((adult, index) => (
-                      <div
-                        key={index}
-                        className="mb-6 w-full flex flex-col gap-4 shadow-md p-6 rounded-lg bg-gray-50"
-                      >
-                        {/* Header */}
-                        <h1 className="text-lg font-semibold text-gray-800">
-                          Adult {index + 1}
-                        </h1>
-
-                        {/* Form Row */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          {/* Title */}
-                          <TextField
-                            select
-                            label="Title"
-                            variant="outlined"
-                            fullWidth
-                            value={adult.selectedTitle}
-                            onChange={(e) =>
-                              handleAdultChange(index, "selectedTitle", e.target.value)
-                            }
-                            className="w-full"
-                          >
-                            {title.map((title, idx) => (
-                              <MenuItem key={idx} value={title}>
-                                {title}
-                              </MenuItem>
-                            ))}
-                          </TextField>
-
-                          {/* First Name */}
-                          <TextField
-                            label="First Name"
-                            variant="outlined"
-                            fullWidth
-                            value={adult.firstName}
-                            onChange={(e) =>
-                              handleAdultChange(index, "firstName", e.target.value)
-                            }
-                            className="w-full"
-                          />
-
-                          {/* Last Name */}
-                          <TextField
-                            label="Last Name"
-                            variant="outlined"
-                            fullWidth
-                            value={adult.lastName}
-                            onChange={(e) =>
-                              handleAdultChange(index, "lastName", e.target.value)
-                            }
-                            className="w-full"
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  }
-
-                  {/* Children Section */}
-                  {flightChildrenNumber>0 &&
-                  <div className="w-full md:w-1/2 shadow-lg p-6 rounded-lg bg-white">
-                    
-                    <h2 className="text-xl font-semibold text-gray-700 mb-4">Children</h2>
-                    {flightChildren.map((child, index) => (
-                      <div
-                        key={index}
-                        className="mb-6 w-full flex flex-col gap-6 shadow-md p-6 rounded-lg bg-gray-50"
-                      >
-                        {/* Header */}
-                        <h1 className="text-lg font-semibold text-gray-800">
-                          Child {index + 1}
-                        </h1>
-
-                        {/* Form Fields */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          {/* Age */}
-                          <TextField
-                            label="Age"
-                            type="number"
-                            variant="outlined"
-                            fullWidth
-                            value={child.age}
-                            onChange={(e) => handleChildChange(index, "age", e.target.value)}
-                            inputProps={{ min: 0 }}
-                            className="w-full"
-                          />
-
-                          {/* First Name */}
-                          <TextField
-                            label="First Name"
-                            variant="outlined"
-                            fullWidth
-                            value={child.firstName}
-                            onChange={(e) => handleChildChange(index, "firstName", e.target.value)}
-                            className="w-full"
-                          />
-
-                          {/* Last Name */}
-                          <TextField
-                            label="Last Name"
-                            variant="outlined"
-                            fullWidth
-                            value={child.lastName}
-                            onChange={(e) => handleChildChange(index, "lastName", e.target.value)}
-                            className="w-full"
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  }
-                </div>           
-                </div>            
-              )}
-              {/* Tour  Details */}
-              {selectedService.service_name === "Tour" && (
-                <div className="border rounded-lg overflow-hidden shadow-lg">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setDetails({ ...details, tour: !details.tour })
-                    }
-                    className="w-full flex justify-between items-center px-6 py-3 bg-blue-50 text-blue-700 font-semibold hover:bg-blue-100 transition-all duration-300"
-                  >
-                    <span>Tour Details</span>
-                    <span>{details.tour ? "-" : "+"}</span>
-                  </button>
-
-                  {details.tour && (
-                    <div className="flex flex-col">
-                      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 bg-gray-50">
-                        {/* Tour */}
-                        <div className="mb-4">
-                          <TextField
-                            label="Tour Name"
-                            variant="outlined"
-                            fullWidth
-                            className="w-full"
-                            value={tour}
-                            onChange={(e) => setTour(e.target.value)}
-                            placeholder="Enter Tour Name"
-                          />
-                        </div>
-
-                        <TextField
-                          select
-                          fullWidth
-                          variant="outlined"
-                          value={selectedTourType}
-                          onChange={(e) => setSelectedTourType(e.target.value)}
-                          label={"Select Tour Type"}
-                          className="w-full"
-                          placeholder="Enter Tour Type"
-                        >
-                          {tourType.map((tour) => (
-                            <MenuItem key={tour.value} value={tour.value}>
-                              {tour.label}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-
-                        {/* adults */}
-                        <div className="mb-4">
-                        <TextField
-                          label="Adults"
-                          type="number"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={tourAdultsNumber}
-                          onChange={handleTourAdultsNumberChange}
-                          placeholder="Enter number of Adults"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div>
-
-                        {/* Children */}
-                        <div className="mb-4">
-                        <TextField
-                          label="Children"
-                          type="number"
-                          variant="outlined"
-                          fullWidth
-                          className="w-full"
-                          value={tourChildrenNumber}
-                          onChange={handleTourChildrenNumberChange}
-                          placeholder="Enter number of children"
-                          inputProps={{ min: 0 }} // Prevent typing values below 0
-                        />
-                      </div>
-
-                        {/* Child Price */}
-                        <div className="mb-4">
-                          <TextField
-                            label="Child Price"
-                            type="number"
-                            variant="outlined"
-                            fullWidth
-                            className="w-full"
-                            value={tourChildPrice}
-                            onChange={(e) => setTourChildPrice(e.target.value)}
-                            placeholder="Enter Child Price"
-                            inputProps={{ min: 0 }} // Prevent typing values below 0
-                          />
-                        </div>
-
-                        {/* Adult Price */}
-                        <div className="mb-4">
-                          <TextField
-                            label="Adult Price"
-                            type="number"
-                            variant="outlined"
-                            fullWidth
-                            className="w-full"
-                            value={tourAdultPrice}
-                            onChange={(e) => setTourAdultPrice(e.target.value)}
-                            placeholder="Enter Adult Price"
-                            inputProps={{ min: 0 }} // Prevent typing values below 0
-                          />
-                        </div>
-                      </div>
-                      <div className="flex flex-col md:flex-row  gap-6">
-                        {/* Adults Children */}
-                        {tourAdultsNumber >0 &&
-                          <div className="w-full md:w-1/2 shadow-lg p-6 rounded-lg bg-white">
-                            <h2 className="text-xl font-semibold text-gray-700 mb-4">Adults</h2>
-                            {tourAdults.map((adult, index) => (
-                              <div
-                          key={index}
-                          className="mb-6 w-full flex flex-col shadow-lg p-3 rounded-lg bg-white hover:shadow-xl transition-shadow duration-300"
-                        >
-                          {/* Adult Title */}
-                          <h2 className="text-xl font-semibold mb-2 text-gray-700">
-                            Adult {index + 1}
-                          </h2>
-
-                          {/* Input Fields Container */}
-                          <div className="w-full flex flex-col md:flex-row gap-3"> {/* Switch to flex-col on small screens */}
-                            
-                            {/* Title */}
-                            <div className="flex-1 mb-3"> 
-                              <TextField
-                                select
-                                label="Title"
-                                variant="outlined"
-                                fullWidth
-                                value={adult.selectedTitle}
-                                onChange={(e) =>
-                                  handleAdulTourChange(index, "selectedTitle", e.target.value)
-                                }
-                                className="w-full"
-                                InputLabelProps={{
-                                  style: { fontWeight: "500", color: "#4a4a4a" },
-                                }}
-                                InputProps={{
-                                  style: { padding: "8px 10px", borderRadius: "6px" },
-                                }}
-                              >
-                                {title.map((title, idx) => (
-                                  <MenuItem key={idx} value={title}>
-                                    {title}
-                                  </MenuItem>
-                                ))}
-                              </TextField>
-                            </div>
-
-                            {/* First Name */}
-                            <div className="flex-1 mb-3">
-                              <TextField
-                                label="First Name"
-                                variant="outlined"
-                                fullWidth
-                                value={adult.firstName}
-                                onChange={(e) =>
-                                  handleAdulTourChange(index, "firstName", e.target.value)
-                                }
-                                className="w-full"
-                                InputLabelProps={{
-                                  style: { fontWeight: "500", color: "#4a4a4a" },
-                                }}
-                                InputProps={{
-                                  style: { padding: "8px 10px", borderRadius: "6px" },
-                                }}
-                              />
-                            </div>
-
-                            {/* Last Name */}
-                            <div className="flex-1 mb-3">
-                              <TextField
-                                label="Last Name"
-                                variant="outlined"
-                                fullWidth
-                                value={adult.lastName}
-                                onChange={(e) =>
-                                  handleAdulTourChange(index, "lastName", e.target.value)
-                                }
-                                className="w-full"
-                                InputLabelProps={{
-                                  style: { fontWeight: "500", color: "#4a4a4a" },
-                                }}
-                                InputProps={{
-                                  style: { padding: "8px 10px", borderRadius: "6px" },
-                                }}
-                              />
-                            </div>
-
-                          </div>
-                        </div>
-
-                        
-                          
-                            
-                            ))}
-                          </div>
-                        }
-
-                        {/* Children Section */}
-                        {tourChildrenNumber >0 && 
-                        <div className="w-full md:w-1/2 shadow-lg p-6 rounded-lg bg-white">
-                          <h2 className="text-xl font-semibold text-gray-700 mb-4">Children</h2>
-                          {tourChildren.map((child, index) => (
-                            <div
-                            key={index}
-                            className="mb-6 w-full flex flex-col shadow-lg p-6 rounded-lg bg-white hover:shadow-xl transition-shadow duration-300"
-                            >
-                            {/* Child Title */}
-                            <h2 className="text-xl font-semibold mb-4 text-gray-700"> {/* Reduced margin-bottom */}
-                              Child {index + 1}
-                            </h2>
-
-                            {/* Input Fields Container */}
-                            <div className="w-full flex flex-col md:flex-row gap-4"> {/* Switch to flex-col on small screens */}
-
-                              {/* Age */}
-                          <div className="flex-1 mb-3"> {/* Reduced margin-bottom */}
-                            <TextField
-                              label="Age"
-                              type="number"
-                              variant="outlined"
-                              fullWidth
-                              value={child.age}
-                              onChange={(e) =>
-                                handleChildTourChange(index, "age", e.target.value)
-                              }
-                              inputProps={{ min: 0 }} // Prevents negative values
-                              className="w-full"
-                            />
-                          </div>
-
-                          {/* First Name */}
-                          <div className="flex-1 mb-3"> {/* Reduced margin-bottom */}
-                            <TextField
-                              label="First Name"
-                              variant="outlined"
-                              fullWidth
-                              value={child.firstName}
-                              onChange={(e) =>
-                                handleChildTourChange(index, "firstName", e.target.value)
-                              }
-                              className="w-full"
-                            />
-                          </div>
-
-                          {/* Last Name */}
-                          <div className="flex-1 mb-3"> {/* Reduced margin-bottom */}
-                            <TextField
-                              label="Last Name"
-                              variant="outlined"
-                              fullWidth
-                              value={child.lastName}
-                              onChange={(e) =>
-                                handleChildTourChange(index, "lastName", e.target.value)
-                              }
-                              className="w-full"
-                            />
-                          </div>
-
-                        </div>
-                        </div>
-
-
-                          ))}
-                        </div>
-                        }
-                      </div>
-                      {/* Hotel Inputs */}
-                      {hotels.map((hotel, index) => (
-                        <div key={index} className="p-4 bg-gray-50">
-                          <h1 className="bg-gray-100 p-2 font-semibold text-mainColor flex justify-center">
-                            Hotel Details
-                          </h1>
-                          <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <TextField
-                              label="Destination"
-                              value={hotel.destination}
-                              onChange={(e) =>
-                                handleHotelChange(
-                                  index,
-                                  "destination",
-                                  e.target.value
-                                )
-                              }
-                              fullWidth
-                              className="mb-2"
-                            />
-                            <TextField
-                              label="Hotel Name"
-                              value={hotel.hotel_name}
-                              onChange={(e) =>
-                                handleHotelChange(
-                                  index,
-                                  "hotel_name",
-                                  e.target.value
-                                )
-                              }
-                              fullWidth
-                              className="mb-2"
-                            />
-                           <TextField
-  select
-  label="Room Type"
-  value={hotel.room_type}
-  onChange={(e) => handleHotelChange(index, "room_type", e.target.value)}
-  fullWidth
-  className="mb-2"
->
-  <MenuItem value="domestic">Domestic</MenuItem>
-  <MenuItem value="international">International</MenuItem>
-</TextField>
-                            <TextField
-                              label="Check-In Date"
-                              type="date"
-                              value={hotel.check_in}
-                              onChange={(e) =>
-                                handleHotelChange(
-                                  index,
-                                  "check_in",
-                                  e.target.value
-                                )
-                              }
-                              fullWidth
-                              InputLabelProps={{ shrink: true }}
-                              className="mb-2"
-                            />
-                            <TextField
-                              label="Check-Out Date"
-                              type="date"
-                              value={hotel.check_out}
-                              onChange={(e) =>
-                                handleHotelChange(
-                                  index,
-                                  "check_out",
-                                  e.target.value
-                                )
-                              }
-                              fullWidth
-                              InputLabelProps={{ shrink: true }}
-                              className="mb-2"
-                            />
-                            <TextField
-                              label="Nights"
-                              type="number"
-                              value={hotel.nights}
-                              onChange={(e) =>
-                                handleHotelChange(
-                                  index,
-                                  "nights",
-                                  e.target.value
-                                )
-                              }
-                              fullWidth
-                              className="mb-2"
-                              inputProps={{
-                                min: "0",
-                      }}
-                            />
-                          </div>
-
-                          {/* Buttons (Add and Remove) */}
-                          <div className="flex justify-between mt-2">
-                            {/* Remove button is shown only if there are more than 1 hotel */}
-                            {index !== 0 && hotels.length > 1 && (
-                              <button
-                                variant="contained"
-                                // color="secondary"
-                                className="bg-red-500 text-white p-2"
-                                onClick={() => removeHotel(index)}
-                              >
-                                Remove Hotel
-                              </button>
-                            )}
-
-                            {/* Add button shown only for the last hotel */}
-                            {index === hotels.length - 1 && (
-                              <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={addNewHotel}
-                              >
-                                + Add Another Hotel
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-
-                      {/* Bus Inputs */}
-                      {buses.map((bus, index) => (
-                        <div key={index} className="p-4 bg-gray-50">
-                          <h1 className="bg-gray-100 p-2 font-semibold text-mainColor flex justify-center">
-                            Transportation
-                          </h1>
-                          <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                          <TextField
-                            select
-                            label="Transportation"
-                            value={bus.transportation}
-                            onChange={(e) => handleBusChange(index, "transportation", e.target.value)}
-                            fullWidth
-                            className="mb-2"
-                          >
-                            {/* Dropdown options */}
-                            <MenuItem value="bus">Bus</MenuItem>
-                            <MenuItem value="flight">Flight</MenuItem>
-                          </TextField>
-                            {/* Conditionally render the date input */}
-                            {bus.transportation === "flight" && (
-                              <TextField
-                                type="datetime-local"
-                                label="Departure Date & Time"
-                                value={transportationDeparture}
-                                onChange={(e) => setTransportationDeparture(e.target.value)}
-                                placeholder="Enter Departure Date & Time"
-                                className="w-full"
-                                variant="outlined"
-                                fullWidth
-                                InputLabelProps={{ shrink: true }}
-                              />
-
-                            )}
-                            <TextField
-                              label="Seats"
-                              type="number"
-                              value={bus.seats}
-                              onChange={(e) =>
-                                handleBusChange(index, "seats", e.target.value)
-                              }
-                              fullWidth
-                              className="mb-2"
-                              inputProps={{
-                                min: "0",
-                      }}
-                            />
-
-                          </div>
-
-                          {/* Buttons (Add and Remove) */}
-                          <div className="flex justify-between mt-2">
-                            {/* Remove button is shown only if there are more than 1 bus */}
-                            {index !== 0 && buses.length > 1 && (
-                              <button
-                                variant="contained"
-                                // color="secondary"
-                                className="bg-red-500 text-white p-2"
-                                onClick={() => removeBus(index)}
-                              >
-                                Remove Bus
-                              </button>
-                            )}
-
-                            {/* Add button shown only for the last bus */}
-                            {index === buses.length - 1 && (
-                              <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={addNewBus}
-                              >
-                                + Add Another Bus
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-
-                      {/* Bus Inputs */}
-                      {/* {buses.map((bus, index) => (
-                      <>
-                      <h1 className='bg-gray-100 p-2 font-semibold text-mainColor flex justify-center'>Bus Details</h1>
-                      <div key={index} className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 bg-gray-50">
-                        
-                        <TextField
-                          label="Transportation"
-                          value={bus.transportation}
-                          onChange={(e) => handleBusChange(index, "transportation", e.target.value)}
-                          fullWidth
-                          className="mb-2"
-                        />
-                        <TextField
-                          label="Seats"
-                          type="number"
-                          value={bus.seats}
-                          onChange={(e) => handleBusChange(index, "seats", e.target.value)}
-                          fullWidth
-                          className="mb-2"
-                        />
-                        </div>
-                      </>
-                    ))}
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={addNewBus}
-                      className="mb-4"
-                    >
-                      + Add Another Bus
-                    </Button> */}
-                    </div>
-                  )}
-                </div>
-              )}
+              </div>
             </div>
+          )}
+          {/* Submit Button */}
+          <div className="mt-6 text-center">
+            <Link to="/dashboard_agent/checkOut_process" type="submit" onClick={handleSubmit} className="bg-blue-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-600">
+              Submit Booking
+            </Link>
           </div>
-        )}
-        {/* Submit Button */}
-        <div className="mt-6 text-center">
-          <Link to="/dashboard_agent/checkOut_process" type="submit" onClick={handleSubmit} className="bg-blue-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-600">
-            Submit Booking
-          </Link>
-        </div>
       </div>
      </form>
   );

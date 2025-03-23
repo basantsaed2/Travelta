@@ -118,7 +118,7 @@ const AddLeadPage = ({ update, setUpdate }) => {
     };
 
 
-    const handleSubmit = async (e) => {
+    const handleSubmitLead = async (e) => {
         e.preventDefault();
 
         if (!name) {
@@ -192,7 +192,7 @@ const AddLeadPage = ({ update, setUpdate }) => {
         <>
         <form
           className="w-full flex flex-col gap-5 p-6"
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmitLead}
           >
           
       {/* <h2 className="f font-semibold text-mainColor text-xl">back</h2> */}
@@ -379,6 +379,7 @@ const AddLeadPage = ({ update, setUpdate }) => {
                 <Button
                 type="submit"
                 variant="contained"
+                onClick={handleSubmitLead}
                 fullWidth
                 className="bg-mainColor hover:bg-blue-600 text-white"
             >
