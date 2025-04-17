@@ -137,3 +137,10 @@ export { default as ListExpensesPage } from "./Dashboard/AgentDashboard/Accounti
 export { default as CategoryExpensesPage } from "./Dashboard/AgentDashboard/Accounting/AccountExpenses/CategoryExpenses/CategoryExpensesPage";
 export { default as AddCategoryExpensesPage } from "./Dashboard/AgentDashboard/Accounting/AccountExpenses/CategoryExpenses/AddCategoryExpensesPage";
 export { default as EditCategoryExpensesPage } from "./Dashboard/AgentDashboard/Accounting/AccountExpenses/CategoryExpenses/EditCategoryExpensesPage";
+
+//O.E
+//Owner && Transaction
+export { default as OwnerPage } from "./Dashboard/AgentDashboard/Accounting/OwnerTransaction/OwnerPage";
+export { default as AddOwnerPage } from "./Dashboard/AgentDashboard/Accounting/OwnerTransaction/AddOwnerPage";
+export { default as EditOwnerPage } from "./Dashboard/AgentDashboard/Accounting/OwnerTransaction/EditOwnerPage";
+export { default as OwnerTransactionPage } from "./Dashboard/AgentDashboard/Accounting/OwnerTransaction/OwnerTransactionPage";

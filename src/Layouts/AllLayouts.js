@@ -135,3 +135,12 @@ export { default as ListExpensesLayout } from "./AgentLayouts/Accounting/Account
 export { default as CategoryExpensesLayout } from "./AgentLayouts/Accounting/AccountExpensesLayout/CategoryExpenses/CategoryExpensesLayout";
 export { default as AddCategoryExpensesLayout } from "./AgentLayouts/Accounting/AccountExpensesLayout/CategoryExpenses/AddCategoryExpensesLayout";
 export { default as EditCategoryExpensesLayout } from "./AgentLayouts/Accounting/AccountExpensesLayout/CategoryExpenses/EditCategoryExpensesLayout";
+
+//O.E
+//Owner && Transaction
+export { default as OwnerLayout } from "./AgentLayouts/Accounting/OwnerTransaction/OwnerLayout";
+export { default as AddOwnerLayout } from "./AgentLayouts/Accounting/OwnerTransaction/AddOwnerLayout";
+export { default as EditOwnerLayout } from "./AgentLayouts/Accounting/OwnerTransaction/EditOwnerLayout";
+export { default as OwnerTransactionLayout } from "./AgentLayouts/Accounting/OwnerTransaction/OwnerTransactionLayout";
+
+

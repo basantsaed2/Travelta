@@ -9,10 +9,9 @@ import SignUpAffilate from "./Pages/Authentication/SignUpAffilate"
 import Login from "./Pages/Authentication/Login";
 import AgentLayout from "./Layouts/AgentLayouts/AgentLayout";
 import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";  
-import {AddAdminAccountLayout, AddAgentLayout, AddCategoryExpensesLayout, AddCategoryRevenueLayout, AddCurrencyLayout, AddDepartmentLayout, AddEmployeeLayout, AddFinancialAccountLayout, AddGroupLayout, AddLeadLayout, AddPositionLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddTaxLayout, AddTourLayout, AddWalletLayout, AdminAccountLayout, BookingPaymentLayout, CartLayout, CategoryExpensesLayout, CategoryRevenueLayout, CheckoutLayout, CurrencyAgentLayout, CurrentBookingLayout, CustomersLayout , DepartmentLayout, EditAdminAccountLayout, EditAgentLayout, EditCategoryExpensesLayout, EditCategoryRevenueLayout, EditCurrencyLayout, EditDepartmentLayout, EditEmployeeLayout, EditFinancialAccountLayout, EditGroupLayout, EditPositionLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, EditTaxLayout, EditTourLayout, EmployeeLayout, FinancialAccountLayout, GroupLayout, HotelBookingDetailsLayout, InvoiceAgentLayout, LeadLayout, LedgerLayout, ListExpensesLayout, ManualBookingLayout, PastBookingLayout, PlansLayout, PositionLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, TaxLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
+import {AddAdminAccountLayout, AddAgentLayout, AddCategoryExpensesLayout, AddCategoryRevenueLayout, AddCurrencyLayout, AddDepartmentLayout, AddEmployeeLayout, AddFinancialAccountLayout, AddGroupLayout, AddLeadLayout, AddOwnerLayout, AddPositionLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddTaxLayout, AddTourLayout, AddWalletLayout, AdminAccountLayout, BookingPaymentLayout, CartLayout, CategoryExpensesLayout, CategoryRevenueLayout, CheckoutLayout, CurrencyAgentLayout, CurrentBookingLayout, CustomersLayout , DepartmentLayout, EditAdminAccountLayout, EditAgentLayout, EditCategoryExpensesLayout, EditCategoryRevenueLayout, EditCurrencyLayout, EditDepartmentLayout, EditEmployeeLayout, EditFinancialAccountLayout, EditGroupLayout, EditOwnerLayout, EditPositionLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, EditTaxLayout, EditTourLayout, EmployeeLayout, FinancialAccountLayout, GroupLayout, HotelBookingDetailsLayout, InvoiceAgentLayout, LeadLayout, LedgerLayout, ListExpensesLayout, ManualBookingLayout, OwnerTransactionLayout, PastBookingLayout, PlansLayout, PositionLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, TaxLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
 import { LandingPage } from "./Pages/AllPages";
 import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
-import ComingSoon from "./Pages/Dashboard/AgentDashboard/Accounting/ComingSoon";
 import HomeSuperAdmin from "./Pages/SuperAdmin/Home/HomeSuperAdmin";
 
 import ClientLayout from "./Layouts/SuperAdminLayouts/ClientLayout/ClientLayout";
@@ -108,13 +107,11 @@ import DetailsTransactionLayout from "./Layouts/AgentLayouts/Users/Suppliers/Det
 // import Accounting from "./Pages/Dashboard/AgentDashboard/Accounting/";
 import AccountSupplierLayout from "./Layouts/AgentLayouts/Accounting/AccountSupplierLayout";
 import TransactionAccountLayout from "./Layouts/AgentLayouts/Accounting/TransactionAccountLayout";
-import InvoiceAccountLayout from "./Layouts/AgentLayouts/Accounting/InvoiceAccountLayout";
+// import InvoiceAccountLayout from "./Layouts/AgentLayouts/Accounting/InvoiceAccountLayout";
 import PayableToSupplierLayout from "./Layouts/AgentLayouts/Accounting/PayableToSupplierLayout/PayableToSupplierLayout";
 import PaidSupplierLayout from "./Layouts/AgentLayouts/Accounting/PayableToSupplierLayout/PaidSupplierLayout";
 import OverDueLayout from "./Layouts/AgentLayouts/Accounting/PayableToSupplierLayout/OverDueLayout";
-import OwnerTransaction from "./Pages/Dashboard/AgentDashboard/Accounting/OwnerTransaction/OwnerTransaction";
 import OwnerLayout from "./Layouts/AgentLayouts/Accounting/OwnerTransaction/OwnerLayout";
-import TransactionLayoutO from "./Layouts/AgentLayouts/Accounting/OwnerTransaction/TransactionLayoutO";
 import PaymentRecivableLayout from "./Layouts/AgentLayouts/Accounting/PaymentRecivableLayout/PaymentRecivableLayout";
 import ListRevenueLayout from "./Layouts/AgentLayouts/Accounting/AccountRevenueLayout/ListRevenueLayout";
 import AgentHRMLayout from "./Layouts/AgentLayouts/HRM/Agent/AgentHRMLayout";
@@ -536,19 +533,6 @@ export const router = createBrowserRouter([
                 element: <AppAccounting/>,
                 children:[
                   {
-                    path:"",
-                    element: <ComingSoon/>
-                  },
-                  // {
-                  //   path:"account_supplier",
-                  //   element: <AccountSupplierLayout/>
-                  // },
-                  // {
-                  //   path:"account_transaction/:id",
-                  //   element: <TransactionAccountLayout/>
-                  // },
-
-                  {
                     path:"ledger",
                     element: <LedgerLayout/>
                   },
@@ -556,16 +540,31 @@ export const router = createBrowserRouter([
                     path:"payment_recivable",
                     element:<PaymentRecivableLayout/>,
                   },
-                  {path:"owner_transaction",
+                  {
+                    path:"owner_transaction",
                     element:<AppOwnerTransaction/>,
                     children:[
                       {
                         path:"owner",
-                        element:<OwnerLayout/>,
+                        element:<Outlet/>,
+                        children:[
+                          {
+                            path:"",
+                            element:<OwnerLayout/>,
+                          },
+                          {
+                            path:"add",
+                            element:<AddOwnerLayout/>
+                          },
+                          {
+                            path:"edit/:ownerId",
+                            element:<EditOwnerLayout/>
+                          }
+                        ]
                       },
                       {
                         path:"transaction",
-                        element:<TransactionLayoutO/>,
+                        element:<OwnerTransactionLayout/>,
                       },
                   ]},
 
@@ -640,13 +639,6 @@ export const router = createBrowserRouter([
                         element:<ListExpensesLayout/>,
                       }
                     ]
-                  },
-             
-
-
-                  {
-                    path:"account_invoice",
-                    element: <InvoiceAccountLayout/>
                   },
                 ]
               },
@@ -1546,431 +1538,424 @@ export const router = createBrowserRouter([
         ],
       },
 
-
-
-
-
-      
-
       // Super Admin Routes
+      // {
+      //   element: <ProtectedRoute allowedRoles={['SuperAdmin']} />,
+      //   path: '/super_admin',
+      //   children: [
+      //     {
+      //       path: '',
+      //       element: <AppLayoutAdmin/>,
+      //       children: [
+      //         {
+      //           path: '',
+      //           element: <HomeSuperAdmin/>,
+      //         },
 
-      {
-        element: <ProtectedRoute allowedRoles={['SuperAdmin']} />,
-        path: '/super_admin',
-        children: [
-          {
-            path: '',
-            element: <AppLayoutAdmin/>,
-            children: [
-              {
-                path: '',
-                element: <HomeSuperAdmin/>,
-              },
+      //         {
+      //           path: 'client',
+      //           element: <AppClientLayOut/>,
+      //           children:[
+      //             {
+      //               path: "",
+      //               element: <ClientLayout/>,
+      //             },
+      //             {
+      //               path: "add",
+      //               element: <AddClient/>,
+      //             },
+      //             {
+      //               path: "update/:id",
+      //               element: <UpdateClient/>,
+      //             },
 
-              {
-                path: 'client',
-                element: <AppClientLayOut/>,
-                children:[
-                  {
-                    path: "",
-                    element: <ClientLayout/>,
-                  },
-                  {
-                    path: "add",
-                    element: <AddClient/>,
-                  },
-                  {
-                    path: "update/:id",
-                    element: <UpdateClient/>,
-                  },
+      //           ]
 
-                ]
+      //         },
 
-              },
+      //         {
+      //           path: 'hotels',
+      //           element: <AppHotelLayOut/>,
+      //           children:[
+      //             {
+      //               path: "",
+      //               element: <HotelsLayout/>,
+      //             },
+      //             {
+      //               path: "add",
+      //               element: <AddHotels/>,
+      //             },
 
-              {
-                path: 'hotels',
-                element: <AppHotelLayOut/>,
-                children:[
-                  {
-                    path: "",
-                    element: <HotelsLayout/>,
-                  },
-                  {
-                    path: "add",
-                    element: <AddHotels/>,
-                  },
+      //             {
+      //               path: "update/:id",
+      //               element: <UpdateHotel/>,
+      //             },
 
-                  {
-                    path: "update/:id",
-                    element: <UpdateHotel/>,
-                  },
+      //           ]
 
-                ]
-
-              },
+      //         },
 
              
 
-              {
-                path: 'admin',
-                element: <AppAdminLayOut/>,
-                children:[
-                  {
-                    path: "",
-                    element: <AdminLayout/>,
-                  },
-                  {
-                    path: "add",
-                    element: <AddAdmin/>,
-                  },
-                  {
-                    path: "update/:id",
-                    element: <UpdateAdmin/>,
-                  },
+      //         {
+      //           path: 'admin',
+      //           element: <AppAdminLayOut/>,
+      //           children:[
+      //             {
+      //               path: "",
+      //               element: <AdminLayout/>,
+      //             },
+      //             {
+      //               path: "add",
+      //               element: <AddAdmin/>,
+      //             },
+      //             {
+      //               path: "update/:id",
+      //               element: <UpdateAdmin/>,
+      //             },
 
-                ]
+      //           ]
 
-              },
-              {
-                path: 'agent_profile',
-                element: <AppAgentProfileLayOut/>,
-                children:[
-                  {
-                    path: "",
-                    element: <AgentProfileLayout/>,
-                  },
-                  {
-                    path: "add",
-                    element: <AddAgent/>,
-                  },
+      //         },
+      //         {
+      //           path: 'agent_profile',
+      //           element: <AppAgentProfileLayOut/>,
+      //           children:[
+      //             {
+      //               path: "",
+      //               element: <AgentProfileLayout/>,
+      //             },
+      //             {
+      //               path: "add",
+      //               element: <AddAgent/>,
+      //             },
 
-                  {
-                    path: "update/:id",
-                    element: <UpdateAgent/>,
-                  },
-                ]
+      //             {
+      //               path: "update/:id",
+      //               element: <UpdateAgent/>,
+      //             },
+      //           ]
 
-              },
-              {
-                path: 'booking',
-                element: <AppBookingLayOut/>,
+      //         },
+      //         {
+      //           path: 'booking',
+      //           element: <AppBookingLayOut/>,
 
-                children:[
-                  {
-                    path: "",
-                    element: <BookingSuperLayout/>,
-                  },
-                  {
-                    path: "add",
-                    element: <AddBooking/>,
-                  },
-                  {
-                    path: "update/:id",
-                    element: <UpdateBooking/>,
-                  },
+      //           children:[
+      //             {
+      //               path: "",
+      //               element: <BookingSuperLayout/>,
+      //             },
+      //             {
+      //               path: "add",
+      //               element: <AddBooking/>,
+      //             },
+      //             {
+      //               path: "update/:id",
+      //               element: <UpdateBooking/>,
+      //             },
 
-                ]
+      //           ]
 
-              },
+      //         },
               
-              {
-                path: 'tourism',
-                element: <AppTourismLayOut/>,
-                children:[
-                  {
-                    path: "",
-                    element: <TourismLayout/>,
-                  },
-                  {
-                    path: "add",
-                    element: <AddToueism/>,
-                  },
+      //         {
+      //           path: 'tourism',
+      //           element: <AppTourismLayOut/>,
+      //           children:[
+      //             {
+      //               path: "",
+      //               element: <TourismLayout/>,
+      //             },
+      //             {
+      //               path: "add",
+      //               element: <AddToueism/>,
+      //             },
 
-                  {
-                    path: "update/:id",
-                    element: <UpdateTourism/>,
-                  },
-                ]
+      //             {
+      //               path: "update/:id",
+      //               element: <UpdateTourism/>,
+      //             },
+      //           ]
 
-              },
+      //         },
 
-              {
-                path: 'pending_payment',
-                element: <AppPendingLayOut/>,
+      //         {
+      //           path: 'pending_payment',
+      //           element: <AppPendingLayOut/>,
 
-                children:[
+      //           children:[
 
                  
 
-                  {
-                    path: "",
-                    element: <PendingPaymentLayout/>,
-                  },
+      //             {
+      //               path: "",
+      //               element: <PendingPaymentLayout/>,
+      //             },
 
-                  {
-                    path: "manualBooking_Pending",
-                    element: <ManualBookingLayoutSuper/>,
-                  },
+      //             {
+      //               path: "manualBooking_Pending",
+      //               element: <ManualBookingLayoutSuper/>,
+      //             },
 
-                  {
-                    path: "wallet_super",
-                    element: <WalletLayoutSuper/>,
-                  },
-
-
-
-                  {
-                    path: "add",
-                    element: <AddPending/>,
-                  },
-
-                  {
-                    path: "update/:id",
-                    element: <UpdatePayment/>,
-                  },
-                ]
-
-              },
-              {
-                path: 'plans',
-                element: <AppPlanLayOut/>,
-                children:[
-                  {
-                    path: "",
-                    element: <PlanLayout/>,
-                  },
-                  {
-                    path: "add",
-                    element: <AddPlan/>,
-                  },
-                  {
-                    path: "update/:id",
-                    element: <UpdatePlan/>,
-                  },
-
-                ]
-
-              },
-              {
-                path: 'ticketing_system',
-                element: <AppTicketLayOut/>,
-
-                children:[
-                  {
-                    path: "",
-                    element: <TicketLayout/>,
-                  },
-                  {
-                    path: "add",
-                    element: <AddTicket/>,
-                  },
-                  {
-                    path: "update/:id",
-                    element: <UpdateTicket/>,
-                  },
-
-                ]
+      //             {
+      //               path: "wallet_super",
+      //               element: <WalletLayoutSuper/>,
+      //             },
 
 
-              },
 
-              {
-                path: 'subscriptions',
-                element: <AppSubscriptionLayOut/>,
-                children:[
-                  {
-                    path: "",
-                    element: <SubscriptionLayout/>,
-                  },
-                  {
-                    path: "add",
-                    element: <AddSubscription/>,
-                  },
+      //             {
+      //               path: "add",
+      //               element: <AddPending/>,
+      //             },
 
-                  {
-                    path: "update/:id",
-                    element: <UpdateSubscription/>,
-                  },
+      //             {
+      //               path: "update/:id",
+      //               element: <UpdatePayment/>,
+      //             },
+      //           ]
 
-                ]
+      //         },
+      //         {
+      //           path: 'plans',
+      //           element: <AppPlanLayOut/>,
+      //           children:[
+      //             {
+      //               path: "",
+      //               element: <PlanLayout/>,
+      //             },
+      //             {
+      //               path: "add",
+      //               element: <AddPlan/>,
+      //             },
+      //             {
+      //               path: "update/:id",
+      //               element: <UpdatePlan/>,
+      //             },
 
-              },
-              {
-                path: "settings",
-                element: <SettingLayout />,
-                children: [
-                  {
-                    path: "countries",
-                    element: <AppCountry />,
-                    children: [
-                      {
-                        path: "",
-                        element: <CountryLayout />, // Default country list page
-                      },
-                      {
-                        path: "add",
-                        element: <AddCountry />, // Add new country (without tabs)
-                      },
-                      {
-                        path: "edit/:countryId",
-                        element: <UpdateCountry />, // Edit existing country
-                      },
-                    ],
-                  },
-                  {
-                    path: "city",
-                    element: <AppCity />,
-                    children: [
-                      {
-                        path: "",
-                        element: <CityLayout />, // Default city list page
-                      },
-                      {
-                        path: "add",
-                        element: <AddCity />, // Add new city (without tabs)
-                      },
-                      {
-                        path: "edit/:cityId",
-                        element: <UpdateCity />, // Edit existing city
-                      },
-                    ],
-                  },
-                  {
-                    path: "zone",
-                    element: <AppZone />,
-                    children: [
-                      {
-                        path: "",
-                        element: <ZoneLayout />, // Default zone list page
-                      },
-                      {
-                        path: "add",
-                        element: <AddZone />, // Add new zone (without tabs)
-                      },
-                      {
-                        path: "edit/:zoneId",
-                        element: <UpdateZone />, // Edit existing zone
-                      },
-                    ],
-                  },
-                  {
-                    path: "payment",
-                    element: <AppPayment />,
-                    children: [
-                      {
-                        path: "",
-                        element: <PaymentLayout />, // Default payment list page
-                      },
-                      {
-                        path: "add",
-                        element: <AddPayment />, // Add new payment (without tabs)
-                      },
-                      {
-                        path: "edit/:paymentId",
-                        element: <UpdatePayment />, // Edit existing payment
-                      },
-                    ],
-                  },
-                  {
-                    path: "payment_method",
-                    element: <AppPaymentMethod />,
-                    children: [
-                      {
-                        path: "",
-                        element: <PaymentMethodLayout />, // Default payment list page
-                      },
-                      {
-                        path: "add",
-                        element: <AddPaymentMethod />, // Add new payment (without tabs)
-                      },
+      //           ]
+
+      //         },
+      //         {
+      //           path: 'ticketing_system',
+      //           element: <AppTicketLayOut/>,
+
+      //           children:[
+      //             {
+      //               path: "",
+      //               element: <TicketLayout/>,
+      //             },
+      //             {
+      //               path: "add",
+      //               element: <AddTicket/>,
+      //             },
+      //             {
+      //               path: "update/:id",
+      //               element: <UpdateTicket/>,
+      //             },
+
+      //           ]
+
+
+      //         },
+
+      //         {
+      //           path: 'subscriptions',
+      //           element: <AppSubscriptionLayOut/>,
+      //           children:[
+      //             {
+      //               path: "",
+      //               element: <SubscriptionLayout/>,
+      //             },
+      //             {
+      //               path: "add",
+      //               element: <AddSubscription/>,
+      //             },
+
+      //             {
+      //               path: "update/:id",
+      //               element: <UpdateSubscription/>,
+      //             },
+
+      //           ]
+
+      //         },
+      //         {
+      //           path: "settings",
+      //           element: <SettingLayout />,
+      //           children: [
+      //             {
+      //               path: "countries",
+      //               element: <AppCountry />,
+      //               children: [
+      //                 {
+      //                   path: "",
+      //                   element: <CountryLayout />, // Default country list page
+      //                 },
+      //                 {
+      //                   path: "add",
+      //                   element: <AddCountry />, // Add new country (without tabs)
+      //                 },
+      //                 {
+      //                   path: "edit/:countryId",
+      //                   element: <UpdateCountry />, // Edit existing country
+      //                 },
+      //               ],
+      //             },
+      //             {
+      //               path: "city",
+      //               element: <AppCity />,
+      //               children: [
+      //                 {
+      //                   path: "",
+      //                   element: <CityLayout />, // Default city list page
+      //                 },
+      //                 {
+      //                   path: "add",
+      //                   element: <AddCity />, // Add new city (without tabs)
+      //                 },
+      //                 {
+      //                   path: "edit/:cityId",
+      //                   element: <UpdateCity />, // Edit existing city
+      //                 },
+      //               ],
+      //             },
+      //             {
+      //               path: "zone",
+      //               element: <AppZone />,
+      //               children: [
+      //                 {
+      //                   path: "",
+      //                   element: <ZoneLayout />, // Default zone list page
+      //                 },
+      //                 {
+      //                   path: "add",
+      //                   element: <AddZone />, // Add new zone (without tabs)
+      //                 },
+      //                 {
+      //                   path: "edit/:zoneId",
+      //                   element: <UpdateZone />, // Edit existing zone
+      //                 },
+      //               ],
+      //             },
+      //             {
+      //               path: "payment",
+      //               element: <AppPayment />,
+      //               children: [
+      //                 {
+      //                   path: "",
+      //                   element: <PaymentLayout />, // Default payment list page
+      //                 },
+      //                 {
+      //                   path: "add",
+      //                   element: <AddPayment />, // Add new payment (without tabs)
+      //                 },
+      //                 {
+      //                   path: "edit/:paymentId",
+      //                   element: <UpdatePayment />, // Edit existing payment
+      //                 },
+      //               ],
+      //             },
+      //             {
+      //               path: "payment_method",
+      //               element: <AppPaymentMethod />,
+      //               children: [
+      //                 {
+      //                   path: "",
+      //                   element: <PaymentMethodLayout />, // Default payment list page
+      //                 },
+      //                 {
+      //                   path: "add",
+      //                   element: <AddPaymentMethod />, // Add new payment (without tabs)
+      //                 },
                     
-                    ],
-                  },
-                  {
-                    path: "currency",
-                    element: <AppCurrency />,
-                    children: [
-                      {
-                        path: "",
-                        element: <CurrencyLayout />, // Default payment list page
-                      },
-                      {
-                        path: "add",
-                        element: <AddCurrency />, // Add new payment (without tabs)
-                      },
-                      {
-                        path: "edit/:currencyId",
-                        element: <UpdateCurrency />, // Edit existing payment
-                      },
-                    ],
-                  },
+      //               ],
+      //             },
+      //             {
+      //               path: "currency",
+      //               element: <AppCurrency />,
+      //               children: [
+      //                 {
+      //                   path: "",
+      //                   element: <CurrencyLayout />, // Default payment list page
+      //                 },
+      //                 {
+      //                   path: "add",
+      //                   element: <AddCurrency />, // Add new payment (without tabs)
+      //                 },
+      //                 {
+      //                   path: "edit/:currencyId",
+      //                   element: <UpdateCurrency />, // Edit existing payment
+      //                 },
+      //               ],
+      //             },
 
-                  {
-                    path: "tour_type",
-                    element: <AppTour />,
-                    children: [
-                      {
-                        path: "",
-                        element: <TourTypeLayout />, // Default zone list page
-                      },
-                      {
-                        path: "add",
-                        element: <AddTourType />, // Add new zone (without tabs)
-                      },
-                      // {
-                      //   path: "edit/:zoneId",
-                      //   element: <UpdateZone />, // Edit existing zone
-                      // },
-                    ],
-                  },
-                ],
-              }
-              ,
+      //             {
+      //               path: "tour_type",
+      //               element: <AppTour />,
+      //               children: [
+      //                 {
+      //                   path: "",
+      //                   element: <TourTypeLayout />, // Default zone list page
+      //                 },
+      //                 {
+      //                   path: "add",
+      //                   element: <AddTourType />, // Add new zone (without tabs)
+      //                 },
+      //                 // {
+      //                 //   path: "edit/:zoneId",
+      //                 //   element: <UpdateZone />, // Edit existing zone
+      //                 // },
+      //               ],
+      //             },
+      //           ],
+      //         }
+      //         ,
 
-              {
-                path: 'signApprove',
-                element: <SignApproveLayout/>
+      //         {
+      //           path: 'signApprove',
+      //           element: <SignApproveLayout/>
 
-              },
+      //         },
 
-              {
-                path: "financial",
-                element: <AppFinancial/>,
-                children:[
-                  {
-                    path: "invoice",
-                    element: <AppInvoice/>,
-                    children:[
-                        {
-                          path: "",
-                          element: <InvoiceLayout/>,
-                        },       
-                        {
-                          path: "add",
-                          element: <AddInvoiceLayout/>,
-                        },
-                        {
-                        path: "edit/:accountId",
-                        element: <EditFinancialAccountLayout/>,
-                        },
-                    ]
-                  },
+      //         {
+      //           path: "financial",
+      //           element: <AppFinancial/>,
+      //           children:[
+      //             {
+      //               path: "invoice",
+      //               element: <AppInvoice/>,
+      //               children:[
+      //                   {
+      //                     path: "",
+      //                     element: <InvoiceLayout/>,
+      //                   },       
+      //                   {
+      //                     path: "add",
+      //                     element: <AddInvoiceLayout/>,
+      //                   },
+      //                   {
+      //                   path: "edit/:accountId",
+      //                   element: <EditFinancialAccountLayout/>,
+      //                   },
+      //               ]
+      //             },
            
 
 
                   
 
-                ]
-              },
+      //           ]
+      //         },
 
               
 
               
 
-            ]
-          },
-        ],
-      },
+      //       ]
+      //     },
+      //   ],
+      // },
 
 ]);
