@@ -3,7 +3,7 @@ import { useNavigate,Link } from 'react-router-dom'
 import { FaArrowLeft } from 'react-icons/fa';
 import TitlePage from '../../../../Components/TitlePage';
 import { OwnerPage } from "../../../../Pages/AllPages";
-import AddButton from '../../../../Components/Buttons/AddButton'
+import AddButton from "../../../../Components/Buttons/AddButton"
 
 const OwnerLayout = () => {
   const navigate = useNavigate();

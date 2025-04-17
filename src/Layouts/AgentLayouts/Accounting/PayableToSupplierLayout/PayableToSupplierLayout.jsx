@@ -1,24 +1,22 @@
-import React from 'react'
+import React , { useState } from 'react';
 import PayableToSupplier from '../../../../Pages/Dashboard/AgentDashboard/Accounting/PayableToSupplier/PayableToSupplier'
-import { useNavigate } from 'react-router-dom'
+import {  useNavigate } from 'react-router-dom'
 import { FaArrowLeft } from 'react-icons/fa'
 import TitlePage from '../../../../Components/TitlePage'
 
+
+
 const PayableToSupplierLayout = () => {
     const navigate = useNavigate()
+      const [update, setUpdate] = useState(false)
+    
   return (
     <>
-                <div className="flex gap-3">
- <button
-        onClick={() => navigate(-1)}
-        className=" top-2 text-mainColor text-2xl cursor-pointer hover:text-blue-500 transition-all"
-      >
-        <FaArrowLeft/>
-      </button>
- <TitlePage text={'Payable To Supplier'} />
-   
- </div>
-    <PayableToSupplier/></>
+    <div className='flex justify-between items-center'>
+      <TitlePage text={'Payable To Supplier Table'} />
+
+      </div>
+    <PayableToSupplier update={update} setUpdate={setUpdate}/></>
   )
 }
 
