@@ -1630,25 +1630,7 @@ useEffect(() => {
           isOpenUsers && !isSidebarCollapsed ? "h-17" : "h-0 "
         } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
       >
-        <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
-          <Link
-            to={"users/customers"}
-            onClick={() => {
-              handleClickCustomers();
-              onLinkClick();
-            }}
-          >
-            <li
-              className={`${
-                isActiveCustomers
-                  ? "rounded-xl bg-white text-mainColor"
-                  : "text-white"
-              }
-                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
-            >
-              Customers
-            </li>
-          </Link>
+        <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">      
           <Link
             to={"users/leads"}
             onClick={() => {
@@ -1665,6 +1647,24 @@ useEffect(() => {
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
             >
               Leads
+            </li>
+          </Link>
+          <Link
+            to={"users/customers"}
+            onClick={() => {
+              handleClickCustomers();
+              onLinkClick();
+            }}
+          >
+            <li
+              className={`${
+                isActiveCustomers
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              }
+                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Customers
             </li>
           </Link>
           <Link
