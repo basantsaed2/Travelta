@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   FaEdit,
   FaFileExcel,
+  
   FaSearch,
   FaFilter,
   FaCopy,
@@ -352,8 +353,14 @@ const handleFilter = (e) => {
               <tbody>
                 {currentRows.length > 0 ? (
                   currentRows.map((item, index) => (
-                    <tr key={item.id} className="text-center border-b">
-                      <td className="p-3 text-gray-500">{index + 1}</td>
+<tr
+  key={item.id}
+  className={`text-center border-b ${
+    (indexOfFirstRow + index) % 2 === 0
+      ? "bg-gray-100 hover:bg-gray-300"
+      : "bg-gray-200 hover:bg-gray-300"
+  }`}
+>                      <td className="p-3 text-gray-500">{index + 1}</td>
                       <td className="p-3 text-gray-500">
                         {item.currency.name}
                       </td>
