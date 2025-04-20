@@ -233,7 +233,7 @@ const ListExpensesPage = () => {
             >
               {list?.categories.map((category) => (
                 <MenuItem key={category.id} value={category.id}>
-                  {category.name}
+                  {category?.name}
                 </MenuItem>
               ))}
             </TextField>
@@ -536,8 +536,8 @@ const ListExpensesPage = () => {
         <td className="p-4 border-b text-sm">{expense.title}</td>
         <td className="p-4 border-b text-sm">{expense.date}</td>
         <td className="p-4 border-b text-sm font-semibold">${expense.amount}</td>
-        <td className="p-4 border-b text-sm">{expense.category.name}</td>
-        <td className="p-4 border-b text-sm">{expense.currency.name}</td>
+        <td className="p-4 border-b text-sm">{expense?.category?.name}</td>
+        <td className="p-4 border-b text-sm">{expense?.currency?.name}</td>
         <td className="p-4 border-b text-sm flex items-center justify-center">
           <img src={expense.financial?.logo_link} alt={expense.financial?.name} className="w-8 h-8 object-cover mr-2" />
           {expense.financial?.name}
