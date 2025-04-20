@@ -73,9 +73,13 @@ const CategoryExpensesPage = ({ update, setUpdate }) => {
         .map((category) => category.parent_category?.name)
         .filter(Boolean)
     ),
-    
+
   ];
 
+
+
+
+  
   // Handle input changes
   const handleSearch = (e) => setSearchText(e.target.value.toLowerCase());
   const handleFilterCategory = (e) => setSelectedCategory(e.target.value);
