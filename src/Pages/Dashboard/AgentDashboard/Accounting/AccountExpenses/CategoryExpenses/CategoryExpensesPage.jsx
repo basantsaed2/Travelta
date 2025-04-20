@@ -73,6 +73,7 @@ const CategoryExpensesPage = ({ update, setUpdate }) => {
         .map((category) => category.parent_category?.name)
         .filter(Boolean)
     ),
+    
   ];
 
   // Handle input changes
