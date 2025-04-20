@@ -163,14 +163,14 @@ const handleStageChange = async (id, name, newstages) => {
   }
 
   return (
-    <div className="w-full p-4 bg-gray-50">
+    <div className="w-full">
       {/* Search Input */}
       <input
         type="text"
         placeholder="Search..."
         value={search}
         onChange={handleSearch}
-        className="w-full p-3 mb-4 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="w-full p-3 mb-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
 
       {/* Rows to Display Dropdown */}
@@ -286,7 +286,7 @@ const handleStageChange = async (id, name, newstages) => {
             <td className="min-w-[150px] sm:min-w-[100px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
               {row.tour_buses.map((bus, index) => (
                 <div key={index}>
-                  {bus.transportation}: {bus.seats} seats
+                  {bus.transportation}
                 </div>
               ))}
             </td>
@@ -294,7 +294,7 @@ const handleStageChange = async (id, name, newstages) => {
             <td className="min-w-[150px] sm:min-w-[100px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
               {row.tour_hotels.map((hotel, index) => (
                 <div key={index}>
-                  {hotel.hotel_name} ({hotel.room_type}) - {hotel.check_in} to {hotel.check_out}
+                  {hotel.hotel_name}
                 </div>
               ))}
             </td>

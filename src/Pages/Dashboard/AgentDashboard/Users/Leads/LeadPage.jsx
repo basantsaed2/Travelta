@@ -10,126 +10,150 @@ import { Link, useNavigate } from 'react-router-dom';
 import {useChangeState} from '../../../../../Hooks/useChangeState';
 import { Switch} from "@mui/material";
 import * as XLSX from "xlsx";
-
+import StatusToggle from '../../../../../Components/StatusToggle'
 const LeadPage = ({ update, setUpdate }) => {
-    const { refetch: refetchLead, loading: loadingLead, data: dataLead } = useGet({url:'https://travelta.online/agent/leads'});
-    const { changeState, loadingChange, responseChange } = useChangeState();
-    const [leads, setLeads] = useState([])
-    const { deleteData, loadingDelete, responseDelete } = useDelete();
-    const [openDelete, setOpenDelete] = useState(null);
-    const [copiedPhone, setCopiedPhone] = useState(null);
-    const [searchText, setSearchText] = useState("");
-    const [selectedCountry, setSelectedCountry] = useState("");
-    const [selectedCity, setSelectedCity] = useState("");
-    const [filterMode, setFilterMode] = useState("both");
-    const navigate= useNavigate()
-    useEffect(() => {
-        refetchLead();
-    }, [refetchLead, update]);
+  // --- Dependencies and Hooks ---
+  const navigate = useNavigate();
+  const { refetch: refetchLead, loading: loadingLead, data: dataLead } = useGet({ url: 'https://travelta.online/agent/leads' });
+  const { changeState, loadingChange, responseChange } = useChangeState();
+  const { deleteData, loadingDelete, responseDelete } = useDelete();
 
-    useEffect(() => {
-        if (dataLead && dataLead.leads) {
-                console.log("Leads Data:", dataLead);
-                setLeads(dataLead.leads);
-        }
-    }, [dataLead]); // Only run this effect when `data` changes
+  // --- State Management ---
+  const [leads, setLeads] = useState([]);
+  const [filteredLeads, setFilteredLeads] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [filterMode, setFilterMode] = useState("both");
+  const [copiedPhone, setCopiedPhone] = useState(null);
+  const [openDelete, setOpenDelete] = useState(null);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
 
-    const handleOpenDelete = (item) => {
-        setOpenDelete(item);
-      };
-      const handleCloseDelete = () => {
-        setOpenDelete(null);
-      };
-    
-      // Delete lead
-      const handleDelete = async (id, name) => {
-        const success = await deleteData(`https://travelta.online/agent/leads/delete/${id}`, `${name} Deleted Success.`);
-    
-        if (success) {
-          // Update Deliveries only if changeState succeeded
-          setLeads(
-            leads.filter((lead) =>
-                lead.id !== id
-            )
-          );
-        }
-        console.log('data leads', leads)
-      };
+  // --- Effects ---
 
-    // Get unique country & city lists
-       const uniqueCountries = [...new Set(leads.map(lead => lead.country?.name).filter(Boolean))];
-       const uniqueCities = [...new Set(leads.map(lead => lead.city?.name).filter(Boolean))];
-       
-       // Handle input changes
-       const handleSearch = (e) => setSearchText(e.target.value.toLowerCase());
-       const handleFilterCountry = (e) => setSelectedCountry(e.target.value);
-       const handleFilterCity = (e) => setSelectedCity(e.target.value);
-       const handleFilterMode = (e) => setFilterMode(e.target.value);
-       
-       // Filtering customers
-       const filteredLeads = leads.filter((lead) => {
-         const matchesSearch =
-         lead?.name?.toLowerCase().includes(searchText) || 
-         lead?.phone?.includes(searchText);
-       
-         const countryMatch = selectedCountry ? lead.country?.name === selectedCountry : true;
-         const cityMatch = selectedCity ? lead.city?.name === selectedCity : true;
-       
-         if (filterMode === "both") return matchesSearch && countryMatch && cityMatch;
-         if (filterMode === "countryOnly") return matchesSearch && countryMatch;
-         if (filterMode === "cityOnly") return matchesSearch && cityMatch;
-         return matchesSearch;
-       });
-       
-       // Copy phone number to clipboard
-       const copyToClipboard = (phone) => {
-         navigator.clipboard.writeText(phone);
-         setCopiedPhone(phone);
-         setTimeout(() => setCopiedPhone(null), 2000);
-       };
-     
-       // Export filtered data to Excel
-       const exportToExcel = () => {
-         const worksheet = XLSX.utils.json_to_sheet(
-          leads.map((lead, index) => ({
-             SL: index + 1,
-             Name: lead.name || "-",
-             Email: lead.email || "-",
-             Phone: lead.phone || "-",
-             WhatsApp: lead.watts || "-",
-             Service: lead.service?.service_name || "-",
-             Agent: lead.agent_sales?.name || "-",
-             Source: lead.source?.source || "-",
-             Country: lead.country?.name || "-",
-             City: lead.city?.name || "-",
-             Status: lead.status=== 1?"Active":"UnActive" || "-",
-           }))
-         );
-         const workbook = XLSX.utils.book_new();
-         XLSX.utils.book_append_sheet(workbook, worksheet, "Leads");
-         XLSX.writeFile(workbook, "Leads.xlsx");
-       };
-     
-      // Change status 
-    const handleChangeStaus = async (id, name, status) => {
-      const response = await changeState(
-              ` https://travelta.online/agent/leads/status/${id}`,
-              `${name} Changed Status.`,
-              { status } // Pass status as an object if changeState expects an object
+  // Fetch Leads on Mount or Update
+  useEffect(() => {
+    refetchLead();
+  }, [refetchLead]);
+
+  // Update local leads when data changes
+  useEffect(() => {
+    if (dataLead?.leads) {
+      console.log("Leads Data:", dataLead);
+      setLeads(dataLead.leads);
+    }
+  }, [dataLead]);
+
+  // Filter leads based on search and selected filters
+  useEffect(() => {
+    let filtered = leads;
+
+    if (searchText) {
+      const search = searchText.toLowerCase();
+      filtered = filtered.filter(lead =>
+        lead?.name?.toLowerCase().includes(search) ||
+        lead?.phone?.toLowerCase().includes(search)
       );
-  
-          if (response) {
-                  // Update categories only if changeState succeeded
-                  setLeads((prevLead) =>
-                    prevLead.map((lead) =>
-                      lead.id === id ? { ...lead, status: status } : lead
-                      )
-                  );
-          }
-  
-      };
+    }
 
-      const headers = ['Name','Email','Phone',"Whatshapp","Service","Agent","Source","Country","City","Status","Profile","Action"];
+    if (selectedCountry) {
+      filtered = filtered.filter(lead => lead.country?.name === selectedCountry);
+    }
+
+    if (selectedCity) {
+      filtered = filtered.filter(lead => lead.city?.name === selectedCity);
+    }
+
+    setFilteredLeads(filtered);
+    setCurrentPage(1);
+  }, [searchText, selectedCountry, selectedCity, leads]);
+
+  // --- Handlers ---
+
+  const handleSearch = (e) => setSearchText(e.target.value.toLowerCase());
+  const handleFilterCountry = (e) => setSelectedCountry(e.target.value);
+  const handleFilterCity = (e) => setSelectedCity(e.target.value);
+
+  const handleOpenDelete = (item) => setOpenDelete(item);
+  const handleCloseDelete = () => setOpenDelete(null);
+
+  const handleDelete = async (id, name) => {
+    const success = await deleteData(`https://travelta.online/agent/leads/delete/${id}`, `${name} Deleted Success.`);
+    if (success) {
+      setLeads(prev => prev.filter(lead => lead.id !== id));
+    }
+  };
+
+  //Change Status
+  const handleChangeStatus = async (id, name, newStatus) => {
+    const response = await changeState(
+      `https://travelta.online/agent/leads/status/${id}`,
+      `${name} changed status to ${newStatus}.`,
+      { status: newStatus }
+    );
+  
+    if (response) {
+      setLeads((prevLead) =>
+        prevLead.map((lead) =>
+          lead.id === id ? { ...lead, status: newStatus } : lead
+        )
+      );
+    }
+  };
+  
+  
+  const copyToClipboard = (phone) => {
+    navigator.clipboard.writeText(phone);
+    setCopiedPhone(phone);
+    setTimeout(() => setCopiedPhone(null), 2000);
+  };
+
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(
+      leads.map((lead, index) => ({
+        SL: index + 1,
+        Name: lead.name || "-",
+        Email: lead.email || "-",
+        Phone: lead.phone || "-",
+        WhatsApp: lead.watts || "-",
+        Service: lead.service?.service_name || "-",
+        Agent: lead.agent_sales?.name || "-",
+        Source: lead.source?.source || "-",
+        Country: lead.country?.name || "-",
+        City: lead.city?.name || "-",
+        Status: lead.status === 1 ? "Active" : "UnActive",
+      }))
+    );
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Leads");
+    XLSX.writeFile(workbook, "Leads.xlsx");
+  };
+
+  // --- Pagination Logic ---
+  const totalPages = Math.ceil(filteredLeads.length / rowsPerPage);
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = filteredLeads.slice(indexOfFirstRow, indexOfLastRow);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage(prev => prev - 1);
+  };
+
+  const handleRowsChange = (e) => {
+    setRowsPerPage(Number(e.target.value));
+    setCurrentPage(1);
+  };
+
+  // --- Derived Data ---
+  const uniqueCountries = [...new Set(leads.map(lead => lead.country?.name).filter(Boolean))];
+  const uniqueCities = [...new Set(leads.map(lead => lead.city?.name).filter(Boolean))];
+
+  const headers = ['Name','Email','Phone',"Whatshapp","Service","Agent","Source","Country","City","Status","Profile","Action"];
 
   return (
     <div className="w-full pb-5 flex items-start justify-start overflow-x-scroll scrollSection">
@@ -141,62 +165,82 @@ const LeadPage = ({ update, setUpdate }) => {
               <div className="w-full sm:min-w-0">
 
               {/* Search & Filter Section */}
-                  <div className="flex flex-wrap items-center gap-4 bg-white p-6 shadow-lg rounded-xl mb-6 border border-gray-200">
-                    {/* Search Input */}
-                    <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-lg w-full md:w-[280px] border border-gray-300">
-                      <FaSearch className="text-gray-500" />
-                      <input
-                        type="text"
-                        placeholder="Search by name or phone..."
-                        value={searchText}
-                        onChange={handleSearch}
-                        className="bg-transparent outline-none w-full text-gray-700 placeholder-gray-500"
-                      />
-                    </div>
-            
-                    {/* Filter by Country */}
-                    <div className="relative w-full md:w-[240px]">
-                      <select
-                        onChange={handleFilterCountry}
-                        value={selectedCountry}
-                        className="appearance-none w-full bg-gray-50 text-gray-700 px-4 py-2 rounded-lg border border-gray-300 outline-none cursor-pointer focus:ring-2 focus:ring-blue-300"
-                      >
-                        <option value="">Filter by Country</option>
-                        {uniqueCountries.map((country, index) => (
-                          <option key={index} value={country}>
-                            {country}
-                          </option>
-                        ))}
-                      </select>
-                      <FaGlobe className="absolute right-3 top-3 text-gray-500 pointer-events-none" />
-                    </div>
-            
-                    {/* Filter by City */}
-                    <div className="relative w-full md:w-[240px]">
-                      <select
-                        onChange={handleFilterCity}
-                        value={selectedCity}
-                        className="appearance-none w-full bg-gray-50 text-gray-700 px-4 py-2 rounded-lg border border-gray-300 outline-none cursor-pointer focus:ring-2 focus:ring-blue-300"
-                      >
-                        <option value="">Filter by City</option>
-                        {uniqueCities.map((city, index) => (
-                          <option key={index} value={city}>
-                            {city}
-                          </option>
-                        ))}
-                      </select>
-                      <FaCity className="absolute right-3 top-3 text-gray-500 pointer-events-none" />
-                    </div>
-            
-                    {/* Export to Excel Button */}
-                    <button
-                      onClick={exportToExcel}
-                      className="flex items-center gap-2 bg-green-500 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-600 transition-all"
-                    >
-                      <FaFileExcel className="w-5 h-5" />
-                      Export to Excel
-                    </button>
-                  </div>
+              <div className="flex flex-wrap items-center gap-4 bg-white p-6 shadow-lg rounded-xl mb-6 border border-gray-200">
+                {/* Search Input */}
+                <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-lg w-full md:w-[280px] border border-gray-300">
+                  <FaSearch className="text-gray-500" />
+                  <input
+                    type="text"
+                    placeholder="Search by name or phone..."
+                    value={searchText}
+                    onChange={handleSearch}
+                    className="bg-transparent outline-none w-full text-gray-700 placeholder-gray-500"
+                  />
+                </div>
+        
+                {/* Filter by Country */}
+                <div className="relative w-full md:w-[240px]">
+                  <select
+                    onChange={handleFilterCountry}
+                    value={selectedCountry}
+                    className="appearance-none w-full bg-gray-50 text-gray-700 px-4 py-2 rounded-lg border border-gray-300 outline-none cursor-pointer focus:ring-2 focus:ring-blue-300"
+                  >
+                    <option value="">Filter by Country</option>
+                    {uniqueCountries.map((country, index) => (
+                      <option key={index} value={country}>
+                        {country}
+                      </option>
+                    ))}
+                  </select>
+                  <FaGlobe className="absolute right-3 top-3 text-gray-500 pointer-events-none" />
+                </div>
+        
+                {/* Filter by City */}
+                <div className="relative w-full md:w-[240px]">
+                  <select
+                    onChange={handleFilterCity}
+                    value={selectedCity}
+                    className="appearance-none w-full bg-gray-50 text-gray-700 px-4 py-2 rounded-lg border border-gray-300 outline-none cursor-pointer focus:ring-2 focus:ring-blue-300"
+                  >
+                    <option value="">Filter by City</option>
+                    {uniqueCities.map((city, index) => (
+                      <option key={index} value={city}>
+                        {city}
+                      </option>
+                    ))}
+                  </select>
+                  <FaCity className="absolute right-3 top-3 text-gray-500 pointer-events-none" />
+                </div>
+        
+                {/* Export to Excel Button */}
+                <button
+                  onClick={exportToExcel}
+                  className="flex items-center gap-2 bg-green-500 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-600 transition-all"
+                >
+                  <FaFileExcel className="w-5 h-5" />
+                  Export to Excel
+                </button>
+              </div>
+
+              {/* Rows per Page */}
+              <div className="flex items-center space-x-2 mb-5">
+                <label className="text-gray-700 font-medium">Rows per page:</label>
+                <div className="w-full md:w-[120px]">
+                  <select
+                    onChange={handleRowsChange}
+                    value={rowsPerPage}
+                    className="w-full bg-gray-50 text-gray-700 px-4 py-2 rounded-lg border border-gray-300 outline-none cursor-pointer"
+                  >
+                    <option value="5">5 rows</option>
+                    <option value="10">10 rows</option>
+                    <option value="20">20 rows</option>
+                    <option value="30">30 rows</option>
+                    <option value="50">50 rows</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* lead Table */}
               <div className="w-full sm:min-w-0 block overflow-x-scroll scrollSection border-collapse">
                 <table className="w-full min-w-[600px]">
                       {/* Table Header */}
@@ -218,19 +262,19 @@ const LeadPage = ({ update, setUpdate }) => {
         
                       {/* Table Body */}
                       <tbody>
-                        {filteredLeads.length === 0 ? ( // 👈 Use filteredleads
+                        {currentRows.length === 0 ? ( // 👈 Use filteredleads
                           <tr>
                             <td colSpan={headers.length} className="text-center text-xl text-gray-500 py-4">
                               No Leads Found
                             </td>
                           </tr>
                         ) : (
-                          filteredLeads.map((lead, index) => ( // 👈 Use filteredleads
+                          currentRows.map((lead, index) => ( // 👈 Use filteredleads
                             <tr
                               key={index}
                               className={`border-b ${index % 2 === 0 ? "bg-white" : "bg-gray-100"} transition hover:bg-gray-100`}
                             >
-                              <td className="text-center py-2 text-gray-600">{index + 1}</td>
+                              <td className="text-center py-2 text-gray-600">{indexOfFirstRow + index + 1}</td>
                               <td className="text-center py-2 text-gray-600 relative">
                                 <span className="block max-w-[150px] truncate mx-auto cursor-pointer group">
                                   {lead?.name || "-"}
@@ -286,14 +330,11 @@ const LeadPage = ({ update, setUpdate }) => {
                               <td className="text-center py-2 text-gray-600">{lead?.source?.source || "-"}</td>
                               <td className="text-center py-2 text-gray-600">{lead?.country?.name || "-"}</td>
                               <td className="text-center py-2 text-gray-600">{lead?.city?.name || "-"}</td>
-                              <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                                <Switch
-                                  checked={lead.status === 1}
-                                  onChange={() => {
-                                      handleChangeStaus(lead.id, lead.name, lead.status === 1 ? 0 : 1);
-                                  }}
-                                  color="primary"
-                                  />
+                              <td className="py-2 text-center">
+                                <StatusToggle
+                                  status={lead.status} // "active", "inactive", or "suspend"
+                                  onChange={(newStatus) => handleChangeStatus(lead.id, lead.name, newStatus)}
+                                />
                               </td>
                               <td className="text-center py-2">
                                 <Link to={`profile/${lead.id}`} className='flex justify-center'>
@@ -358,7 +399,26 @@ const LeadPage = ({ update, setUpdate }) => {
                         )}
                       </tbody>
                 </table>
-                </div>
+              </div>
+
+              {/* Pagination Controls */}
+              <div className="flex justify-between items-center mt-4">
+                <button
+                  onClick={handlePrevPage}
+                  disabled={currentPage === 1}
+                  className={`px-4 py-2 rounded-lg ${currentPage === 1 ? "bg-gray-300" : "bg-blue-500 text-white"}`}
+                >
+                  Previous
+                </button>
+                <span className="text-gray-700">Page {currentPage} of {totalPages || 1}</span>
+                <button
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages || totalPages === 0}
+                  className={`px-4 py-2 rounded-lg ${currentPage === totalPages ? "bg-gray-300" : "bg-blue-500 text-white"}`}
+                >
+                  Next
+                </button>
+              </div>
               </div>
             )}
     </div>

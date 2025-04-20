@@ -16,7 +16,7 @@ const EditLead = ({ update, setUpdate }) => {
   const [whatshapp, setWhatshapp] = useState("");
   const [email, setEmail] = useState('');
   const [gender, setGender] = useState('');
-  const [status, setStatus] = useState(0);
+  const [status, setStatus] = useState("active");
   const [imageFile, setImageFile] = useState(null);
   const [imageName, setImageName] = useState("");
   const [imageBase64, setImageBase64] = useState(""); // Store base64 image
@@ -63,6 +63,7 @@ const EditLead = ({ update, setUpdate }) => {
 
         setImageFile(lead.image_link || '')
         setImageName(lead.image || '')
+        setStatus(lead.status);
       }
 
     }
@@ -96,7 +97,7 @@ const EditLead = ({ update, setUpdate }) => {
   
     try {
       const response = await fetch(`https://travelta.online/agent/leads/update/${leadId}`, {
-        method: 'PUT',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${auth.user?.token || ''}`, // Include authorization token
@@ -139,179 +140,242 @@ const EditLead = ({ update, setUpdate }) => {
           ref.current.click();
     }
   };
+  const handleReset = () => {
+    setName('');
+    setPhone('');
+    setEmail('');
+    setGender('');
+    setAlternatePhone('')
+};
   
   return ( 
-  <form onSubmit={handleSubmit} className='grid grid-col-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-4'>
-    <TextField
-      label="Name"
-      variant="outlined"
-      fullWidth
-      required
-      value={name}
-      onChange={(e) => setName(e.target.value)}
-      className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-      />
-      <TextField
-      label="Phone"
-      variant="outlined"
-      type="tel"
-      fullWidth
-      required
-      value={phone}
-      onChange={(e) => setPhone(e.target.value)}
-      className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-    />
-      <TextField
-      label="Alternate Phone"
-      variant="outlined"
-      type="tel"
-      fullWidth
-      value={alternatePhone}
-      onChange={(e) => setAlternatePhone(e.target.value)}
-      className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-    />
-      <TextField
-      label="WhatsApp"
-      variant="outlined"
-      type="tel"
-      fullWidth
-      value={whatshapp}
-      onChange={(e) => setWhatshapp(e.target.value)}
-      className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-    />
-      <TextField
-      label="Email"
-      variant="outlined"
-      type="email"
-      fullWidth
-      required
-      value={email}
-      onChange={(e) => setEmail(e.target.value)}
-      className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-    />
-      <TextField
-      label="Gender"
-      variant="outlined"
-      select
-      fullWidth
-      required
-      value={gender}
-      onChange={(e) => setGender(e.target.value)}
-      className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-    >
-      <MenuItem value="male">Male</MenuItem>
-      <MenuItem value="female">Female</MenuItem>
-    </TextField>
-    <TextField
-      select
-      label="Select Service"
-      value={selectedService}
-      onChange={(e) => setSelectedService(e.target.value)}
-      fullWidth
-      >
-      {services.map((service) => (
-          <MenuItem key={service.id} value={service.id}>
-              {service.service_name}
-          </MenuItem>
-      ))}
-    </TextField>
-    <TextField
-      select
-      label="Select Agent"
-      value={selectedAgent}
-      onChange={(e) => setSelectedAgent(e.target.value)}
-      fullWidth
-      >
-      {agetSales.map((agetSale) => (
-          <MenuItem key={agetSale.id} value={agetSale.id}>
-              {agetSale.name}
-          </MenuItem>
-      ))}
-    </TextField>
-    <TextField
-      select
-      label="Select Source"
-      value={selectedSource}
-      onChange={(e) => setSelectedSource(e.target.value)}
-      fullWidth
-      >
-      {sources.map((source) => (
-          <MenuItem key={source.id} value={source.id}>
-              {source.source}
-          </MenuItem>
-      ))}
-    </TextField>
-    <TextField
-      select
-      label="Select Nationality"
-      value={selectedNationality}
-      onChange={(e) => setSelectedNationality(e.target.value)}
-      fullWidth
-      >
-      {nationalities.map((nationality) => (
-          <MenuItem key={nationality.id} value={nationality.id}>
-              {nationality.name}
-          </MenuItem>
-      ))}
-    </TextField>
-    <TextField
-      select
-      label="Select Country"
-      value={selectedCountry}
-      onChange={(e) => setSelectedCountry(e.target.value)}
-      fullWidth
-      >
-      {countries.map((country) => (
-          <MenuItem key={country.id} value={country.id}>
-              {country.name}
-          </MenuItem>
-      ))}
-    </TextField>
-    <TextField
-      select
-      label="Select City"
-      value={selectedCity}
-      onChange={(e) => setSelectedCity(e.target.value)}
-      fullWidth
-      >
-      {cities.map((city) => (
-          <MenuItem key={city.id} value={city.id}>
-              {city.name}
-          </MenuItem>
-      ))}
-    </TextField>
-          <input
-              type="file"
-              ref={ImageRef}
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
+   <form
+          className="w-full flex flex-col gap-5 p-6"
+          onSubmit={handleSubmit}
+          >
+          <div className='grid grid-col-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
+            <TextField
+            label="Name"
+            variant="outlined"
+            fullWidth
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+            />
+            <TextField
+            label="Phone"
+            variant="outlined"
+            type="tel"
+            fullWidth
+            required
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
           />
+            <TextField
+            label="Alternate Phone"
+            variant="outlined"
+            type="tel"
+            fullWidth
+            value={alternatePhone}
+            onChange={(e) => setAlternatePhone(e.target.value)}
+            className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+          />
+            <TextField
+            label="WhatsApp"
+            variant="outlined"
+            type="tel"
+            fullWidth
+            value={whatshapp}
+            onChange={(e) => setWhatshapp(e.target.value)}
+            className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+          />
+            <TextField
+            label="Email"
+            variant="outlined"
+            type="email"
+            fullWidth
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+          />
+            <TextField
+            label="Gender"
+            variant="outlined"
+            select
+            fullWidth
+            required
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+          >
+            <MenuItem value="male">Male</MenuItem>
+            <MenuItem value="female">Female</MenuItem>
+          </TextField>
           <TextField
-              label="Upload Logo"
-              variant="outlined"
-              fullWidth
-              value={imageName}
-              onClick={() => handleImageClick(ImageRef)} // Open file dialog when clicked
-              InputProps={{
-                  endAdornment: (
-                  <InputAdornment position="end">
-                      <IconButton> 
-                      < IoCloudUpload/>
-                        </IconButton>
-                    </InputAdornment>
-                  ),
-              }}
+            select
+            label="Select Service"
+            value={selectedService}
+            onChange={(e) => setSelectedService(e.target.value)}
+            fullWidth
+            >
+            {services.map((service) => (
+                <MenuItem key={service.id} value={service.id}>
+                    {service.service_name}
+                </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            select
+            label="Select Agent"
+            value={selectedAgent}
+            onChange={(e) => setSelectedAgent(e.target.value)}
+            fullWidth
+            >
+            {agetSales.map((agetSale) => (
+                <MenuItem key={agetSale.id} value={agetSale.id}>
+                    {agetSale.name}
+                </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            select
+            label="Select Source"
+            value={selectedSource}
+            onChange={(e) => setSelectedSource(e.target.value)}
+            fullWidth
+            >
+            {sources.map((source) => (
+                <MenuItem key={source.id} value={source.id}>
+                    {source.source}
+                </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            select
+            label="Select Nationality"
+            value={selectedNationality}
+            onChange={(e) => setSelectedNationality(e.target.value)}
+            fullWidth
+            >
+            {nationalities.map((nationality) => (
+                <MenuItem key={nationality.id} value={nationality.id}>
+                    {nationality.name}
+                </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            select
+            label="Select Country"
+            value={selectedCountry}
+            onChange={(e) => setSelectedCountry(e.target.value)}
+            fullWidth
+            >
+            {countries.map((country) => (
+                <MenuItem key={country.id} value={country.id}>
+                    {country.name}
+                </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            select
+            label="Select City"
+            value={selectedCity}
+            onChange={(e) => setSelectedCity(e.target.value)}
+            fullWidth
+            >
+            {cities.map((city) => (
+                <MenuItem key={city.id} value={city.id}>
+                    {city.name}
+                </MenuItem>
+            ))}
+          </TextField>
+                <input
+                    type="file"
+                    ref={ImageRef}
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                />
+                <TextField
+                    label="Upload Logo"
+                    variant="outlined"
+                    fullWidth
+                    value={imageName}
+                    onClick={() => handleImageClick(ImageRef)} // Open file dialog when clicked
+                    InputProps={{
+                        endAdornment: (
+                        <InputAdornment position="end">
+                            <IconButton> 
+                            < IoCloudUpload/>
+                              </IconButton>
+                          </InputAdornment>
+                        ),
+                    }}
+                    />
+          <div className="w-full flex items-center">
+          <span className="text-mainColor text-lg font-semibold">Status: </span>
+
+          {/* Radio Button Group */}
+          <div className="flex items-center space-x-4 ml-2">
+            <label className="flex items-center space-x-1">
+              <input
+                type="radio"
+                name="status"
+                value="active"
+                checked={status === "active"}
+                onChange={() => setStatus("active")}
+                className="form-radio text-green-500"
               />
-            <div className="w-full flex items-center ml-5 mt-2">
-              <span className="text-mainColor text-lg font-semibold">Status : </span>
-                  <Switch
-                      checked={status === 1}
-                      onChange={handleSwitchChange}
-                      color="primary"
-                  />
-            </div>
-      </form>
+              <span className={`text-base lg:text-lg font-semibold ${status === "active"? 'text-green-500' : 'text-gray-600'}`}>Active</span>
+            </label>
+
+            <label className="flex items-center space-x-1">
+              <input
+                type="radio"
+                name="status"
+                value="inactive"
+                checked={status === "inactive"}
+                onChange={() => setStatus("inactive")}
+                className="form-radio text-yellow-500"
+              />
+              <span className={`text-base lg:text-lg font-semibold ${status === "inactive" ? 'text-red-500' : 'text-gray-600'}`}>Inactive</span>
+            </label>
+
+            <label className="flex items-center space-x-1">
+              <input
+                type="radio"
+                name="status"
+                value="suspend"
+                checked={status === "suspend"}
+                onChange={() => setStatus("suspend")}
+                className="form-radio text-red-500"
+              />
+              <span className={`text-base lg:text-lg font-semibold ${status === "suspend" ? 'text-yellow-500' : 'text-gray-600'}`}>Suspended</span>
+            </label>
+          </div>
+          </div>
+
+          </div>
+          <div className="w-full flex items-center gap-x-4">
+          <div className="">
+              <Button text={'Reset'} onClick={handleReset} className="bg-mainColor hover:bg-blue-600 hover:text-white">Reset</Button>
+          </div>
+          <div className="">
+              <Button
+              type="submit"
+              variant="contained"
+              onClick={handleSubmit}
+              fullWidth
+              className="bg-mainColor hover:bg-blue-600 text-white"
+          >
+              Submit
+          </Button>
+          </div>
+    </div>
+    </form>
   );
 };
 

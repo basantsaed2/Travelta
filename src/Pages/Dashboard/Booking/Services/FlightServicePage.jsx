@@ -100,12 +100,12 @@ const FlightServicePage = (
   };
 
   return (
-    <div className="border rounded-lg overflow-hidden shadow-lg p-4 md:p-6 bg-gradient-to-r from-blue-50 to-blue-100">
+    <div className="border rounded-lg overflow-hidden shadow-lg p-2 md:p-6 bg-gradient-to-r from-blue-50 to-blue-100">
       <h2 className="text-3xl font-bold text-blue-800 mb-6 text-center">
       Flight Details
       </h2>
 
-      <div className="p-4 rounded-lg mb-4">
+      <div className="p-2 rounded-lg mb-4">
 
         {/* Basic Flight Information */}
         <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">

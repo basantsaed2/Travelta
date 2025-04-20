@@ -7,7 +7,7 @@ import StaticLoader from '../../../../Components/StaticLoader';
 import { FaUser, FaDollarSign, FaPlane, FaPhone,FaCalendarAlt ,FaUserCircle  } from 'react-icons/fa'; // Import necessary React Icons
 import { MdMoreVert, MdCheckCircle, MdClose, MdSettings } from "react-icons/md";
 
-const WorkStation = () => {
+const WorkStationPage = () => {
   const { refetch: refetchLists, loading: loadingLists, data: lists } = useGet({
     url: "https://travelta.online/agent/request/lists",
   });
@@ -515,4 +515,4 @@ const WorkStation = () => {
   
 };
 
-export default WorkStation;
+export default WorkStationPage;

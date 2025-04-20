@@ -203,14 +203,14 @@ const handleStageChange = async (id, name, newStages) => {
   }
 
   return (
-    <div className="w-full p-4 bg-gray-50">
+    <div className="w-full">
       {/* Search Input */}
       <input
         type="text"
         placeholder="Search..."
         value={search}
         onChange={handleSearch}
-        className="w-full p-3 mb-4 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="w-full p-3 mb-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
 
       {/* Rows to Display Dropdown */}
@@ -227,7 +227,7 @@ const handleStageChange = async (id, name, newStages) => {
       </select>
 
       {/* Table Container */}
-      <div className="w-full custom-scrollbar overflow-x-auto rounded-lg shadow-md bg-white">
+      <div className="w-full custom-scrollbar overflow-x-auto rounded-lg shadow-md bg-white p-2">
       <table className="w-full sm:min-w-0">
       <thead className="w-full">
   <tr className="w-full border-b-2">

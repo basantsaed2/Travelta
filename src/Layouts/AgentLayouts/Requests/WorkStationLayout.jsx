@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import TitlePage from '../../../Components/TitlePage'
-import WorkStation from '../../../Pages/Dashboard/AgentDashboard/Requests/WorkStation'
+import {WorkStationPage} from '../../../Pages/AllPages'
 
 const WorkStationLayout = () => {
     const [update, setUpdate] = useState(false)
     return (
       <>
         <TitlePage text={'Work Station'} />
-        <WorkStation update={update} setUpdate={setUpdate}/>
+        <WorkStationPage update={update} setUpdate={setUpdate}/>
       </>
   )
 }

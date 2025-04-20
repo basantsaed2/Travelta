@@ -105,17 +105,18 @@ const LeadLayout = () => {
 
   return (
     <>
-      <div className='flex justify-between items-center mb-3'>
-        <div className='w-1/2'>
+      <div className='w-full flex flex-col lg:flex-row lg:items-center justify-between mb-3'>
+        <div className='w-full md:w-1/4'>
           <TitlePage text={'Lead Table'} />
         </div>
-        <div className="flex gap-3">
+          <div className='flex flex-col lg:flex-row gap-2'>
           <Link to='add'>
-            <AddButton />
+            <AddButton Text="Add New Lead" Size="lg"/>
           </Link>
+          <div className='flex gap-2'>
           <button
             onClick={handleDownloadBulk}
-            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
+            className="bg-green-500 text-sm xl:text-base text-white px-2 md:px-4 py-2 rounded-md cursor-pointer hover:bg-green-600 transition"
           >
             Download Template
           </button>
@@ -128,20 +129,21 @@ const LeadLayout = () => {
           />
           <label
             htmlFor="fileUpload"
-            className="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-blue-600 transition"
+            className="bg-blue-500 text-sm xl:text-base text-white px-2 md:px-4 py-2 rounded-md cursor-pointer hover:bg-blue-600 transition"
           >
             Upload Bulk
           </label>
           {file && (
             <button
               onClick={handleSubmit}
-              className="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600 transition"
+              className="bg-red-500 text-sm xl:text-base text-white px-2 md:px-4 py-2 rounded-md cursor-pointer hover:bg-red-600 transition"
             >
               Submit
             </button>
           )}
+          </div>
+          </div>
         </div>
-      </div>
       <LeadPage update={update} setUpdate={setUpdate} />
     </>
   );

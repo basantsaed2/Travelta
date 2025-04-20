@@ -59,7 +59,7 @@ const VisaServicePage = ({ countries,today,title,
 
     return (
         // <div className="p-2 md:p-6 bg-white rounded-xl shadow-lg">
-        <div className="border rounded-lg overflow-hidden shadow-lg p-4 md:p-6 bg-gradient-to-r from-blue-50 to-blue-100">
+        <div className="border rounded-lg overflow-hidden shadow-lg p-2 md:p-6 bg-gradient-to-r from-blue-50 to-blue-100">
             <h2 className="text-3xl font-bold text-blue-800 mb-6 text-center">
             Visa Details
             </h2>
