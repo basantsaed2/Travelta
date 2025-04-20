@@ -2059,7 +2059,7 @@ useEffect(() => {
       </div>
 
       {/* Operation */}     
-      <Link
+      {/* <Link
         to="accounting"
         onMouseMove={() => setIsActiveOperationIcon(true)}
         onMouseOut={() => setIsActiveOperationIcon(false)}
@@ -2095,7 +2095,7 @@ useEffect(() => {
             } text-xl transition-all duration-300 group-hover:text-mainColor`}
           />
         )}
-      </Link>
+      </Link> */}
 
       {/* Requests */}    
       <Link

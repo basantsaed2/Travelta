@@ -71,6 +71,11 @@ export { default as EditTourPage } from "./Dashboard/AgentDashboard/Inventory/To
 //CheckOutProcess
 export { default as CheckOutProcessPage } from "./Dashboard/AgentDashboard/CheckOutProcess/CheckOutProcessPage"; 
 
+//Requests
+export { default as NewRequestPage } from "./Dashboard/AgentDashboard/Requests/NewRequestPage"; 
+export { default as RequestPage } from "./Dashboard/AgentDashboard/Requests/RequestPage"; 
+export { default as WorkStationPage } from "./Dashboard/AgentDashboard/Requests/WorkStationPage"; 
+
 //HRM
 //HRM > Department
 export { default as DepartmentPage } from "./Dashboard/AgentDashboard/HRM/Department/DepartmentPage";

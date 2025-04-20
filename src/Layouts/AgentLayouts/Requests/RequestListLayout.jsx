@@ -1,15 +1,24 @@
 import React, { useState } from 'react'
 import TitlePage from '../../../Components/TitlePage'
-import RequestList from '../../../Pages/Dashboard/AgentDashboard/Requests/RequestList'
+import {RequestPage} from '../../../Pages/AllPages'
+import AddButton from '../../../Components/Buttons/AddButton'
+import { Link } from 'react-router-dom'
 
 const RequestListLayout = () => {
     const [update, setUpdate] = useState(false)
     return (
       <>
-        <TitlePage text={'Request List'} />
-        <RequestList update={update} setUpdate={setUpdate}/>
+        <div className='flex justify-between items-center'>
+          <div className='w-3/9'>
+          <TitlePage text={'Request List'} />
+          </div>
+          <Link to='add'>
+              <AddButton Size='text-base' Text='Add New Request' />
+            </Link>
+        </div>
+        <RequestPage update={update} setUpdate={setUpdate}/>
       </>
     )
 }
 
-export default RequestListLayout
+export default RequestListLayout;

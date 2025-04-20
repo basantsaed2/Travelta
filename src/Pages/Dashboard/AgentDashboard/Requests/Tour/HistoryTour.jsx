@@ -163,14 +163,14 @@ const handleStageChange = async (id, name, newstages) => {
   }
 
   return (
-    <div className="w-full p-4 bg-gray-50">
+    <div className="w-full">
       {/* Search Input */}
       <input
         type="text"
         placeholder="Search..."
         value={search}
         onChange={handleSearch}
-        className="w-full p-3 mb-4 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="w-full p-3 mb-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
 
       {/* Rows to Display Dropdown */}

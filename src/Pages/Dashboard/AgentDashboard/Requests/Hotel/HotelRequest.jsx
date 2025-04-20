@@ -25,7 +25,7 @@ const HotelRequest = () => {
   return (
     <div>
       {/* Tab buttons */}
-      <div className="flex justify-between items-center gap-4 mb-4  border-gray-300">
+      <div className="flex justify-between items-center gap-4 mb-4">
         <button
           className={`py-4 px-4 rounded-lg w-[40%] text-center transition-all duration-300 
             ${selectedTab === 'Current' ? 'bg-mainColor text-white' : 'bg-gray-200 text-gray-700'}`}
@@ -43,7 +43,7 @@ const HotelRequest = () => {
       </div>
 
       {/* Display content based on selected tab */}
-      <div className="p-4">
+      <div className="">
         {selectedTab === 'Current' ? (
           <><Current data={dataCurrent} loading={loadingHotel} refetch={refetchHotel}/></>
         ) : (

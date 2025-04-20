@@ -72,7 +72,7 @@ const BusServicePage = ({
   };
 
   return (
-    <div className="border rounded-lg overflow-hidden shadow-lg p-4 md:p-6 bg-gradient-to-r from-blue-50 to-blue-100">
+    <div className="border rounded-lg overflow-hidden shadow-lg p-2 md:p-6 bg-gradient-to-r from-blue-50 to-blue-100">
       <h2 className="text-3xl font-bold text-blue-800 mb-6 text-center">
         Bus Details
       </h2>

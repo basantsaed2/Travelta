@@ -6,12 +6,15 @@ import { IoMdPersonAdd } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from "react-icons/fa";
 import { IoCloudUpload } from "react-icons/io5";
+import { useAuth } from "../../../../../Context/Auth";
 
 const AddLeadPage = ({ update, setUpdate }) => {
     const { postData:postNewLead, loadingPost:loadingNewLead, response:responseNewLead} = usePost({ url: 'https://travelta.online/agent/leads/add' });
     const { postData:postLeadList, loadingPost:loadingLeadList, response:responseLeadList } = usePost({ url: 'https://travelta.online/agent/leads/add_lead' });
     const { refetch: refetchLead, loading: loadingLead, data: dataLead } = useGet({ url: 'https://travelta.online/agent/leads/leads_search' });
     const { refetch: refetchList, loading: loadingList, data: dataList } = useGet({ url: 'https://travelta.online/agent/leads/lists' });
+    const [activeTab, setActiveTab] = useState("search"); // "add" or "search"
+    const auth = useAuth();
 
     const [leads, setLeads] = useState([]);
     const [name, setName] = useState("");
@@ -24,7 +27,7 @@ const AddLeadPage = ({ update, setUpdate }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [filteredLeads,SetfilteredLeads] = useState([])
-    const [status, setStatus] = useState(0);
+    const [status, setStatus] = useState("active");
     const [imageFile, setImageFile] = useState(null);
     const [imageName, setImageName] = useState("");
     const [imageBase64, setImageBase64] = useState(""); // Store base64 image
@@ -76,16 +79,6 @@ const AddLeadPage = ({ update, setUpdate }) => {
         setGender('');
         setAlternatePhone('')
     };
-    const handleGoBack = () => {
-      navigate(-1, { replace: true });
-    };
-
-    // useEffect(() => {
-    //     if (!loadingNewLead || !loadingLeadList) {
-    //         handleReset();
-    //         setUpdate(!update);
-    //     }
-    // }, [responseNewLead, responseLeadList]);
 
     useEffect(() => {
       if ((!loadingNewLead && responseNewLead) || (!loadingLeadList && responseLeadList)) {
@@ -94,9 +87,19 @@ const AddLeadPage = ({ update, setUpdate }) => {
       }
   }, [responseNewLead,responseLeadList]);
 
+   // State Change Handler
     const handleSwitchChange = () => {
-      setStatus((prev) => (prev === 1 ? 0 : 1)); // Toggle between 1 and 0
-    };   
+      // Cycle between three states: active (1), inactive (0), suspended (2)
+      setStatus((prev) => {
+        if (prev === 1) {
+          return 0; // Change from active to inactive
+        } else if (prev === 0) {
+          return 2; // Change from inactive to suspended
+        } else {
+          return 1; // Change from suspended to active
+        }
+      });
+    };
     const handleImageChange = (e) => {
       const file = e.target.files[0];
       if (file) {
@@ -122,19 +125,19 @@ const AddLeadPage = ({ update, setUpdate }) => {
         e.preventDefault();
 
         if (!name) {
-            alert('Please Enter Name');
+            auth.toastError('Please Enter Name');
             return;
         }
         if (!phone) {
-            alert('Please Enter Phone');
+          auth.toastError('Please Enter Phone');
             return;
         }
         if (!email) {
-            alert('Please Enter The Email');
+          auth.toastError('Please Enter The Email');
             return;
         }
         if (!gender) {
-            alert('Please Select Gender');
+          auth.toastError('Please Select Gender');
             return;
         }
 
@@ -181,289 +184,336 @@ const AddLeadPage = ({ update, setUpdate }) => {
         SetfilteredLeads(filtered);
       }
     };
-    
-  
-    // const filteredLeads = leads.filter((lead) =>
-    //     lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    //     lead.phone.includes(searchQuery)
-    // );
 
-    return (
-        <>
-        <form
-          className="w-full flex flex-col gap-5 p-6"
-          onSubmit={handleSubmitLead}
+  return (
+      <>
+        <div className="w-full">
+        {/* Tabs Header */}
+        <div className="flex justify-center gap-4 mb-6">
+        <button
+            className={`px-6 py-2 rounded-md shadow font-semibold transition-all hover:bg-white hover:text-mainColor ${
+              activeTab === "search" ? "bg-mainColor text-white" : "bg-gray-100 text-gray-600"
+            }`}
+            onClick={() => setActiveTab("search")}
           >
-          
-      {/* <h2 className="f font-semibold text-mainColor text-xl">back</h2> */}
-    
-      <h1 className="flex justify-center font-semibold text-mainColor text-xl">
-        Add New Lead
-      </h1>
-      <div className='grid grid-col-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
-             <TextField
-              label="Name"
-              variant="outlined"
-              fullWidth
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-              />
-              <TextField
-              label="Phone"
-              variant="outlined"
-              type="tel"
-              fullWidth
-              required
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-            />
-              <TextField
-              label="Alternate Phone"
-              variant="outlined"
-              type="tel"
-              fullWidth
-              value={alternatePhone}
-              onChange={(e) => setAlternatePhone(e.target.value)}
-              className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-            />
-              <TextField
-              label="WhatsApp"
-              variant="outlined"
-              type="tel"
-              fullWidth
-              value={whatshapp}
-              onChange={(e) => setWhatshapp(e.target.value)}
-              className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-            />
-              <TextField
-              label="Email"
-              variant="outlined"
-              type="email"
-              fullWidth
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-            />
-              <TextField
-              label="Gender"
-              variant="outlined"
-              select
-              fullWidth
-              required
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-              className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-            >
-              <MenuItem value="male">Male</MenuItem>
-              <MenuItem value="female">Female</MenuItem>
-            </TextField>
-            <TextField
-              select
-              label="Select Service"
-              value={selectedService}
-              onChange={(e) => setSelectedService(e.target.value)}
-              fullWidth
+            Search Lead
+          </button>
+          <button
+            className={`px-6 py-2 rounded-md shadow font-semibold transition-all hover:bg-white hover:text-mainColor ${
+              activeTab === "add" ? "bg-mainColor text-white" : "bg-gray-100 text-gray-600"
+            }`}
+            onClick={() => setActiveTab("add")}
+          >
+            Add New Lead
+          </button>
+        </div>
+
+          {/* Tab Content */}
+          {activeTab === "add" ? (
+              <form
+              className="w-full flex flex-col gap-5 p-6"
+              onSubmit={handleSubmitLead}
               >
-              {services.map((service) => (
-                  <MenuItem key={service.id} value={service.id}>
-                      {service.service_name}
-                  </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              select
-              label="Select Agent"
-              value={selectedAgent}
-              onChange={(e) => setSelectedAgent(e.target.value)}
-              fullWidth
-              >
-              {agetSales.map((agetSale) => (
-                  <MenuItem key={agetSale.id} value={agetSale.id}>
-                      {agetSale.name}
-                  </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              select
-              label="Select Source"
-              value={selectedSource}
-              onChange={(e) => setSelectedSource(e.target.value)}
-              fullWidth
-              >
-              {sources.map((source) => (
-                  <MenuItem key={source.id} value={source.id}>
-                      {source.source}
-                  </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              select
-              label="Select Nationality"
-              value={selectedNationality}
-              onChange={(e) => setSelectedNationality(e.target.value)}
-              fullWidth
-              >
-              {nationalities.map((nationality) => (
-                  <MenuItem key={nationality.id} value={nationality.id}>
-                      {nationality.name}
-                  </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              select
-              label="Select Country"
-              value={selectedCountry}
-              onChange={(e) => setSelectedCountry(e.target.value)}
-              fullWidth
-              >
-              {countries.map((country) => (
-                  <MenuItem key={country.id} value={country.id}>
-                      {country.name}
-                  </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              select
-              label="Select City"
-              value={selectedCity}
-              onChange={(e) => setSelectedCity(e.target.value)}
-              fullWidth
-              >
-              {cities.map((city) => (
-                  <MenuItem key={city.id} value={city.id}>
-                      {city.name}
-                  </MenuItem>
-              ))}
-            </TextField>
-                  <input
-                      type="file"
-                      ref={ImageRef}
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="hidden"
+              
+              {/* <h2 className="f font-semibold text-mainColor text-xl">back</h2> */}
+
+              <h1 className="flex justify-center font-semibold text-mainColor text-xl">
+              Add New Lead
+              </h1>
+              <div className='grid grid-col-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
+                  <TextField
+                  label="Name"
+                  variant="outlined"
+                  fullWidth
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
                   />
                   <TextField
-                      label="Upload Logo"
+                  label="Phone"
+                  variant="outlined"
+                  type="tel"
+                  fullWidth
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+                />
+                  <TextField
+                  label="Alternate Phone"
+                  variant="outlined"
+                  type="tel"
+                  fullWidth
+                  value={alternatePhone}
+                  onChange={(e) => setAlternatePhone(e.target.value)}
+                  className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+                />
+                  <TextField
+                  label="WhatsApp"
+                  variant="outlined"
+                  type="tel"
+                  fullWidth
+                  value={whatshapp}
+                  onChange={(e) => setWhatshapp(e.target.value)}
+                  className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+                />
+                  <TextField
+                  label="Email"
+                  variant="outlined"
+                  type="email"
+                  fullWidth
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+                />
+                  <TextField
+                  label="Gender"
+                  variant="outlined"
+                  select
+                  fullWidth
+                  required
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                  className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
+                >
+                  <MenuItem value="male">Male</MenuItem>
+                  <MenuItem value="female">Female</MenuItem>
+                </TextField>
+                <TextField
+                  select
+                  label="Select Service"
+                  value={selectedService}
+                  onChange={(e) => setSelectedService(e.target.value)}
+                  fullWidth
+                  >
+                  {services.map((service) => (
+                      <MenuItem key={service.id} value={service.id}>
+                          {service.service_name}
+                      </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  select
+                  label="Select Agent"
+                  value={selectedAgent}
+                  onChange={(e) => setSelectedAgent(e.target.value)}
+                  fullWidth
+                  >
+                  {agetSales.map((agetSale) => (
+                      <MenuItem key={agetSale.id} value={agetSale.id}>
+                          {agetSale.name}
+                      </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  select
+                  label="Select Source"
+                  value={selectedSource}
+                  onChange={(e) => setSelectedSource(e.target.value)}
+                  fullWidth
+                  >
+                  {sources.map((source) => (
+                      <MenuItem key={source.id} value={source.id}>
+                          {source.source}
+                      </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  select
+                  label="Select Nationality"
+                  value={selectedNationality}
+                  onChange={(e) => setSelectedNationality(e.target.value)}
+                  fullWidth
+                  >
+                  {nationalities.map((nationality) => (
+                      <MenuItem key={nationality.id} value={nationality.id}>
+                          {nationality.name}
+                      </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  select
+                  label="Select Country"
+                  value={selectedCountry}
+                  onChange={(e) => setSelectedCountry(e.target.value)}
+                  fullWidth
+                  >
+                  {countries.map((country) => (
+                      <MenuItem key={country.id} value={country.id}>
+                          {country.name}
+                      </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  select
+                  label="Select City"
+                  value={selectedCity}
+                  onChange={(e) => setSelectedCity(e.target.value)}
+                  fullWidth
+                  >
+                  {cities.map((city) => (
+                      <MenuItem key={city.id} value={city.id}>
+                          {city.name}
+                      </MenuItem>
+                  ))}
+                </TextField>
+                      <input
+                          type="file"
+                          ref={ImageRef}
+                          accept="image/*"
+                          onChange={handleImageChange}
+                          className="hidden"
+                      />
+                      <TextField
+                          label="Upload Logo"
+                          variant="outlined"
+                          fullWidth
+                          value={imageName}
+                          onClick={() => handleImageClick(ImageRef)} // Open file dialog when clicked
+                          InputProps={{
+                              endAdornment: (
+                              <InputAdornment position="end">
+                                  <IconButton> 
+                                  < IoCloudUpload/>
+                                    </IconButton>
+                                </InputAdornment>
+                              ),
+                          }}
+                          />
+              <div className="w-full flex items-center">
+                <span className="text-mainColor text-lg font-semibold">Status: </span>
+                
+                {/* Radio Button Group */}
+                <div className="flex items-center space-x-4 ml-2">
+                  <label className="flex items-center space-x-1">
+                    <input
+                      type="radio"
+                      name="status"
+                      value="active"
+                      checked={status === "active"}
+                      onChange={() => setStatus("active")}
+                      className="form-radio text-green-500"
+                    />
+                    <span className={`text-base lg:text-lg font-semibold ${status === "active"? 'text-green-500' : 'text-gray-600'}`}>Active</span>
+                  </label>
+
+                  <label className="flex items-center space-x-1">
+                    <input
+                      type="radio"
+                      name="status"
+                      value="inactive"
+                      checked={status === "inactive"}
+                      onChange={() => setStatus("inactive")}
+                      className="form-radio text-yellow-500"
+                    />
+                    <span className={`text-base lg:text-lg font-semibold ${status === "inactive" ? 'text-red-500' : 'text-gray-600'}`}>Inactive</span>
+                  </label>
+
+                  <label className="flex items-center space-x-1">
+                    <input
+                      type="radio"
+                      name="status"
+                      value="suspend"
+                      checked={status === "suspend"}
+                      onChange={() => setStatus("suspend")}
+                      className="form-radio text-red-500"
+                    />
+                    <span className={`text-base lg:text-lg font-semibold ${status === "suspend" ? 'text-yellow-500' : 'text-gray-600'}`}>Suspended</span>
+                  </label>
+                </div>
+              </div>
+
+              </div>
+              <div className="w-full flex items-center gap-x-4">
+                <div className="">
+                    <Button text={'Reset'} onClick={handleReset} className="bg-mainColor hover:bg-blue-600 hover:text-white">Reset</Button>
+                </div>
+                <div className="">
+                    <Button
+                    type="submit"
+                    variant="contained"
+                    onClick={handleSubmitLead}
+                    fullWidth
+                    className="bg-mainColor hover:bg-blue-600 text-white"
+                >
+                    Submit
+                </Button>
+                </div>
+              </div>
+              </form>
+                ) : (
+                <div className="w-full flex flex-col gap-5 p-6 bg-white shadow-md rounded-md">
+                <h1 className="w-full flex justify-center font-semibold text-mainColor text-xl">Search Lead Number</h1>
+                  <div className=" flex justify-between gap-3 ">
+                  <TextField
+                      label="Search by Name or Phone"
                       variant="outlined"
                       fullWidth
-                      value={imageName}
-                      onClick={() => handleImageClick(ImageRef)} // Open file dialog when clicked
-                      InputProps={{
-                          endAdornment: (
-                          <InputAdornment position="end">
-                              <IconButton> 
-                              < IoCloudUpload/>
-                                </IconButton>
-                            </InputAdornment>
-                          ),
-                      }}
-                      />
-                    <div className="w-full flex items-center ml-5 mt-2">
-                       <span className="text-mainColor text-lg font-semibold">Status : </span>
-                          <Switch
-                              checked={status === 1}
-                              onChange={handleSwitchChange}
-                              color="primary"
-                          />
-                    </div>
-          </div>
-          <div className="w-full flex items-center gap-x-4">
-            <div className="">
-                <Button text={'Reset'} onClick={handleReset} className="bg-mainColor hover:bg-blue-600 hover:text-white">Reset</Button>
-            </div>
-            <div className="">
-                <Button
-                type="submit"
-                variant="contained"
-                onClick={handleSubmitLead}
-                fullWidth
-                className="bg-mainColor hover:bg-blue-600 text-white"
-            >
-                Submit
-            </Button>
-            </div>
-          </div>
-        </form>
+                      value={searchQuery}
+                      onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        handleSearch();}
+                      }
+                      className="mb-4 shadow-sm border-2 border-gray-300 focus:border-mainColor rounded-md p-3 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-mainColor focus:ring-opacity-50 transition-all duration-200"
+                    />
+                        <Button
+                        type="button"
+                        variant="contained"
+                        className="bg-mainColor hover:bg-blue-600 text-white "
+                        onClick={handleSearch}
+                    >
+                        Search
+                    </Button>
 
-        <div className="w-full flex flex-col gap-5 p-6 bg-white shadow-md rounded-md">
-        <h1 className="w-full flex justify-center font-semibold text-mainColor text-xl">Add Lead</h1>
-           <div className=" flex justify-between gap-3 ">
-           <TextField
-              label="Search by Name or Phone"
-              variant="outlined"
-              fullWidth
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                handleSearch();}
-              }
-              className="mb-4 shadow-sm border-2 border-gray-300 focus:border-mainColor rounded-md p-3 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-mainColor focus:ring-opacity-50 transition-all duration-200"
-            />
-                 <Button
-                type="button"
-                variant="contained"
-                className="bg-mainColor hover:bg-blue-600 text-white "
-                onClick={handleSearch}
-            >
-                Search
-            </Button>
+                  </div>
 
-           </div>
-
-      
-            {/* {filteredLeads.length === 0 ?
-              <p className="text-center py-4 text-lg text-mainColor">No Lead Available For This Search</p>
-            : */}
-            <TableContainer className="overflow-x-auto bg-white shadow-md rounded-lg">
-              <Table className="min-w-full">
-                <thead className="w-full bg-gray-100">
-                  <tr className="border-b-2 border-gray-300">
-                    <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Name</th>
-                    <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Email</th>
-                    <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Phone</th>
-                    <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Gender</th>
-                    <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white">
-                  {filteredLeads.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} className="text-center py-3 text-xl text-mainColor font-TextFontMedium">
-                        No Leads List Found
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredLeads
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((lead, index) => (
-                        <tr key={index} className="border-b border-gray-200 hover:bg-gray-50">
-                          <td className="py-2 text-center text-thirdColor">{lead.name || '-'}</td>
-                          <td className="py-2 text-center text-thirdColor">{lead.email || '-'}</td>
-                          <td className="py-2 text-center text-thirdColor">{lead.phone || '-'}</td>
-                          <td className="py-2 text-center text-thirdColor">{lead.gender || '-'}</td>
-                          <td className="py-2 text-center flex justify-center items-center">
-                            <button
-                              onClick={() => handleAddLead(lead.id)}
-                              className="flex gap-1 justify-center items-center text-mainColor font-bold hover:text-blue-600"
-                            >
-                              <IoMdPersonAdd /> Add Lead
-                            </button>
-                          </td>
-                        </tr>
-                      ))
-                  )}
-                </tbody>
-              </Table>
-            </TableContainer>
-            {/* } */}
-
+                    <TableContainer className="overflow-x-auto bg-white shadow-md rounded-lg">
+                      <Table className="min-w-full">
+                        <thead className="w-full bg-gray-100">
+                          <tr className="border-b-2 border-gray-300">
+                            <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Name</th>
+                            <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Email</th>
+                            <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Phone</th>
+                            <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Gender</th>
+                            <th className="min-w-[120px] text-center py-3 text-lg font-semibold text-mainColor">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white">
+                          {filteredLeads.length === 0 ? (
+                            <tr>
+                              <td colSpan={5} className="text-center py-3 text-xl text-mainColor font-TextFontMedium">
+                                No Leads List Found
+                              </td>
+                            </tr>
+                          ) : (
+                            filteredLeads
+                              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                              .map((lead, index) => (
+                                <tr key={index} className="border-b border-gray-200 hover:bg-gray-50">
+                                  <td className="py-2 text-center text-thirdColor">{lead.name || '-'}</td>
+                                  <td className="py-2 text-center text-thirdColor">{lead.email || '-'}</td>
+                                  <td className="py-2 text-center text-thirdColor">{lead.phone || '-'}</td>
+                                  <td className="py-2 text-center text-thirdColor">{lead.gender || '-'}</td>
+                                  <td className="py-2 text-center flex justify-center items-center">
+                                    <button
+                                      onClick={() => handleAddLead(lead.id)}
+                                      className="flex gap-1 justify-center items-center text-mainColor font-bold hover:text-blue-600"
+                                    >
+                                      <IoMdPersonAdd /> Add Lead
+                                    </button>
+                                  </td>
+                                </tr>
+                              ))
+                          )}
+                        </tbody>
+                      </Table>
+                    </TableContainer>
+                </div>
+              )}
         </div>
-       </>
+      </>
     );
-};
-
+}
 export default AddLeadPage;

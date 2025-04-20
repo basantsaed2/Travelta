@@ -130,7 +130,7 @@ const TourServicePage = ({
   };
 
   return (
-    <div className="border rounded-lg overflow-hidden shadow-lg p-4 md:p-6 bg-gradient-to-r from-blue-50 to-blue-100">
+    <div className="border rounded-lg overflow-hidden shadow-lg p-2 md:p-6 bg-gradient-to-r from-blue-50 to-blue-100">
         <h2 className="text-3xl font-bold text-blue-800 mb-6 text-center">
             Tour Details
         </h2>
@@ -395,8 +395,10 @@ const TourServicePage = ({
                 variant="outlined"
                 sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
             >
-                <MenuItem value="domestic">Domestic</MenuItem>
-                <MenuItem value="international">International</MenuItem>
+                <MenuItem value="single">Single</MenuItem>
+                <MenuItem value="double">Double</MenuItem>
+                <MenuItem value="triple">Triple</MenuItem>
+                <MenuItem value="quadruple">Quadruple</MenuItem>
             </TextField>
             <TextField
                 label="Check-In Date"
@@ -446,7 +448,7 @@ const TourServicePage = ({
                 </div>
             }
             </div>
-            <div className="flex justify-between mt-4">
+            <div className="flex flex-col md:flex-row gap-3 justify-between mt-4">
             {index !== 0 && hotels.length > 1 && (
                 <button
                 className="bg-red-500 text-white py-2 px-4 rounded-lg transition-colors hover:bg-red-600"
@@ -506,7 +508,7 @@ const TourServicePage = ({
                 sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
             />
             </div>
-            <div className="flex justify-between mt-4">
+            <div className="flex flex-col md:flex-row gap-3 justify-between mt-4">
             {index !== 0 && buses.length > 1 && (
                 <button
                 className="bg-red-500 text-white py-2 px-4 rounded-lg transition-colors hover:bg-red-600"
@@ -516,7 +518,7 @@ const TourServicePage = ({
                 </button>
             )}
             {index === buses.length - 1 && (
-                <Button variant="contained" color="primary" onClick={addNewBus}>
+                <Button  sx={{ fontSize: '0.8rem' }} variant="contained" className="text-sm" color="primary" onClick={addNewBus}>
                 + Add Another Transportation
                 </Button>
             )}
