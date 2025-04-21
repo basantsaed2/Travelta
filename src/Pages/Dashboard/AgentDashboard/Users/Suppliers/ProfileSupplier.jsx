@@ -43,7 +43,7 @@ const ProfileSupplier = ({ id }) => {
   return (
     <div className=" p-4 space-y-6">
       {/* User Info Card */}
-      <div className="w-full lg:w-[70%] bg-gradient-to-br from-white to-blue-50 rounded-3xl shadow-lg p-8 space-y-6 border border-blue-100 transition-all hover:shadow-2xl">
+      <div className="w-full bg-gradient-to-br from-white to-blue-50 rounded-3xl shadow-lg p-8 space-y-6 border border-blue-100 transition-all hover:shadow-2xl">
 
         {/* Header */}
         <div className="text-center">
@@ -54,7 +54,7 @@ const ProfileSupplier = ({ id }) => {
         </div>
 
         {/* Details Grid */}
-        <div className="grid md:grid-cols-2 gap-6 text-sm text-gray-700">
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 text-sm text-gray-700">
           
           {/* Phones */}
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">

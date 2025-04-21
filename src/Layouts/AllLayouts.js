@@ -30,6 +30,13 @@ export { default as AddLeadLayout } from "./AgentLayouts/Users/Leads/AddLeadLayo
 export { default as SupplierLayout } from "./AgentLayouts/Users/Suppliers/SupplierLayout";
 export { default as AddSupplierLayout } from "./AgentLayouts/Users/Suppliers/AddSupplierLayout";
 export { default as EditSupplierLayout } from "./AgentLayouts/Users/Suppliers/EditSupplierLayout"; 
+
+//Requests
+export { default as RequestListLayout } from "./AgentLayouts/Requests/RequestListLayout";
+export { default as AddRequestLayout } from "./AgentLayouts/Requests/AddRequestLayout";
+export { default as EditRequestLayout } from "./AgentLayouts/Requests/EditRequestLayout";
+export { default as WorkStationLayout } from "./AgentLayouts/Requests/WorkStationLayout";
+
 //Inventory
 //Rooms
 //Room Settind

@@ -9,7 +9,7 @@ import SignUpAffilate from "./Pages/Authentication/SignUpAffilate"
 import Login from "./Pages/Authentication/Login";
 import AgentLayout from "./Layouts/AgentLayouts/AgentLayout";
 import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";  
-import {AddAdminAccountLayout, AddAgentLayout, AddCategoryExpensesLayout, AddCategoryRevenueLayout, AddCurrencyLayout, AddDepartmentLayout, AddEmployeeLayout, AddFinancialAccountLayout, AddGroupLayout, AddLeadLayout, AddOwnerLayout, AddPositionLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddTaxLayout, AddTourLayout, AddWalletLayout, AdminAccountLayout, BookingPaymentLayout, CartLayout, CategoryExpensesLayout, CategoryRevenueLayout, CheckoutLayout, CurrencyAgentLayout, CurrentBookingLayout, CustomersLayout , DepartmentLayout, EditAdminAccountLayout, EditAgentLayout, EditCategoryExpensesLayout, EditCategoryRevenueLayout, EditCurrencyLayout, EditDepartmentLayout, EditEmployeeLayout, EditFinancialAccountLayout, EditGroupLayout, EditOwnerLayout, EditPositionLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, EditTaxLayout, EditTourLayout, EmployeeLayout, FinancialAccountLayout, GroupLayout, HotelBookingDetailsLayout, InvoiceAgentLayout, LeadLayout, LedgerLayout, ListExpensesLayout, ManualBookingLayout, OwnerTransactionLayout, PastBookingLayout, PlansLayout, PositionLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, TaxLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
+import {AddAdminAccountLayout, AddAgentLayout, AddCategoryExpensesLayout, AddCategoryRevenueLayout, AddCurrencyLayout, AddDepartmentLayout, AddEmployeeLayout, AddFinancialAccountLayout, AddGroupLayout, AddLeadLayout, AddOwnerLayout, AddPositionLayout, AddRequestLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddTaxLayout, AddTourLayout, AddWalletLayout, AdminAccountLayout, BookingPaymentLayout, CartLayout, CategoryExpensesLayout, CategoryRevenueLayout, CheckoutLayout, CurrencyAgentLayout, CurrentBookingLayout, CustomersLayout , DepartmentLayout, EditAdminAccountLayout, EditAgentLayout, EditCategoryExpensesLayout, EditCategoryRevenueLayout, EditCurrencyLayout, EditDepartmentLayout, EditEmployeeLayout, EditFinancialAccountLayout, EditGroupLayout, EditOwnerLayout, EditPositionLayout, EditRequestLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, EditTaxLayout, EditTourLayout, EmployeeLayout, FinancialAccountLayout, GroupLayout, HotelBookingDetailsLayout, InvoiceAgentLayout, LeadLayout, LedgerLayout, ListExpensesLayout, ManualBookingLayout, OwnerTransactionLayout, PastBookingLayout, PlansLayout, PositionLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, TaxLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
 import { LandingPage } from "./Pages/AllPages";
 import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 import HomeSuperAdmin from "./Pages/SuperAdmin/Home/HomeSuperAdmin";
@@ -67,7 +67,6 @@ import UpdateCurrency from "./Pages/SuperAdmin/Settings/Tabs/Currency/UpdateCurr
 import PaymentMethodLayout from "./Layouts/SuperAdminLayouts/SettingLayout/PaymentMethodLayout";
 import AddPaymentMethod from "./Pages/SuperAdmin/Settings/Tabs/PaymentMethod/AddPaymentMethod";
 import RequestListLayout from "./Layouts/AgentLayouts/Requests/RequestListLayout";
-import NewRequestLayout from "./Layouts/AgentLayouts/Requests/NewRequestLayout";
 import WorkStationLayout from "./Layouts/AgentLayouts/Requests/WorkStationLayout";
 import InvoiceLayout from "./Layouts/SuperAdminLayouts/FinancialLayout/InvoiceLayout/InvoiceLayout";
 import AddInvoiceLayout from "./Layouts/SuperAdminLayouts/FinancialLayout/InvoiceLayout/AddInvoiceLayout";
@@ -1153,12 +1152,16 @@ export const router = createBrowserRouter([
                 element: <RequestsApp />,
                 children: [
                   {
-                    path: 'request_list',
+                    path: '',
                     element: <RequestListLayout />,
                   },
                   {
-                    path: 'new_request',
-                    element: <NewRequestLayout />,
+                    path: 'add_request',
+                    element: <AddRequestLayout />,
+                  },
+                  {
+                    path: 'edit_request/:requestId',
+                    element: <EditRequestLayout />,
                   },
                   {
                     path: 'work_station',

@@ -2,7 +2,7 @@ import React from "react";
 import MainLogo from "../../Assets/Images/MainLogo";
 import Logo from "../../Assets/Images/Logo";
 
-const Invoice = ({ bookingData }) => {
+const Voucher = ({ bookingData }) => {
   return (
     <div className="p-6  bg-white shadow-lg rounded-lg">
       {/* Header */}
@@ -11,14 +11,14 @@ const Invoice = ({ bookingData }) => {
         <h1 className="text-2xl font-bold text-blue-900 ml-4">Travelta</h1>
       </div>
       
-      {/* Invoice Info */}
+      {/* Voucher Info */}
       <div className="bg-blue-900 text-white p-4 flex justify-between mt-4 rounded-lg">
         <div>
-          <h2 className="font-bold">Invoice</h2>
+          <h2 className="font-bold">Voucher</h2>
           <p>{bookingData?.booking_payment?.created_at || "N/A"}</p>
         </div>
         <div>
-          <h2 className="font-bold">Invoice Date</h2>
+          <h2 className="font-bold">Voucher Date</h2>
           <p>Tuesday, Jul 16, 2024</p>
         </div>
       </div>
@@ -362,4 +362,4 @@ const Invoice = ({ bookingData }) => {
   );
 };
 
-export default Invoice;
+export default Voucher;

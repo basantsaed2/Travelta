@@ -7,17 +7,13 @@ import { useAuth } from "../../../../../../Context/Auth";
 import { FaEdit, FaFileExcel, FaSearch, FaFilter } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import StaticLoader from "../../../../../../Components/StaticLoader";
-
-
-
-
-
-
+import { Link } from "react-router-dom";
 
 const CategoryRevenuePage = () => {
   const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [selectedParentCategory, setSelectedParentCategory] = useState("");
+  const [openDelete, setOpenDelete] = useState(null);
 
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -77,7 +73,7 @@ const CategoryRevenuePage = () => {
       refetchCategory();
     });
   };
-  const filteredCategory = categories.filter((category) => {
+  const filteredCategory = category.filter((category) => {
     const matchesSearch =
       category?.name?.toLowerCase().includes(searchText) ||
       category.parent_category?.name?.toLowerCase().includes(searchText);

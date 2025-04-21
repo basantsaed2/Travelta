@@ -1,5 +1,5 @@
 import React, { useState ,useEffect} from "react";
-import { TextField, MenuItem, Select, Checkbox, ListItemText, Button } from "@mui/material";
+import { TextField, MenuItem, Select, Checkbox, ListItemText, Button,Autocomplete,CircularProgress  } from "@mui/material";
 import { usePost } from '../../../../../Hooks/usePostJson';
 import { useGet } from '../../../../../Hooks/useGet';
 import { FaPlus } from 'react-icons/fa';
@@ -10,6 +10,8 @@ const AddSupplierPage = ({ update, setUpdate }) => {
     const { postData, loadingPost, response } = usePost({ url:'https://travelta.online/agent/supplier/add'});
     const [suppliersServices, setSupplierServices] = useState([])
     const [selectedServices, setSelectedServices] = useState([]); // Holds the selected service ID
+    const [serviceDescriptions, setServiceDescriptions] = useState({});
+
     const navigate = useNavigate();
 
     const [name, setName] = useState("");
@@ -64,6 +66,29 @@ const AddSupplierPage = ({ update, setUpdate }) => {
           }
       }, [response]);
 
+      const handleServiceChange = (event) => {
+        const {
+          target: { value },
+        } = event;
+      
+        const selected = typeof value === 'string' ? value.split(',') : value;
+      
+        // Remove descriptions for unselected services
+        const updatedDescriptions = Object.fromEntries(
+          selected.map((id) => [id, serviceDescriptions[id] || ''])
+        );
+      
+        setSelectedServices(selected);
+        setServiceDescriptions(updatedDescriptions);
+      };      
+
+      const handleDescriptionChange = (serviceId, description) => {
+        setServiceDescriptions((prev) => ({
+          ...prev,
+          [serviceId]: description,
+        }));
+      };      
+
     const handleSubmitSupplier = async (e) => {
     e.preventDefault();
 
@@ -108,7 +133,6 @@ const AddSupplierPage = ({ update, setUpdate }) => {
     formData.append('admin_email', adminEmail)
 
     formData.append('services', JSON.stringify(selectedServices));
-    // formData.append('emergency_phone', alternatePhone)
         
   
     console.log('formData', formData)
@@ -151,27 +175,22 @@ const AddSupplierPage = ({ update, setUpdate }) => {
   return (
     <>
     <form
-    className="w-full flex flex-col gap-10 p-6"
-    onSubmit={handleSubmitSupplier}
-    >
-        <div
-            className="w-full flex sm:flex-col lg:flex-row flex-wrap items-start justify-start gap-5"
-        >
-        <div className="sm:w-full lg:w-[30%] flex flex-col items-start justify-center gap-y-1">
-            {/* <span className="text-xl font-TextFontRegular text-thirdColor">Name:</span> */}
-            <TextField
+      className="w-full rounded-xl shadow-2xl p-8 space-y-10"
+      onSubmit={handleSubmitSupplier}
+    >  
+      {/* Supplier Info Section */}
+      <section className="space-y-6">
+        <h3 className="text-2xl font-semibold text-gray-800 border-b pb-2">Supplier Information</h3>
+  
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <TextField
             label="Supplier Name"
             variant="outlined"
             fullWidth
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
           />
-        </div>
-
-        {/* Supplier Phone */}
-        <div className="sm:w-full lg:w-[35%] flex flex-col items-start justify-center gap-y-1">
           <TextField
             label="Supplier Phone"
             variant="outlined"
@@ -180,30 +199,12 @@ const AddSupplierPage = ({ update, setUpdate }) => {
             required
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
           />
         </div>
-      </div>
-
-      {/* Button to Add More Phone Fields */}
-      <div className="w-full flex justify-start gap-4 mt-2">
-        <Button
-          type="button"
-          variant="contained"
-          className="bg-mainColor hover:bg-blue-600 text-white px-4 py-1 flex items-center gap-2"
-          onClick={handleAddPhoneField}
-        >
-          <FaPlus /> Add More Phone
-        </Button>
-      </div>
-
-      {additionalPhones.map((phone, index) => (
-        <div
-          key={index}
-          className="w-full sm:w-full md:w-1/2 lg:w-1/2 flex sm:flex-col lg:flex-row gap-4 mt-2 bg-white p-3 rounded-lg shadow-lg"
-        >
-          {/* Phone Field */}
-          <div className="sm:w-full lg:w-[70%] flex flex-col items-start justify-center gap-y-1">
+  
+        {/* Additional Phone Fields */}
+        {additionalPhones.map((phone, index) => (
+          <div key={index} className="flex flex-col md:flex-row gap-4 items-center bg-gray-50 p-4 rounded-md shadow">
             <TextField
               label={`Phone ${index + 2}`}
               variant="outlined"
@@ -211,28 +212,29 @@ const AddSupplierPage = ({ update, setUpdate }) => {
               fullWidth
               value={phone}
               onChange={(e) => handleAdditionalPhoneChange(index, e.target.value)}
-              className="shadow-md border-mainColor hover:border-mainColor focus:border-mainColor p-2 rounded-lg"
             />
-          </div>
-
-          {/* Remove Phone Button */}
-          <div className="flex items-center justify-center sm:w-full lg:w-[30%] mt-2 lg:mt-0">
             <Button
-              type="button"
-              variant="contained"
-              className="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-lg shadow-md"
+              variant="outlined"
+              color="error"
               onClick={() => handleRemovePhoneField(index)}
             >
               Remove
             </Button>
           </div>
-        </div>
-      ))}
-
-      {/* Email Fields Section */}
-      <div className="w-full flex sm:flex-col lg:flex-row gap-4 mt-4">
+        ))}
+  
+        <Button
+          type="button"
+          variant="outlined"
+          color="primary"
+          startIcon={<FaPlus />}
+          onClick={handleAddPhoneField}
+        >
+          Add Phone
+        </Button>
+  
         {/* Supplier Email */}
-        <div className="sm:w-full lg:w-[35%] flex flex-col items-start justify-center gap-y-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <TextField
             label="Supplier Email"
             variant="outlined"
@@ -241,29 +243,12 @@ const AddSupplierPage = ({ update, setUpdate }) => {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
           />
         </div>
-      </div>
-
-      {/* Button to Add More Email Fields */}
-      <div className="w-full flex justify-start gap-4 mt-2">
-        <Button
-          type="button"
-          variant="contained"
-          className="bg-mainColor hover:bg-blue-600 text-white px-4 py-1 flex items-center gap-2"
-          onClick={handleAddEmailField}
-        >
-          <FaPlus /> Add More Email
-        </Button>
-      </div>
-
-      {additionalEmails.map((email, index) => (
-        <div
-          key={index}
-          className="w-full sm:w-full md:w-1/2 lg:w-1/2 xl:w-[48%] flex sm:flex-col lg:flex-row gap-4 mt-2 bg-white p-3 rounded-lg shadow-lg"
-        >
-          <div className="sm:w-full lg:w-[70%] flex flex-col items-start justify-center gap-y-1">
+  
+        {/* Additional Email Fields */}
+        {additionalEmails.map((email, index) => (
+          <div key={index} className="flex flex-col md:flex-row gap-4 items-center bg-gray-50 p-4 rounded-md shadow">
             <TextField
               label={`Email ${index + 2}`}
               variant="outlined"
@@ -271,27 +256,33 @@ const AddSupplierPage = ({ update, setUpdate }) => {
               fullWidth
               value={email}
               onChange={(e) => handleAdditionalEmailChange(index, e.target.value)}
-              className="shadow-md border-mainColor hover:border-mainColor focus:border-mainColor p-2 rounded-lg"
             />
-          </div>
-          {/* Remove Email Button */}
-          <div className="flex items-center justify-center sm:w-full lg:w-[30%] mt-2 lg:mt-0">
             <Button
-              type="button"
-              variant="contained"
-              className="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded-lg shadow-md"
+              variant="outlined"
+              color="error"
               onClick={() => handleRemoveEmailField(index)}
             >
               Remove
             </Button>
           </div>
-        </div>
-      ))}
-
-      {/* Admin Fields Section */}
-      <div className="w-full flex sm:flex-col lg:flex-row gap-4 mt-4">
-        {/* Admin Name */}
-        <div className="sm:w-full lg:w-[35%] flex flex-col items-start justify-center gap-y-1">
+        ))}
+  
+        <Button
+          type="button"
+          variant="outlined"
+          color="primary"
+          startIcon={<FaPlus />}
+          onClick={handleAddEmailField}
+        >
+          Add Email
+        </Button>
+      </section>
+  
+      {/* Admin Info Section */}
+      <section className="space-y-6">
+        <h3 className="text-2xl font-semibold text-gray-800 border-b pb-2">Admin Contact</h3>
+  
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <TextField
             label="Admin Name"
             variant="outlined"
@@ -299,12 +290,7 @@ const AddSupplierPage = ({ update, setUpdate }) => {
             required
             value={adminName}
             onChange={(e) => setAdminName(e.target.value)}
-            className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
           />
-        </div>
-
-        {/* Admin Phone */}
-        <div className="sm:w-full lg:w-[35%] flex flex-col items-start justify-center gap-y-1">
           <TextField
             label="Admin Phone"
             variant="outlined"
@@ -313,14 +299,7 @@ const AddSupplierPage = ({ update, setUpdate }) => {
             required
             value={adminPhone}
             onChange={(e) => setAdminPhone(e.target.value)}
-            className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
           />
-        </div>
-      </div>
-
-      {/* Admin Email */}
-      <div className="w-full flex sm:flex-col lg:flex-row gap-4 mt-2">
-        <div className="sm:w-full lg:w-[35%] flex flex-col items-start justify-center gap-y-1">
           <TextField
             label="Admin Email"
             variant="outlined"
@@ -329,57 +308,98 @@ const AddSupplierPage = ({ update, setUpdate }) => {
             required
             value={adminEmail}
             onChange={(e) => setAdminEmail(e.target.value)}
-            className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
           />
         </div>
-      </div>
+      </section>
+  
+      {/* Services */}
+      <section className="space-y-6">
+  <h3 className="text-2xl font-semibold text-gray-800 border-b pb-2">Supplier Services</h3>
 
-      {/* Services Section */}
-      <div className="w-full flex sm:flex-col lg:flex-row gap-4 mt-4">
-        <div className="sm:w-full lg:w-[35%] flex flex-col items-start justify-center gap-y-1">
-          <TextField
-            label="Services"
-            fullWidth
-            select
-            value={selectedServices}
-            onChange={(e) => setSelectedServices(e.target.value)}
-            SelectProps={{
-              multiple: true,
-              renderValue: (selected) =>
-                selected
-                  .map((id) => suppliersServices.find((service) => service.id === id)?.service_name)
-                  .join(", "),
-            }}
-            variant="outlined"
-            className="shadow-md font-mainColor border-mainColor hover:border-mainColor focus:border-mainColor"
-          >
-            {suppliersServices.map((service) => (
-              <MenuItem key={service.id} value={service.id}>
-                <Checkbox checked={selectedServices.includes(service.id)} />
-                <ListItemText primary={service.service_name} />
-              </MenuItem>
-            ))}
-          </TextField>
-        </div>
-        </div>
-          <div className="w-full flex items-center gap-x-4">
-             <div className="">
-                  <Button text={'Reset'} onClick={handleReset} className="bg-mainColor hover:bg-blue-600 hover:text-white">Reset</Button>
-              </div>
-            <div className="">
-                <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                className="bg-mainColor hover:bg-blue-600 text-white"
-                onClick={handleSubmitSupplier}
-            >
-                Submit
-            </Button>
-            </div>
-        </div>
+  <Autocomplete
+  multiple
+  options={Array.isArray(suppliersServices) && suppliersServices.length > 0 
+    ? suppliersServices 
+    : [{ id: "", service_name: "No Services" }]}
+  getOptionLabel={(option) => option.service_name}
+  value={selectedServices}
+  onChange={(event, newValue) => {
+    setSelectedServices(newValue);
+    // Clean up removed descriptions
+    const updatedDescriptions = {};
+    newValue.forEach((service) => {
+      updatedDescriptions[service.id] = serviceDescriptions[service.id] || '';
+    });
+    setServiceDescriptions(updatedDescriptions);
+  }}
+  loading={loadingSupplier}
+  disableCloseOnSelect
+  className="w-full shadow-md font-mainColor border-mainColor"
+  renderInput={(params) => (
+    <TextField
+      {...params}
+      label="Select Supplier Services"
+      variant="outlined"
+      fullWidth
+      required
+      InputProps={{
+        ...params.InputProps,
+        endAdornment: (
+          <>
+            {loadingSupplier ? <CircularProgress size={20} /> : null}
+            {params.InputProps.endAdornment}
+          </>
+        ),
+      }}
+    />
+  )}
+  isOptionEqualToValue={(option, value) => option.id === value.id}
+/>
+
+{/* Description fields for selected services */}
+<div className="space-y-4 mt-4">
+  {selectedServices.map((service) => (
+    <TextField
+      key={service.id}
+      label={`Description for ${service.service_name}`}
+      variant="outlined"
+      fullWidth
+      multiline
+      rows={3}
+      value={serviceDescriptions[service.id] || ''}
+      onChange={(e) =>
+        setServiceDescriptions((prev) => ({
+          ...prev,
+          [service.id]: e.target.value,
+        }))
+      }
+    />
+  ))}
+</div>
+
+      </section>
+
+  
+      {/* Action Buttons */}
+      <div className="flex flex-col md:flex-row justify-end gap-4 mt-6">
+        <Button
+          variant="outlined"
+          onClick={handleReset}
+          className="text-mainColor border-mainColor hover:bg-mainColor hover:text-white"
+        >
+          Reset
+        </Button>
+        <Button
+          type="submit"
+          variant="contained"
+          className="bg-mainColor hover:bg-blue-600 text-white"
+        >
+          Submit
+        </Button>
+      </div>
     </form>
-    </>
+  </>
+  
   );
 };
 

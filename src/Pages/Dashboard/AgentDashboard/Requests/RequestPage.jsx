@@ -11,7 +11,7 @@ const RequestPage = () => {
   const [selectedTab, setSelectedTab] = useState('Hotels');
   const navigate = useNavigate();
   const handleNavigate = () => {
-    navigate("/dashboard_agent/requests/new_request")
+    navigate("/dashboard_agent/requests/add_request")
   }
   // Content for each tab
   const tabContent = {

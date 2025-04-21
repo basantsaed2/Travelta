@@ -12,7 +12,7 @@ import BusServicePage from "../../Booking/Services/BusServicePage";
 import TourServicePage from "../../Booking/Services/TourServicePage";
 import { createFilterOptions } from "@mui/material/Autocomplete";
 
-const NewRequestPage = () => {
+const AddRequestPage = () => {
   const auth = useAuth();
   const { refetch: refetchList,loading: loadingList,data: requestList,} = useGet({ url: "https://travelta.online/agent/request/lists" });
   const {postData: postDataHotel,loadingPost: loadingPostHotel,response: responseHotel,} = usePost({ url: "https://travelta.online/agent/request/add_hotel" });
@@ -663,4 +663,4 @@ const NewRequestPage = () => {
   );
 };
 
-export default NewRequestPage;
+export default AddRequestPage;

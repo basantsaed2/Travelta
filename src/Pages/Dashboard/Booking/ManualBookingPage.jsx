@@ -3,8 +3,6 @@ import {TextField,MenuItem,Switch,Button,Checkbox,Autocomplete,CircularProgress}
 import { useGet } from "../../../Hooks/useGet";
 import { usePost } from "../../../Hooks/usePostJson";
 import { useAuth } from "../../../Context/Auth";
-import { MdAttachMoney } from "react-icons/md";
-import { FiPercent } from "react-icons/fi";
 import { AddSupplierPage } from "../../AllPages";
 import { AddLeadPage } from "../../AllPages";
 import { Link, useNavigate } from 'react-router-dom';
@@ -341,7 +339,6 @@ const ManualBooking = () => {
       formData.append("adults_data", JSON.stringify(adults_data));
       formData.append("children_data", JSON.stringify(children_data));
     }
-
     else if (selectedService?.service_name === "Visa") {
       formData.append("country", visaCountry);
       formData.append("travel_date", visaTravelDate);
@@ -362,7 +359,6 @@ const ManualBooking = () => {
       formData.append("adults_data", JSON.stringify(adults_data));
       formData.append("children_data", JSON.stringify(children_data));
     }
-
     // Append Flight fields to FormData 
     else if (selectedService.service_name === 'Flight') {
       formData.append("type", selectedFlightType);
@@ -402,15 +398,6 @@ const ManualBooking = () => {
       );
       formData.append("from_to", formattedFlights);
     }
-
-
-
-
-
-
-
-
-
     // Append Bus fields to FormData
     else if (selectedService.service_name === "Bus") {
       formData.append("from", busFrom);
@@ -443,10 +430,6 @@ const ManualBooking = () => {
       formData.append("adults_data", JSON.stringify(adults_data));
       formData.append("children_data", JSON.stringify(children_data));
     }
-
-
-
-
     // Append Tour fields to FormData
     else if (selectedService.service_name === "Tour") {
       formData.append("tour", tour);

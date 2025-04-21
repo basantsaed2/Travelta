@@ -6,7 +6,7 @@ const CheckOutProcessLayout = () => {
   const [update, setUpdate] = useState(false)
   return (
     <>
-      <TitlePage text={'CheckOut Process'} />
+      {/* <TitlePage text={'CheckOut Process'} /> */}
       <CheckOutProcessPage update={update} setUpdate={setUpdate}/>
     </>
   )

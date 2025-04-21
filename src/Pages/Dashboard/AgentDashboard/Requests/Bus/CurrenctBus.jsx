@@ -5,6 +5,11 @@ import { useAuth } from '../../../../../Context/Auth';
 import { CircularProgress, MenuItem, TextField } from '@mui/material';
 import { useChangeState } from '../../../../../Hooks/useChangeState';
 import { useDelete } from '../../../../../Hooks/useDelete';
+import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
+import { MdDelete } from "react-icons/md";
+import { Link } from 'react-router-dom';
+import { FaEdit } from "react-icons/fa";
+import { PiWarningCircle } from "react-icons/pi";
 
 const CurrenctBus = ({ data, loading ,refetch}) => {
   const [dataCurrent, setDataCurrent] = useState([]);
@@ -18,6 +23,7 @@ const CurrenctBus = ({ data, loading ,refetch}) => {
   const [request, setRequest] = useState([]); // Handling request
   const { changeState, loadingChange, responseChange } = useChangeState();
   const { deleteData, loadingDelete, responseDelete } = useDelete();
+  const [openDelete, setOpenDelete] = useState(null);
   const [isNotePopupOpen, setIsNotePopupOpen] = useState(false);
   const [currentNote, setCurrentNote] = useState("");
   const [currentNoteId, setCurrentNoteId] = useState(null);
@@ -60,20 +66,26 @@ const CurrenctBus = ({ data, loading ,refetch}) => {
     setFilteredData(filtered);
   };
 
-  
-      // Delete Customer
-      const handleDelete = async (id, name) => {
-        const success = await deleteData(`https://travelta.online/agent/request/delete/${id}`, `${name} Deleted Success.`);
-    
-        if (success) {
-            setDataCurrent(
-            dataCurrent.filter((request) =>
-              request.id !== id
-            )
-          );
-          refetch()
-        }
-      };
+  const handleOpenDelete = (item) => {
+    setOpenDelete(item);
+  };
+  const handleCloseDelete = () => {
+    setOpenDelete(null);
+  };
+
+  const handleDelete = async (id, name) => {
+    const success = await deleteData(`https://travelta.online/agent/request/delete/${id}`, `${name} Deleted Success.`);
+
+    if (success) {
+        // Update Discounts only if changeState succeeded
+        setDataCurrent(
+          dataCurrent.filter((request) =>
+            request.id !== id
+                )
+        );
+    }
+  };
+
   const handleRowsToDisplayChange = (e) => {
     setRowsToDisplay(Number(e.target.value));
   };
@@ -288,45 +300,88 @@ const handleStageChange = async (id, name, newstages) => {
           <td className="min-w-[80px] sm:w-1/12 py-2 text-center text-thirdColor">{row.to_name}</td>
           <td className="min-w-[80px] sm:w-1/12 py-2 text-center text-thirdColor">{row.to_phone}</td>
           <td 
-  className="cursor-pointer min-w-[150px] sm:min-w-[100px] py-2 text-center text-thirdColor hover:underline"
-  onClick={() => handleChangeNote(row.id, row.notes)}
->
-  {row.notes || "Add Note"}
-</td>
-{isNotePopupOpen && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-white p-6 rounded-md shadow-lg">
-      <h2 className="text-lg font-semibold mb-4">Edit Note</h2>
-      <textarea
-        className="w-full p-2 border border-gray-300 rounded-md"
-        value={currentNote}
-        onChange={(e) => setCurrentNote(e.target.value)}
-      ></textarea>
-      <div className="flex justify-end mt-4">
-        <button 
-          className="px-4 py-2 bg-gray-500 text-white rounded-md mr-2"
-          onClick={() => setIsNotePopupOpen(false)}
-        >
-          Cancel
-        </button>
-        <button 
-          className="px-4 py-2 bg-blue-500 text-white rounded-md"
-          onClick={handleSaveNote}
-        >
-          Save
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-<td>
-  <button 
-    onClick={() => handleDelete(row.id,row.agent)} 
-    className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-200"
-  >
-    Delete
-  </button>
-</td>
+            className="cursor-pointer min-w-[150px] sm:min-w-[100px] py-2 text-center text-thirdColor hover:underline"
+            onClick={() => handleChangeNote(row.id, row.notes)}
+          >
+            {row.notes || "Add Note"}
+          </td>
+          {isNotePopupOpen && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white p-6 rounded-md shadow-lg">
+                <h2 className="text-lg font-semibold mb-4">Edit Note</h2>
+                <textarea
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  value={currentNote}
+                  onChange={(e) => setCurrentNote(e.target.value)}
+                ></textarea>
+                <div className="flex justify-end mt-4">
+                  <button 
+                    className="px-4 py-2 bg-gray-500 text-white rounded-md mr-2"
+                    onClick={() => setIsNotePopupOpen(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                    onClick={handleSaveNote}
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          <td className="text-center py-2">
+            <div className="flex items-center justify-center gap-1">
+            <Link to={`edit_request/${row.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
+              <button
+                type="button"
+                onClick={() => handleOpenDelete(row.id)}
+              >
+                <MdDelete color='#D01025' size="24"/>
+              </button>
+
+              {openDelete === row.id && (
+                <Dialog
+                  open={true}
+                  onClose={handleCloseDelete}
+                  className="relative z-10"
+                >
+                  <DialogBackdrop className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                  <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+                    <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                      <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                        <div className="flex  flex-col items-center justify-center bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                          <PiWarningCircle color='#0D47A1'
+                          size="60"
+                          />
+                          <div className="flex items-center">
+                            <div className="mt-2 text-center">
+                              You will delete row {row?.to_name || "-"}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                          <button className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto" onClick={() => handleDelete(row.id, row?.to_name)}>
+                            Delete
+                          </button>
+
+                          <button
+                            type="button"
+                            data-autofocus
+                            onClick={handleCloseDelete}
+                            className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-6 py-3 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:mt-0 sm:w-auto"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </DialogPanel>
+                    </div>
+                  </div>
+                </Dialog>
+              )}
+            </div>
+          </td>
         </tr>
       ))
     ) : (

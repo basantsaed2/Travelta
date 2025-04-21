@@ -930,13 +930,13 @@ useEffect(() => {
     if (
       result === "/dashboard_agent/requests" &&
       ![
-        "/dashboard_agent/requests/request_list",
-        "/dashboard_agent/requests/new_request",
+        "/dashboard_agent/requests",
+        "/dashboard_agent/requests/add_request",
         "/dashboard_agent/requests/work_station",
       ].some((path) => pathName.startsWith(path))
     ) {
       handleClickBookingList();
-      navigate("/dashboard_agent/requests/request_list");
+      navigate("/dashboard_agent/requests");
     }
     console.log("result", result);
   }, [location]);
@@ -953,7 +953,7 @@ useEffect(() => {
     useEffect(() => {
       const part = pathName.split("/");
       const result = part.slice(0, 4).join("/");
-      if (result == "/dashboard_agent/requests/request_list") {
+      if (result == "/dashboard_agent/requests") {
         handleClickRequestList();
       }
     }, [location]);
@@ -970,7 +970,7 @@ useEffect(() => {
     useEffect(() => {
       const part = pathName.split("/");
       const result = part.slice(0, 4).join("/");
-      if (result == "/dashboard_agent/requests/new_request") {
+      if (result == "/dashboard_agent/requests/add_request") {
         handleClickNewRequest();
       }
     }, [location]);
@@ -1553,7 +1553,7 @@ useEffect(() => {
     }, [location]);
 
   return (
-    <div className="space-y-4 w-full h-full">
+    <div className="space-y-2 w-full h-full">
       {/* Home */}
       <Link
         to="/dashboard_agent"
@@ -2096,178 +2096,152 @@ useEffect(() => {
           />
         )}
       </Link> */}
-
-      {/* Requests */}    
-      <Link
-        to="requests/request_list"
-        onMouseMove={() => setIsActiveRequestsIcon(true)}
-        onMouseOut={() => setIsActiveRequestsIcon(false)}
-        onClick={handleClickRequests}
-        className={`
-          ${isActiveRequests ? "active" : ""}
-         flex items-center 
-         ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
-        hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+{/* Requests */}
+<Link
+  to="requests"
+  onMouseMove={() => setIsActiveRequestsIcon(true)}
+  onMouseOut={() => setIsActiveRequestsIcon(false)}
+  onClick={handleClickRequests}
+  className={`${
+    isActiveRequests ? "active" : ""
+  } flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-between"} hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+>
+  <div className="flex font-semibold text-lg items-center gap-x-2"> {/* Increased font size here */}
+    <FaCode 
+      className={`${
+        isActiveRequestsIcon || isActiveRequests
+          ? "text-mainColor"
+          : "text-white"
+      } text-xl`} 
+    />
+    {!isSidebarCollapsed && (
+      <span
+        className={`text-[17px] font-semibold transition-all duration-300 group-hover:text-mainColor ml-2 ${isActiveRequests ? "text-mainColor" : "text-white"}`}
       >
-        <div className="flex font-semibold text-xl items-center gap-x-2">
-          <FaCode 
-            className={`${
-              isActiveRequestsIcon || isActiveRequests
-                ? "text-mainColor"
-                : "text-white"
-            }`}
-          />
-          {!isSidebarCollapsed && (
-            <span
-              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
-                isActiveRequests ? "text-mainColor" : "text-white"
-              }`}
-            >
-              Requests
-            </span>
-          )}
-        </div>
-        {!isSidebarCollapsed && (
-          <IoIosArrowForward
-            className={`${
-              isActiveRequests ? "text-mainColor rotate-90" : "text-white rotate-0"
-            } text-xl transition-all duration-300 group-hover:text-mainColor`}
-          />
-        )}
-      </Link>
-      <div
+        Requests
+      </span>
+    )}
+  </div>
+  {!isSidebarCollapsed && (
+    <IoIosArrowForward
+      className={`${isActiveRequests ? "text-mainColor rotate-90" : "text-white rotate-0"} text-lg transition-all duration-300 group-hover:text-mainColor`} 
+    />
+  )}
+</Link>
+<div
+  className={`${
+    isOpenRequests && !isSidebarCollapsed ? "h-17" : "h-0 "
+  } overflow-hidden flex items-start justify-end w-full transition-all duration-700`}
+>
+  <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
+    <Link
+      to={"requests"}
+      onClick={() => {
+        handleClickRequestList();
+        onLinkClick();
+      }}
+    >
+      <li
         className={`${
-          isOpenRequests && !isSidebarCollapsed ? "h-17" : "h-0 "
-        } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+          isActiveRequestList ? "rounded-xl bg-white text-mainColor" : "text-white"
+        } text-lg font-TextFontRegular rounded-xl px-4 py-1 hover:bg-white transition-all duration-300 hover:text-mainColor`} 
       >
-        <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
-          <Link
-            to={"requests/request_list"}
-            onClick={() => {
-              handleClickRequestList();
-              onLinkClick();
-            }}
-          >
-            <li
-              className={`${
-                isActiveRequestList
-                  ? "rounded-xl bg-white text-mainColor"
-                  : "text-white"
-              }
-                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
-            >
-              Request List 
-            </li>
-          </Link>
-          <Link
-            to={"requests/new_request"}
-            onClick={() => {
-              handleClickNewRequest();
-              onLinkClick();
-            }}
-          >
-            <li
-              className={`${
-                isActiveNewRequest
-                  ? "rounded-xl bg-white text-mainColor"
-                  : "text-white"
-              }
-                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
-            >
-              New Request
-            </li>
-          </Link>
-          <Link
-            to={"requests/work_station"}
-            onClick={() => {
-              handleClickWorkStation();
-              onLinkClick();
-            }}
-          >
-            <li
-              className={`${
-                isActiveWorkStation
-                  ? "rounded-xl bg-white text-mainColor"
-                  : "text-white"
-              }
-                          text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
-            >
-              Work Station
-            </li>
-          </Link>
-        </ul>
-      </div>
-
-      {/* Inventory */}      
-      <div
-        onMouseMove={() => setIsActiveInventoryIcon(true)}
-        onMouseOut={() => setIsActiveInventoryIcon(false)}
-        onClick={handleClickInventory}
-        className={`
-          ${isActiveInventory ? "active" : ""}
-         flex items-center 
-         ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
-        hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
-      >
-        <div className="flex font-semibold text-xl items-center gap-x-2">
-          <FaBriefcase 
-            className={`${
-              isActiveInventoryIcon || isActiveInventory
-                ? "text-mainColor"
-                : "text-white"
-            }`}
-          />
-          {!isSidebarCollapsed && (
-            <span
-              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
-                isActiveInventory ? "text-mainColor" : "text-white"
-              }`}
-            >
-              Inventory
-            </span>
-          )}
-        </div>
-        {!isSidebarCollapsed && (
-          <IoIosArrowForward
-            className={`${
-              isActiveInventory ? "text-mainColor rotate-90" : "text-white rotate-0"
-            } text-xl transition-all duration-300 group-hover:text-mainColor`}
-          />
-        )}
-      </div>
-
-      <div
+        Request List
+      </li>
+    </Link>
+    <Link
+      to={"requests/add_request"}
+      onClick={() => {
+        handleClickNewRequest();
+        onLinkClick();
+      }}
+    >
+      <li
         className={`${
-          isOpenInventory && !isSidebarCollapsed ? "h-17" : "h-0 "
-        } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+          isActiveNewRequest ? "rounded-xl bg-white text-mainColor" : "text-white"
+        } text-lg font-TextFontRegular rounded-xl px-4 py-1 hover:bg-white transition-all duration-300 hover:text-mainColor`}  
       >
-        <ul className="list-disc w-full transition-all duration-700 flex flex-col gap-y-4">
-          <div className="flex flex-col gap-y-1"
-            // to={"inventory/room"}
-            // onClick={handleClickInventory}
-          >
+        New Request
+      </li>
+    </Link>
+    <Link
+      to={"requests/work_station"}
+      onClick={() => {
+        handleClickWorkStation();
+        onLinkClick();
+      }}
+    >
+      <li
+        className={`${
+          isActiveWorkStation ? "rounded-xl bg-white text-mainColor" : "text-white"
+        } text-lg font-TextFontRegular rounded-xl px-4 py-1 hover:bg-white transition-all duration-300 hover:text-mainColor`}  
+      >
+        Work Station
+      </li>
+    </Link>
+  </ul>
+</div>
 
+{/* Inventory */}
+<div
+  onMouseMove={() => setIsActiveInventoryIcon(true)}
+  onMouseOut={() => setIsActiveInventoryIcon(false)}
+  onClick={handleClickInventory}
+  className={`${
+    isActiveInventory ? "active" : ""
+  } flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-between"} hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+>
+  <div className="flex font-semibold text-lg items-center gap-x-2"> {/* Increased font size here */}
+    <FaBriefcase
+      className={`${
+        isActiveInventoryIcon || isActiveInventory ? "text-mainColor" : "text-white"
+      } text-xl`} 
+    />
+    {!isSidebarCollapsed && (
+      <span
+        className={`text-[17px] font-semibold transition-all duration-300 group-hover:text-mainColor ml-2 ${
+          isActiveInventory ? "text-mainColor" : "text-white"
+        }`}
+      >
+        Inventory
+      </span>
+    )}
+  </div>
+  {!isSidebarCollapsed && (
+    <IoIosArrowForward
+      className={`${
+        isActiveInventory ? "text-mainColor rotate-90" : "text-white rotate-0"
+      } text-lg transition-all duration-300 group-hover:text-mainColor`} 
+    />
+  )}
+</div>
+
+<div
+  className={`${
+    isOpenInventory && !isSidebarCollapsed ? "h-17" : "h-0 "
+  } overflow-hidden flex items-start justify-end w-full transition-all duration-700`}
+>
+  <ul className="list-disc w-full transition-all duration-700 flex flex-col gap-y-4">
+    <div className="flex flex-col gap-y-1">
       <li
         onMouseMove={() => setIsActiveInventoryRoomIcon(true)}
         onMouseOut={() => setIsActiveInventoryRoomIcon(false)}
         onClick={handleClickInventoryRoom}
-        className={`
-          ${isActiveInventoryRoom ? "active" : ""}
-         flex items-center 
-         ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
-        hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+        className={`${
+          isActiveInventoryRoom ? "active" : ""
+        } flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-between"} hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
       >
-        <div className="flex font-semibold text-xl items-center gap-x-2">
+        <div className="flex font-semibold text-xl items-center gap-x-2"> {/* Increased font size here */}
           <MdOutlineBedroomChild
             className={`${
               isActiveInventoryRoomIcon || isActiveInventoryRoom
                 ? "text-mainColor"
                 : "text-white"
-            }`}
+            } text-lg`} 
           />
           {!isSidebarCollapsed && (
             <span
-              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
+              className={`text-lg font-TextFontRegular transition-all duration-300 group-hover:text-mainColor ml-2 ${
                 isActiveInventoryRoom ? "text-mainColor" : "text-white"
               }`}
             >
@@ -2279,650 +2253,449 @@ useEffect(() => {
           <IoIosArrowForward
             className={`${
               isActiveInventoryRoom ? "text-mainColor rotate-90" : "text-white rotate-0"
-            } text-xl transition-all duration-300 group-hover:text-mainColor`}
+            } text-lg transition-all duration-300 group-hover:text-mainColor`} 
           />
         )}
       </li>
-      
-                    <div
-                      className={`${
-                        isOpenInventoryRoom && !isSidebarCollapsed ? "h-17" : "h-0 "
-                      } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
-                    >
-                      <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-4">
-      
+      <div
+        className={`${
+          isOpenInventoryRoom && !isSidebarCollapsed ? "h-17" : "h-0 "
+        } overflow-hidden flex items-start justify-end w-full transition-all duration-700`}
+      >
+        <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-4">
+          <Link
+            to={"inventory/room/list"}
+            onClick={() => {
+              handleClickInventoryRoomPreview();
+              onLinkClick();
+            }}
+          >
+            <li
+              className={`${
+                isActiveInventoryRoomPreview
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              } text-lg font-TextFontRegular rounded-xl px-4 py-1 hover:bg-white transition-all duration-300 hover:text-mainColor`} 
+            >
+              Room List
+            </li>
+          </Link>
+          <Link
+            to={"inventory/room/setting_room"}
+            onClick={() => {
+              handleClickInventoryRoomSetting();
+              onLinkClick();
+            }}
+          >
+            <li
+              className={`${
+                isActiveInventoryRoomSetting
+                  ? "rounded-xl bg-white text-mainColor"
+                  : "text-white"
+              } text-lg font-TextFontRegular rounded-xl px-4 py-1 hover:bg-white transition-all duration-300 hover:text-mainColor`} 
+            >
+              Room Setting
+            </li>
+          </Link>
+        </ul>
+      </div>
+      <Link
+        to="inventory/tour/list"
+        onMouseMove={() => setIsActiveInventoryIcon(true)}
+        onMouseOut={() => setIsActiveInventoryIcon(false)}
+        onClick={() => {
+          handleClickInventoryTour();
+          onLinkClick();
+        }}
+        className={`${
+          isActiveInventoryTour ? "active" : ""
+        } flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-start"} hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+      >
+        <div className="flex font-semibold text-lg items-center gap-x-2"> {/* Increased font size here */}
+          <FaMapMarkedAlt
+            className={`${
+              isActiveInventoryTour || isActiveInventory
+                ? "text-mainColor"
+                : "text-white"
+            } text-lg`} 
+          />
+          {!isSidebarCollapsed && (
+            <span
+              className={`text-lg font-TextFontRegular transition-all duration-300 group-hover:text-mainColor ml-2 ${
+                isActiveInventoryTour ? "text-mainColor" : "text-white"
+              }`}
+            >
+              Tour
+            </span>
+          )}
+        </div>
+        {!isSidebarCollapsed && (
+          <IoIosArrowForward
+            className={`${
+              isActiveInventoryTour ? "text-mainColor rotate-90" : "text-white rotate-0"
+            } text-lg transition-all duration-300 group-hover:text-mainColor`} 
+          />
+        )}
+      </Link>
+    </div>
+  </ul>
+</div>
 
-                              <Link
-                                to={"inventory/room/list"}
-                                onClick={() => {
-                                    handleClickInventoryRoomPreview();
-                                    onLinkClick();
-                                  }}
-                                >
-                                  <li
-                                    className={`${
-                                      isActiveInventoryRoomPreview
-                                        ? "rounded-xl bg-white text-mainColor"
-                                        : "text-white"
-                                    }
-                                                text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
-                                  >
-                                    Room List
-                                  </li>
-                              </Link>
 
-                              <Link
-                              to={"inventory/room/setting_room"}
-                              onClick={() => {
-                                handleClickInventoryRoomSetting();
-                                onLinkClick();
-                                }}
-                              >
-                                <li
-                                className={`${
-                                  isActiveInventoryRoomSetting
-                                    ? "rounded-xl bg-white text-mainColor"
-                                    : "text-white"
-                                }
-                                            text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
-                              >
-                                Room Setting
-                              </li>
-                              </Link>
-                      </ul>
-                    </div>
-
-                    <Link
-  to="inventory/tour/list"
-  onMouseMove={() => setIsActiveInventoryIcon(true)}
-  onMouseOut={() => setIsActiveInventoryIcon(false)} // Fix: Set to false
-  onClick={() => {
-    handleClickInventoryTour();
-    onLinkClick();
-  }}
-  className={`
-    ${isActiveInventoryTour ? "active" : ""}
-    flex items-center 
-     ${isSidebarCollapsed ? "justify-center" : "justify-start"}
-    hover:rounded-xl p-2 hover:bg-white hover:text-mainColor
-    group transition-all duration-300`}
->
-  <div className="flex font-semibold text-xl items-center gap-x-2">
-    <FaMapMarkedAlt
+    {/* Accounting */}  
+    <Link
+      to="accounting/ledger"
+      onMouseMove={() => setIsActiveAccountingIcon(true)}
+      onMouseOut={() => setIsActiveAccountingIcon(false)}
+      onClick={handleClickAccounting}
       className={`${
-        isActiveInventoryTourIcon || isActiveInventoryTour ? "text-mainColor" : "text-white"
-      } transition-all duration-300 group-hover:text-mainColor`} // Ensure smooth transition
-    />
-    {!isSidebarCollapsed && (
-      <span
-        className={`text-base transition-all duration-300 font-TextFontRegular group-hover:text-mainColor ml-2 ${
-          isActiveInventoryTour ? "text-mainColor" : "text-white"
-        }`}
-      >
-        Tour
-      </span>
-    )}
-  </div>  
-                    </Link>
-
-
-      
-          </div>
-        </ul>
-      </div>
-
-      {/* Accounting */}  
-      <Link
-        to="accounting/ledger"
-        onMouseMove={() => setIsActiveAccountingIcon(true)}
-        onMouseOut={() => setIsActiveAccountingIcon(false)}
-        onClick={handleClickAccounting}
-        className={`
-          ${isActiveAccounting ? "active" : ""}
-         flex items-center 
-         ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
-        hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
-      >
-        <div className="flex font-semibold text-lg items-center gap-x-2">
-          <FaDatabase 
-            className={`${
-              isActiveAccountingIcon || isActiveAccounting
-                ? "text-mainColor"
-                : "text-white"
-            }`}
-          />
-          {!isSidebarCollapsed && (
-            <span
-              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
-                isActiveAccounting ? "text-mainColor" : "text-white"
-              }`}
-            >
-              Accounting
-            </span>
-          )}
-        </div>
+        isActiveAccounting ? "active" : ""
+      } flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-between"} hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+    >
+      <div className="flex items-center gap-x-2">
+        <FaDatabase
+          className={`${
+            isActiveAccountingIcon || isActiveAccounting
+              ? "text-mainColor"
+              : "text-white"
+          }`}
+        />
         {!isSidebarCollapsed && (
-          <IoIosArrowForward
-            className={`${
-              isActiveAccounting ? "text-mainColor rotate-90" : "text-white rotate-0"
-            } text-lg transition-all duration-300 group-hover:text-mainColor`}
-          />
+          <span
+            className={`text-[17px] font-semibold ml-2 group-hover:text-mainColor ${
+              isActiveAccounting ? "text-mainColor" : "text-white"
+            }`}
+          >
+            Accounting
+          </span>
         )}
-      </Link>
-      <div
-        className={`overflow-hidden w-full transition-all duration-700 ${
-          isOpenAccounting && !isSidebarCollapsed ? "max-h-[400px]" : "max-h-0"
-        }`}
-      >
-        <ul className="list-none w-full pl-5 transition-all duration-700 flex flex-col gap-y-1">
-  
-          {/* Ledger Link */}
-          <Link to={"accounting/ledger"} onClick={() => { handleClickLedger(); onLinkClick(); }}>
-            <li className={`text-md p-2 rounded-lg transition-all duration-300 ${
+      </div>
+      {!isSidebarCollapsed && (
+        <IoIosArrowForward
+          className={`${
+            isActiveAccounting ? "text-mainColor rotate-90" : "text-white rotate-0"
+          } text-lg transition-all duration-300 group-hover:text-mainColor`}
+        />
+      )}
+    </Link>
+    <div
+      className={`overflow-hidden w-full transition-all duration-700 ${
+        isOpenAccounting && !isSidebarCollapsed ? "max-h-[800px]" : "max-h-0"
+      }`}
+    >
+      <ul className="list-none w-full pl-5 transition-all duration-700 flex flex-col gap-y-1">
+        {/* Ledger Link */}
+        <Link to={"accounting/ledger"} onClick={() => { handleClickLedger(); onLinkClick(); }}>
+          <li
+            className={`text-[16px] font-medium p-2 rounded-lg transition-all duration-300 ${
               isActiveLedger ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-            }`}>
-             - General Ledger
-            </li>
-          </Link>
+            }`}
+          >
+            - General Ledger
+          </li>
+        </Link>
 
-           {/* payment_recivable Link */}
-           <Link to={"accounting/payment_recivable"} onClick={() => { handleClickPaymentRecivable(); onLinkClick(); }}>
-            <li className={`text-md p-2 rounded-lg transition-all duration-300 ${
+        {/* payment_recivable Link */}
+        <Link to={"accounting/payment_recivable"} onClick={() => { handleClickPaymentRecivable(); onLinkClick(); }}>
+          <li
+            className={`text-[16px] font-medium p-2 rounded-lg transition-all duration-300 ${
               isActivePaymentRecivable ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-            }`}>
-            - Payment Recivable
-            </li>
-          </Link>
-
-          {/* O.E Dropdown (Owner List & Transactions) */}
-          <li
-              onMouseEnter={() => setIsActiveOwnerTransaction(true)}
-              onMouseLeave={() => setIsActiveOwnerTransaction(false)}
-              onClick={handleClickOwnerTransaction}
-              className={`flex items-center font-medium text-md justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer
-                ${isActiveOwnerTransaction ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}
-              `}
-            >
-              <div className="flex items-center gap-2">
-                <GrTransaction className={isActiveOwnerTransaction ? "text-mainColor" : "text-white"} />
-                {!isSidebarCollapsed && <span>O.E</span>}
-              </div>
-              {!isSidebarCollapsed && (
-                <IoIosArrowForward className={`transition-transform duration-300 ${
-                  isActiveOwnerTransaction ? "rotate-90 text-mainColor" : "rotate-0 text-white"
-                }`} />
-              )}
-          </li>
-          {/* Owner List & Transactions (Expandable) */}
-          <div
-            className={`overflow-hidden transition-all duration-500 ${
-              isOpenOwnerTransaction ? "max-h-[300px]" : "max-h-0"
             }`}
           >
-            <ul className="list-disc pl-6 transition-all duration-500 flex flex-col gap-y-2">
+            - Payment Receivable
+          </li>
+        </Link>
 
-              {/* Owner List */}
-              <Link to={"accounting/owner_transaction/owner"} onClick={() => { handleClickOwner(); onLinkClick(); }}>
-                <li className={`text-md px-4 py-2 rounded-lg transition-all duration-300 ${
+        {/* O.E Dropdown (Owner List & Transactions) */}
+        <li
+          onMouseEnter={() => setIsActiveOwnerTransaction(true)}
+          onMouseLeave={() => setIsActiveOwnerTransaction(false)}
+          onClick={handleClickOwnerTransaction}
+          className={`flex items-center font-medium text-[16px] justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer ${
+            isActiveOwnerTransaction ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            <GrTransaction className={isActiveOwnerTransaction ? "text-mainColor" : "text-white"} />
+            {!isSidebarCollapsed && <span>O.E</span>}
+          </div>
+          {!isSidebarCollapsed && (
+            <IoIosArrowForward
+              className={`transition-transform duration-300 ${
+                isActiveOwnerTransaction ? "rotate-90 text-mainColor" : "rotate-0 text-white"
+              }`}
+            />
+          )}
+        </li>
+
+        {/* Owner List & Transactions (Expandable) */}
+        <div
+          className={`overflow-hidden transition-all duration-500 ${
+            isOpenOwnerTransaction ? "max-h-[300px]" : "max-h-0"
+          }`}
+        >
+          <ul className="list-disc pl-6 transition-all duration-500 flex flex-col gap-y-2">
+            {/* Owner List */}
+            <Link to={"accounting/owner_transaction/owner"} onClick={() => { handleClickOwner(); onLinkClick(); }}>
+              <li
+                className={`text-[16px] font-medium px-4 py-2 rounded-lg transition-all duration-300 ${
                   isActiveOwner ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-                }`}>
-                  Owners
-                </li>
-              </Link>
+                }`}
+              >
+                Owners
+              </li>
+            </Link>
 
-              {/* Transactions */}
-              <Link to={"accounting/owner_transaction/transaction"} onClick={() => { handleClickTransaction(); onLinkClick(); }}>
-                <li className={`text-md px-4 py-2 rounded-lg transition-all duration-300 ${
+            {/* Transactions */}
+            <Link to={"accounting/owner_transaction/transaction"} onClick={() => { handleClickTransaction(); onLinkClick(); }}>
+              <li
+                className={`text-[16px] font-medium px-4 py-2 rounded-lg transition-all duration-300 ${
                   isActiveTransaction ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-                }`}>
-                  Transactions
-                </li>
-              </Link>
+                }`}
+              >
+                Transactions
+              </li>
+            </Link>
+          </ul>
+        </div>
 
-            </ul>
+        {/* Payable to Supplier Dropdown */}
+        <li
+          onMouseEnter={() => setIsActivePayable(true)}
+          onMouseLeave={() => setIsActivePayable(false)}
+          onClick={handleClickPayable}
+          className={`flex items-center font-medium text-[16px] justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer ${
+            isActivePayable ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            <MdOutlinePayment className={isActivePayable ? "text-mainColor" : "text-white"} />
+            {!isSidebarCollapsed && <span>Payable</span>}
           </div>
-
-          {/* Payable to Supplier Dropdown */}
-          <li
-            onMouseEnter={() => setIsActivePayable(true)}
-            onMouseLeave={() => setIsActivePayable(false)}
-            onClick={handleClickPayable}
-            className={`flex items-center font-medium text-md justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer
-              ${isActivePayable ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}
-            `}
-          >
-            <div className="flex items-center gap-2">
-              <MdOutlinePayment className={isActivePayable ? "text-mainColor" : "text-white"} />
-              {!isSidebarCollapsed && <span>Payable</span>}
-            </div>
-            {!isSidebarCollapsed && (
-              <IoIosArrowForward className={`transition-transform duration-300 ${
+          {!isSidebarCollapsed && (
+            <IoIosArrowForward
+              className={`transition-transform duration-300 ${
                 isActivePayable ? "rotate-90 text-mainColor" : "rotate-0 text-white"
-              }`} />
-            )}
-          </li>
-
-          {/* Payable to Supplier Expandable Section */}
-          <div
-            className={`overflow-hidden transition-all duration-500 ${
-              isOpenPayable ? "max-h-[300px]" : "max-h-0"
-            }`}
-          >
-            <ul className="list-disc pl-6 transition-all duration-500 flex flex-col gap-y-2">
-
-              {/* Payable to Supplier */}
-              <Link to={"accounting/payable_to_supplier/payable_supplier"} onClick={() => { handleClickPayableToSupplier(); onLinkClick(); }}>
-                <li className={`text-md px-4 py-2 rounded-lg transition-all duration-300 ${
+              }`}
+            />
+          )}
+        </li>
+        {/* Payable to Supplier Expandable Section */}
+        <div
+          className={`overflow-hidden transition-all duration-500 ${isOpenPayable ? "max-h-[300px]" : "max-h-0"}`}
+        >
+          <ul className="list-disc pl-6 transition-all duration-500 flex flex-col gap-y-2">
+            {/* Payable to Supplier */}
+            <Link to={"accounting/payable_to_supplier/payable_supplier"} onClick={() => { handleClickPayableToSupplier(); onLinkClick(); }}>
+              <li
+                className={`text-md font-semibold px-2 py-2 rounded-lg transition-all duration-300 ${
                   isActivePayableToSupplier ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-                }`}>
-                  Payable To Supplier
-                </li>
-              </Link>
+                }`}
+              >
+                Payable To Supplier
+              </li>
+            </Link>
 
-              {/* Paid Supplier */}
-              <Link to={"accounting/payable_to_supplier/paid_supplier"} onClick={() => { handleClickPaidSupplier(); onLinkClick(); }}>
-                <li className={`text-md px-4 py-2 rounded-lg transition-all duration-300 ${
+            {/* Paid Supplier */}
+            <Link to={"accounting/payable_to_supplier/paid_supplier"} onClick={() => { handleClickPaidSupplier(); onLinkClick(); }}>
+              <li
+                className={`text-md font-semibold px-4 py-2 rounded-lg transition-all duration-300 ${
                   isActivePaidSupplier ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-                }`}>
-                  Paid Supplier
-                </li>
-              </Link>
+                }`}
+              >
+                Paid Supplier
+              </li>
+            </Link>
 
-              {/* Over Due */}
-              <Link to={"accounting/payable_to_supplier/over_due"} onClick={() => { handleClickOverDue(); onLinkClick(); }}>
-                <li className={`text-md px-4 py-2 rounded-lg transition-all duration-300 ${
+            {/* Over Due */}
+            <Link to={"accounting/payable_to_supplier/over_due"} onClick={() => { handleClickOverDue(); onLinkClick(); }}>
+              <li
+                className={`text-md font-semibold px-4 py-2 rounded-lg transition-all duration-300 ${
                   isActiveOverDue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-                }`}>
-                  Over Due
-                </li>
-              </Link>
-
-            </ul>
-          </div>
-
-          {/* Revenue Section */}
-          <li
-            onMouseEnter={() => setIsActiveRevenue(true)}
-            onMouseLeave={() => setIsActiveRevenue(false)}
-            onClick={handleClickRevenue}
-            className={`flex items-center font-medium text-md justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer
-              ${isActiveRevenue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}
-            `}
-          >
-            <div className="flex items-center gap-2">
-              <MdAttachMoney  className={isActiveRevenue ? "text-mainColor" : "text-white"} />
-              {!isSidebarCollapsed && <span>Revenue</span>}
-            </div>
-            {!isSidebarCollapsed && (
-              <IoIosArrowForward className={`transition-transform duration-300 ${
-                isActiveRevenue ? "rotate-90 text-mainColor" : "rotate-0 text-white"
-              }`} />
-            )}
-          </li>
-
-          {/* Revenue Dropdown */}
-          <div
-            className={`overflow-hidden transition-all duration-500 ${
-              isOpenRevenue ? "max-h-[300px]" : "max-h-0"
-            }`}
-          >
-            <ul className="list-disc pl-6 transition-all duration-500 flex flex-col gap-y-2">
-
-              {/* Revenue List */}
-              <Link to={"accounting/revenue/list_revenue"} onClick={() => { handleClickListRevenue(); onLinkClick(); }}>
-                <li className={`text-md px-4 py-2 rounded-lg transition-all duration-300 ${
-                  isActiveListRevenue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-                }`}>
-                    Revenue List
-                </li>
-              </Link>
-
-              {/* Revenue Category */}
-              <Link to={"accounting/revenue/category_revenue"} onClick={() => { handleClickCategoryRevenue(); onLinkClick(); }}>
-                <li className={`text-md px-4 py-2 rounded-lg transition-all duration-300 ${
-                  isActiveCategoryRevenue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-                }`}>
-                  Revenue Category
-                </li>
-              </Link>
-
-            </ul>
-          </div>
-
-           {/* Expenses Section */}
-           <li
-            onMouseEnter={() => setIsActiveExpenses(true)}
-            onMouseLeave={() => setIsActiveExpenses(false)}
-            onClick={handleClickExpenses}
-            className={`flex items-center font-medium text-md justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer
-              ${isActiveExpenses ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}
-            `}
-          >
-            <div className="flex items-center gap-2">
-              <MdOutlineMoneyOff  className={isActiveExpenses ? "text-mainColor" : "text-white"} />
-              {!isSidebarCollapsed && <span>Expenses</span>}
-            </div>
-            {!isSidebarCollapsed && (
-              <IoIosArrowForward className={`transition-transform duration-300 ${
-                isActiveExpenses ? "rotate-90 text-mainColor" : "rotate-0 text-white"
-              }`} />
-            )}
-          </li>
-
-          {/* Expenses Dropdown */}
-          <div
-            className={`overflow-hidden transition-all duration-500 ${
-              isOpenExpenses ? "max-h-[300px]" : "max-h-0"
-            }`}
-          >
-            <ul className="list-disc pl-6 transition-all duration-500 flex flex-col gap-y-2">
-
-              {/* Revenue List */}
-              <Link to={"accounting/expenses/list_expenses"} onClick={() => { handleClickListExpenses(); onLinkClick(); }}>
-                <li className={`text-md px-4 py-2 rounded-lg transition-all duration-300 ${
-                  isActiveListExpenses ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-                }`}>
-                    Expenses List
-                </li>
-              </Link>
-
-              {/* Revenue Category */}
-              <Link to={"accounting/expenses/category_expenses"} onClick={() => { handleClickCategoryExpenses(); onLinkClick(); }}>
-                <li className={`text-md px-4 py-2 rounded-lg transition-all duration-300 ${
-                  isActiveCategoryExpenses ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-                }`}>
-                  Expenses Category
-                </li>
-              </Link>
-            </ul>
-          </div>
- 
-        </ul>
-
-      </div>
-
-      {/* HRM */}
-      <Link
-        to="hrm/department"
-        onMouseMove={() => setIsActiveHRMIcon(true)}
-        onMouseOut={() => setIsActiveHRMIcon(false)}
-        onClick={handleClickHRM}
-        className={`
-          ${isActiveHRM? "active" : ""}
-         flex items-center 
-         ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
-        hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
-      >
-        <div className="flex font-semibold text-lg items-center gap-x-2">
-          <FaUserCog  
-            className={`${
-              isActiveHRMIcon || isActiveHRM
-                ? "text-mainColor"
-                : "text-white"
-            }`}
-          />
-          {!isSidebarCollapsed && (
-            <span
-              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
-                isActiveHRM ? "text-mainColor" : "text-white"
-              }`}
-            >
-              HRM
-            </span>
-          )}
+                }`}
+              >
+                Over Due
+              </li>
+            </Link>
+          </ul>
         </div>
-        {!isSidebarCollapsed && (
-          <IoIosArrowForward
-            className={`${
-              isActiveHRM ? "text-mainColor rotate-90" : "text-white rotate-0"
-            } text-lg transition-all duration-300 group-hover:text-mainColor`}
-          />
-        )}
-      </Link>
-      <div
-        className={`${
-          isOpenHRM && !isSidebarCollapsed ? "h-15" : "h-0 "
-        } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
-      >
-        <ul className="list-none w-full pl-6 transition-all duration-700 flex flex-col gap-y-2">
-          <Link
-            to={"hrm/department"}
-            onClick={() => {
-              handleClickHRMDepartment();
-              onLinkClick();
-            }}
-          >
-            <li
-              className={`${
-                isActiveHRMDepartment
-                  ? "rounded-xl bg-white text-mainColor"
-                  : "text-white"
-              }
-                 text-md font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
-            >
-              - Department
-            </li>
-          </Link>    
 
-            <Link
-            to={"hrm/agent"}
-            onClick={() => {
-              handleClickHRMAgent();
-              onLinkClick();
-            }}
-          >
-            <li
-              className={`${
-                isActiveHRMAgent
-                  ? "rounded-xl bg-white text-mainColor"
-                  : "text-white"
-              }
-                  text-md font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
-            >
-              - Agent
-            </li>
-          </Link>   
-
-            <Link
-            to={"hrm/employee"}
-            onClick={() => {
-              handleClickHRMEmployee();
-              onLinkClick();
-            }}
-          >
-            <li
-              className={`${
-                isActiveHRMEmployee
-                  ? "rounded-xl bg-white text-mainColor"
-                  : "text-white"
-              }
-                          text-md font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
-            >
-              - Employee
-            </li>
-          </Link>     
-        </ul>
-      </div>
-
-      {/* Settings */}
-      <Link
-        to="setting"
-        onMouseMove={() => setIsActiveSettingIcon(true)}
-        onMouseOut={() => setIsActiveSettingIcon(false)}
-        onClick={handleClickSetting}
-        className={`
-          ${isActiveSetting? "active" : ""}
-         flex items-center 
-         ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
-        hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
-      >
-        <div className="flex font-semibold text-lg items-center gap-x-2">
-          <FaCog 
-            className={`${
-              isActiveSettingIcon || isActiveSetting
-                ? "text-mainColor"
-                : "text-white"
-            }`}
-          />
+        {/* Revenue Section */}
+        <li
+          onMouseEnter={() => setIsActiveRevenue(true)}
+          onMouseLeave={() => setIsActiveRevenue(false)}
+          onClick={handleClickRevenue}
+          className={`flex items-center font-semibold text-md justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer
+            ${isActiveRevenue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}`}
+        >
+          <div className="flex items-center gap-2">
+            <MdAttachMoney className={isActiveRevenue ? "text-mainColor" : "text-white"} />
+            {!isSidebarCollapsed && <span>Revenue</span>}
+          </div>
           {!isSidebarCollapsed && (
-            <span
-              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
-                isActiveSetting ? "text-mainColor" : "text-white"
-              }`}
-            >
-              Settings
-            </span>
+            <IoIosArrowForward
+              className={`transition-transform duration-300 ${isActiveRevenue ? "rotate-90 text-mainColor" : "rotate-0 text-white"}`}
+            />
           )}
+        </li>
+
+        {/* Revenue Dropdown */}
+        <div className={`overflow-hidden transition-all duration-500 ${isOpenRevenue ? "max-h-[300px]" : "max-h-0"}`}>
+          <ul className="list-disc pl-6 transition-all duration-500 flex flex-col gap-y-2">
+            {/* Revenue List */}
+            <Link to={"accounting/revenue/list_revenue"} onClick={() => { handleClickListRevenue(); onLinkClick(); }}>
+              <li className={`text-md font-semibold px-4 py-2 rounded-lg transition-all duration-300 ${
+                isActiveListRevenue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+              }`}>
+                Revenue List
+              </li>
+            </Link>
+
+            {/* Revenue Category */}
+            <Link to={"accounting/revenue/category_revenue"} onClick={() => { handleClickCategoryRevenue(); onLinkClick(); }}>
+              <li className={`text-md font-semibold px-4 py-2 rounded-lg transition-all duration-300 ${
+                isActiveCategoryRevenue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+              }`}>
+                Revenue Category
+              </li>
+            </Link>
+          </ul>
         </div>
+
+        {/* Expenses Section */}
+        <li
+          onMouseEnter={() => setIsActiveExpenses(true)}
+          onMouseLeave={() => setIsActiveExpenses(false)}
+          onClick={handleClickExpenses}
+          className={`flex items-center font-semibold text-md justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer
+            ${isActiveExpenses ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}`}
+        >
+          <div className="flex items-center gap-2">
+            <MdOutlineMoneyOff className={isActiveExpenses ? "text-mainColor" : "text-white"} />
+            {!isSidebarCollapsed && <span>Expenses</span>}
+          </div>
+          {!isSidebarCollapsed && (
+            <IoIosArrowForward
+              className={`transition-transform duration-300 ${isActiveExpenses ? "rotate-90 text-mainColor" : "rotate-0 text-white"}`}
+            />
+          )}
+        </li>
+
+        {/* Expenses Dropdown */}
+        <div className={`overflow-hidden transition-all duration-500 ${isOpenExpenses ? "max-h-[300px]" : "max-h-0"}`}>
+          <ul className="list-disc pl-6 transition-all duration-500 flex flex-col gap-y-2">
+            {/* Expenses List */}
+            <Link to={"accounting/expenses/list_expenses"} onClick={() => { handleClickListExpenses(); onLinkClick(); }}>
+              <li className={`text-md font-semibold px-4 py-2 rounded-lg transition-all duration-300 ${
+                isActiveListExpenses ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+              }`}>
+                Expenses List
+              </li>
+            </Link>
+
+            {/* Expenses Category */}
+            <Link to={"accounting/expenses/category_expenses"} onClick={() => { handleClickCategoryExpenses(); onLinkClick(); }}>
+              <li className={`text-md font-semibold px-4 py-2 rounded-lg transition-all duration-300 ${
+                isActiveCategoryExpenses ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+              }`}>
+                Expenses Category
+              </li>
+            </Link>
+          </ul>
+        </div>
+      </ul>
+    </div>
+
+     {/* HRM */}
+    <Link
+      to="hrm/department"
+      onMouseMove={() => setIsActiveHRMIcon(true)}
+      onMouseOut={() => setIsActiveHRMIcon(false)}
+      onClick={handleClickHRM}
+      className={`
+        ${isActiveHRM ? "active" : ""}
+        flex items-center 
+        ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
+        hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300
+      `}
+    >
+      <div className="flex items-center gap-x-2">
+        <FaUserCog className={`${isActiveHRMIcon || isActiveHRM ? "text-mainColor" : "text-white"} text-xl`} />
         {!isSidebarCollapsed && (
-          <IoIosArrowForward
-            className={`${
-              isActiveSetting ? "text-mainColor rotate-90" : "text-white rotate-0"
-            } text-lg transition-all duration-300 group-hover:text-mainColor`}
-          />
+          <span className={`text-[17px] font-semibold ml-2 group-hover:text-mainColor ${isActiveHRM ? "text-mainColor" : "text-white"}`}>
+            HRM
+          </span>
         )}
-      </Link>
-      <div
-        className={`${
-          isOpenSetting && !isSidebarCollapsed ? "h-17" : "h-0 "
-        } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
-      >
-        <ul className="list-none w-full pl-6 transition-all duration-700 flex flex-col gap-y-2">
-          <Link
-            to={"setting/financial_account"}
-            onClick={() => {
-              handleClickSettingFinancialAccount();
-              onLinkClick();
-            }}
-          >
-            <li
-              className={`${
-                isActiveFinancialAccount
-                  ? "rounded-xl bg-white text-mainColor"
-                  : "text-white"
-              }
-                text-md font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
-            >
-              - Financial Account
-            </li>
-          </Link>
-
-          <Link
-            to={"setting/roles"}
-            onClick={() => {
-              handleClickSettingRoles();
-              onLinkClick();
-            }}
-          >
-            <li
-              className={`${
-                isActivePosition
-                  ? "rounded-xl bg-white text-mainColor"
-                  : "text-white"
-              }
-                text-md font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
-            >
-              - Roles
-            </li>
-          </Link>
-
-          <Link
-            to={"setting/admin_account"}
-            onClick={() => {
-              handleClickSettingAdminAccount();
-              onLinkClick();
-            }}
-          >
-            <li
-              className={`${
-                isActiveAdminAccount
-                  ? "rounded-xl bg-white text-mainColor"
-                  : "text-white"
-              }
-                text-md font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
-            >
-              - Admin Account
-            </li>
-          </Link>
-
-          <Link
-            to={"setting/wallet"}
-            onClick={() => {
-              handleClickSettingWallet();
-              onLinkClick();
-            }}
-          >
-            <li
-              className={`${
-                isActiveWallet
-                  ? "rounded-xl bg-white text-mainColor"
-                  : "text-white"
-              }
-                text-md font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
-            >
-              - Wallet
-            </li>
-          </Link>
-
-          <Link
-            to={"setting/currency"}
-            onClick={() => {
-              handleClickSettingCurrency();
-              onLinkClick();
-            }}
-          >
-            <li
-              className={`${
-                isActiveCurrency
-                  ? "rounded-xl bg-white text-mainColor"
-                  : "text-white"
-              }
-                 text-md font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
-            >
-              - Currency
-            </li>
-          </Link>
-
-          <Link
-            to={"setting/tax"}
-            onClick={() => {
-              handleClickSettingTax();
-              onLinkClick();
-            }}
-          >
-            <li
-              className={`${
-                isActiveTax
-                  ? "rounded-xl bg-white text-mainColor"
-                  : "text-white"
-              }
-                   text-md font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
-            >
-              - Tax
-            </li>
-          </Link>
-
-          <Link
-            to={"setting/group"}
-            onClick={() => {
-              handleClickSettingGroup();
-              onLinkClick();
-            }}
-          >
-            <li
-              className={`${
-                isActiveGroup
-                  ? "rounded-xl bg-white text-mainColor"
-                  : "text-white"
-              }
-                          text-md font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
-            >
-              - Group
-            </li>
-          </Link>
-         
-        </ul>
       </div>
+      {!isSidebarCollapsed && (
+        <IoIosArrowForward
+          className={`${isActiveHRM ? "text-mainColor rotate-90" : "text-white rotate-0"} text-lg transition-all duration-300 group-hover:text-mainColor`}
+        />
+      )}
+    </Link>
+    <div className={`${isOpenHRM && !isSidebarCollapsed ? "h-15" : "h-0"} overflow-hidden flex items-start justify-end w-full transition-all duration-700`}>
+      <ul className="list-none w-full pl-6 flex flex-col gap-y-2 transition-all duration-700">
+        {[
+          { label: 'Department', to: 'hrm/department', isActive: isActiveHRMDepartment, onClick: handleClickHRMDepartment },
+          { label: 'Agent', to: 'hrm/agent', isActive: isActiveHRMAgent, onClick: handleClickHRMAgent },
+          { label: 'Employee', to: 'hrm/employee', isActive: isActiveHRMEmployee, onClick: handleClickHRMEmployee },
+        ].map(({ label, to, isActive, onClick }) => (
+          <Link to={to} key={label} onClick={() => { onClick(); onLinkClick(); }}>
+            <li className={`text-[16px] font-medium px-4 py-2 rounded-lg transition-all duration-300 ${isActive ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}`}>
+              - {label}
+            </li>
+          </Link>
+        ))}
+      </ul>
+    </div>
+
+    {/* Settings */}
+    <Link
+      to="setting"
+      onMouseMove={() => setIsActiveSettingIcon(true)}
+      onMouseOut={() => setIsActiveSettingIcon(false)}
+      onClick={handleClickSetting}
+      className={`
+        ${isActiveSetting ? "active" : ""}
+        flex items-center 
+        ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
+        hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300
+      `}
+    >
+      <div className="flex items-center gap-x-2">
+        <FaCog className={`${isActiveSettingIcon || isActiveSetting ? "text-mainColor" : "text-white"} text-xl`} />
+        {!isSidebarCollapsed && (
+          <span className={`text-[17px] font-semibold ml-2 group-hover:text-mainColor ${isActiveSetting ? "text-mainColor" : "text-white"}`}>
+            Settings
+          </span>
+        )}
+      </div>
+      {!isSidebarCollapsed && (
+        <IoIosArrowForward
+          className={`${isActiveSetting ? "text-mainColor rotate-90" : "text-white rotate-0"} text-lg transition-all duration-300 group-hover:text-mainColor`}
+        />
+      )}
+    </Link>
+    <div className={`${isOpenSetting && !isSidebarCollapsed ? "h-15" : "h-0"} overflow-hidden flex items-start justify-end w-full transition-all duration-700`}>
+    <ul className="list-none w-full pl-6 flex flex-col gap-y-2 transition-all duration-700">
+      {[
+        { label: 'Financial Account', to: 'setting/financial_account', isActive: isActiveFinancialAccount, onClick: handleClickSettingFinancialAccount },
+        { label: 'Roles', to: 'setting/roles', isActive: isActivePosition, onClick: handleClickSettingRoles },
+        { label: 'Admin Account', to: 'setting/admin_account', isActive: isActiveAdminAccount, onClick: handleClickSettingAdminAccount },
+        { label: 'Wallet', to: 'setting/wallet', isActive: isActiveWallet, onClick: handleClickSettingWallet },
+        { label: 'Currency', to: 'setting/currency', isActive: isActiveCurrency, onClick: handleClickSettingCurrency },
+        { label: 'Tax', to: 'setting/tax', isActive: isActiveTax, onClick: handleClickSettingTax },
+        { label: 'Group', to: 'setting/group', isActive: isActiveGroup, onClick: handleClickSettingGroup },
+      ].map(({ label, to, isActive, onClick }) => (
+        <Link to={to} key={label} onClick={() => { onClick(); onLinkClick(); }}>
+          <li className={`text-[16px] font-medium px-4 py-2 rounded-lg transition-all duration-300 ${isActive ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}`}>
+            - {label}
+          </li>
+        </Link>
+      ))}
+    </ul>
+    </div>
+
 
     </div>
   );

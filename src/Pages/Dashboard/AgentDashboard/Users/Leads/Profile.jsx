@@ -156,7 +156,7 @@ const Profile = ({ id }) => {
         {/* New Request Button */}
         <div className="w-full flex justify-end md:w-1/2"> {/* Hidden on smaller screens, visible on large screens */}
           <Link
-            to="/dashboard_agent/requests/new_request"
+            to="/dashboard_agent/requests/add_request"
             className="px-6 py-2 bg-mainColor text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
           >
             Add New Request
