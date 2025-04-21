@@ -5,7 +5,14 @@ import { MenuItem, TextField } from "@mui/material";
 import { useDelete } from "../../../../../../Hooks/useDelete";
 import { useAuth } from "../../../../../../Context/Auth";
 import { FaEdit, FaFileExcel, FaSearch, FaFilter } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 import StaticLoader from "../../../../../../Components/StaticLoader";
+
+
+
+
+
+
 
 const CategoryRevenuePage = () => {
   const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
@@ -19,8 +26,8 @@ const CategoryRevenuePage = () => {
   const [newName, setNewName] = useState("");
   const [newId, setNewId] = useState("");
   const [searchText, setSearchText] = useState("");
-
   const { deleteData, loadingDelete, responseDelete } = useDelete();
+
 
   const {
     refetch: refetchCategory,
@@ -188,6 +195,10 @@ const CategoryRevenuePage = () => {
       setCurrentPage(1); // Reset to first page when rows per page changes
     };
 
+    const headers = ["Category", "Category Parent", "Action"];
+
+
+    
   return (
     <>
       <div className="w-full pb-5 flex items-start justify-start overflow-x-scroll scrollSection">
@@ -272,74 +283,129 @@ const CategoryRevenuePage = () => {
             </div>
 
             {/**table */}
-            <div className="w-full sm:min-w-0 block overflow-x-scroll scrollSection border-collapse">
-              <table className="w-full min-w-[600px]">
-                <thead className="bg-gray-200 text-gray-700">
-                  <tr className="border-t-2 border-b-2">
-                    <th className="w-[50px] text-mainColor bg-mainBgColor text-center font-medium sm:text-sm lg:text-base xl:text-lg p-2 border-b-2">
-                      ID
-                    </th>
-                    <th className="w-[50px] text-mainColor bg-mainBgColor text-center font-medium sm:text-sm lg:text-base xl:text-lg p-2 border-b-2">
-                      Category
-                    </th>
-                    <th className="w-[50px] text-mainColor bg-mainBgColor text-center font-medium sm:text-sm lg:text-base xl:text-lg p-2 border-b-2">
-                      Parent
-                    </th>
-                    <th className="w-[50px] text-mainColor bg-mainBgColor text-center font-medium sm:text-sm lg:text-base xl:text-lg p-2 border-b-2">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {category.map((category, index) => (
-                    <tr key={category.id}>
-                      <td
-                        colSpan="4"
-                        className="text-center text-xl text-gray-500 py-4"
-                      >
-                        {index + 1}
-                      </td>
-                      <td
-                        colSpan="4"
-                        className="text-center text-xl text-gray-500 py-4"
-                      >
-                        {category.name}
-                      </td>
-                      <td
-                        colSpan="4"
-                        className="text-center text-xl text-gray-500 py-4"
-                      >
-                        {category.parent_category?.name || "-"}
-                      </td>
-                      <td
-                        colSpan="4"
-                        className="text-center text-xl text-gray-500 py-4"
-                      >
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => {
-                              setSelectedCategory(category);
-                              setNewName(category.name);
-                              setNewId(category.parent_category?.id || "");
-                              setIsEditPopupOpen(true);
-                            }}
-                            className="text-left p-2 hover:bg-gray-100 text-mainColor flex items-center gap-2"
-                          >
-                            <FaEdit />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(category.id)}
-                            className="text-left p-2 hover:bg-red-100 flex items-center gap-2 text-red-500"
-                          >
-                            <FaTrashCan />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+
+                      <div className="w-full sm:min-w-0 block overflow-x-scroll scrollSection border-collapse">
+                        <table className="w-full min-w-[600px]">
+                          <thead className="bg-gray-200 text-gray-700">
+                            <tr className="border-t-2 border-b-2">
+                              <th className="w-[50px] text-mainColor bg-mainBgColor text-center font-medium sm:text-sm lg:text-base xl:text-lg p-2 border-b-2">
+                                SL
+                              </th>
+                              {headers.map((name, index) => (
+                                <th
+                                  key={index}
+                                  className="min-w-[120px] text-mainColor bg-mainBgColor text-center font-medium sm:text-sm lg:text-base xl:text-lg py-3 border-b-2"
+                                >
+                                  {name}
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+            
+                          <tbody>
+                            {paginatedData.length === 0 ? (
+                              <tr>
+                                <td
+                                  colSpan="4"
+                                  className="text-center text-xl text-gray-500 py-4"
+                                >
+                                  No Expenses Categories Found
+                                </td>
+                              </tr>
+                            ) : (
+                              paginatedData.map(
+                                (
+                                  category,
+                                  index // 👈 Use filteredleads
+                                ) => (
+                                  <tr
+                                    key={index}
+                                    className={`border-b ${
+                                      index % 2 === 0 ? "bg-white" : "bg-gray-100"
+                                    } transition hover:bg-gray-100`}
+                                  >
+                                    <td className="text-center py-2 text-gray-600">
+                                      {index + 1}
+                                    </td>
+                                    <td className="text-center py-2 text-gray-600">
+                                      {category?.name || "-"}
+                                    </td>
+                                    <td className="text-center py-2 text-gray-600">
+                                      {category?.parent_category?.name || "-"}
+                                    </td>
+                                    <td className="text-center py-2">
+                                      <div className="flex items-center justify-center gap-1">
+                                        <Link
+                                          to={`edit/${category.id}`}
+                                          state={{ category }}
+                                        >
+                                          <FaEdit color="#4CAF50" size="24" />
+                                        </Link>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleOpenDelete(category.id)}
+                                        >
+                                          <MdDelete color="#D01025" size="24" />
+                                        </button>
+            
+                                        {openDelete === category.id && (
+                                          <Dialog
+                                            open={true}
+                                            onClose={handleCloseDelete}
+                                            className="relative z-10"
+                                          >
+                                            <DialogBackdrop className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                                            <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+                                              <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                                                <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                                                  <div className="flex  flex-col items-center justify-center bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                                    <PiWarningCircle
+                                                      color="#0D47A1"
+                                                      size="60"
+                                                    />
+                                                    <div className="flex items-center">
+                                                      <div className="mt-2 text-center">
+                                                        You will delete category{" "}
+                                                        {category?.name || "-"}
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                                    <button
+                                                      className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto"
+                                                      onClick={() =>
+                                                        handleDelete(
+                                                          category.id,
+                                                          category?.name
+                                                        )
+                                                      }
+                                                    >
+                                                      Delete
+                                                    </button>
+            
+                                                    <button
+                                                      type="button"
+                                                      data-autofocus
+                                                      onClick={handleCloseDelete}
+                                                      className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-6 py-3 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:mt-0 sm:w-auto"
+                                                    >
+                                                      Cancel
+                                                    </button>
+                                                  </div>
+                                                </DialogPanel>
+                                              </div>
+                                            </div>
+                                          </Dialog>
+                                        )}
+                                      </div>
+                                    </td>
+                                  </tr>
+                                )
+                              )
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
 
             {isAddPopupOpen && (
               <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
