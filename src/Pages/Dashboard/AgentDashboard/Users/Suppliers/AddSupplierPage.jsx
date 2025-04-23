@@ -1,5 +1,5 @@
 import React, { useState ,useEffect} from "react";
-import { TextField, MenuItem, Select, Checkbox, ListItemText, Button,Autocomplete,CircularProgress  } from "@mui/material";
+import { TextField, Button,Autocomplete,CircularProgress  } from "@mui/material";
 import { usePost } from '../../../../../Hooks/usePostJson';
 import { useGet } from '../../../../../Hooks/useGet';
 import { FaPlus } from 'react-icons/fa';
@@ -50,15 +50,6 @@ const AddSupplierPage = ({ update, setUpdate }) => {
         setAdminEmail('')
         setSelectedServices([])
     }
-
-    //  useEffect(() => {
-    //     if (!loadingPost) {
-    //             handleReset()
-    //             setUpdate(!update)
-                
-    //         }
-    // }, [response])
-
      useEffect(() => {
           if (!loadingPost && response) {
                 setUpdate(!update);
@@ -89,56 +80,61 @@ const AddSupplierPage = ({ update, setUpdate }) => {
         }));
       };      
 
-    const handleSubmitSupplier = async (e) => {
-    e.preventDefault();
-
-    if (!name) {
-           auth.toastError('please Enter Name')
-           return;
-    }
-    if (!phone) {
-           auth.toastError('please Enter phone')
-           return;
-    }
-    if (!email) {
-           auth.toastError('please Enter Email')
-           return;
-    }
-    if (!adminName) {
-        auth.toastError('please Enter Admin Name')
-        return;
-    }
-    if (!adminPhone) {
-            auth.toastError('please Enter Admin phone')
-            return;
-    }
-    if (!adminEmail) {
-            auth.toastError('please Enter Admin Email')
-            return;
-    }
-    if (!selectedServices || selectedServices.length === 0) {
-        auth.toastError('please Select Service')
-        return;
-    }
-    const allPhones = [phone, ...additionalPhones];
-    const allEmails = [email, ...additionalEmails];
-
-    const formData = new FormData();
-
-    formData.append('agent', name)
-    formData.append('phones', JSON.stringify(allPhones))
-    formData.append('emails', JSON.stringify(allEmails))
-    formData.append('admin_name', adminName)
-    formData.append('admin_phone', adminPhone)
-    formData.append('admin_email', adminEmail)
-
-    formData.append('services', JSON.stringify(selectedServices));
-        
-  
-    console.log('formData', formData)
-
-    postData(formData, 'Supplier Added Success');
-    }
+      const handleSubmitSupplier = async (e) => {
+        e.preventDefault();
+      
+        // Validation checks
+        if (!name) {
+          auth.toastError('Please Enter Name');
+          return;
+        }
+        if (!phone) {
+          auth.toastError('Please Enter Phone');
+          return;
+        }
+        if (!email) {
+          auth.toastError('Please Enter Email');
+          return;
+        }
+        if (!adminName) {
+          auth.toastError('Please Enter Admin Name');
+          return;
+        }
+        if (!adminPhone) {
+          auth.toastError('Please Enter Admin Phone');
+          return;
+        }
+        if (!adminEmail) {
+          auth.toastError('Please Enter Admin Email');
+          return;
+        }
+        if (!selectedServices || selectedServices.length === 0) {
+          auth.toastError('Please Select At Least One Service');
+          return;
+        }
+      
+        // Combine all contact information
+        const allPhones = [phone, ...additionalPhones.filter(p => p)]; // Filter out empty values
+        const allEmails = [email, ...additionalEmails.filter(e => e)]; // Filter out empty values
+      
+        // Prepare services data with descriptions
+        const servicesWithDescriptions = selectedServices.map(service => ({
+          id: service.id,
+          description: serviceDescriptions[service.id] || '' // Fallback to empty string if no description
+        }));
+      
+        // Create FormData
+        const formData = new FormData();
+        formData.append('agent', name);
+        formData.append('phones', JSON.stringify(allPhones));
+        formData.append('emails', JSON.stringify(allEmails));
+        formData.append('admin_name', adminName);
+        formData.append('admin_phone', adminPhone);
+        formData.append('admin_email', adminEmail);
+        formData.append('services', JSON.stringify(servicesWithDescriptions)); // Now includes both id and description
+    
+         postData(formData, 'Supplier Added Success');
+      };
 
 
     const handleAddPhoneField = () => {
@@ -314,69 +310,72 @@ const AddSupplierPage = ({ update, setUpdate }) => {
   
       {/* Services */}
       <section className="space-y-6">
-  <h3 className="text-2xl font-semibold text-gray-800 border-b pb-2">Supplier Services</h3>
+        <h3 className="text-2xl font-semibold text-gray-800 border-b pb-2">Supplier Services</h3>
 
-  <Autocomplete
-  multiple
-  options={Array.isArray(suppliersServices) && suppliersServices.length > 0 
-    ? suppliersServices 
-    : [{ id: "", service_name: "No Services" }]}
-  getOptionLabel={(option) => option.service_name}
-  value={selectedServices}
-  onChange={(event, newValue) => {
-    setSelectedServices(newValue);
-    // Clean up removed descriptions
-    const updatedDescriptions = {};
-    newValue.forEach((service) => {
-      updatedDescriptions[service.id] = serviceDescriptions[service.id] || '';
-    });
-    setServiceDescriptions(updatedDescriptions);
-  }}
-  loading={loadingSupplier}
-  disableCloseOnSelect
-  className="w-full shadow-md font-mainColor border-mainColor"
-  renderInput={(params) => (
-    <TextField
-      {...params}
-      label="Select Supplier Services"
-      variant="outlined"
-      fullWidth
-      required
-      InputProps={{
-        ...params.InputProps,
-        endAdornment: (
-          <>
-            {loadingSupplier ? <CircularProgress size={20} /> : null}
-            {params.InputProps.endAdornment}
-          </>
-        ),
-      }}
-    />
-  )}
-  isOptionEqualToValue={(option, value) => option.id === value.id}
-/>
+        <Autocomplete
+          multiple
+          options={Array.isArray(suppliersServices) && suppliersServices.length > 0 
+            ? suppliersServices 
+            : [{ id: "", service_name: "No Services Available" }]}
+          getOptionLabel={(option) => option.service_name || "No Services Available"}
+          value={selectedServices}
+          onChange={(event, newValue) => {
+            setSelectedServices(newValue);
+            // Update descriptions only for selected services
+            const updatedDescriptions = {};
+            newValue.forEach((service) => {
+              updatedDescriptions[service.id] = serviceDescriptions[service.id] || '';
+            });
+            setServiceDescriptions(updatedDescriptions);
+          }}
+          loading={loadingSupplier}
+          disableCloseOnSelect
+          className="w-full shadow-md font-mainColor border-mainColor"
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Select Supplier Services"
+              variant="outlined"
+              fullWidth
+              required={selectedServices.length === 0} // Only require if empty
+              error={selectedServices.length === 0}
+              helperText={selectedServices.length === 0 ? "Please select at least one service" : ""}
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <>
+                    {loadingSupplier ? <CircularProgress size={20} /> : null}
+                    {params.InputProps.endAdornment}
+                  </>
+                ),
+              }}
+            />
+          )}
+          isOptionEqualToValue={(option, value) => option.id === value.id}
+          noOptionsText="No services available"
+          getOptionDisabled={(option) => option.id === ""} // Disable the "No Services" option
+        />
 
-{/* Description fields for selected services */}
-<div className="space-y-4 mt-4">
-  {selectedServices.map((service) => (
-    <TextField
-      key={service.id}
-      label={`Description for ${service.service_name}`}
-      variant="outlined"
-      fullWidth
-      multiline
-      rows={3}
-      value={serviceDescriptions[service.id] || ''}
-      onChange={(e) =>
-        setServiceDescriptions((prev) => ({
-          ...prev,
-          [service.id]: e.target.value,
-        }))
-      }
-    />
-  ))}
-</div>
-
+        {/* Description fields for selected services */}
+        <div className="space-y-4 mt-4">
+          {selectedServices.map((service) => (
+            service.id && ( // Only render for valid services
+              <TextField
+                key={service.id}
+                label={`Description for ${service.service_name}`}
+                variant="outlined"
+                fullWidth
+                multiline
+                rows={3}
+                value={serviceDescriptions[service.id] || ''}
+                onChange={(e) => handleDescriptionChange(service.id, e.target.value)}
+                required
+                error={!serviceDescriptions[service.id]}
+                helperText={!serviceDescriptions[service.id] ? "Please add a description" : ""}
+              />
+            )
+          ))}
+        </div>
       </section>
 
   
