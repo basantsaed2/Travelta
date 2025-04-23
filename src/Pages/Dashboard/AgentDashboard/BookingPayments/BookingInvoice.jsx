@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useGet } from '../../../../Hooks/useGet';
 import StaticLoader from '../../../../Components/StaticLoader';
-import InvoicePage from '../../../../Components/Agent Components/InvoicePage';
+import AutoPDFGenerator from '../../../../Components/Agent Components/AutoPDFGenerator';
 
 const BookingInvoice = () => {
     const {id} = useParams()
@@ -24,7 +24,7 @@ if (loadingInvoice){
   return (
  
     <div className="overflow-x-auto p-4">
-<InvoicePage bookingData={paymentInvoice}/>
+<AutoPDFGenerator bookingData={paymentInvoice}/>
     </div>
   )
 }

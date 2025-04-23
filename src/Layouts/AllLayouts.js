@@ -18,6 +18,9 @@ export { default as HotelBookingDetailsLayout } from "./BookingLayout/HotelBooki
 export { default as CurrentBookingLayout } from "./BookingListLayout/CurrentBookingLayout";
 export { default as PastBookingLayout } from "./BookingListLayout/PastBookingLayout";
 export { default as UpcomingBookingLayout } from "./BookingListLayout/UpcomingBookingLayout";
+//Booking Details
+export { default as BookingDetailsLayout } from "./BookingListLayout/BookingDetails/BookingDetailsLayout";
+
 
 // AgentLayouts
 // Users

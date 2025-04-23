@@ -30,6 +30,10 @@ export { default as AddLeadPage } from "./Dashboard/AgentDashboard/Users/Leads/A
 export { default as SupplierPage } from "./Dashboard/AgentDashboard/Users/Suppliers/SupplierPage";  
 export { default as AddSupplierPage } from "./Dashboard/AgentDashboard/Users/Suppliers/AddSupplierPage";
 export { default as EditSupplierPage } from "./Dashboard/AgentDashboard/Users/Suppliers/EditSupplierPage";
+
+//BookingDetails
+export { default as BookingDetailsPage } from "./Dashboard/BookingList/BookingDetails/BookingDetailsPage";  
+
 //Inventory
 //Rooms
 //Room Settind

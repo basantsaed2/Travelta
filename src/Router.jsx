@@ -9,8 +9,8 @@ import SignUpAffilate from "./Pages/Authentication/SignUpAffilate"
 import Login from "./Pages/Authentication/Login";
 import AgentLayout from "./Layouts/AgentLayouts/AgentLayout";
 import AgentHomePage from "./Pages/Dashboard/AgentDashboard/Home/AgentHomePage";  
-import {AddAdminAccountLayout, AddAgentLayout, AddCategoryExpensesLayout, AddCategoryRevenueLayout, AddCurrencyLayout, AddDepartmentLayout, AddEmployeeLayout, AddFinancialAccountLayout, AddGroupLayout, AddLeadLayout, AddOwnerLayout, AddPositionLayout, AddRequestLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddTaxLayout, AddTourLayout, AddWalletLayout, AdminAccountLayout, BookingPaymentLayout, CartLayout, CategoryExpensesLayout, CategoryRevenueLayout, CheckoutLayout, CurrencyAgentLayout, CurrentBookingLayout, CustomersLayout , DepartmentLayout, EditAdminAccountLayout, EditAgentLayout, EditCategoryExpensesLayout, EditCategoryRevenueLayout, EditCurrencyLayout, EditDepartmentLayout, EditEmployeeLayout, EditFinancialAccountLayout, EditGroupLayout, EditOwnerLayout, EditPositionLayout, EditRequestLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, EditTaxLayout, EditTourLayout, EmployeeLayout, FinancialAccountLayout, GroupLayout, HotelBookingDetailsLayout, InvoiceAgentLayout, LeadLayout, LedgerLayout, ListExpensesLayout, ManualBookingLayout, OwnerTransactionLayout, PastBookingLayout, PlansLayout, PositionLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, TaxLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
-import { LandingPage } from "./Pages/AllPages";
+import {AddAdminAccountLayout, AddAgentLayout, AddCategoryExpensesLayout, AddCategoryRevenueLayout, AddCurrencyLayout, AddDepartmentLayout, AddEmployeeLayout, AddFinancialAccountLayout, AddGroupLayout, AddLeadLayout, AddOwnerLayout, AddPositionLayout, AddRequestLayout, AddRoomAmenityLayout, AddRoomExtraLayout, AddRoomLayout, AddRoomTypeLayout, AddSupplierLayout, AddTaxLayout, AddTourLayout, AddWalletLayout, AdminAccountLayout, BookingDetailsLayout, BookingPaymentLayout, CartLayout, CategoryExpensesLayout, CategoryRevenueLayout, CheckoutLayout, CurrencyAgentLayout, CurrentBookingLayout, CustomersLayout , DepartmentLayout, EditAdminAccountLayout, EditAgentLayout, EditCategoryExpensesLayout, EditCategoryRevenueLayout, EditCurrencyLayout, EditDepartmentLayout, EditEmployeeLayout, EditFinancialAccountLayout, EditGroupLayout, EditOwnerLayout, EditPositionLayout, EditRequestLayout, EditRoomAmenityLayout, EditRoomExtraLayout, EditRoomLayout, EditRoomPricingLayout, EditRoomTypeLayout, EditSupplierLayout, EditTaxLayout, EditTourLayout, EmployeeLayout, FinancialAccountLayout, GroupLayout, HotelBookingDetailsLayout, InvoiceAgentLayout, LeadLayout, LedgerLayout, ListExpensesLayout, ManualBookingLayout, OwnerTransactionLayout, PastBookingLayout, PlansLayout, PositionLayout, RoomAvailabilityLayout, RoomExtraLayout, RoomGalleryLayout, RoomLayout, RoomPricingLayout, RoomTypeLayout, SupplierLayout, TaxLayout, UpcomingBookingLayout, WalletLayout} from "./Layouts/AllLayouts";
+import { BookingDetailsPage, HotelBookingDetailsPage, LandingPage } from "./Pages/AllPages";
 import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 import HomeSuperAdmin from "./Pages/SuperAdmin/Home/HomeSuperAdmin";
 
@@ -70,28 +70,10 @@ import RequestListLayout from "./Layouts/AgentLayouts/Requests/RequestListLayout
 import WorkStationLayout from "./Layouts/AgentLayouts/Requests/WorkStationLayout";
 import InvoiceLayout from "./Layouts/SuperAdminLayouts/FinancialLayout/InvoiceLayout/InvoiceLayout";
 import AddInvoiceLayout from "./Layouts/SuperAdminLayouts/FinancialLayout/InvoiceLayout/AddInvoiceLayout";
-import FlightProfileLayout from "./Layouts/BookingListLayout/Upcoming/FlightDeatilsLayout";
-import VisaProfileLayout from "./Layouts/BookingListLayout/Upcoming/VisaDetailsLayout";
-import TourProfileLayout from "./Layouts/BookingListLayout/Upcoming/TourDetailsLayout";
-import BusProfileLayout from "./Layouts/BookingListLayout/Upcoming/BusDetailsLayout";
-import HotelProfileLayout from "./Layouts/BookingListLayout/Upcoming/HotelDetailsLayout";
 import ProfileLayout from "./Layouts/AgentLayouts/Users/Leads/ProfileLayout";
 import ProfileSupplierLayout from "./Layouts/AgentLayouts/Users/Suppliers/ProfileSupplierLayout";
 import ProfileCustomerLayout from "./Layouts/AgentLayouts/Users/Customers/ProfileLayout";
 import EditLeadLayout from "./Layouts/AgentLayouts/Users/Leads/EditLeadLayout";
-import FlightLayout from "./Layouts/BookingListLayout/past/FlightLayout";
-import VisaLayout from "./Layouts/BookingListLayout/past/VisaLayout";
-import TourLayout from "./Layouts/BookingListLayout/past/TourLayout";
-import BusLayout from "./Layouts/BookingListLayout/past/BusLayout";
-import HotelLayout from "./Layouts/BookingListLayout/past/HotelLayout";
-import FlightDeatilsLayout from "./Layouts/BookingListLayout/Current/FlightDeatilsLayout";
-import VisaDetailsLayout from "./Layouts/BookingListLayout/Current/VisaDetailsLayout";
-import TourDeatilsLayout from "./Layouts/BookingListLayout/Current/TourDeatilsLayout";
-import BusDetailsLayout from "./Layouts/BookingListLayout/Current/BusDetailsLayout";
-import HotelDetailsLayout from "./Layouts/BookingListLayout/Current/HotelDetailsLayout";
-import DetailsCurrentLayout from "./Layouts/BookingListLayout/DetailsCurrentLayout";
-import DetailsPastLayout from "./Layouts/BookingListLayout/DetailsPastLayout";
-import DetailsUpcomingLayout from "./Layouts/BookingListLayout/DetailsUpcomingLayout";
 import ManualBookingLayoutSuper from "./Layouts/SuperAdminLayouts/PendingPaymetLayout/ManualBookingLayoutSuper";
 import WalletLayoutSuper from "./Layouts/SuperAdminLayouts/PendingPaymetLayout/WalletLayoutSuper";
 import TourTypeLayout from "./Layouts/SuperAdminLayouts/SettingLayout/ToutTypeLayout";
@@ -743,8 +725,8 @@ export const router = createBrowserRouter([
                        element:<CurrentBookingLayout/>
                       },
                       {
-                        path:"details/:current_id",
-                        element:<DetailsCurrentLayout/>
+                        path:"details/:detailsId",
+                        element:<BookingDetailsLayout/>
                        },
                      ]
                   },
@@ -757,8 +739,8 @@ export const router = createBrowserRouter([
                        element:<PastBookingLayout/>
                       },
                       {
-                       path:"details_past/:past_id",
-                       element:<DetailsPastLayout/>
+                       path:"details/:detailsId",
+                       element:<BookingDetailsLayout/>
                       },
                      ]
                   },
@@ -771,8 +753,8 @@ export const router = createBrowserRouter([
                       element:<UpcomingBookingLayout/>
                      },
                      {
-                      path:"details_upcoming/:upcoming_id",
-                      element:<DetailsUpcomingLayout/>
+                      path:"details/:detailsId",
+                      element:<BookingDetailsLayout/>
                      },
                     ]
 
