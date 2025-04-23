@@ -13,8 +13,7 @@ import {
   FaUserFriends,
   FaCalendarAlt,
   FaCheckCircle,
-  FaEye,
-  FaChevronDown,
+  FaEye,FaEdit
 } from "react-icons/fa";
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
 import { Link } from 'react-router-dom';
@@ -187,7 +186,7 @@ const Profile = ({ id }) => {
           <table className="w-full min-w-[600px]">
             <thead className="bg-gray-200 text-gray-700">
               <tr className="border-t-2 border-b-2">
-                {['SL', 'Name', 'Phone', 'Service', 'Stage', 'Agent', 'Priority', 'Action'].map((header, i) => (
+                {['SL', 'Name', 'Phone', 'Service', 'Stage', 'Agent', 'Priority','Details', 'Action'].map((header, i) => (
                   <th key={i} className="text-center font-medium text-mainColor bg-mainBgColor py-2 border-b-2">
                     {header}
                   </th>
@@ -214,6 +213,11 @@ const Profile = ({ id }) => {
                       >
                         <FaEye className="inline mr-1" /> View Details
                       </button>
+                    </td>
+                    <td className="text-center py-2">
+                      <div className="flex items-center justify-center gap-1">
+                      <Link to={`/dashboard_agent/requests/edit_request/${req.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
+                      </div>
                     </td>
                   </tr>
                 ))

@@ -1,89 +1,35 @@
-// import React, { useState } from 'react';
-// import TitlePage from '../../../../Components/TitlePage';
-// import { LeadPage } from '../../../../Pages/AllPages';
-// import AddButton from '../../../../Components/Buttons/AddButton';
-// import { Link } from 'react-router-dom';
-// import * as XLSX from 'xlsx';
-// import { usePost } from '../../../../Hooks/usePostJson';
-// const LeadLayout = () => {
-//   const [update, setUpdate] = useState(false);
-//   const { postData, loadingPost, response} = usePost({ url: 'https://travelta.online/agent/leads/import_excel' });
-
-//   const handleDownloadBulk = () => {
-//     const headers = [
-//       "name", "phone", "email", "watts", "emergency_phone", "gender",
-//       "source", "service", "nationality", "country",
-//       "city", "image"
-//     ];
-
-//     const worksheet = XLSX.utils.aoa_to_sheet([headers]); 
-//     const workbook = XLSX.utils.book_new();
-//     XLSX.utils.book_append_sheet(workbook, worksheet, "Leads_Template");
-
-//     XLSX.writeFile(workbook, "Leads_Bulk_Template.xlsx");
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-
-//     const formData = new FormData();
-//     formData.append('file', name);
-
-//     postNewLead(formData, 'Bulk Uploaded Success');
-// };
-
-//   return (
-//     <>
-//       <div className='flex justify-between items-center mb-3'>
-//         <div className='w-1/2'>
-//         <TitlePage text={'Lead Table'} />
-//         </div>
-//         <div className="flex gap-3">
-//           <Link to='add'>
-//             <AddButton />
-//           </Link>
-//           <button
-//             onClick={handleDownloadBulk}
-//             className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
-//           >
-//             Import Bulk
-//           </button>
-//         </div>
-//       </div>
-//       <LeadPage update={update} setUpdate={setUpdate} />
-//     </>
-//   );
-// };
-
-// export default LeadLayout;
-
-
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import TitlePage from '../../../../Components/TitlePage';
 import { LeadPage } from '../../../../Pages/AllPages';
 import AddButton from '../../../../Components/Buttons/AddButton';
 import { Link } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import { usePost } from '../../../../Hooks/usePostJson';
-
+import { useAuth } from "../../../../Context/Auth";
 const LeadLayout = () => {
   const [update, setUpdate] = useState(false);
   const [file, setFile] = useState(null);
   const { postData, loadingPost, response } = usePost({ url: 'https://travelta.online/agent/leads/import_excel' });
+  const auth = useAuth();
 
   const handleDownloadBulk = () => {
     const headers = [
-      "name", "phone", "email", "watts", "emergency_phone", "gender",
+      "name", "phone", "email", "watts", "emergency_phone", "gender",'agent',
       "source", "service", "nationality", "country",
-      "city", "image"
+      "city",
     ];
-
     const worksheet = XLSX.utils.aoa_to_sheet([headers]); 
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Leads_Template");
-
     XLSX.writeFile(workbook, "Leads_Bulk_Template.xlsx");
   };
+
+    useEffect(() => {
+      if (!loadingPost && response) {
+            setFile(null);
+        }
+        setUpdate(!update);
+    }, [loadingPost,response]);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -91,16 +37,12 @@ const LeadLayout = () => {
 
   const handleSubmit = async () => {
     if (!file) {
-      alert('Please select a file first');
+      auth.toastError('Please select a file first');
       return;
     }
-
     const formData = new FormData();
     formData.append('file', file);
-
-    await postData(formData);
-    setUpdate(prev => !prev); // Refresh the leads table after upload
-    setFile(null);
+    postData(formData,"Upload Bulk Send Success");
   };
 
   return (

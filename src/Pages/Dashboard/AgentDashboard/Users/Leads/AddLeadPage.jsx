@@ -1,10 +1,9 @@
 import React, { useState, useEffect ,useRef } from "react";
-import { TextField, MenuItem, Button,InputAdornment, IconButton , Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination ,Switch} from "@mui/material";
+import { TextField, MenuItem, Button,InputAdornment, IconButton , Table, TableContainer} from "@mui/material";
 import { usePost } from '../../../../../Hooks/usePostJson';
 import { useGet } from '../../../../../Hooks/useGet';
 import { IoMdPersonAdd } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
-import { FaArrowLeft } from "react-icons/fa";
 import { IoCloudUpload } from "react-icons/io5";
 import { useAuth } from "../../../../../Context/Auth";
 
@@ -52,7 +51,6 @@ const AddLeadPage = ({ update, setUpdate }) => {
         refetchLead();
         refetchList();
     }, [refetchLead,refetchList,update]);
-
     useEffect(() => {
         if (dataLead && dataLead.leads) {
           console.log("lead",dataLead)
@@ -70,37 +68,15 @@ const AddLeadPage = ({ update, setUpdate }) => {
           setSources(dataList.sources);
           setAgetSales(dataList.aget_sales);
       }
-  }, [dataList]);
-
-    const handleReset = () => {
-        setName('');
-        setPhone('');
-        setEmail('');
-        setGender('');
-        setAlternatePhone('')
-    };
-
+    }, [dataList]);
     useEffect(() => {
-      if ((!loadingNewLead && responseNewLead) || (!loadingLeadList && responseLeadList)) {
-            setUpdate(!update);
-            navigate(-1, { replace: true });
-      }
-  }, [responseNewLead,responseLeadList]);
-
-   // State Change Handler
-    const handleSwitchChange = () => {
-      // Cycle between three states: active (1), inactive (0), suspended (2)
-      setStatus((prev) => {
-        if (prev === 1) {
-          return 0; // Change from active to inactive
-        } else if (prev === 0) {
-          return 2; // Change from inactive to suspended
-        } else {
-          return 1; // Change from suspended to active
+        if ((!loadingNewLead && responseNewLead) || (!loadingLeadList && responseLeadList)) {
+              setUpdate(!update);
+              navigate(-1, { replace: true });
         }
-      });
-    };
-    const handleImageChange = (e) => {
+    }, [responseNewLead,responseLeadList]);
+
+  const handleImageChange = (e) => {
       const file = e.target.files[0];
       if (file) {
           setImageFile(file);
@@ -114,76 +90,86 @@ const AddLeadPage = ({ update, setUpdate }) => {
           };
       }
   };
-    const handleImageClick = (ref) => {
-      if (ref.current) {
-            ref.current.click();
+  const handleImageClick = (ref) => {
+    if (ref.current) {
+          ref.current.click();
+    }
+  };
+  const handleReset = () => {
+    setName('');
+    setPhone('');
+    setEmail('');
+    setGender('');
+    setAlternatePhone('');
+    setSelectedCountry('');
+    setSelectedCity('');
+    setSelectedNationality('');
+    setSelectedService('');
+    setSelectedSource('');
+    setSelectedAgent('');
+    setStatus('active');
+    setImageFile('');
+    setImageBase64('');
+    setImageName('');
+  };
+  const handleSubmitLead = async (e) => {
+      e.preventDefault();
+
+      if (!name) {
+          auth.toastError('Please Enter Name');
+          return;
       }
-    };
-
-
-    const handleSubmitLead = async (e) => {
-        e.preventDefault();
-
-        if (!name) {
-            auth.toastError('Please Enter Name');
-            return;
-        }
-        if (!phone) {
-          auth.toastError('Please Enter Phone');
-            return;
-        }
-        if (!email) {
-          auth.toastError('Please Enter The Email');
-            return;
-        }
-        if (!gender) {
-          auth.toastError('Please Select Gender');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('name', name);
-        formData.append('phone', phone);
-        formData.append('email', email);
-        formData.append('gender', gender);
-        formData.append('emergency_phone', alternatePhone);
-
-        formData.append('watts', whatshapp);
-        formData.append('source_id', selectedSource);
-        formData.append('agent_sales_id', selectedAgent);
-        formData.append('service_id', selectedService);
-        formData.append('nationality_id', selectedNationality);
-        formData.append('country_id', selectedCountry);
-        formData.append('city_id', selectedCity);
-        formData.append('image', imageBase64);
-        formData.append('status', status);
-
-        postNewLead(formData, 'Lead Added Success');
-    };
-
-    const handleAddLead = (leadId) => {
-        // Add lead logic here
-        const formData = new FormData();
-        formData.append('customer_id', leadId);
-
-        console.log("Adding lead with ID:", leadId);
-        postLeadList(formData, 'Lead Added Success');
-
-    };
-
-    const handleSearch = () => {
-      if (searchQuery.trim() === "") {
-       
-        SetfilteredLeads([]);  
-      } else {
-        
-        const filtered = leads.filter((lead) =>
-          lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          lead.phone === searchQuery 
-        );
-        SetfilteredLeads(filtered);
+      if (!phone) {
+        auth.toastError('Please Enter Phone');
+          return;
       }
-    };
+      if (!email) {
+        auth.toastError('Please Enter The Email');
+          return;
+      }
+      if (!gender) {
+        auth.toastError('Please Select Gender');
+          return;
+      }
+
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('phone', phone);
+      formData.append('email', email);
+      formData.append('gender', gender);
+      formData.append('emergency_phone', alternatePhone);
+
+      formData.append('watts', whatshapp);
+      formData.append('source_id', selectedSource);
+      formData.append('agent_sales_id', selectedAgent);
+      formData.append('service_id', selectedService);
+      formData.append('nationality_id', selectedNationality);
+      formData.append('country_id', selectedCountry);
+      formData.append('city_id', selectedCity);
+      formData.append('image', imageBase64);
+      formData.append('status', status);
+
+      postNewLead(formData, 'Lead Added Success');
+  };
+  const handleAddLead = (leadId) => {
+      // Add lead logic here
+      const formData = new FormData();
+      formData.append('customer_id', leadId);
+      postLeadList(formData, 'Lead Added Success');
+  };
+  const handleSearch = () => {
+    if (searchQuery.trim() === "") {
+      
+      SetfilteredLeads([]);  
+    } else {
+      
+      const filtered = leads.filter((lead) =>
+        lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        lead.phone === searchQuery 
+      );
+      SetfilteredLeads(filtered);
+    }
+  };
 
   return (
       <>
@@ -214,9 +200,6 @@ const AddLeadPage = ({ update, setUpdate }) => {
               className="w-full flex flex-col gap-5 p-6"
               onSubmit={handleSubmitLead}
               >
-              
-              {/* <h2 className="f font-semibold text-mainColor text-xl">back</h2> */}
-
               <h1 className="flex justify-center font-semibold text-mainColor text-xl">
               Add New Lead
               </h1>
@@ -334,31 +317,40 @@ const AddLeadPage = ({ update, setUpdate }) => {
                   ))}
                 </TextField>
                 <TextField
-                  select
-                  label="Select Country"
-                  value={selectedCountry}
-                  onChange={(e) => setSelectedCountry(e.target.value)}
-                  fullWidth
+                    select
+                    label="Select Country"
+                    value={selectedCountry}
+                    onChange={(e) => {
+                      const countryId = e.target.value;
+                      setSelectedCountry(countryId);
+                      // Optional: Clear selected city when country changes
+                      setSelectedCity('');
+                    }}
+                    fullWidth
                   >
-                  {countries.map((country) => (
+                    {countries.map((country) => (
                       <MenuItem key={country.id} value={country.id}>
-                          {country.name}
+                        {country.name}
                       </MenuItem>
-                  ))}
-                </TextField>
-                <TextField
-                  select
-                  label="Select City"
-                  value={selectedCity}
-                  onChange={(e) => setSelectedCity(e.target.value)}
-                  fullWidth
+                    ))}
+                  </TextField>
+
+                  <TextField
+                    select
+                    label="Select City"
+                    value={selectedCity}
+                    onChange={(e) => setSelectedCity(e.target.value)}
+                    fullWidth
+                    disabled={!selectedCountry} // disables when no country is selected
                   >
-                  {cities.map((city) => (
-                      <MenuItem key={city.id} value={city.id}>
+                    {cities
+                      .filter((city) => city.country_id === selectedCountry) // filter cities by selected country
+                      .map((city) => (
+                        <MenuItem key={city.id} value={city.id}>
                           {city.name}
-                      </MenuItem>
-                  ))}
-                </TextField>
+                        </MenuItem>
+                      ))}
+                  </TextField>
                       <input
                           type="file"
                           ref={ImageRef}

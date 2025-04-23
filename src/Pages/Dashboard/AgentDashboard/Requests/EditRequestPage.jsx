@@ -189,6 +189,53 @@ const EditRequestPage = () => {
      setBusAdults(mappedAdults);
      setBusChildren(mappedChildren);
     }
+    // const [transportationDeparture, setTransportationDeparture] = useState("");
+    if(request.service?.service_name === "Tour" && request.tour){
+      const tour =request.tour;
+      setTour(tour.tour);
+      setSelectedTourType(tour.type);
+      setTourAdultsNumber(tour.adults);
+      setTourChildrenNumber(tour.childreen);
+      setTourAdultPrice(tour.adult_price);
+      setTourChildPrice(tour.child_price);
+
+    // Set nested arrays if available
+    if (Array.isArray(tour.bus)) {
+      const busData = tour.bus.map((busItem) => ({
+        transportation: busItem.transportation || "",
+        seats: busItem.seats || "",
+      }));
+      setBuses(busData);
+    }
+
+    if (Array.isArray(tour.hotel)) {
+      const hotelData = tour.hotel.map((hotelItem) => ({
+        destination: hotelItem.destination || "",
+        hotel_name: hotelItem.hotel_name || "",
+        room_type: hotelItem.room_type || "",
+        check_in: hotelItem.check_in || "",
+        check_out: hotelItem.check_out || "",
+        nights: hotelItem.nights || "",
+      }));
+      setHotels(hotelData);
+    }
+    const mappedAdults = Array.isArray(request.adults)
+      ? request.adults.map((adult) => ({
+          selectedTitle: adult.title || "",
+          firstName: adult.first_name || "",
+          lastName: adult.last_name || "",
+        }))
+      : [];
+    const mappedChildren = Array.isArray(request.children)
+      ? request.children.map((child) => ({
+          age: child.age || "",
+          firstName: child.first_name || "",
+          lastName: child.last_name || "",
+        }))
+      : [];
+      setTourAdults(mappedAdults);
+      setTourChildren(mappedChildren);
+    }
      
     }
     console.log("dataRequest", dataRequest);

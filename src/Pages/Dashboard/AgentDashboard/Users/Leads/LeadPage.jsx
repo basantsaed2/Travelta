@@ -30,12 +30,10 @@ const LeadPage = ({ update, setUpdate }) => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // --- Effects ---
-
   // Fetch Leads on Mount or Update
   useEffect(() => {
     refetchLead();
-  }, [refetchLead]);
+  }, [refetchLead,update]);
 
   // Update local leads when data changes
   useEffect(() => {
@@ -48,7 +46,6 @@ const LeadPage = ({ update, setUpdate }) => {
   // Filter leads based on search and selected filters
   useEffect(() => {
     let filtered = leads;
-
     if (searchText) {
       const search = searchText.toLowerCase();
       filtered = filtered.filter(lead =>
@@ -70,7 +67,6 @@ const LeadPage = ({ update, setUpdate }) => {
   }, [searchText, selectedCountry, selectedCity, leads]);
 
   // --- Handlers ---
-
   const handleSearch = (e) => setSearchText(e.target.value.toLowerCase());
   const handleFilterCountry = (e) => setSelectedCountry(e.target.value);
   const handleFilterCity = (e) => setSelectedCity(e.target.value);
@@ -101,8 +97,6 @@ const LeadPage = ({ update, setUpdate }) => {
       );
     }
   };
-  
-  
   const copyToClipboard = (phone) => {
     navigator.clipboard.writeText(phone);
     setCopiedPhone(phone);
@@ -374,7 +368,7 @@ const LeadPage = ({ update, setUpdate }) => {
                                               </div>
                                             </div>
                                             <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                              <button className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto" onClick={() => handleDelete(lead.id, lead?.agent)}>
+                                              <button className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto" onClick={() => handleDelete(lead.id, lead?.name)}>
                                                 Delete
                                               </button>
             
