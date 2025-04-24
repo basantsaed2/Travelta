@@ -48,7 +48,7 @@ const PlanPage = ({ refetch, setUpdate }) => {
   }, [dataPlan, auth.user.role]); // Re-run effect when dataPlan or user role changes
 
 
-  const handleAddToCart = async (plan, event) => {
+const handleAddToCart = async (plan, event) => {
     if (event) event.preventDefault();
 
     const planWithPeriodAndPrice = {

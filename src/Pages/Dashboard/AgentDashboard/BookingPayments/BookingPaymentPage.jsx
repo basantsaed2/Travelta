@@ -4,7 +4,7 @@ import { FaCalendar, FaCity, FaHotel, FaListOl, FaMoon, FaPlaneDeparture, FaRout
 import { Button, TextField, CircularProgress, Card, CardContent, Typography, Divider } from "@mui/material";
 import StaticLoader from '../../../../Components/StaticLoader';
 import { FaBus, FaMapMarkerAlt, FaUser, FaCalendarAlt, FaPhone, FaTicketAlt } from "react-icons/fa";
-import { FaEnvelope, FaMoneyBillWave, FaWallet, FaGlobe,FaCheck  } from "react-icons/fa";
+import { FaEnvelope, FaMoneyBillWave, FaWallet, FaGlobe, FaCheck } from "react-icons/fa";
 import {
   Box,
   Paper,
@@ -21,7 +21,7 @@ const BookingPaymentPage = () => {
   const { postData: postSearch, loadingPost: loadingSearch, response: responseSearch } = usePost({
     url: "https://travelta.online/agent/accounting/booking/search",
   });
-  const { postData, loadingPost, response } = usePost({url: "https://travelta.online/agent/accounting/booking/payment",});
+  const { postData, loadingPost, response } = usePost({ url: "https://travelta.online/agent/accounting/booking/payment", });
   const [referenceCode, setReferenceCode] = useState("");
   const [data, setData] = useState(null);
 
@@ -44,7 +44,7 @@ const BookingPaymentPage = () => {
     postSearch(formData, "Searching...");
   };
 
-  const headersPaid = ['SL','Code', 'Date','Amount', 'Finacial Account',"Invoice"];
+  const headersPaid = ['SL', 'Code', 'Date', 'Amount', 'Finacial Account', "Invoice"];
   const [selectedItems, setSelectedItems] = useState({});
   // State to track selected financial account for each remaining_list item
   const [selectedFinancialAccounts, setSelectedFinancialAccounts] = useState({});
@@ -128,7 +128,7 @@ const BookingPaymentPage = () => {
           <div className="w-full bg-white p-4 rounded-3xl shadow-lg">
             {/* Grouped Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* From Information */}
+              {/* From Information */}
               <div className="bg-gradient-to-r from-blue-200 to-blue-400 p-4 rounded-2xl shadow-md">
                 <h3 className="text-xl font-semibold mb-4">Agent Information</h3>
                 <div className="flex flex-col gap-3">
@@ -202,232 +202,225 @@ const BookingPaymentPage = () => {
         <div className="w-full bg-fourthColor p-4 rounded-2xl shadow-md">
           {data?.booking?.bus && (
             <>
-            <h1 className="w-full font-semibold text-2xl text-center p-4">Bus Details</h1>
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-              
-              {/* Bus Type */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaBus className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Bus Name</h3>
-                  <p className="text-gray-600">{data.booking.bus.bus}</p>
-                </div>
-              </div>
+              <h1 className="w-full font-semibold text-2xl text-center p-4">Bus Details</h1>
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
 
-              {/* From - To */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaMapMarkerAlt className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Route</h3>
-                  <p className="text-gray-600">{data.booking.bus.from} → {data.booking.bus.to}</p>
+                {/* Bus Type */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaBus className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Bus Name</h3>
+                    <p className="text-gray-600">{data.booking.bus.bus}</p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Departure & Arrival */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaCalendarAlt className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Departure</h3>
-                  <p className="text-gray-600">{data.booking.bus.departure}</p>
+                {/* From - To */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaMapMarkerAlt className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Route</h3>
+                    <p className="text-gray-600">{data.booking.bus.from} → {data.booking.bus.to}</p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaCalendarAlt className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Arrival</h3>
-                  <p className="text-gray-600">{data.booking.bus.arrival}</p>
+                {/* Departure & Arrival */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaCalendarAlt className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Departure</h3>
+                    <p className="text-gray-600">{data.booking.bus.departure}</p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Passenger Details */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaUser className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Passengers</h3>
-                  <p className="text-gray-600">Adults: {data.booking.bus.adults}, Children: {data.booking.bus.childreen}</p>
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaCalendarAlt className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Arrival</h3>
+                    <p className="text-gray-600">{data.booking.bus.arrival}</p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Ticket Prices */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaTicketAlt className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Ticket Prices</h3>
-                  <p className="text-gray-600">Adult: {data.booking.bus.adult_price}, Child: {data.booking.bus.child_price}</p>
+                {/* Passenger Details */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaUser className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Passengers</h3>
+                    <p className="text-gray-600">Adults: {data.booking.bus.adults}, Children: {data.booking.bus.childreen}</p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Driver Contact */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaPhone className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Driver Contact</h3>
-                  <p className="text-gray-600">{data.booking.bus.driver_phone}</p>
+                {/* Ticket Prices */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaTicketAlt className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Ticket Prices</h3>
+                    <p className="text-gray-600">Adult: {data.booking.bus.adult_price}, Child: {data.booking.bus.child_price}</p>
+                  </div>
                 </div>
+
+                {/* Driver Contact */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaPhone className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Driver Contact</h3>
+                    <p className="text-gray-600">{data.booking.bus.driver_phone}</p>
+                  </div>
+                </div>
+
               </div>
-              
-            </div>
             </>
           )}
-             {data?.booking?.hotel && (
+          {data?.booking?.hotel && (
             <>
-            <h1 className="w-full font-semibold text-2xl text-center p-4">Hotel Details</h1>
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-              
-              {/* Hotel Type */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaHotel className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Hotel Name</h3>
-                  <p className="text-gray-600">{data.booking.hotel.hotel_name}</p>
+              <h1 className="w-full font-semibold text-2xl text-center p-4">Hotel Details</h1>
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+
+                {/* Hotel Type */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaHotel className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Hotel Name</h3>
+                    <p className="text-gray-600">{data.booking.hotel.hotel_name}</p>
+                  </div>
                 </div>
-              </div>
 
-           
-
-       
-
-        
-
-              {/* Passenger Details */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaUser className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Passengers</h3>
-                  <p className="text-gray-600">Adults: {data.booking.hotel.adults}, Children: {data.booking.hotel.childreen}</p>
+                {/* Passenger Details */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaUser className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Passengers</h3>
+                    <p className="text-gray-600">Adults: {data.booking.hotel.adults}, Children: {data.booking.hotel.childreen}</p>
+                  </div>
                 </div>
-              </div>
 
-
-              {/* Quantity */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaListOl className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Room Quantity</h3>
-                  <p className="text-gray-600">{data.booking.hotel.room_quantity}</p>
+                {/* Quantity */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaListOl className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Room Quantity</h3>
+                    <p className="text-gray-600">{data.booking.hotel.room_quantity}</p>
+                  </div>
                 </div>
-              </div>
 
-                  {/* Nights */}
-                  <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaMoon className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Hotel Nights</h3>
-                  <p className="text-gray-600">{data.booking.hotel.nights}</p>
+                {/* Nights */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaMoon className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Hotel Nights</h3>
+                    <p className="text-gray-600">{data.booking.hotel.nights}</p>
+                  </div>
                 </div>
+
               </div>
-              
-            </div>
             </>
           )}
-         {data?.booking?.tour&& (
+          {data?.booking?.tour && (
             <>
-            <h1 className="w-full font-semibold text-2xl text-center p-4">Tour Details</h1>
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-              
-              {/* Bus Type */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaRoute className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Tour Name</h3>
-                  <p className="text-gray-600">{data.booking.tour.tour}</p>
+              <h1 className="w-full font-semibold text-2xl text-center p-4">Tour Details</h1>
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+
+                {/* Bus Type */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaRoute className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Tour Name</h3>
+                    <p className="text-gray-600">{data.booking.tour.tour}</p>
+                  </div>
                 </div>
-              </div>
 
 
 
-        
-              {/* Passenger Details */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaUser className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Passengers</h3>
-                  <p className="text-gray-600">Adults: {data.booking.tour.adults}, Children: {data.booking.tour.childreen}</p>
+
+                {/* Passenger Details */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaUser className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Passengers</h3>
+                    <p className="text-gray-600">Adults: {data.booking.tour.adults}, Children: {data.booking.tour.childreen}</p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Ticket Prices */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaTicketAlt className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Tour Prices</h3>
-                  <p className="text-gray-600">Adult: {data.booking.tour.adult_price}, Child: {data.booking.tour.child_price}</p>
+                {/* Ticket Prices */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaTicketAlt className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Tour Prices</h3>
+                    <p className="text-gray-600">Adult: {data.booking.tour.adult_price}, Child: {data.booking.tour.child_price}</p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Driver Contact */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaShapes className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Tour Type</h3>
-                  <p className="text-gray-600">{data.booking.tour.type}</p>
+                {/* Driver Contact */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaShapes className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Tour Type</h3>
+                    <p className="text-gray-600">{data.booking.tour.type}</p>
+                  </div>
                 </div>
+
               </div>
-              
-            </div>
             </>
           )}
 
-{data?.booking?.flight && (
+          {data?.booking?.flight && (
             <>
-            <h1 className="w-full font-semibold text-2xl text-center p-4">Flight Details</h1>
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-              
-              {/* Bus Type */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaBus className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Flight Name</h3>
-                  <p className="text-gray-600">{data.booking.flight.class}</p>
-                </div>
-              </div>
+              <h1 className="w-full font-semibold text-2xl text-center p-4">Flight Details</h1>
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
 
-              {/* From - To */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaMapMarkerAlt className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Route</h3>
-                  <p className="text-gray-600">{data.booking.flight.from_to[0].from} → {data.booking.flight.from_to[0].to}</p>
+                {/* Bus Type */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaBus className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Flight Name</h3>
+                    <p className="text-gray-600">{data.booking.flight.class}</p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Departure & Arrival */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaPlaneDeparture className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Departure</h3>
-                  <p className="text-gray-600">{data.booking.flight.departure}</p>
+                {/* From - To */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaMapMarkerAlt className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Route</h3>
+                    <p className="text-gray-600">{data.booking.flight.from_to[0].from} → {data.booking.flight.from_to[0].to}</p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaCalendarAlt className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Arrival</h3>
-                  <p className="text-gray-600">{data.booking.flight.arrival}</p>
+                {/* Departure & Arrival */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaPlaneDeparture className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Departure</h3>
+                    <p className="text-gray-600">{data.booking.flight.departure}</p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Passenger Details */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaUser className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Passengers</h3>
-                  <p className="text-gray-600">Adults: {data.booking.flight.adults}, Children: {data.booking.flight.childreen}</p>
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaCalendarAlt className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Arrival</h3>
+                    <p className="text-gray-600">{data.booking.flight.arrival}</p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Ticket Prices */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaTicketAlt className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Ticket Prices</h3>
-                  <p className="text-gray-600">Adult: {data.booking.flight.adult_price}, Child: {data.booking.flight.child_price}</p>
+                {/* Passenger Details */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaUser className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Passengers</h3>
+                    <p className="text-gray-600">Adults: {data.booking.flight.adults}, Children: {data.booking.flight.childreen}</p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Driver Contact
+                {/* Ticket Prices */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaTicketAlt className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Ticket Prices</h3>
+                    <p className="text-gray-600">Adult: {data.booking.flight.adult_price}, Child: {data.booking.flight.child_price}</p>
+                  </div>
+                </div>
+
+                {/* Driver Contact
               <div className="flex items-center bg-white p-2 rounded-xl shadow">
                 <FaPhone className="text-mainColor text-2xl mr-3" />
                 <div>
@@ -435,62 +428,55 @@ const BookingPaymentPage = () => {
                   <p className="text-gray-600">{data.booking.bus.driver_phone}</p>
                 </div>
               </div> */}
-              
-            </div>
+
+              </div>
             </>
           )}
 
-{data?.booking?.visa && (
+          {data?.booking?.visa && (
             <>
-            <h1 className="w-full font-semibold text-2xl text-center p-4">Visa Details</h1>
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-              
-       
+              <h1 className="w-full font-semibold text-2xl text-center p-4">Visa Details</h1>
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
 
-      
-
-        
-
-      
-              {/* Passenger Details */}
-              <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaUser className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Passengers</h3>
-                  <p className="text-gray-600">Adults: {data.booking.visa.adults}, Children: {data.booking.visa.childreen}</p>
+                {/* Passenger Details */}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaUser className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Passengers</h3>
+                    <p className="text-gray-600">Adults: {data.booking.visa.adults}, Children: {data.booking.visa.childreen}</p>
+                  </div>
                 </div>
-              </div>
 
-                 {/* Note*/}
-                 <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaTicketAlt className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Note</h3>
-                  <p className="text-gray-600">{data.booking.visa.notes}</p>
+                {/* Note*/}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaTicketAlt className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Note</h3>
+                    <p className="text-gray-600">{data.booking.visa.notes}</p>
+                  </div>
                 </div>
-              </div>
 
-                     {/* country*/}
-                     <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaCity className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Country</h3>
-                  <p className="text-gray-600">{data.booking.visa.country}</p>
+                {/* country*/}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaCity className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Country</h3>
+                    <p className="text-gray-600">{data.booking.visa.country}</p>
+                  </div>
                 </div>
-              </div>
 
-                        {/* date*/}
-                        <div className="flex items-center bg-white p-2 rounded-xl shadow">
-                <FaCalendarAlt className="text-mainColor text-2xl mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold">Appointment Date</h3>
-                  <p className="text-gray-600">{data.booking.visa.appointment_date}</p>
+                {/* date*/}
+                <div className="flex items-center bg-white p-2 rounded-xl shadow">
+                  <FaCalendarAlt className="text-mainColor text-2xl mr-3" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Appointment Date</h3>
+                    <p className="text-gray-600">{data.booking.visa.appointment_date}</p>
+                  </div>
                 </div>
-              </div>
 
 
 
-              {/* Driver Contact
+                {/* Driver Contact
               <div className="flex items-center bg-white p-2 rounded-xl shadow">
                 <FaPhone className="text-mainColor text-2xl mr-3" />
                 <div>
@@ -498,22 +484,22 @@ const BookingPaymentPage = () => {
                   <p className="text-gray-600">{data.booking.bus.driver_phone}</p>
                 </div>
               </div> */}
-              
-            </div>
+
+              </div>
             </>
           )}
 
         </div>
       )}
 
-      {data && 
+      {data &&
         <div className="w-full bg-fourthColor rounded-2xl shadow-md p-4 mt-5 flex flex-col gap-5 items-start justify-start overflow-x-scroll scrollSection">
-            {loadingSearch ? (
-              <div className="w-full h-56 flex justify-center items-center">
-                <StaticLoader />
-              </div>
-            ) : (data?.payments && data?.payments.length > 0) && (
-              <>
+          {loadingSearch ? (
+            <div className="w-full h-56 flex justify-center items-center">
+              <StaticLoader />
+            </div>
+          ) : (data?.payments && data?.payments.length > 0) && (
+            <>
               <h1 className="w-full font-semibold text-2xl text-center p-2">Payments</h1>
               <table className="w-full sm:min-w-0">
                 <thead className="w-full">
@@ -531,13 +517,13 @@ const BookingPaymentPage = () => {
                       <td colSpan={12} className='text-center text-xl text-mainColor font-TextFontMedium  '>Not find payments</td>
                     </tr>
                   ) : (
-                    data?.payments.map((payment, index) => ( 
+                    data?.payments.map((payment, index) => (
                       <tr className="w-full border-b-2" key={index}>
                         <td className="min-w-[80px] sm:min-w-[50px] sm:w-1/12 lg:w-1/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
                           {index + 1}
                         </td>
                         <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-                          {payment?.code|| '-'}
+                          {payment?.code || '-'}
                         </td>
                         <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
                           {payment?.date || '-'}
@@ -550,14 +536,14 @@ const BookingPaymentPage = () => {
                         </td>
 
                         <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
-  {payment?.id ? (
-    <Link to={`/dashboard_agent/booking_payments/invoice/${payment?.id}`} className="text-blue-500 underline hover:text-blue-700">
-      View
-    </Link>
-  ) : (
-    '-'
-  )}
-</td>
+                          {payment?.id ? (
+                            <Link to={`/dashboard_agent/booking_payments/invoice/${payment?.id}`} className="text-blue-500 underline hover:text-blue-700">
+                              View
+                            </Link>
+                          ) : (
+                            '-'
+                          )}
+                        </td>
                         {/* <td className="min-w-[150px] sm:min-w-[100px] sm:w-2/12 lg:w-2/12 py-2 text-center text-thirdColor text-sm sm:text-base lg:text-lg xl:text-xl overflow-hidden">
                         <button
                               type="button"
@@ -574,13 +560,13 @@ const BookingPaymentPage = () => {
                   )}
                 </tbody>
               </table>
-              </>
-            )}
+            </>
+          )}
         </div>
       }
 
       {data && data.remaining_list &&
-          <div className="w-full flex flex-col gap-3">
+        <div className="w-full flex flex-col gap-3">
           <Typography variant="h5" component="h3" gutterBottom>
             Remaining Payments
           </Typography>
@@ -670,7 +656,7 @@ const BookingPaymentPage = () => {
 
 
 
-      
+
     </div>
   );
 };

@@ -6,7 +6,7 @@ const InvoiceAgentLayout = () => {
      const [update, setUpdate] = useState(false)
   return (
     <>
-    <TitleSection text={'Invoice Table'} />
+    {/* <TitleSection text={'Invoice Table'} /> */}
     <InvoicePage update={update} setUpdate={setUpdate}/>
     </>
   );

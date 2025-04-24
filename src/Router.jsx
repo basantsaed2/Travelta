@@ -789,21 +789,26 @@ export const router = createBrowserRouter([
               // },
 
               
+              // {
+              //   path: "subscriptions",
+              //   element: <AppSubscriptionAgentLayout/>,
+              //   children:[
+              //     {
+              //       path: "invoice",
+              //       element: <AppInvoiceAgent/>,
+              //       children:[
+              //           {
+              //             path: "",
+              //             element: <InvoiceAgentLayout/>,
+              //           },       
+              //       ]
+              //     },
+              //   ]
+              // },
+
               {
                 path: "subscriptions",
-                element: <AppSubscriptionAgentLayout/>,
-                children:[
-                  {
-                    path: "invoice",
-                    element: <AppInvoiceAgent/>,
-                    children:[
-                        {
-                          path: "",
-                          element: <InvoiceAgentLayout/>,
-                        },       
-                    ]
-                  },
-                ]
+                element: <InvoiceAgentLayout/>
               },
 
               {
