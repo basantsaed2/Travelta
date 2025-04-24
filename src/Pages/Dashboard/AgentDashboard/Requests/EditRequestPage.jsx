@@ -116,12 +116,11 @@ const EditRequestPage = () => {
   const [selectedTourType, setSelectedTourType] = useState("");
   const [tourAdultPrice, setTourAdultPrice] = useState("");
   const [tourChildPrice, setTourChildPrice] = useState("");
-  const [transportationDeparture, setTransportationDeparture] = useState("");
   const [tourChildrenNumber, setTourChildrenNumber] = useState('');
   const [tourAdultsNumber, setTourAdultsNumber] = useState('');
   const [tourAdults, setTourAdults] = useState([]);
   const [tourChildren, setTourChildren] = useState([]);
-  const [buses, setBuses] = useState([{ transportation: "", seats: "" }]);
+  const [buses, setBuses] = useState([{ transportation: "", seats: "" ,departure :""}]);
   const [hotels, setHotels] = useState([
     {
       destination: "",
@@ -204,6 +203,7 @@ const EditRequestPage = () => {
       const busData = tour.bus.map((busItem) => ({
         transportation: busItem.transportation || "",
         seats: busItem.seats || "",
+        ...(busItem.transportation === 'flight' ? { departure: busItem.departure } : {}),
       }));
       setBuses(busData);
     }
@@ -382,20 +382,17 @@ const EditRequestPage = () => {
     else if (selectedService.service_name.toLowerCase() === "tour") {
       formData.append("tour", tour);
       formData.append("type", selectedTourType);
-      formData.append('departure', transportationDeparture);
       formData.append("adult_price", tourAdultPrice);
       formData.append("child_price", tourChildPrice);
       formData.append('childreen', tourChildrenNumber);
       formData.append('adults', tourAdultsNumber);
       // formData.append("notes", notesTour);
 
-      // formData.append("adults", tourAdults);
-      // formData.append("childreen", tourChildren);
       const formattedBuses = JSON.stringify(
         buses.map((bus) => ({
           transportation: bus.transportation,
           seats: bus.seats,
-          departure:bus.transportationDeparture,
+          ...(bus.transportation === 'flight' ? { departure: bus.departure } : {}),
         }))
       );
       const adults_data = tourAdults.map((adult) => ({

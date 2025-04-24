@@ -941,7 +941,7 @@ const EditRoomPage = ({ update, setUpdate }) => {
                 </div>
             </div>
             {
-                selectedHotel && 
+                selectedHotel && taxes.length > 0 &&(
                 <div className="w-full flex items-center flex-col md:flex-row mt-6 gap-5">
                     <TextField
                         select
@@ -995,6 +995,7 @@ const EditRoomPage = ({ update, setUpdate }) => {
                     )
                     }
                 </div>
+                )
             }
          </div>
         )}

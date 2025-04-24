@@ -4,7 +4,7 @@ import { useGet } from "../../../Hooks/useGet";
 import { TextField, Button, MenuItem, InputAdornment,CircularProgress,Tabs, Tab ,Autocomplete } from "@mui/material";
 import { MdHotel } from "react-icons/md";
 import { FaGlobe, FaCity, FaUser, FaChild } from "react-icons/fa";
-import { FaStar ,FaBed, FaMoneyBillWave, FaRegCreditCard, FaInfoCircle } from 'react-icons/fa';
+import { FaStar ,FaBed, FaMoneyBillWave, FaRegCreditCard, FaInfoCircle ,FaMapMarkerAlt } from 'react-icons/fa';
 import { Link } from "react-router-dom";
 import { MdLocationOn, MdNightsStay } from "react-icons/md"; // Location & Nights
 import { FaRegMoneyBillAlt } from "react-icons/fa"; // Price icon
@@ -368,64 +368,104 @@ const BookingEngine = ({ update, setUpdate }) => {
     <p className="text-lg text-gray-600">Unfortunately, no hotels match your search criteria. Please try again with different filters.</p>
   </div>
 ) : (
-  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-6">
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-6">
   {hotels.map((hotel) => {
-    // Find the minimum price from the available room pricing
     const minPrice = hotel.room_pricings.reduce((min, current) => 
       current.price < min ? current.price : min, hotel.room_pricings[0]?.price);
-    const currency = hotel.room_pricings[0]?.currency_name || "Dollar"; // Default to "Dollar" if not available
+    const currency = hotel.room_pricings[0]?.currency_name || "USD";
+    const stars = Array.from({ length: 5 }).map((_, i) => (
+      <FaStar key={i} className={i < hotel.hotel_stars ? "text-yellow-400" : "text-gray-300"} />
+    ));
 
     return (
-      <div key={hotel.hotel_id} className="bg-white rounded-xl shadow-xl overflow-hidden transition-transform transform hover:scale-90">
-        {/* Hotel Image Carousel */}
-        <Splide options={options} className="w-full">
-          {hotel.images.map((image, index) => (
-            <SplideSlide key={index} className="w-full flex justify-center">
-              <img
-                src={image}
-                alt={hotel.hotel_name}
-                className="w-full h-full object-fit"
-              />
-            </SplideSlide>
-          ))}
-        </Splide>
+      <div key={hotel.hotel_id} className="group bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+        {/* Image with location badge */}
+        <div className="relative h-60 overflow-hidden">
+          <Splide 
+            options={{ 
+              type: 'loop',
+              autoplay: true,
+              interval: 4000,
+              pauseOnHover: false,
+              arrows: false,
+              pagination: false
+            }}
+            className="h-full"
+          >
+            {hotel.images.map((image, index) => (
+              <SplideSlide key={index}>
+                <img
+                  src={image}
+                  alt={hotel.hotel_name}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </SplideSlide>
+            ))}
+          </Splide>
+          
+          {/* Location Badge */}
+          <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-sm">
+            <div className="flex items-center gap-1 text-sm font-medium">
+              <FaMapMarkerAlt className="text-red-500" />
+              <span className="text-gray-800">{hotel.city}, {hotel.country}</span>
+            </div>
+          </div>
+        </div>
 
         {/* Hotel Info */}
-        <div className="p-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              {/* Hotel Logo */}
+        <div className="p-5">
+          <div className="flex justify-between items-start mb-3">
+            <div>
+              <h3 className="text-xl font-bold text-gray-900 line-clamp-1">{hotel.hotel_name}</h3>
+              <div className="flex items-center mt-1">
+                <div className="flex mr-2">{stars}</div>
+                <span className="text-sm text-gray-500">{hotel.hotel_stars}-star hotel</span>
+              </div>
+            </div>
+            
+            {/* Hotel Logo */}
+            <div className="flex-shrink-0 ml-3">
               <img
                 src={hotel.hotel_logo || 'https://via.placeholder.com/50'}
                 alt={hotel.hotel_name}
-                className="w-12 h-12 rounded-full object-cover"
+                className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
               />
-              <h2 className="text-2xl font-semibold text-gray-800">{hotel.hotel_name}</h2>
-            </div>
-
-            {/* Stars Rating */}
-            <div className="flex items-center text-yellow-400">
-              {Array.from({ length: hotel.hotel_stars }).map((_, index) => (
-                <FaStar key={index} className="text-xl" />
-              ))}
             </div>
           </div>
 
-          <p className="text-gray-600">{hotel.description}</p>
-
-          {/* Display the minimum price with currency */}
-          <div className="flex items-center text-gray-700 space-x-2">
-            <FaMoneyBillWave className="text-green-500" />
-            <span className="font-semibold">Price : {minPrice} {currency}</span>
+          {/* Description with fade effect */}
+          <div className="relative mb-4">
+            <div className="text-gray-600 line-clamp-3 text-sm relative">
+              {hotel.description || "Luxurious accommodation with premium amenities"}
+              <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-white to-transparent"></div>
+            </div>
           </div>
 
-          {/* Button to Get More Details */}
-          <Link to={"details"} state={{hotel: hotel}} className="inline-block w-full mt-4">
-            <button className="bg-blue-600 text-white py-2 px-6 rounded-md w-full hover:bg-blue-700 transition duration-300 ease-in-out">
-              <FaInfoCircle className="inline-block mr-2" />
-              View More Details
-            </button>
-          </Link>
+          {/* Price and CTA */}
+          <div className="flex items-center justify-between border-t pt-4">
+            <div>
+              <p className="text-xs text-gray-500">Starting from</p>
+              <p className="text-xl font-bold text-blue-600">
+                {minPrice} <span className="text-sm">{currency}</span>
+              </p>
+              <p className="text-xs text-gray-500">per night</p>
+            </div>
+            
+            <Link 
+              to="details" 
+              state={{
+                hotel,
+                checkIn,
+                checkOut,
+                adults,
+                children,
+              }}
+              className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-5 py-2 rounded-lg shadow-sm hover:shadow-md transition-all flex items-center gap-2"
+            >
+              <FaInfoCircle />
+              <span>View Details</span>
+            </Link>
+          </div>
         </div>
       </div>
     );

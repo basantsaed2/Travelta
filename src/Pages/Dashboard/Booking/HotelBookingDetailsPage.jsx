@@ -653,33 +653,455 @@
 // export default HotelBookingDetailsPage;
 
 
+// import React, { useState, useEffect } from "react";
+// import { useLocation } from "react-router-dom";
+// import { FaStar, FaMapMarkerAlt, FaWifi, FaParking, FaSwimmingPool, FaUtensils, FaSnowflake, FaDog, FaSmokingBan, FaRegSnowflake } from "react-icons/fa";
+// import { IoIosPeople, IoMdTime } from "react-icons/io";
+// import { MdMeetingRoom, MdBathtub, MdBedroomParent, MdAirlineSeatReclineExtra } from "react-icons/md";
+// import { GiMoneyStack, GiPayMoney, GiReceiveMoney } from "react-icons/gi";
+// import { Splide, SplideSlide } from '@splidejs/react-splide';
+// import '@splidejs/react-splide/css';
+// import { Box, Dialog, DialogContent, Grid, Typography, Button, Chip, Divider, Paper, IconButton } from "@mui/material";
+// import { LocalizationProvider } from '@mui/x-date-pickers';
+// import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+// import { IoMdCloseCircleOutline } from "react-icons/io";
+// import { usePost } from "../../../Hooks/usePostJson";
+// const HotelBookingDetailsPage = () => {
+//   const location = useLocation();
+//   const hotel = location.state?.hotel;
+//   const { postData, loadingPost, response} = usePost({
+//     url: "https://travelta.online/agent/bookRoom",
+//   });
+//   const { checkIn, checkOut, adults, children } = location.state || {};
+//   const availableQuantity = hotel.available_rooms[0]?.available_quantity || 1;
+//   const [roomQuantity, setRoomQuantity] = useState(1);
+  
+//   const [selectedRoom, setSelectedRoom] = useState(null);
+//   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+//   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+//   const [checkInDate, setCheckInDate] = useState(null);
+//   const [checkOutDate, setCheckOutDate] = useState(null);
+//   // const [adults, setAdults] = useState(2);
+//   // const [children, setChildren] = useState(0);
+
+//   useEffect(() => {
+//     console.log("Hotel", hotel);
+//   }, [hotel]);
+
+//   if (!hotel) {
+//     return (
+//       <div className="max-w-4xl mx-auto p-6 text-center">
+//         <p>No hotel data available.</p>
+//       </div>
+//     );
+//   }
+
+
+//   const handleImageClick = (index) => {
+//     setSelectedImageIndex(index);
+//     setIsImageModalOpen(true);
+//   };
+
+//   return (
+//     <div className="max-w-7xl mx-auto px-4 py-6">
+//       {/* Hotel Header */}
+//       <div className="mb-6">
+//         <h1 className="text-3xl font-bold text-gray-800">{hotel.hotel_name}</h1>
+//         <div className="flex items-center mt-1">
+//           <FaMapMarkerAlt className="text-gray-500 mr-1" />
+//           <span className="text-gray-600">
+//             {hotel.city}, {hotel.country}
+//           </span>
+//         </div>
+//         <div className="flex items-center mt-2">
+//           {Array.from({ length: hotel.hotel_stars }).map((_, i) => (
+//             <FaStar key={i} className="text-yellow-400 mr-1" />
+//           ))}
+//           <span className="ml-2 text-gray-700">
+//             {hotel.hotel_stars}-star hotel
+//           </span>
+//         </div>
+//       </div>
+
+//       {/* Image Gallery */}
+//       <div className="grid grid-cols-4 gap-2 mb-6">
+//         {/* Main Image */}
+//         <div 
+//           className="col-span-2 row-span-2 cursor-pointer" 
+//           onClick={() => handleImageClick(0)}
+//         >
+//           <img
+//             src={hotel.images[0]}
+//             alt="Main hotel"
+//             className="w-full h-full object-cover rounded-lg"
+//           />
+//         </div>
+//         {/* Secondary Images */}
+//         {hotel.images.slice(1, 5).map((image, index) => (
+//           <div 
+//             key={index} 
+//             className="cursor-pointer"
+//             onClick={() => handleImageClick(index + 1)}
+//           >
+//             <img
+//               src={image}
+//               alt={`Hotel view ${index + 1}`}
+//               className="w-full h-full object-cover rounded-lg"
+//             />
+//           </div>
+//         ))}
+//       </div>
+
+//       {/* Image Modal */}
+//       <Dialog
+//         open={isImageModalOpen}
+//         onClose={() => setIsImageModalOpen(false)}
+//         maxWidth="lg"
+//         fullWidth
+//       >
+//         <DialogContent>
+//           <IconButton
+//             onClick={() => setIsImageModalOpen(false)}
+//             sx={{ position: 'absolute', right: 8, top: 8 }}
+//           >
+//             <IoMdCloseCircleOutline />
+//           </IconButton>
+//           <Splide
+//             options={{
+//               start: selectedImageIndex,
+//               rewind: true,
+//               gap: '1rem',
+//             }}
+//           >
+//             {hotel.images.map((image, index) => (
+//               <SplideSlide key={index}>
+//                 <img
+//                   src={image}
+//                   alt={`Hotel image ${index}`}
+//                   className="w-full h-auto max-h-[80vh] object-contain"
+//                 />
+//               </SplideSlide>
+//             ))}
+//           </Splide>
+//         </DialogContent>
+//       </Dialog>
+
+//       {/* Main Content */}
+//       <div className="flex flex-col lg:flex-row gap-6">
+//         {/* Left Column */}
+//         <div className="lg:w-2/3">
+//           {/* Property Highlights */}
+//           {/* <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+//             <h2 className="text-xl font-bold mb-4">Property Highlights</h2>
+//             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+//               {amenities.map((amenity, index) => (
+//                 <div key={index} className="flex items-center">
+//                   <span className="text-blue-500 mr-2">{amenity.icon}</span>
+//                   <span>{amenity.name}</span>
+//                 </div>
+//               ))}
+//             </div>
+//           </div> */}
+
+//           {/* Description */}
+//           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+//             <h2 className="text-xl font-bold mb-4">Description</h2>
+//             <p className="text-gray-700">
+//               {hotel.available_rooms[0]?.room_details?.description || 
+//                "This hotel offers comfortable accommodations with modern amenities. Enjoy a pleasant stay with excellent service."}
+//             </p>
+//           </div>
+
+//           {/* Ratings */}
+//           {/* <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+//             <h2 className="text-xl font-bold mb-4">Ratings</h2>
+//             <div className="space-y-3">
+//               {Object.entries(ratings).map(([category, score]) => (
+//                 <div key={category} className="flex items-center">
+//                   <span className="w-40 font-medium">{category}</span>
+//                   <div className="flex-1 mx-2">
+//                     <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+//                       <div 
+//                         className="h-full bg-blue-500" 
+//                         style={{ width: `${(score / 10) * 100}%` }}
+//                       ></div>
+//                     </div>
+//                   </div>
+//                   <span className="font-bold">{score}</span>
+//                 </div>
+//               ))}
+//             </div>
+//           </div> */}
+
+//           {/* Room Details */}
+//           <div className="bg-white rounded-lg shadow-md p-6">
+//             <h2 className="text-xl font-bold mb-4">Room Types</h2>
+//             {hotel.available_rooms.map((room, index) => (
+//               <Paper key={index} className="p-4 mb-4">
+//                 <div className="flex flex-col md:flex-row gap-4">
+//                   <div className="md:w-1/3">
+//                     <img
+//                       src={room.room_details.thumbnail_link}
+//                       alt={room.room_type}
+//                       className="w-full h-48 object-cover rounded-lg"
+//                     />
+//                   </div>
+//                   <div className="md:w-2/3">
+//                     <h3 className="text-lg font-semibold">{room.room_type} Room</h3>
+//                     <div className="flex flex-wrap gap-2 my-2">
+//                       {/* {roomFacilities.map((facility, idx) => (
+//                         <Chip 
+//                           key={idx} 
+//                           icon={facility.icon} 
+//                           label={facility.name} 
+//                           size="small"
+//                         />
+//                       ))} */}
+//                     </div>
+//                     <div className="grid grid-cols-2 gap-2 my-2">
+//                       <div className="flex items-center">
+//                         <IoIosPeople className="mr-2" />
+//                         <span>Max {room.room_details.max_adults} adults</span>
+//                       </div>
+//                       <div className="flex items-center">
+//                         <MdBedroomParent className="mr-2" />
+//                         <span>{room.room_details.max_capacity} people</span>
+//                       </div>
+//                     </div>
+//                     <Divider className="my-2" />
+//                     <div className="flex justify-between items-center">
+//                       <div>
+//                         <span className="text-2xl font-bold text-blue-600">
+//                           ${room.room_details.price}
+//                         </span>
+//                         <span className="text-gray-500 ml-1">per night</span>
+//                       </div>
+//                       <Button 
+//                         variant="contained" 
+//                         color="primary"
+//                         onClick={() => setSelectedRoom(room)}
+//                       >
+//                         Select Room
+//                       </Button>
+//                     </div>
+//                   </div>
+//                 </div>
+//               </Paper>
+//             ))}
+//           </div>
+//         </div>
+
+//         {/* Right Column - Booking Widget */}
+//         <div className="lg:w-1/3">
+//           <div className="bg-white rounded-lg shadow-md p-6 sticky top-4">
+//             <h2 className="text-xl font-bold mb-4">Your Reservation</h2>
+
+//             {/* Show Check-in & Check-out Dates */}
+//             <div className="grid grid-cols-2 gap-4 mb-4">
+//               <div>
+//                 <label className="block text-sm font-medium mb-1">Check-in</label>
+//                 <div className="border rounded-md p-2 bg-gray-50">{checkIn}</div>
+//               </div>
+//               <div>
+//                 <label className="block text-sm font-medium mb-1">Check-out</label>
+//                 <div className="border rounded-md p-2 bg-gray-50">{checkOut}</div>
+//               </div>
+//             </div>
+
+//             {/* Show Adults & Children */}
+//             <div className="grid grid-cols-2 gap-4 mb-4">
+//               <div>
+//                 <label className="block text-sm font-medium mb-1">Adults</label>
+//                 <div className="border rounded-md p-2 bg-gray-50">{adults}</div>
+//               </div>
+//               <div>
+//                 <label className="block text-sm font-medium mb-1">Children</label>
+//                 <div className="border rounded-md p-2 bg-gray-50">{children}</div>
+//               </div>
+//             </div>
+
+//             {/* Room Quantity Selection */}
+//             <div className="mb-6">
+//               <label className="block text-sm font-medium mb-1">Room Quantity</label>
+//               <select 
+//                 className="w-full border rounded-md p-2"
+//                 value={roomQuantity}
+//                 onChange={(e) => setRoomQuantity(Number(e.target.value))}
+//               >
+//                 {Array.from(
+//                   { length: hotel.available_rooms[0]?.available_quantity || 1 },
+//                   (_, i) => i + 1
+//                 ).map(num => (
+//                   <option key={num} value={num}>{num}</option>
+//                 ))}
+//               </select>
+//             </div>
+
+//             {/* Price Summary */}
+//             <div className="space-y-3 mb-6">
+//               <div className="flex justify-between">
+//                 <span>Room Price (1 night)</span>
+//                 <span className="font-medium">${hotel.available_rooms[0]?.room_details?.price}</span>
+//               </div>
+//               <div className="flex justify-between">
+//                 <span>Taxes and fees</span>
+//                 <span className="font-medium">$0</span>
+//               </div>
+//               <Divider />
+//               <div className="flex justify-between font-bold text-lg">
+//                 <span>Total</span>
+//                 <span>${hotel.available_rooms[0]?.room_details?.price * roomQuantity}</span>
+//               </div>
+//             </div>
+
+//             <Button 
+//               variant="contained" 
+//               color="primary" 
+//               fullWidth
+//               size="large"
+//               disabled={hotel.available_rooms[0]?.available_quantity === 0}
+//             >
+//               {hotel.available_rooms[0]?.available_quantity === 0 ? 'Sold Out' : 'Reserve Now'}
+//             </Button>
+//           </div>
+//         </div>
+
+
+//       </div>
+
+//       {/* Room Details Modal */}
+//       <Dialog
+//         open={!!selectedRoom}
+//         onClose={() => setSelectedRoom(null)}
+//         maxWidth="md"
+//         fullWidth
+//       >
+//         {selectedRoom && (
+//           <>
+//             <DialogContent>
+//               <IconButton
+//                 onClick={() => setSelectedRoom(null)}
+//                 sx={{ position: 'absolute', right: 8, top: 8 }}
+//               >
+//                 <IoMdCloseCircleOutline />
+//               </IconButton>
+//               <Grid container spacing={3}>
+//                 <Grid item xs={12} md={6}>
+//                   <img
+//                     src={selectedRoom.room_details.thumbnail_link}
+//                     alt={selectedRoom.room_type}
+//                     className="w-full h-auto rounded-lg"
+//                   />
+//                 </Grid>
+//                 <Grid item xs={12} md={6}>
+//                   <Typography variant="h5" gutterBottom>
+//                     {selectedRoom.room_type} Room
+//                   </Typography>
+//                   <Typography variant="body1" paragraph>
+//                     {selectedRoom.room_details.description}
+//                   </Typography>
+                  
+//                   <Divider sx={{ my: 2 }} />
+                  
+//                   <Typography variant="h6" gutterBottom>
+//                     Room Facilities
+//                   </Typography>
+//                   <Grid container spacing={1}>
+//                     {/* {roomFacilities.map((facility, index) => (
+//                       <Grid item xs={6} key={index}>
+//                         <div className="flex items-center">
+//                           <span className="text-blue-500 mr-2">{facility.icon}</span>
+//                           <span>{facility.name}</span>
+//                         </div>
+//                       </Grid>
+//                     ))} */}
+//                   </Grid>
+                  
+//                   <Divider sx={{ my: 2 }} />
+                  
+//                   <Typography variant="h6" gutterBottom>
+//                     Pricing Details
+//                   </Typography>
+//                   <div className="space-y-2">
+//                     <div className="flex justify-between">
+//                       <span>Base Price:</span>
+//                       <span>${selectedRoom.room_details.price}</span>
+//                     </div>
+//                     <div className="flex justify-between">
+//                       <span>Taxes:</span>
+//                       <span>Included</span>
+//                     </div>
+//                     <div className="flex justify-between font-bold">
+//                       <span>Total per night:</span>
+//                       <span>${selectedRoom.room_details.price}</span>
+//                     </div>
+//                   </div>
+//                 </Grid>
+//               </Grid>
+              
+//               <Divider sx={{ my: 3 }} />
+              
+//               <Typography variant="h6" gutterBottom>
+//                 Policies
+//               </Typography>
+//               <Grid container spacing={2}>
+//                 {/* {policies.map((policy, index) => (
+//                   <Grid item xs={6} key={index}>
+//                     <Paper elevation={0} className="p-2">
+//                       <div className="flex items-center">
+//                         <span className="text-blue-500 mr-2">{policy.icon}</span>
+//                         <div>
+//                           <div className="font-medium">{policy.title}</div>
+//                           <div className="text-sm">{policy.time || policy.policy}</div>
+//                         </div>
+//                       </div>
+//                     </Paper>
+//                   </Grid>
+//                 ))} */}
+//               </Grid>
+//             </DialogContent>
+//           </>
+//         )}
+//       </Dialog>
+//     </div>
+//   );
+// };
+
+// export default HotelBookingDetailsPage;
+
+
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { FaStar, FaMapMarkerAlt, FaWifi, FaParking, FaSwimmingPool, FaUtensils, FaSnowflake, FaDog, FaSmokingBan, FaRegSnowflake } from "react-icons/fa";
+import { FaStar, FaMapMarkerAlt, FaWifi, FaParking, FaSwimmingPool, FaUtensils, FaSnowflake, FaDog, FaSmokingBan, FaRegSnowflake, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { IoIosPeople, IoMdTime } from "react-icons/io";
 import { MdMeetingRoom, MdBathtub, MdBedroomParent, MdAirlineSeatReclineExtra } from "react-icons/md";
 import { GiMoneyStack, GiPayMoney, GiReceiveMoney } from "react-icons/gi";
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css';
-import { Box, Dialog, DialogContent, Grid, Typography, Button, Chip, Divider, Paper, IconButton } from "@mui/material";
+import { Box, Dialog, DialogContent, Grid, Typography, Button, Chip, Divider, Paper, IconButton, TextField } from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { usePost } from "../../../Hooks/usePostJson";
+
 const HotelBookingDetailsPage = () => {
   const location = useLocation();
   const hotel = location.state?.hotel;
-  const { postData, loadingPost, response} = usePost({
+  const { postData, loadingPost, response } = usePost({
     url: "https://travelta.online/agent/bookRoom",
   });
-  const [selectedRoom, setSelectedRoom] = useState(null);
+  const { checkIn, checkOut, adults, children } = location.state || {};
+  
+  const [selectedRooms, setSelectedRooms] = useState([]);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [checkInDate, setCheckInDate] = useState(null);
-  const [checkOutDate, setCheckOutDate] = useState(null);
-  const [adults, setAdults] = useState(2);
-  const [children, setChildren] = useState(0);
+  const [checkInDate, setCheckInDate] = useState(checkIn ? new Date(checkIn) : null);
+  const [checkOutDate, setCheckOutDate] = useState(checkOut ? new Date(checkOut) : null);
+  const [totalAdults, setTotalAdults] = useState(adults || 2);
+  const [totalChildren, setTotalChildren] = useState(children || 0);
+  const [expandedRoomIndex, setExpandedRoomIndex] = useState(null);
 
   useEffect(() => {
     console.log("Hotel", hotel);
@@ -693,47 +1115,66 @@ const HotelBookingDetailsPage = () => {
     );
   }
 
-  // Mock data for amenities (since they're empty in the provided data)
-  const amenities = [
-    { name: "Free WiFi", icon: <FaWifi /> },
-    { name: "Parking", icon: <FaParking /> },
-    { name: "Swimming Pool", icon: <FaSwimmingPool /> },
-    { name: "Restaurant", icon: <FaUtensils /> },
-    { name: "Air Conditioning", icon: <FaRegSnowflake /> },
-    { name: "Pets Allowed", icon: <FaDog /> },
-    { name: "Non-smoking Rooms", icon: <FaSmokingBan /> }
-  ];
-
-  const roomFacilities = [
-    { name: "Private Bathroom", icon: <MdBathtub /> },
-    { name: "Flat-screen TV", icon: <MdMeetingRoom /> },
-    { name: "Minibar", icon: <MdBedroomParent /> },
-    { name: "Safe", icon: <MdAirlineSeatReclineExtra /> }
-  ];
-
-  const policies = [
-    { title: "Check-in", time: "12:14 PM", icon: <IoMdTime /> },
-    { title: "Check-out", time: "02:14 AM", icon: <IoMdTime /> },
-    { title: "Cancellation", policy: "Non-refundable", icon: <GiPayMoney /> },
-    { title: "Children Policy", policy: "Allowed (max 4)", icon: <IoIosPeople /> }
-  ];
-
-  const ratings = {
-    "Location": 9.7,
-    "Cleanliness": 9.3,
-    "Service": 9.8,
-    "Value for Money": 9.3,
-    "Facilities": 8.9,
-    "Comfort": 9.3
-  };
-
   const handleImageClick = (index) => {
     setSelectedImageIndex(index);
     setIsImageModalOpen(true);
   };
 
+  const toggleRoomExpansion = (index) => {
+    setExpandedRoomIndex(expandedRoomIndex === index ? null : index);
+  };
+
+  const handleSelectRoom = (room) => {
+    // Check if room is already selected
+    const isSelected = selectedRooms.some(r => r.room_id === room.room_id);
+    
+    if (isSelected) {
+      // Remove room if already selected
+      setSelectedRooms(selectedRooms.filter(r => r.room_id !== room.room_id));
+    } else {
+      // Add room with default quantity 1
+      setSelectedRooms([...selectedRooms, {
+        ...room,
+        quantity: 1,
+        totalPrice: room.room_details.price
+      }]);
+    }
+  };
+
+  const handleQuantityChange = (roomId, newQuantity) => {
+    setSelectedRooms(selectedRooms.map(room => {
+      if (room.room_id === roomId) {
+        const availableQty = room.available_quantity;
+        const validatedQty = Math.min(Math.max(1, newQuantity), availableQty);
+        return {
+          ...room,
+          quantity: validatedQty,
+          totalPrice: validatedQty * room.room_details.price
+        };
+      }
+      return room;
+    }));
+  };
+
+  const calculateTotalPrice = () => {
+    return selectedRooms.reduce((sum, room) => sum + room.totalPrice, 0);
+  };
+
+  const renderAmenities = (amenities) => {
+    if (!amenities || amenities.length === 0) {
+      return <p className="text-gray-500">No amenities listed</p>;
+    }
+    return (
+      <div className="flex flex-wrap gap-2">
+        {amenities.map((amenity, index) => (
+          <Chip key={index} label={amenity} size="small" className="bg-blue-50 text-blue-600" />
+        ))}
+      </div>
+    );
+  };
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
+    <div className="max-w-7xl mx-auto pt-0 px-4 py-6">
       {/* Hotel Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-800">{hotel.hotel_name}</h1>
@@ -820,101 +1261,103 @@ const HotelBookingDetailsPage = () => {
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Left Column */}
         <div className="lg:w-2/3">
-          {/* Property Highlights */}
-          {/* <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-bold mb-4">Property Highlights</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {amenities.map((amenity, index) => (
-                <div key={index} className="flex items-center">
-                  <span className="text-blue-500 mr-2">{amenity.icon}</span>
-                  <span>{amenity.name}</span>
-                </div>
-              ))}
-            </div>
-          </div> */}
-
           {/* Description */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
             <h2 className="text-xl font-bold mb-4">Description</h2>
             <p className="text-gray-700">
-              {hotel.available_rooms[0]?.room_details?.description || 
+              {hotel.hotel_description || 
                "This hotel offers comfortable accommodations with modern amenities. Enjoy a pleasant stay with excellent service."}
             </p>
           </div>
 
-          {/* Ratings */}
-          {/* <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-bold mb-4">Ratings</h2>
-            <div className="space-y-3">
-              {Object.entries(ratings).map(([category, score]) => (
-                <div key={category} className="flex items-center">
-                  <span className="w-40 font-medium">{category}</span>
-                  <div className="flex-1 mx-2">
-                    <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-blue-500" 
-                        style={{ width: `${(score / 10) * 100}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                  <span className="font-bold">{score}</span>
-                </div>
-              ))}
-            </div>
-          </div> */}
+          {/* Hotel Facilities */}
+          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 className="text-xl font-bold mb-4">Hotel Facilities</h2>
+            {renderAmenities(hotel.hotel_facilities)}
+          </div>
 
           {/* Room Details */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-bold mb-4">Room Types</h2>
+            <h2 className="text-xl font-bold mb-4">Available Rooms</h2>
             {hotel.available_rooms.map((room, index) => (
-              <Paper key={index} className="p-4 mb-4">
-                <div className="flex flex-col md:flex-row gap-4">
-                  <div className="md:w-1/3">
-                    <img
-                      src={room.room_details.thumbnail_link}
-                      alt={room.room_type}
-                      className="w-full h-48 object-cover rounded-lg"
-                    />
-                  </div>
-                  <div className="md:w-2/3">
-                    <h3 className="text-lg font-semibold">{room.room_type} Room</h3>
-                    <div className="flex flex-wrap gap-2 my-2">
-                      {roomFacilities.map((facility, idx) => (
-                        <Chip 
-                          key={idx} 
-                          icon={facility.icon} 
-                          label={facility.name} 
+              <Paper key={index} className="p-4 mb-4 border border-gray-200 rounded-lg">
+                <div className="flex flex-col">
+                  <div className="flex flex-col md:flex-row gap-4">
+                    <div className="md:w-1/3">
+                      <img
+                        src={room.room_details.thumbnail_link}
+                        alt={room.room_type}
+                        className="w-full h-48 object-cover rounded-lg"
+                      />
+                    </div>
+                    <div className="md:w-2/3">
+                      <div className="flex justify-between items-start">
+                        <h3 className="text-lg font-semibold">{room.room_type} Room</h3>
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-blue-600">
+                            ${room.room_details.price}
+                          </div>
+                          <span className="text-gray-500 text-sm">per night</span>
+                        </div>
+                      </div>
+                      
+                      <div className="my-2">
+                        <div className="flex items-center text-sm text-gray-600 mb-1">
+                          <IoIosPeople className="mr-2" />
+                          <span>Max {room.room_details.max_adults} adults, {room.room_details.max_children} children</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <MdMeetingRoom className="mr-2" />
+                          <span>{room.available_quantity} rooms available</span>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-4">
+                        <Button 
+                          variant={selectedRooms.some(r => r.room_id === room.room_id) ? "outlined" : "contained"}
+                          color={selectedRooms.some(r => r.room_id === room.room_id) ? "secondary" : "primary"}
+                          onClick={() => handleSelectRoom(room)}
                           size="small"
-                        />
-                      ))}
-                    </div>
-                    <div className="grid grid-cols-2 gap-2 my-2">
-                      <div className="flex items-center">
-                        <IoIosPeople className="mr-2" />
-                        <span>Max {room.room_details.max_adults} adults</span>
+                        >
+                          {selectedRooms.some(r => r.room_id === room.room_id) ? 'Selected' : 'Select Room'}
+                        </Button>
+                        
+                        <Button 
+                          variant="text" 
+                          color="primary" 
+                          size="small" 
+                          className="ml-2"
+                          onClick={() => toggleRoomExpansion(index)}
+                          endIcon={expandedRoomIndex === index ? <FaChevronUp size={14} /> : <FaChevronDown size={14} />}
+                        >
+                          {expandedRoomIndex === index ? 'Less details' : 'More details'}
+                        </Button>
                       </div>
-                      <div className="flex items-center">
-                        <MdBedroomParent className="mr-2" />
-                        <span>{room.room_details.max_capacity} people</span>
-                      </div>
-                    </div>
-                    <Divider className="my-2" />
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <span className="text-2xl font-bold text-blue-600">
-                          ${room.room_details.price}
-                        </span>
-                        <span className="text-gray-500 ml-1">per night</span>
-                      </div>
-                      <Button 
-                        variant="contained" 
-                        color="primary"
-                        onClick={() => setSelectedRoom(room)}
-                      >
-                        Select Room
-                      </Button>
                     </div>
                   </div>
+                  
+                  {/* Expanded Room Details */}
+                  {expandedRoomIndex === index && (
+                    <div className="mt-4 pt-4 border-t border-gray-200">
+                      <h4 className="font-medium mb-2">Room Description</h4>
+                      <p className="text-gray-700 mb-4">
+                        {room.room_details.description || "Comfortable room with modern amenities."}
+                      </p>
+                      
+                      <h4 className="font-medium mb-2">Room Amenities</h4>
+                      {renderAmenities(room.room_details.amenity)}
+                      
+                      <h4 className="font-medium mt-4 mb-2">Policies</h4>
+                      <div className="bg-blue-50 p-3 rounded-md">
+                        <p className="text-sm text-gray-700 mb-2">
+                          <strong>Cancellation:</strong> {room.room_details.cancelation}
+                        </p>
+                        <p className="text-sm text-gray-700">
+                          <strong>Check-in/out:</strong> {room.room_details.check_in} / {room.room_details.check_out}
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </Paper>
             ))}
@@ -923,194 +1366,107 @@ const HotelBookingDetailsPage = () => {
 
         {/* Right Column - Booking Widget */}
         <div className="lg:w-1/3">
-          <div className="bg-white rounded-lg shadow-md p-6 sticky top-4">
-            <h2 className="text-xl font-bold mb-4">Your Reservation</h2>
-            
-            {/* Date Selection */}
-            <div className="grid grid-cols-1 gap-4 mb-4">
-  <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <div>
-        <label className="block text-sm font-medium mb-1">Check-in</label>
-        <DatePicker
-          value={checkInDate}
-          onChange={(newValue) => setCheckInDate(newValue)}
-          renderInput={({ inputRef, inputProps, InputProps }) => (
-            <div className="flex items-center border rounded-md p-2">
-              <input ref={inputRef} {...inputProps} className="flex-1 outline-none" />
-              {InputProps?.endAdornment}
-            </div>
-          )}
-        />
-      </div>
+          <div className="bg-white rounded-lg shadow-md p-6 sticky top-4 border border-blue-100">
+            <h2 className="text-xl font-bold mb-4">Your Booking Details</h2>
 
-      <div>
-        <label className="block text-sm font-medium mb-1">Check-out</label>
-        <DatePicker
-          value={checkOutDate}
-          onChange={(newValue) => setCheckOutDate(newValue)}
-          renderInput={({ inputRef, inputProps, InputProps }) => (
-            <div className="flex items-center border rounded-md p-2">
-              <input ref={inputRef} {...inputProps} className="flex-1 outline-none" />
-              {InputProps?.endAdornment}
-            </div>
-          )}
-        />
-      </div>
-    </LocalizationProvider>
-            </div>
-            
-            {/* Guest Selection */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div>
-                <label className="block text-sm font-medium mb-1">Adults</label>
-                <select 
-                  className="w-full border rounded-md p-2"
-                  value={adults}
-                  onChange={(e) => setAdults(e.target.value)}
-                >
-                  {[1, 2, 3, 4, 5].map(num => (
-                    <option key={num} value={num}>{num}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Children</label>
-                <select 
-                  className="w-full border rounded-md p-2"
-                  value={children}
-                  onChange={(e) => setChildren(e.target.value)}
-                >
-                  {[0, 1, 2, 3, 4].map(num => (
-                    <option key={num} value={num}>{num}</option>
-                  ))}
-                </select>
+            {/* Dates */}
+            <div className="mb-4">
+              <h3 className="font-medium text-gray-700 mb-2">Your stay</h3>
+              <div className="grid grid-cols-2 gap-2 bg-blue-50 p-2 rounded-md">
+                <div>
+                  <p className="text-xs text-gray-500">Check-in</p>
+                  <p className="font-medium">{checkInDate?.toLocaleDateString() || checkIn}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Check-out</p>
+                  <p className="font-medium">{checkOutDate?.toLocaleDateString() || checkOut}</p>
+                </div>
               </div>
             </div>
-            
+
+            {/* Guests */}
+            <div className="mb-4">
+              <h3 className="font-medium text-gray-700 mb-2">Guests</h3>
+              <div className="bg-blue-50 p-2 rounded-md">
+                <p className="text-sm">
+                  {totalAdults} {totalAdults === 1 ? 'Adult' : 'Adults'}, {totalChildren} {totalChildren === 1 ? 'Child' : 'Children'}
+                </p>
+              </div>
+            </div>
+
+            {/* Selected Rooms */}
+            <div className="mb-4">
+              <h3 className="font-medium text-gray-700 mb-2">Selected Rooms</h3>
+              {selectedRooms.length === 0 ? (
+                <p className="text-sm text-gray-500 italic">No rooms selected yet</p>
+              ) : (
+                <div className="space-y-3">
+                  {selectedRooms.map((room, index) => (
+                    <div key={index} className="border-b pb-2">
+                      <div className="flex justify-between">
+                        <span className="font-medium">{room.room_type}</span>
+                        <span className="text-blue-600">${room.room_details.price}</span>
+                      </div>
+                      <div className="flex justify-between items-center mt-1">
+                        <span className="text-sm text-gray-600">Quantity:</span>
+                        <select 
+                          className="border rounded p-1 text-sm"
+                          value={room.quantity}
+                          onChange={(e) => handleQuantityChange(room.room_id, parseInt(e.target.value))}
+                        >
+                          {Array.from({ length: room.available_quantity }, (_, i) => (
+                            <option key={i+1} value={i+1}>{i+1}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="text-right mt-1">
+                        <Button 
+                          variant="text" 
+                          color="error" 
+                          size="small"
+                          onClick={() => handleSelectRoom(room)}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {/* Price Summary */}
-            <div className="space-y-3 mb-6">
-              <div className="flex justify-between">
-                <span>Room Price (1 night)</span>
-                <span className="font-medium">${hotel.available_rooms[0]?.room_details?.price}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Taxes and fees</span>
-                <span className="font-medium">$0</span>
-              </div>
-              <Divider />
-              <div className="flex justify-between font-bold text-lg">
-                <span>Total</span>
-                <span>${hotel.available_rooms[0]?.room_details?.price}</span>
+            <div className="border-t pt-4">
+              <h3 className="font-medium text-gray-700 mb-2">Price Summary</h3>
+              <div className="space-y-2">
+                {selectedRooms.map((room, index) => (
+                  <div key={index} className="flex justify-between text-sm">
+                    <span>{room.quantity}x {room.room_type}</span>
+                    <span>${room.totalPrice}</span>
+                  </div>
+                ))}
+                <Divider />
+                <div className="flex justify-between font-bold">
+                  <span>Total</span>
+                  <span>${calculateTotalPrice()}</span>
+                </div>
               </div>
             </div>
-            
+
             <Button 
               variant="contained" 
               color="primary" 
               fullWidth
               size="large"
-              disabled={!checkInDate || !checkOutDate}
+              className="mt-6"
+              disabled={selectedRooms.length === 0}
+              sx={{ py: 1.5, fontWeight: 'bold' }}
             >
               Reserve Now
             </Button>
           </div>
         </div>
       </div>
-
-      {/* Room Details Modal */}
-      <Dialog
-        open={!!selectedRoom}
-        onClose={() => setSelectedRoom(null)}
-        maxWidth="md"
-        fullWidth
-      >
-        {selectedRoom && (
-          <>
-            <DialogContent>
-              <IconButton
-                onClick={() => setSelectedRoom(null)}
-                sx={{ position: 'absolute', right: 8, top: 8 }}
-              >
-                <IoMdCloseCircleOutline />
-              </IconButton>
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                  <img
-                    src={selectedRoom.room_details.thumbnail_link}
-                    alt={selectedRoom.room_type}
-                    className="w-full h-auto rounded-lg"
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h5" gutterBottom>
-                    {selectedRoom.room_type} Room
-                  </Typography>
-                  <Typography variant="body1" paragraph>
-                    {selectedRoom.room_details.description}
-                  </Typography>
-                  
-                  <Divider sx={{ my: 2 }} />
-                  
-                  <Typography variant="h6" gutterBottom>
-                    Room Facilities
-                  </Typography>
-                  <Grid container spacing={1}>
-                    {roomFacilities.map((facility, index) => (
-                      <Grid item xs={6} key={index}>
-                        <div className="flex items-center">
-                          <span className="text-blue-500 mr-2">{facility.icon}</span>
-                          <span>{facility.name}</span>
-                        </div>
-                      </Grid>
-                    ))}
-                  </Grid>
-                  
-                  <Divider sx={{ my: 2 }} />
-                  
-                  <Typography variant="h6" gutterBottom>
-                    Pricing Details
-                  </Typography>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span>Base Price:</span>
-                      <span>${selectedRoom.room_details.price}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Taxes:</span>
-                      <span>Included</span>
-                    </div>
-                    <div className="flex justify-between font-bold">
-                      <span>Total per night:</span>
-                      <span>${selectedRoom.room_details.price}</span>
-                    </div>
-                  </div>
-                </Grid>
-              </Grid>
-              
-              <Divider sx={{ my: 3 }} />
-              
-              <Typography variant="h6" gutterBottom>
-                Policies
-              </Typography>
-              <Grid container spacing={2}>
-                {policies.map((policy, index) => (
-                  <Grid item xs={6} key={index}>
-                    <Paper elevation={0} className="p-2">
-                      <div className="flex items-center">
-                        <span className="text-blue-500 mr-2">{policy.icon}</span>
-                        <div>
-                          <div className="font-medium">{policy.title}</div>
-                          <div className="text-sm">{policy.time || policy.policy}</div>
-                        </div>
-                      </div>
-                    </Paper>
-                  </Grid>
-                ))}
-              </Grid>
-            </DialogContent>
-          </>
-        )}
-      </Dialog>
     </div>
   );
 };

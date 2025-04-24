@@ -6,6 +6,7 @@ import { IoMdPersonAdd } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import { IoCloudUpload } from "react-icons/io5";
 import { useAuth } from "../../../../../Context/Auth";
+import { se } from "date-fns/locale";
 
 const AddLeadPage = ({ update, setUpdate }) => {
     const { postData:postNewLead, loadingPost:loadingNewLead, response:responseNewLead} = usePost({ url: 'https://travelta.online/agent/leads/add' });
@@ -44,6 +45,9 @@ const AddLeadPage = ({ update, setUpdate }) => {
     const [selectedSource,setSelectedSource] = useState('')
     const [agetSales,setAgetSales] = useState([])
     const [selectedAgent,setSelectedAgent] = useState('')
+
+    const [selectedLead,setSelectedLead] = useState('')
+
 
     const navigate = useNavigate();
     
@@ -151,10 +155,13 @@ const AddLeadPage = ({ update, setUpdate }) => {
 
       postNewLead(formData, 'Lead Added Success');
   };
-  const handleAddLead = (leadId) => {
+  const handleAddLead = async (e) => {
+      e.preventDefault();
       // Add lead logic here
       const formData = new FormData();
-      formData.append('customer_id', leadId);
+      formData.append('customer_id', selectedLead);
+      formData.append('source_id', selectedSource);
+      formData.append('agent_sales_id', selectedAgent);
       postLeadList(formData, 'Lead Added Success');
   };
   const handleSearch = () => {
@@ -488,13 +495,24 @@ const AddLeadPage = ({ update, setUpdate }) => {
                                   <td className="py-2 text-center text-thirdColor">{lead.email || '-'}</td>
                                   <td className="py-2 text-center text-thirdColor">{lead.phone || '-'}</td>
                                   <td className="py-2 text-center text-thirdColor">{lead.gender || '-'}</td>
-                                  <td className="py-2 text-center flex justify-center items-center">
-                                    <button
-                                      onClick={() => handleAddLead(lead.id)}
-                                      className="flex gap-1 justify-center items-center text-mainColor font-bold hover:text-blue-600"
-                                    >
-                                      <IoMdPersonAdd /> Add Lead
-                                    </button>
+                                  <td  className={`py-2 flex justify-center items-center text-center border-b border-gray-200 hover:bg-gray-50 ${
+                                      selectedLead === lead.id ? 'bg-green-50' : ''
+                                    }`}>
+                                                                    <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      // Toggle selection - if already selected, deselect; otherwise select
+                                      setSelectedLead(selectedLead === lead.id ? null : lead.id);
+                                    }}
+                                    className={`flex gap-1 justify-center items-center font-bold ${
+                                      selectedLead === lead.id 
+                                        ? 'text-green-600' 
+                                        : 'text-mainColor hover:text-blue-600'
+                                    }`}
+                                  >
+                                    <IoMdPersonAdd /> 
+                                    {selectedLead === lead.id ? 'Selected' : 'Add Lead'}
+                                  </button>
                                   </td>
                                 </tr>
                               ))
@@ -502,6 +520,58 @@ const AddLeadPage = ({ update, setUpdate }) => {
                         </tbody>
                       </Table>
                     </TableContainer>
+
+                    {
+                      selectedLead && (
+                        <form className="w-full" onSubmit={handleAddLead}
+                            >
+                          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
+                      <TextField
+                    select
+                    label="Select Agent"
+                    value={selectedAgent}
+                    onChange={(e) => setSelectedAgent(e.target.value)}
+                    fullWidth
+                    >
+                    {agetSales.map((agetSale) => (
+                        <MenuItem key={agetSale.id} value={agetSale.id}>
+                            {agetSale.name}
+                        </MenuItem>
+                    ))}
+                  </TextField>
+                  <TextField
+                    select
+                    label="Select Source"
+                    value={selectedSource}
+                    onChange={(e) => setSelectedSource(e.target.value)}
+                    fullWidth
+                    >
+                    {sources.map((source) => (
+                        <MenuItem key={source.id} value={source.id}>
+                            {source.source}
+                        </MenuItem>
+                    ))}
+                  </TextField>
+                          </div>
+                          <div className="w-full flex items-center gap-x-4 mt-5">
+                            <div className="">
+                            <Button text={'Reset'} onClick={handleReset} className="bg-mainColor hover:bg-blue-600 hover:text-white">Reset</Button>
+                            </div>
+                            <div className="">
+                                <Button
+                                type="submit"
+                                variant="contained"
+                                fullWidth
+                                className="bg-mainColor hover:bg-blue-600 text-white"
+                            >
+                                Submit
+                            </Button>
+                            </div>
+                          </div>
+                        </form>
+                      )
+                    }
+                    
                 </div>
               )}
         </div>
