@@ -181,7 +181,7 @@ const handleToggleDescription = (roomIndex) => {
             <StaticLoader />
           </div>
         ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 p-4">
         {rooms.map((room, roomIndex) => (
             <div
             key={room.id}

@@ -11,6 +11,8 @@ export { default as CheckoutPage } from "./Dashboard/Checkout/CheckoutPage";
 //Booking
 //Manual Booking
 export { default as ManualBookingPage } from "./Dashboard/Booking/ManualBookingPage";
+export { default as EditManualBookingPage } from "./Dashboard/Booking/EditManualBookingPage";
+
 //Booking Engine
 export { default as BookingEngine } from "./Dashboard/Booking/BookingEngine";
 export { default as HotelBookingDetailsPage } from "./Dashboard/Booking/HotelBookingDetailsPage";

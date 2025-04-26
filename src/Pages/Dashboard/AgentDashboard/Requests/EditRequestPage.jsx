@@ -18,7 +18,7 @@ const EditRequestPage = () => {
   const { requestId } = useParams();
   const { refetch: refetchRequestData, loading: loadingRequestData, data: dataRequest } = useGet({ url:`https://travelta.online/agent/request/item/${requestId}` });
 
-  const { refetch: refetchList,loading: loadingList,data: requestList,} = useGet({ url: "https://travelta.online/agent/request/lists" });
+  const {refetch: refetchList,loading: loadingList,data: requestList,} = useGet({ url: "https://travelta.online/agent/request/lists" });
   const {postData: postDataHotel,loadingPost: loadingPostHotel,response: responseHotel,} = usePost({ url: `https://travelta.online/agent/request/update_hotel/${requestId}`});
   const {postData: postDataBus,loadingPost: loadingPostBus,response: responseBus,} = usePost({ url: `https://travelta.online/agent/request/update_bus/${requestId}`});
   const {postData: postDataVisa,loadingPost: loadingPostVisa,response: responseVisa,} = usePost({ url: `https://travelta.online/agent/request/update_visa/${requestId}` });

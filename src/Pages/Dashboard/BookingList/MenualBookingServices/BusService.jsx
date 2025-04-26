@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import StaticLoader from '../../../../Components/StaticLoader';
-import { FaFileExcel, FaSearch, FaFilter,FaCalendarAlt, } from "react-icons/fa";
+import { FaFileExcel, FaSearch, FaFilter,FaCalendarAlt, FaEdit} from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import * as XLSX from "xlsx";
 
@@ -271,6 +271,9 @@ const BusService = ({ data }) => {
                           </Link>
                         </div>
                       </td>
+                       <td className="text-center flex items-center justify-center mt-3 py-2 text-gray-600">
+                          <Link to={`/dashboard_agent/booking/manual_booking/edit_booking/${bus.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
+                          </td> 
                     </tr>
                   ))
                 )}

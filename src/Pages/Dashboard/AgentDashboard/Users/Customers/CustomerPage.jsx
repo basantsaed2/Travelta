@@ -231,7 +231,7 @@ const CustomerPage = ({ refetch, setUpdate }) => {
                       <td className="text-center py-2 text-gray-600">{customer?.country?.name || "-"}</td>
                       <td className="text-center py-2 text-gray-600">{customer?.city?.name || "-"}</td>
                       <td className="text-center py-2">
-                        <button onClick={() => navigate(`/dashboard_agent/users/customers/profiles/${customer?.id}`)}>
+                        <button onClick={() => navigate(`/dashboard_agent/users/customers/profile/${customer?.id}`)}>
                           <FaUserCircle className="w-7 h-7 text-gray-700 hover:text-blue-500 transition-all cursor-pointer" />
                         </button>
                       </td>

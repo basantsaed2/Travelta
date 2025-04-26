@@ -703,17 +703,18 @@ useEffect(() => {
   useEffect(() => {
     const pathName = location.pathname;
     const part = pathName.split("/");
-    const result = part.slice(0, 3).join("/");
+    const result = part.slice(0, 4).join("/");
   
     if (
       result === "/dashboard_agent/booking" &&
-      !["/dashboard_agent/booking/manual_booking", "/dashboard_agent/booking/booking_engine", "/dashboard_agent/booking/booking_engine/details"].includes(pathName)
+      !["/dashboard_agent/booking/manual_booking" , "/dashboard_agent/booking/booking_engine",
+      ].some((path) => pathName.startsWith(path))
     ) {
       handleClickBooking();
       navigate("/dashboard_agent/booking/manual_booking");
     }
-  }, [location.pathname]); // Fixed dependency
-  
+  }, [location]); // Fixed dependency
+
 
   /* Manual Booking */
   const handleClickManualBooking = useCallback(() => {

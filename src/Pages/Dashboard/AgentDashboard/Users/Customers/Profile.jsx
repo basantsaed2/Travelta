@@ -4,24 +4,25 @@ import { usePost } from '../../../../../Hooks/usePostJson';
 import StaticLoader from '../../../../../Components/StaticLoader';
 import {
   FaPhone, FaUser, FaWhatsapp, FaEnvelope, FaFlag, 
-  FaMapMarkerAlt, FaGlobe, FaUserTag, FaUserFriends, 
-  FaCalendarAlt, FaCheckCircle, FaEye, FaEdit,
-  FaChevronDown, FaChevronUp, FaCalendarCheck, FaSearch,FaPaperPlane ,FaInfoCircle 
+  FaMapMarkerAlt, FaGlobe,
+  FaCalendarAlt, FaEye, FaEdit,
+ FaCalendarCheck, FaSearch,FaPaperPlane ,FaInfoCircle 
 } from "react-icons/fa";
 import { TextField } from "@mui/material";
 import { MdClose, MdAdd } from "react-icons/md";
 import { AiOutlineEye } from "react-icons/ai";
 import { Link } from 'react-router-dom';
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
-
-const ProfileCustomer = ({ id }) => {
+import { useParams } from 'react-router-dom';
+const ProfileCustomer = () => {
+  const {id} = useParams();
   const { refetch: refetchCustomerProfile, loading: loadingCustomerProfile, data: CustomerProfile } = useGet({
     url: `https://travelta.online/agent/customer/profile/${id}`
   });
   const { postData, loadingPost, response } = usePost({ 
     url: 'https://travelta.online/agent/customer/upload_papers' 
   });
-  const { postData:postUpdate, loadingPost:loadingUpdate, response:responseUpdate } = usePost({ url: `https://travelta.online/agent/customer/profile/${id}`});
+  const { postData:postUpdate, loadingPost:loadingUpdate, response:responseUpdate } = usePost({ url: `https://travelta.online/agent/customer/update/${id}`});
 
   const [data, setData] = useState([]);
   const [requests, setRequests] = useState([]);
@@ -59,12 +60,12 @@ const ProfileCustomer = ({ id }) => {
   useEffect(() => {
     if (!loadingPost && response){
       setIsModalOpen(false);
+      refetchCustomerProfile();
     }
   }, [loadingPost,response]);
 
   useEffect(() => {
     if (!loadingUpdate && responseUpdate) {
-      refetchCustomerProfile();
       setShowPhoneModal(false);
       refetchCustomerProfile();
     }
@@ -161,7 +162,7 @@ const ProfileCustomer = ({ id }) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('phone', phone);
-    postUpdate(formData, 'Phone Number Change Request Sent successfully');
+    postUpdate(formData, 'Phone number change request sent successfully');
   };
 
   // Image modal handlers
@@ -192,18 +193,10 @@ const ProfileCustomer = ({ id }) => {
         <div className="flex flex-col md:flex-row gap-6 items-center">
           <div className="flex flex-col items-center w-full md:w-1/4 gap-3">
             <img 
-              src={data?.image_link || "https://via.placeholder.com/150"} 
+              src={data?.image_link || ''} 
               alt="Profile" 
               className="w-36 h-36 object-cover rounded-xl border border-gray-300 shadow-md" 
             />
-            <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-              data?.status === "active" ? "bg-green-100 text-green-700" : 
-              data?.status === "inactive" ? "bg-yellow-100 text-yellow-700" : 
-              "bg-red-100 text-red-700"
-            }`}>
-              <FaCheckCircle className="inline mr-1" />
-              {data?.status || "Unknown"}
-            </span>
           </div>
 
           {/* Customer Info */}
@@ -235,10 +228,10 @@ const ProfileCustomer = ({ id }) => {
                 [FaCalendarAlt, "Date Added", data?.date_added?.split(" ")[0]],
                 [FaCalendarCheck, "Total Bookings", data?.total_booking],  // Added total bookings
               ].map(([Icon, label, value], idx) => (
-                <p key={idx} className="flex items-start gap-2 text-gray-700 text-sm sm:text-base break-words min-w-0">
+                <div key={idx} className="flex items-start gap-2 text-gray-700 text-sm sm:text-base break-words min-w-0">
                   <Icon className="text-mainColor mt-1" />
                   <span><span className="font-semibold">{label}:</span> {value || "-"}</span>
-                </p>
+                </div>
               ))}
               
               {/* Upload Attachment Button - spans full width on mobile, fits grid on larger screens */}

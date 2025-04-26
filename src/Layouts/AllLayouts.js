@@ -10,6 +10,7 @@ export { default as CheckoutLayout } from "./CheckoutLayout/CheckoutLayout";
 //Booking
 //Manual Booking
 export { default as ManualBookingLayout } from "./BookingLayout/ManualBookingLayout";
+export { default as EditManualBookingLayout } from "./BookingLayout/EditManualBookingLayout";
 //Booking Engine
 export { default as BookingEngineLayout } from "./BookingLayout/BookingEngineLayout";
 export { default as HotelBookingDetailsLayout } from "./BookingLayout/HotelBookingDetailsLayout";

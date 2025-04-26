@@ -1070,7 +1070,6 @@
 
 // export default HotelBookingDetailsPage;
 
-
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { FaStar, FaMapMarkerAlt, FaWifi, FaParking, FaSwimmingPool, FaUtensils, FaSnowflake, FaDog, FaSmokingBan, FaRegSnowflake, FaChevronDown, FaChevronUp } from "react-icons/fa";
@@ -1079,29 +1078,24 @@ import { MdMeetingRoom, MdBathtub, MdBedroomParent, MdAirlineSeatReclineExtra } 
 import { GiMoneyStack, GiPayMoney, GiReceiveMoney } from "react-icons/gi";
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css';
-import { Box, Dialog, DialogContent, Grid, Typography, Button, Chip, Divider, Paper, IconButton, TextField } from "@mui/material";
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Dialog, DialogContent, Button, Chip, Divider, Paper, IconButton, TextField } from "@mui/material";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { usePost } from "../../../Hooks/usePostJson";
 
 const HotelBookingDetailsPage = () => {
   const location = useLocation();
   const hotel = location.state?.hotel;
-  const { postData, loadingPost, response } = usePost({
-    url: "https://travelta.online/agent/bookRoom",
-  });
+  const { postData, loadingPost, response } = usePost({url: "https://travelta.online/agent/agent/bookingEngine",});
   const { checkIn, checkOut, adults, children } = location.state || {};
-  
-  const [selectedRooms, setSelectedRooms] = useState([]);
+  const [selectedRoom, setSelectedRoom] = useState(null);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [checkInDate, setCheckInDate] = useState(checkIn ? new Date(checkIn) : null);
   const [checkOutDate, setCheckOutDate] = useState(checkOut ? new Date(checkOut) : null);
   const [totalAdults, setTotalAdults] = useState(adults || 2);
   const [totalChildren, setTotalChildren] = useState(children || 0);
-  const [expandedRoomIndex, setExpandedRoomIndex] = useState(null);
+  const [isRoomDetailsModalOpen, setIsRoomDetailsModalOpen] = useState(false);
+  const [selectedRoomDetails, setSelectedRoomDetails] = useState(null);
 
   useEffect(() => {
     console.log("Hotel", hotel);
@@ -1120,44 +1114,38 @@ const HotelBookingDetailsPage = () => {
     setIsImageModalOpen(true);
   };
 
-  const toggleRoomExpansion = (index) => {
-    setExpandedRoomIndex(expandedRoomIndex === index ? null : index);
+  const handleViewRoomDetails = (room) => {
+    setSelectedRoomDetails(room);
+    setIsRoomDetailsModalOpen(true);
   };
 
   const handleSelectRoom = (room) => {
-    // Check if room is already selected
-    const isSelected = selectedRooms.some(r => r.room_id === room.room_id);
-    
-    if (isSelected) {
-      // Remove room if already selected
-      setSelectedRooms(selectedRooms.filter(r => r.room_id !== room.room_id));
+    if (selectedRoom && selectedRoom.room_id === room.room_id) {
+      setSelectedRoom(null);
     } else {
-      // Add room with default quantity 1
-      setSelectedRooms([...selectedRooms, {
+      setSelectedRoom({
         ...room,
         quantity: 1,
         totalPrice: room.room_details.price
-      }]);
+      });
     }
   };
 
-  const handleQuantityChange = (roomId, newQuantity) => {
-    setSelectedRooms(selectedRooms.map(room => {
-      if (room.room_id === roomId) {
-        const availableQty = room.available_quantity;
-        const validatedQty = Math.min(Math.max(1, newQuantity), availableQty);
-        return {
-          ...room,
-          quantity: validatedQty,
-          totalPrice: validatedQty * room.room_details.price
-        };
-      }
-      return room;
-    }));
+  const handleQuantityChange = (newQuantity) => {
+    if (!selectedRoom) return;
+    
+    const availableQty = selectedRoom.available_quantity;
+    const validatedQty = Math.min(Math.max(1, newQuantity), availableQty);
+    
+    setSelectedRoom({
+      ...selectedRoom,
+      quantity: validatedQty,
+      totalPrice: validatedQty * selectedRoom.room_details.price
+    });
   };
 
   const calculateTotalPrice = () => {
-    return selectedRooms.reduce((sum, room) => sum + room.totalPrice, 0);
+    return selectedRoom ? selectedRoom.totalPrice : 0;
   };
 
   const renderAmenities = (amenities) => {
@@ -1171,6 +1159,35 @@ const HotelBookingDetailsPage = () => {
         ))}
       </div>
     );
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!selectedRoom) return;
+    
+    console.log("Booking data:", selectedRoom);
+    const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
+    
+    const bookingData = {
+      room_id: selectedRoom.room_id,
+      check_in: checkInDate.toISOString().split('T')[0],
+      check_out: checkOutDate.toISOString().split('T')[0],
+      quantity: selectedRoom.quantity,
+      // from_supplier_id: selectedRoom.room_details.supplier_id,
+      // country_id: selectedRoom.room_details.country_id,
+      // city_id: selectedRoom.room_details.city_id,
+      hotel_id: selectedRoom.room_details.hotel_id,
+      to_agent_id: selectedRoom.room_details.agent_id, // Replace with actual agent ID if needed
+      to_customer_id: null,
+      room_type: selectedRoom.room_type,
+      no_of_adults: totalAdults,
+      no_of_children: totalChildren,
+      no_of_nights: nights,
+      // currency_id: selectedRoom.room_details.currency_id, // Assuming USD
+      amount: calculateTotalPrice()
+    };
+    
+    postData(bookingData);
   };
 
   return (
@@ -1314,12 +1331,12 @@ const HotelBookingDetailsPage = () => {
                       
                       <div className="mt-4">
                         <Button 
-                          variant={selectedRooms.some(r => r.room_id === room.room_id) ? "outlined" : "contained"}
-                          color={selectedRooms.some(r => r.room_id === room.room_id) ? "secondary" : "primary"}
+                          variant={selectedRoom?.room_id === room.room_id ? "outlined" : "contained"}
+                          color={selectedRoom?.room_id === room.room_id ? "secondary" : "primary"}
                           onClick={() => handleSelectRoom(room)}
                           size="small"
                         >
-                          {selectedRooms.some(r => r.room_id === room.room_id) ? 'Selected' : 'Select Room'}
+                          {selectedRoom?.room_id === room.room_id ? 'Selected' : 'Select Room'}
                         </Button>
                         
                         <Button 
@@ -1327,37 +1344,13 @@ const HotelBookingDetailsPage = () => {
                           color="primary" 
                           size="small" 
                           className="ml-2"
-                          onClick={() => toggleRoomExpansion(index)}
-                          endIcon={expandedRoomIndex === index ? <FaChevronUp size={14} /> : <FaChevronDown size={14} />}
+                          onClick={() => handleViewRoomDetails(room)}
                         >
-                          {expandedRoomIndex === index ? 'Less details' : 'More details'}
+                          View Details
                         </Button>
                       </div>
                     </div>
                   </div>
-                  
-                  {/* Expanded Room Details */}
-                  {expandedRoomIndex === index && (
-                    <div className="mt-4 pt-4 border-t border-gray-200">
-                      <h4 className="font-medium mb-2">Room Description</h4>
-                      <p className="text-gray-700 mb-4">
-                        {room.room_details.description || "Comfortable room with modern amenities."}
-                      </p>
-                      
-                      <h4 className="font-medium mb-2">Room Amenities</h4>
-                      {renderAmenities(room.room_details.amenity)}
-                      
-                      <h4 className="font-medium mt-4 mb-2">Policies</h4>
-                      <div className="bg-blue-50 p-3 rounded-md">
-                        <p className="text-sm text-gray-700 mb-2">
-                          <strong>Cancellation:</strong> {room.room_details.cancelation}
-                        </p>
-                        <p className="text-sm text-gray-700">
-                          <strong>Check-in/out:</strong> {room.room_details.check_in} / {room.room_details.check_out}
-                        </p>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </Paper>
             ))}
@@ -1394,43 +1387,39 @@ const HotelBookingDetailsPage = () => {
               </div>
             </div>
 
-            {/* Selected Rooms */}
+            {/* Selected Room */}
             <div className="mb-4">
-              <h3 className="font-medium text-gray-700 mb-2">Selected Rooms</h3>
-              {selectedRooms.length === 0 ? (
-                <p className="text-sm text-gray-500 italic">No rooms selected yet</p>
+              <h3 className="font-medium text-gray-700 mb-2">Selected Room</h3>
+              {!selectedRoom ? (
+                <p className="text-sm text-gray-500 italic">No room selected yet</p>
               ) : (
-                <div className="space-y-3">
-                  {selectedRooms.map((room, index) => (
-                    <div key={index} className="border-b pb-2">
-                      <div className="flex justify-between">
-                        <span className="font-medium">{room.room_type}</span>
-                        <span className="text-blue-600">${room.room_details.price}</span>
-                      </div>
-                      <div className="flex justify-between items-center mt-1">
-                        <span className="text-sm text-gray-600">Quantity:</span>
-                        <select 
-                          className="border rounded p-1 text-sm"
-                          value={room.quantity}
-                          onChange={(e) => handleQuantityChange(room.room_id, parseInt(e.target.value))}
-                        >
-                          {Array.from({ length: room.available_quantity }, (_, i) => (
-                            <option key={i+1} value={i+1}>{i+1}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="text-right mt-1">
-                        <Button 
-                          variant="text" 
-                          color="error" 
-                          size="small"
-                          onClick={() => handleSelectRoom(room)}
-                        >
-                          Remove
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
+                <div className="border-b pb-2">
+                  <div className="flex justify-between">
+                    <span className="font-medium">{selectedRoom.room_type}</span>
+                    <span className="text-blue-600">${selectedRoom.room_details.price}</span>
+                  </div>
+                  <div className="flex justify-between items-center mt-1">
+                    <span className="text-sm text-gray-600">Quantity:</span>
+                    <select 
+                      className="border rounded p-1 text-sm"
+                      value={selectedRoom.quantity}
+                      onChange={(e) => handleQuantityChange(parseInt(e.target.value))}
+                    >
+                      {Array.from({ length: selectedRoom.available_quantity }, (_, i) => (
+                        <option key={i+1} value={i+1}>{i+1}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="text-right mt-1">
+                    <Button 
+                      variant="text" 
+                      color="error" 
+                      size="small"
+                      onClick={() => setSelectedRoom(null)}
+                    >
+                      Remove
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
@@ -1439,12 +1428,12 @@ const HotelBookingDetailsPage = () => {
             <div className="border-t pt-4">
               <h3 className="font-medium text-gray-700 mb-2">Price Summary</h3>
               <div className="space-y-2">
-                {selectedRooms.map((room, index) => (
-                  <div key={index} className="flex justify-between text-sm">
-                    <span>{room.quantity}x {room.room_type}</span>
-                    <span>${room.totalPrice}</span>
+                {selectedRoom && (
+                  <div className="flex justify-between text-sm">
+                    <span>{selectedRoom.quantity}x {selectedRoom.room_type}</span>
+                    <span>${selectedRoom.totalPrice}</span>
                   </div>
-                ))}
+                )}
                 <Divider />
                 <div className="flex justify-between font-bold">
                   <span>Total</span>
@@ -1459,14 +1448,98 @@ const HotelBookingDetailsPage = () => {
               fullWidth
               size="large"
               className="mt-6"
-              disabled={selectedRooms.length === 0}
+              disabled={!selectedRoom}
               sx={{ py: 1.5, fontWeight: 'bold' }}
+              onClick={handleSubmit}
             >
               Reserve Now
             </Button>
           </div>
         </div>
       </div>
+
+      {/* Room Details Modal */}
+      <Dialog
+        open={isRoomDetailsModalOpen}
+        onClose={() => setIsRoomDetailsModalOpen(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogContent>
+          <IconButton
+            onClick={() => setIsRoomDetailsModalOpen(false)}
+            sx={{ position: 'absolute', right: 8, top: 8 }}
+          >
+            <IoMdCloseCircleOutline />
+          </IconButton>
+          
+          {selectedRoomDetails && (
+            <div className="p-4">
+              <h2 className="text-2xl font-bold mb-4">{selectedRoomDetails.room_type} Room</h2>
+              
+              <div className="mb-6">
+                <img
+                  src={selectedRoomDetails.room_details.thumbnail_link}
+                  alt={selectedRoomDetails.room_type}
+                  className="w-full h-64 object-cover rounded-lg mb-4"
+                />
+                
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="flex items-center">
+                    <IoIosPeople className="mr-2 text-gray-600" />
+                    <span>Max {selectedRoomDetails.room_details.max_adults} adults, {selectedRoomDetails.room_details.max_children} children</span>
+                  </div>
+                  <div className="flex items-center">
+                    <MdMeetingRoom className="mr-2 text-gray-600" />
+                    <span>{selectedRoomDetails.available_quantity} rooms available</span>
+                  </div>
+                  <div className="flex items-center">
+                    <GiMoneyStack className="mr-2 text-gray-600" />
+                    <span className="font-bold text-blue-600">${selectedRoomDetails.room_details.price} per night</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mb-6">
+                <h3 className="text-xl font-semibold mb-2">Room Description</h3>
+                <p className="text-gray-700">
+                  {selectedRoomDetails.room_details.description || "Comfortable room with modern amenities."}
+                </p>
+              </div>
+              
+              <div className="mb-6">
+                <h3 className="text-xl font-semibold mb-2">Room Amenities</h3>
+                {renderAmenities(selectedRoomDetails.room_details.amenity)}
+              </div>
+              
+              <div className="mb-6">
+                <h3 className="text-xl font-semibold mb-2">Policies</h3>
+                <div className="bg-blue-50 p-4 rounded-md">
+                  <p className="text-gray-700 mb-2">
+                    <strong>Cancellation:</strong> {selectedRoomDetails.room_details.cancelation || "Free cancellation available"}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong>Check-in/out:</strong> {selectedRoomDetails.room_details.check_in || "2:00 PM"} / {selectedRoomDetails.room_details.check_out || "12:00 PM"}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex justify-end">
+                <Button 
+                  variant="contained" 
+                  color="primary"
+                  onClick={() => {
+                    handleSelectRoom(selectedRoomDetails);
+                    setIsRoomDetailsModalOpen(false);
+                  }}
+                >
+                  {selectedRoom?.room_id === selectedRoomDetails.room_id ? 'Selected' : 'Select This Room'}
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

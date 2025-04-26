@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import StaticLoader from '../../../../Components/StaticLoader';
-import { FaFileExcel, FaSearch, FaFilter,FaCalendarAlt} from "react-icons/fa";
+import { FaFileExcel, FaSearch, FaFilter,FaCalendarAlt,FaEdit} from "react-icons/fa";
 import * as XLSX from "xlsx";
 import { Link } from 'react-router-dom';
 
@@ -107,7 +107,7 @@ const FlightService = ({ data }) => {
 
   // Unique statuses for filter dropdown
   const uniqueStatus = [...new Set(flights.map(flight => flight.status).filter(Boolean))];
-  const headers = ['Code', 'Airline', 'Country','Route','Depature', 'Class', 'Status', 'Payment', 'Total Price', 'Details'];
+  const headers = ['Code', 'Airline', 'Country','Route','Depature', 'Class', 'Status', 'Payment', 'Total Price', 'Details','Action'];
 
   return (
     <div className="w-full pb-5 flex items-start justify-start overflow-x-scroll scrollSection">
@@ -230,12 +230,15 @@ const FlightService = ({ data }) => {
                       <td className="text-center py-2 text-gray-600">{flight?.code || "-"}</td>
                       <td className="text-center py-2 text-gray-600">{flight?.airline || "-"}</td>
                       <td className="text-center py-2 text-gray-600">{flight?.country || "-"}</td>
-                      <td className="text-center py-2 text-gray-600">{flight.from_to.map((route, index) => (
-                        <span key={index}>
+                      <td className="text-center py-2 text-gray-600">
+                      {Array.isArray(flight.from_to) &&
+                        flight.from_to.map((route, index) => (
+                          <span key={index}>
                             {route.from} → {route.to}
-                        </span>
+                            {index < flight.from_to.length - 1 && ', '}
+                          </span>
                         ))}
-                        </td>
+                    </td>
                       <td className="text-center py-2 text-gray-600">{flight?.depature || "-"}</td>
                       <td className="text-center py-2 text-gray-600">{flight?.flight_class || "-"}</td>
                       <td className="text-center py-2">
@@ -266,6 +269,9 @@ const FlightService = ({ data }) => {
                           </Link>
                         </div>
                       </td>
+                      <td className="text-center flex items-center justify-center mt-3 py-2 text-gray-600">
+                      <Link to={`/dashboard_agent/booking/manual_booking/edit_booking/${flight.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
+                      </td> 
                     </tr>
                   ))
                 )}

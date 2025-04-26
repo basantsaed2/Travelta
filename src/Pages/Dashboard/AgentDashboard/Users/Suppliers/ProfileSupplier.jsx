@@ -371,21 +371,21 @@ const ProfileSupplier = ({ id }) => {
       {/* Profile Card */}
       <div className="shadow-lg w-full rounded-2xl p-4 md:p-6 border border-gray-300 transition-all hover:shadow-2xl relative bg-white flex flex-col md:flex-row gap-6 items-center">
         {/* Left: Profile Image */}
-        <div className='w-full md:w-1/2 flex flex-col gap-3'>
+        {/* <div className='w-full md:w-1/2 flex flex-col gap-3'>
           <div className="relative flex justify-center">
             <div className="w-36 h-36 rounded-full bg-blue-100 flex items-center justify-center">
               <FaUser className="text-blue-500 text-5xl" />
             </div>
           </div>
           <h3 className="text-xl font-semibold text-mainColor text-center">{data?.name || '_'}</h3>
-        </div>
+        </div> */}
 
         {/* Right: Supplier Details */}
         <div className="w-full space-y-2">
           <span className="inline-block bg-green-200 text-green-700 text-sm font-medium px-3 py-1 rounded-full">Active</span>
 
           {/* Contact Info */}
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {/* Phones */}
             <div>
               {data?.phones?.map((phone, i) => (

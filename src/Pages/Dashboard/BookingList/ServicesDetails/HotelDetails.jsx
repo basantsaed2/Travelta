@@ -1,5 +1,5 @@
 import React from "react";
-import { FaHotel,FaClipboardList ,FaBed ,FaBuilding ,FaFileDownload,FaUser,FaPhone,FaEnvelope  } from 'react-icons/fa';
+import { FaHotel,FaStar ,FaClipboardList ,FaBed ,FaBuilding ,FaFileDownload,FaUser,FaPhone,FaEnvelope  } from 'react-icons/fa';
 
 const HotelDetails = (hotel) => {
     return (

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import StaticLoader from '../../../../Components/StaticLoader';
-import { FaFileExcel, FaSearch, FaFilter,FaCalendarAlt} from "react-icons/fa";
+import { FaFileExcel, FaSearch, FaFilter,FaCalendarAlt,FaStar ,FaEdit} from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import * as XLSX from "xlsx";
 import { useAuth } from '../../../../Context/Auth';
@@ -119,7 +119,7 @@ const HotelService = ({ data }) => {
 
   // Unique statuses for filter dropdown
   const uniqueStatus = [...new Set(hotels.map(hotel => hotel.status).filter(Boolean))];
-  const headers = ['Code', 'Hotel', 'Country', 'Check In', 'Check Out', 'Status', 'Payment', 'Total Price', 'Details'];
+  const headers = ['Code', 'Hotel', 'Country', 'Check In', 'Check Out', 'Status', 'Payment', 'Total Price', 'Details','Action'];
 
   return (
     <div className="w-full pb-5 flex items-start justify-start overflow-x-scroll scrollSection">
@@ -272,6 +272,9 @@ const HotelService = ({ data }) => {
                           </Link>
                         </div>
                       </td>
+                       <td className="flex items-center justify-center py-2 text-gray-600">
+                        <Link to={`/dashboard_agent/booking/manual_booking/edit_booking/${hotel.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
+                        </td> 
                     </tr>
                   ))
                 )}
