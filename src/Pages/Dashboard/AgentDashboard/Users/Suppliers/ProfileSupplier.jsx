@@ -318,10 +318,15 @@ import { MdClose, MdAdd } from "react-icons/md";
 import { AiOutlineEye } from "react-icons/ai";
 import { Link, useNavigate } from 'react-router-dom';
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
+import { usePost } from '../../../../../Hooks/usePostJson';
+import { TextField } from "@mui/material";
 
 const ProfileSupplier = ({ id }) => {
   const { refetch: refetchSupplierProfile, loading: loadingSupplierProfile, data: SupplierProfile } = useGet({
     url: `https://travelta.online/agent/supplier/profile/${id}`
+  });
+  const { postData, loadingPost, response } = usePost({ 
+    url: 'https://travelta.online/agent/supplier/upload_papers' 
   });
   
   const [data, setData] = useState({});
@@ -335,6 +340,13 @@ const ProfileSupplier = ({ id }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [copiedItem, setCopiedItem] = useState(null);
+
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [attachments, setAttachments] = useState([{ id: Date.now(), type: "" }]);
+    const [showImage, setShowImage] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -350,6 +362,13 @@ const ProfileSupplier = ({ id }) => {
     }
   }, [SupplierProfile]);
 
+   useEffect(() => {
+      if (!loadingPost && response){
+        setIsModalOpen(false);
+        refetchSupplierProfile();
+      }
+    }, [loadingPost,response]);
+
   const copyToClipboard = (text, type) => {
     navigator.clipboard.writeText(text);
     setCopiedItem(type);
@@ -361,6 +380,55 @@ const ProfileSupplier = ({ id }) => {
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
+
+    // Attachment handling
+    const convertFileToBase64 = (file, callback) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => callback(reader.result);
+    };
+  
+    const handleFileChange = (e, id) => {
+      const file = e.target.files[0];
+      if (file) {
+        convertFileToBase64(file, (base64) => {
+          setAttachments(prev => prev.map(item => 
+            item.id === id ? { ...item, file: base64 } : item
+          ));
+        });
+      }
+    };  
+  
+    const handleTypeChange = (e, id) => {
+      setAttachments(prev => prev.map(item => 
+        item.id === id ? { ...item, type: e.target.value } : item
+      ));
+    };
+  
+    const addAttachment = () => {
+      setAttachments([...attachments, { id: Date.now(), type: "" }]);
+    };
+    const removeAttachment = (id) => {
+      if (attachments.length > 1) {
+        setAttachments(attachments.filter(item => item.id !== id));
+      }
+    };
+
+  const handleSubmit = async (e) => { 
+    e.preventDefault();
+    const formData = new FormData();
+
+    attachments.forEach((attachment, index) => {
+      if (attachment.file) {
+        formData.append(`images[${index}][image]`, attachment.file);
+      }
+      formData.append(`images[${index}][type]`, attachment.type);
+      formData.append(`images[${index}][supplier_id]`, id);
+    });
+
+    postData(formData, 'Attachments Added Success');
+ 
+  };
 
   if (loadingSupplierProfile) {
     return <StaticLoader />;
@@ -705,6 +773,72 @@ const ProfileSupplier = ({ id }) => {
           </div>
         </Dialog>
       )}
+
+       {/* Upload Attachments Modal */}
+        {isModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 p-4">
+            <div className="relative w-full max-w-xl bg-white rounded-xl shadow-2xl p-6 overflow-y-auto max-h-[80vh]">
+              <button 
+                onClick={() => setIsModalOpen(false)} 
+                className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+              >
+                <MdClose size={28} />
+              </button>
+              <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Upload Attachments</h2>
+              <div className="space-y-4">
+                {attachments.map((attachment, index) => (
+                  <div 
+                    key={attachment.id} 
+                    className="flex flex-col md:flex-row items-start md:items-center gap-4 border p-4 rounded-lg shadow-sm"
+                  >
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <span className="text-lg font-semibold text-gray-700">{index + 1}.</span>
+                      <TextField
+                        label="Image Type"
+                        variant="outlined"
+                        size="small"
+                        className="w-full sm:w-48"
+                        value={attachment.type}
+                        onChange={(e) => handleTypeChange(e, attachment.id)}
+                      />
+                    </div>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full">
+                      <input
+                        type="file"
+                        accept="image/*, application/pdf"
+                        onChange={(e) => handleFileChange(e, attachment.id)}
+                        className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+                      />
+                      {attachments.length > 1 && index > 0 && (
+                        <button 
+                          onClick={() => removeAttachment(attachment.id)} 
+                          className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
+                        >
+                          <MdClose size={16} />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <button 
+                  onClick={addAttachment} 
+                  className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
+                >
+                  <MdAdd size={20} /> Add More
+                </button>
+                <button 
+                  onClick={handleSubmit} 
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg"
+                  disabled={loadingPost}
+                >
+                  {loadingPost ? 'Uploading...' : 'Submit'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
     </div>
   );
 };
