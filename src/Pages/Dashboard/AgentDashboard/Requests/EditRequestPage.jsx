@@ -79,6 +79,7 @@ const EditRequestPage = () => {
   const [flightAirline, setFlightAirline] = useState("");
   const [flightTicketNumber, setFlightTicketNumber] = useState("");
   const [flightRefPNR, setFlightRefPNR] = useState("");
+  const [singleFlight, setSingleFlight] = useState({ from: "", to: "" });
 
   // To track the hotel details
   const [hotelName, setHotelName] = useState("");
@@ -160,86 +161,209 @@ const EditRequestPage = () => {
       setSelectedCurrency(request.currency)
       setExpectedRevenue(request.expected_revenue)
 
-    if(request.service?.service_name === "Bus" && request.bus){
-      setBusFrom(request.bus?.from);
-      setBusTo(request.bus?.to);
-      setDeparture(request.bus?.departure);
-      setArrival(request.bus?.arrival);
-      setBusAdultsNumber(request.bus?.adults);
-      setBusChildrenNumber(request.bus?.childreen);
-      setAdultPrice(request.bus?.adult_price);
-      setChildPrice(request.bus?.child_price);
-      setBusName(request.bus?.bus);
-      setBusNumber(request.bus?.bus_number);
-      setDriverPhone(request.bus?.driver_phone);
+      if (request.service?.service_name === "Hotel" && request.hotel) {
+        const hotel = request.hotel;
+        
+        // Set basic hotel information
+        setHotelName(hotel.hotel_name || "");
+        setCheckInDate(hotel.check_in || "");
+        setCheckOutDate(hotel.check_out || "");
+        setTotalNights(hotel.nights || "0");
+        setRoomQuantity(hotel.room_quantity || "1");
+        // Handle room types (split string if needed)
+        const roomTypes = typeof hotel.room_type === 'string' 
+          ? hotel.room_type.split(',') 
+          : Array.isArray(hotel.room_type) 
+            ? hotel.room_type 
+            : [];
+        setRoomTypes(roomTypes);
+        
+        // Set guest numbers with fallbacks
+        setAdultsHotelNumber(hotel.adults ? String(hotel.adults) : "1");
+        setChildrenHotelNumber(hotel.childreen ? String(hotel.childreen) : "0");
+      
+        // Map adults data with proper fallbacks
+        const mappedAdults = Array.isArray(request.adults)
+          ? request.adults.map((adult) => ({
+              title: adult.title || "",
+              firstName: adult.first_name || "",
+              lastName: adult.last_name || "",
+            }))
+          : [];
+        
+        // Map children data with proper fallbacks
+        const mappedChildren = Array.isArray(request.children)
+          ? request.children.map((child) => ({
+              age: child.age ? String(child.age) : "",
+              firstName: child.first_name || "",
+              lastName: child.last_name || "",
+            }))
+          : [];
+        
+        // Set the mapped data
+        setHotelAdults(mappedAdults);
+        setHotelChildren(mappedChildren);
+      }
+      if(request.service?.service_name === "Bus" && request.bus){
+        setBusFrom(request.bus?.from);
+        setBusTo(request.bus?.to);
+        setDeparture(request.bus?.departure);
+        setArrival(request.bus?.arrival);
+        setBusAdultsNumber(request.bus?.adults);
+        setBusChildrenNumber(request.bus?.childreen);
+        setAdultPrice(request.bus?.adult_price);
+        setChildPrice(request.bus?.child_price);
+        setBusName(request.bus?.bus);
+        setBusNumber(request.bus?.bus_number);
+        setDriverPhone(request.bus?.driver_phone);
+        const mappedAdults = Array.isArray(request.adults)
+        ? request.adults.map((adult) => ({
+            selectedTitle: adult.title || "",
+            firstName: adult.first_name || "",
+            lastName: adult.last_name || "",
+          }))
+        : [];
+      const mappedChildren = Array.isArray(request.children)
+        ? request.children.map((child) => ({
+            age: child.age || "",
+            firstName: child.first_name || "",
+            lastName: child.last_name || "",
+          }))
+        : [];
+      setBusAdults(mappedAdults);
+      setBusChildren(mappedChildren);
+      }
+      if(request.service?.service_name === "Tour" && request.tour){
+        const tour =request.tour;
+        setTour(tour.tour);
+        setSelectedTourType(tour.type);
+        setTourAdultsNumber(tour.adults);
+        setTourChildrenNumber(tour.childreen);
+        setTourAdultPrice(tour.adult_price);
+        setTourChildPrice(tour.child_price);
+
+      // Set nested arrays if available
+      if (Array.isArray(tour.bus)) {
+        const busData = tour.bus.map((busItem) => ({
+          transportation: busItem.transportation || "",
+          seats: busItem.seats || "",
+          ...(busItem.transportation === 'flight' ? { departure: busItem.departure } : {}),
+        }));
+        setBuses(busData);
+      }
+
+      if (Array.isArray(tour.hotel)) {
+        const hotelData = tour.hotel.map((hotelItem) => ({
+          destination: hotelItem.destination || "",
+          hotel_name: hotelItem.hotel_name || "",
+          room_type: hotelItem.room_type || "",
+          check_in: hotelItem.check_in || "",
+          check_out: hotelItem.check_out || "",
+          nights: hotelItem.nights || "",
+        }));
+        setHotels(hotelData);
+      }
       const mappedAdults = Array.isArray(request.adults)
-      ? request.adults.map((adult) => ({
-          selectedTitle: adult.title || "",
-          firstName: adult.first_name || "",
-          lastName: adult.last_name || "",
-        }))
-      : [];
-     const mappedChildren = Array.isArray(request.children)
-       ? request.children.map((child) => ({
-           age: child.age || "",
-           firstName: child.first_name || "",
-           lastName: child.last_name || "",
-         }))
-       : [];
-     setBusAdults(mappedAdults);
-     setBusChildren(mappedChildren);
-    }
-    // const [transportationDeparture, setTransportationDeparture] = useState("");
-    if(request.service?.service_name === "Tour" && request.tour){
-      const tour =request.tour;
-      setTour(tour.tour);
-      setSelectedTourType(tour.type);
-      setTourAdultsNumber(tour.adults);
-      setTourChildrenNumber(tour.childreen);
-      setTourAdultPrice(tour.adult_price);
-      setTourChildPrice(tour.child_price);
-
-    // Set nested arrays if available
-    if (Array.isArray(tour.bus)) {
-      const busData = tour.bus.map((busItem) => ({
-        transportation: busItem.transportation || "",
-        seats: busItem.seats || "",
-        ...(busItem.transportation === 'flight' ? { departure: busItem.departure } : {}),
-      }));
-      setBuses(busData);
-    }
-
-    if (Array.isArray(tour.hotel)) {
-      const hotelData = tour.hotel.map((hotelItem) => ({
-        destination: hotelItem.destination || "",
-        hotel_name: hotelItem.hotel_name || "",
-        room_type: hotelItem.room_type || "",
-        check_in: hotelItem.check_in || "",
-        check_out: hotelItem.check_out || "",
-        nights: hotelItem.nights || "",
-      }));
-      setHotels(hotelData);
-    }
-    const mappedAdults = Array.isArray(request.adults)
-      ? request.adults.map((adult) => ({
-          selectedTitle: adult.title || "",
-          firstName: adult.first_name || "",
-          lastName: adult.last_name || "",
-        }))
-      : [];
-    const mappedChildren = Array.isArray(request.children)
-      ? request.children.map((child) => ({
-          age: child.age || "",
-          firstName: child.first_name || "",
-          lastName: child.last_name || "",
-        }))
-      : [];
-      setTourAdults(mappedAdults);
-      setTourChildren(mappedChildren);
-    }
-     
-    }
-    console.log("dataRequest", dataRequest);
+        ? request.adults.map((adult) => ({
+            selectedTitle: adult.title || "",
+            firstName: adult.first_name || "",
+            lastName: adult.last_name || "",
+          }))
+        : [];
+      const mappedChildren = Array.isArray(request.children)
+        ? request.children.map((child) => ({
+            age: child.age || "",
+            firstName: child.first_name || "",
+            lastName: child.last_name || "",
+          }))
+        : [];
+        setTourAdults(mappedAdults);
+        setTourChildren(mappedChildren);
+      }
+      if(request.service?.service_name === "Visa" && request.visa){
+        const visa =request.visa;
+        setVisaCountry(visa.country);
+        setVisaTravelDate(visa.travel_date);
+        setVisaAppointmentDate(visa.appointment_date);
+        setVisaAdultsNumber(visa.adults);
+        setVisaChildrenNumber(visa.childreen);
+        const mappedAdults = Array.isArray(request.adults)
+          ? request.adults.map((adult) => ({
+              selectedTitle: adult.title || "",
+              firstName: adult.first_name || "",
+              lastName: adult.last_name || "",
+            }))
+          : [];
+        const mappedChildren = Array.isArray(request.children)
+          ? request.children.map((child) => ({
+              age: child.age || "",
+              firstName: child.first_name || "",
+              lastName: child.last_name || "",
+            }))
+          : [];
+        setVisaAdults(mappedAdults);
+        setVisaChildren(mappedChildren);
+      }
+      if(request.service?.service_name === "Flight" && request.flight){
+        const flight =request.flight;
+        setSelectedFlightType(flight.type);
+        setSelectedFlightDirection(flight.direction);
+        setFlightDeparture(flight.departure);
+        setFlightArrival(flight.arrival);
+        setFlightChildrenNumber(flight.childreen);
+        setFlightAdultsNumber(flight.adults);
+        setFlightInfants(flight.infants);
+        setFlightAdultPrice(flight.adult_price);
+        setFlightChildPrice(flight.child_price);
+        setFlightClass(flight.class);
+        setFlightAirline(flight.airline);
+        setFlightTicketNumber(flight.ticket_number);
+        setFlightRefPNR(flight.ref_pnr);
+        const mappedAdults = Array.isArray(request.adults)
+          ? request.adults.map((adult) => ({
+              selectedTitle: adult.title || "",
+              firstName: adult.first_name || "",
+              lastName: adult.last_name || "",
+            }))
+          : [];
+        const mappedChildren = Array.isArray(request.children)
+          ? request.children.map((child) => ({
+              age: child.age || "",
+              firstName: child.first_name || "",
+              lastName: child.last_name || "",
+            }))
+          : [];
+        setFlightAdults(mappedAdults);
+        setFlightChildren(mappedChildren);
+        if (flight.direction === "multi_city") {
+          const parsedFlights = flight.from_to 
+            ? JSON.parse(flight.from_to) 
+            : [];
+          setMultiCityFlights(parsedFlights);
+        } else {
+          const parsedFlights = flight.from_to 
+            ? JSON.parse(flight.from_to) 
+            : [];
+          setSingleFlight(parsedFlights[0] || { from: "", to: "" });
+        }
+        if(request.adults && request.adults.length > 0) {
+          const adultsData = request.adults.map((adult) => ({
+            title: adult.title,
+            firstName: adult.first_name,
+            lastName: adult.last_name,
+          }));
+          setFlightAdults(adultsData); // Set the flight adults data
+        }
+        if(request.children && request.children.length > 0) {
+          const childrenData = request.children.map((child) => ({
+            age: child.age,
+            firstName: child.first_name,
+            lastName: child.last_name,
+          }));
+          setFlightChildren(childrenData); // Set the flight children data
+        }
+      }
+  }console.log("dataRequest", dataRequest);
   }, [dataRequest]);
 
   const handleSubmit = (e) => {
@@ -280,7 +404,7 @@ const EditRequestPage = () => {
       // Append adults and children data for Hotel
       formData.append("adult_data", JSON.stringify(adults_data));
       formData.append("child_data", JSON.stringify(children_data));
-      postDataHotel(formData, "Hotel Request Added successful");
+      postDataHotel(formData, "Hotel Request Updated successful");
     }
     // Append Bus fields to FormData
     else if (selectedService.service_name.toLowerCase() === "bus") {
@@ -314,70 +438,7 @@ const EditRequestPage = () => {
       // Append adults and children data for Bus
       formData.append("adult_data", JSON.stringify(adults_data));
       formData.append("child_data", JSON.stringify(children_data));
-      postDataBus(formData, "Bus Request Added successful");
-    }
-    // Append Visa fields to FormData
-    else if (selectedService?.service_name.toLowerCase() === "visa") {
-      formData.append("country", visaCountry);
-      formData.append("travel_date", visaTravelDate);
-      formData.append("appointment_date", visaAppointmentDate);
-      formData.append("notes", visaNotes);
-      formData.append("childreen", visaChildrenNumber);
-      formData.append("adults", visaAdultsNumber);
-      const adults_data = visaAdults.map((adult) => ({
-          title: adult.selectedTitle,
-          first_name: adult.firstName,
-          last_name: adult.lastName,
-      }));
-      const children_data = visaChildren.map((child) => ({
-          age: child.age,
-          first_name: child.firstName,
-          last_name: child.lastName,
-      }));
-      formData.append("adult_data", JSON.stringify(adults_data));
-      formData.append("child_data", JSON.stringify(children_data));
-      postDataVisa(formData, "Visa Request Added successful");
-    }
-    // Append Flight fields to FormData
-    else if (selectedService.service_name.toLowerCase() === "flight") {
-      formData.append("type", selectedFlightType);
-      formData.append("departure", flightDeparture);
-      formData.append("direction", selectedFlightDirection);
-      formData.append("childreen", flightChildrenNumber);
-      formData.append("adults", flightAdultsNumber);
-      formData.append("infants", flightInfants);
-      formData.append("adult_price", flightAdultPrice);
-      formData.append("child_price", flightChildPrice);
-      formData.append("class", flightClass);
-      formData.append("airline", flightAirline);
-      formData.append("ticket_number", flightTicketNumber);
-      formData.append("ref_pnr", flightRefPNR);
-      // formData.append("notes", notesFlight);
-
-      const adults_data = flightAdults.map((adult) => ({
-        title: adult.selectedTitle,
-        first_name: adult.firstName,
-        last_name: adult.lastName,
-      }));
-      const children_data = flightChildren.map((child) => ({
-        age: child.age,
-        first_name: child.firstName,
-        last_name: child.lastName,
-      }));
-      formData.append("adult_data", JSON.stringify(adults_data));
-      formData.append("child_data", JSON.stringify(children_data));
-
-      if (selectedFlightDirection === "round_trip" || selectedFlightDirection === "multi_city") {
-        formData.append("arrival", flightArrival);
-      }
-      const formattedFlights = JSON.stringify(
-        multiCityFlights.map((flight) => ({
-          from: flight.from,
-          to: flight.to,
-        }))
-      );
-      formData.append("from_to", formattedFlights);
-      postDataFlight(formData, "Flight Request Added successful");
+      postDataBus(formData, "Bus Request Updated successful");
     }
     // Append Tour fields to FormData
     else if (selectedService.service_name.toLowerCase() === "tour") {
@@ -423,6 +484,80 @@ const EditRequestPage = () => {
       );
       formData.append("tour_hotels", formattedHotels);
       postDataTour(formData,'Tour Request Updated successful');
+    }
+    // Append Visa fields to FormData
+    else if (selectedService?.service_name.toLowerCase() === "visa") {
+      formData.append("country", visaCountry);
+      formData.append("travel_date", visaTravelDate);
+      formData.append("appointment_date", visaAppointmentDate);
+      formData.append("notes", visaNotes);
+      formData.append("childreen", visaChildrenNumber);
+      formData.append("adults", visaAdultsNumber);
+      const adults_data = visaAdults.map((adult) => ({
+          title: adult.selectedTitle,
+          first_name: adult.firstName,
+          last_name: adult.lastName,
+      }));
+      const children_data = visaChildren.map((child) => ({
+          age: child.age,
+          first_name: child.firstName,
+          last_name: child.lastName,
+      }));
+      formData.append("adult_data", JSON.stringify(adults_data));
+      formData.append("child_data", JSON.stringify(children_data));
+      postDataVisa(formData, "Visa Request Updated successful");
+    }
+    // Append Flight fields to FormData
+    else if (selectedService.service_name.toLowerCase() === "flight") {
+      formData.append("type", selectedFlightType);
+      formData.append("departure", flightDeparture);
+      formData.append("direction", selectedFlightDirection);
+      formData.append("childreen", flightChildrenNumber);
+      formData.append("adults", flightAdultsNumber);
+      formData.append("infants", flightInfants);
+      formData.append("adult_price", flightAdultPrice);
+      formData.append("child_price", flightChildPrice);
+      formData.append("class", flightClass);
+      formData.append("airline", flightAirline);
+      formData.append("ticket_number", flightTicketNumber);
+      formData.append("ref_pnr", flightRefPNR);
+      // formData.append("notes", notesFlight);
+
+      const adults_data = flightAdults.map((adult) => ({
+        title: adult.selectedTitle,
+        first_name: adult.firstName,
+        last_name: adult.lastName,
+      }));
+      const children_data = flightChildren.map((child) => ({
+        age: child.age,
+        first_name: child.firstName,
+        last_name: child.lastName,
+      }));
+      formData.append("adult_data", JSON.stringify(adults_data));
+      formData.append("child_data", JSON.stringify(children_data));
+
+      if (selectedFlightDirection === "round_trip" || selectedFlightDirection === "multi_city") {
+        formData.append("arrival", flightArrival);
+      }
+      let formattedFlights = "";
+      if (selectedFlightDirection === "multi_city") {
+        formattedFlights = JSON.stringify(
+          multiCityFlights.map((flight) => ({
+            from: flight.from,
+            to: flight.to,
+          }))
+        );
+      } else {
+        // Single city flight
+        formattedFlights = JSON.stringify([
+          {
+            from: singleFlight?.from || "",
+            to: singleFlight?.to || "",
+          },
+        ]);
+      }
+      formData.append("from_to", formattedFlights);   
+      postDataFlight(formData, "Flight Request Updated successful");
     }
   };
   if (loadingList || loadingRequestData) {
@@ -625,6 +760,8 @@ const EditRequestPage = () => {
             setFlightArrival={setFlightArrival}
             multiCityFlights={multiCityFlights}
             setMultiCityFlights={setMultiCityFlights}
+            singleFlight={singleFlight}
+            setSingleFlight={setSingleFlight}
             flightChildrenNumber={flightChildrenNumber}
             setFlightChildrenNumber={setFlightChildrenNumber}
             flightAdultsNumber={flightAdultsNumber}

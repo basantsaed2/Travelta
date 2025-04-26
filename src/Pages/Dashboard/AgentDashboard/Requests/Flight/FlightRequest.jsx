@@ -341,10 +341,7 @@ if (loading) return <StaticLoader />;
           <table className="w-full min-w-[600px]">
             <thead className="bg-gray-200 text-gray-700">
               <tr className="border-t-2 border-b-2">
-                <th className="w-[50px] text-mainColor bg-mainBgColor text-center font-medium sm:text-sm lg:text-base xl:text-lg p-2 border-b-2">
-                  SL
-                </th>
-                {["SL", "Client Name", "Client Phone", "Agent", "Revenue", "Arrival", "Departure","ref_pnr","Ticket No", "Airline", "Direction.", "Type", "From → To", "Adults", "Children","Infants", "Priority", "Service", "Stages", "Notes", "Action"].map((name, index) => (
+                {["SL", "Client Name", "Client Phone", "Agent", "Revenue", "Arrival", "Departure","ref_pnr","Ticket No", "Airline", "Direction.", "Type", "From → To", "Adults", "Children","Infants", "Service", "Priority", "Stages", "Notes", "Action"].map((name, index) => (
                   <th
                     key={index}
                     className="min-w-[120px] text-mainColor bg-mainBgColor text-center font-medium sm:text-sm lg:text-base xl:text-lg py-3 border-b-2"
@@ -397,6 +394,7 @@ if (loading) return <StaticLoader />;
                 <td className="text-center py-2">{row.adults_no}</td>
                 <td className="text-center py-2">{row.children_no}</td>
                 <td className="text-center py-2">{row.infants_no}</td>
+                <td className="text-center py-2">{row.service}</td>
                 <td className="text-center py-2">
                   <TextField
                     select

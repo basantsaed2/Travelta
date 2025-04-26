@@ -14,6 +14,7 @@ import { createFilterOptions } from "@mui/material/Autocomplete";
 
 const AddRequestPage = () => {
   const auth = useAuth();
+  const nevigate = useNavigate();
   const { refetch: refetchList,loading: loadingList,data: requestList,} = useGet({ url: "https://travelta.online/agent/request/lists" });
   const {postData: postDataHotel,loadingPost: loadingPostHotel,response: responseHotel,} = usePost({ url: "https://travelta.online/agent/request/add_hotel" });
   const {postData: postDataBus,loadingPost: loadingPostBus,response: responseBus,} = usePost({ url: "https://travelta.online/agent/request/add_bus" });
@@ -75,6 +76,7 @@ const AddRequestPage = () => {
   const [flightAirline, setFlightAirline] = useState("");
   const [flightTicketNumber, setFlightTicketNumber] = useState("");
   const [flightRefPNR, setFlightRefPNR] = useState("");
+  const [singleFlight, setSingleFlight] = useState({ from: "", to: "" });
 
   // To track the hotel details
   const [hotelName, setHotelName] = useState("");
@@ -145,6 +147,12 @@ const AddRequestPage = () => {
     }
     console.log("data", requestList);
   }, [requestList]);
+
+  useEffect(() => {
+    if ((responseHotel && !loadingPostHotel)  || (responseBus && !loadingPostBus) || (responseVisa && !loadingPostVisa) || (responseFlight && !loadingPostFlight) || (responseTour && !loadingPostTour)) {
+     nevigate(-1);
+    }
+  }, [responseHotel, responseBus, responseVisa, responseFlight, responseTour, loadingPostHotel, loadingPostBus, loadingPostVisa, loadingPostFlight, loadingPostTour]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -274,13 +282,24 @@ const AddRequestPage = () => {
       if (selectedFlightDirection === "round_trip" || selectedFlightDirection === "multi_city") {
         formData.append("arrival", flightArrival);
       }
-      const formattedFlights = JSON.stringify(
-        multiCityFlights.map((flight) => ({
-          from: flight.from,
-          to: flight.to,
-        }))
-      );
-      formData.append("from_to", formattedFlights);
+      let formattedFlights = "";
+      if (selectedFlightDirection === "multi_city") {
+        formattedFlights = JSON.stringify(
+          multiCityFlights.map((flight) => ({
+            from: flight.from,
+            to: flight.to,
+          }))
+        );
+      } else {
+        // Single city flight
+        formattedFlights = JSON.stringify([
+          {
+            from: singleFlight?.from || "",
+            to: singleFlight?.to || "",
+          },
+        ]);
+      }
+      formData.append("from_to", formattedFlights);   
       postDataFlight(formData, "Flight Request Added successful");
     }
     // Append Tour fields to FormData
@@ -527,6 +546,8 @@ const AddRequestPage = () => {
             setFlightArrival={setFlightArrival}
             multiCityFlights={multiCityFlights}
             setMultiCityFlights={setMultiCityFlights}
+            singleFlight={singleFlight}
+            setSingleFlight={setSingleFlight}
             flightChildrenNumber={flightChildrenNumber}
             setFlightChildrenNumber={setFlightChildrenNumber}
             flightAdultsNumber={flightAdultsNumber}
