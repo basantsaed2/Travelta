@@ -1,61 +1,3 @@
-// import React, { useEffect, useState } from 'react';
-// import Current from './Current';
-// import History from './History';
-// import { useGet } from '../../../../../Hooks/useGet';
-
-// const HotelRequest = () => {
-//   // State to track which tab is selected
-//   const [selectedTab, setSelectedTab] = useState('Current');
-//   const {refetch: refetchHotel,loading: loadingHotel,data: Hotel,} = useGet({ url: "https://travelta.online/agent/request"});
-//   const [dataHotel,setDataList] = useState([])
-//   const [dataCurrent,setDataCurrent] = useState([])
-//   const [dataHistory,setDataHistory] = useState([])
-//   useEffect(() => {
-//     refetchHotel()
-//   }, [refetchHotel])
-
-//   useEffect(() => {
-//     if(Hotel){
-//       setDataList(Hotel)
-//       setDataCurrent(Hotel.current.hotels)
-//       setDataHistory(Hotel.history.hotels)
-//     }
-//     console.log('data ',Hotel)
-//   }, [Hotel])
-//   return (
-//     <div>
-//       {/* Tab buttons */}
-//       <div className="flex justify-between items-center gap-4 mb-4">
-//         <button
-//           className={`py-4 px-4 rounded-lg w-[40%] text-center transition-all duration-300 
-//             ${selectedTab === 'Current' ? 'bg-mainColor text-white' : 'bg-gray-200 text-gray-700'}`}
-//           onClick={() => setSelectedTab('Current')}
-//         >
-//           Current
-//         </button>
-//         <button
-//           className={`py-4 px-4 rounded-lg w-[40%] text-center transition-all duration-300 
-//             ${selectedTab === 'History' ? 'bg-mainColor text-white' : 'bg-gray-200 text-gray-700'}`}
-//           onClick={() => setSelectedTab('History')}
-//         >
-//           History
-//         </button>
-//       </div>
-
-//       {/* Display content based on selected tab */}
-//       <div className="">
-//         {selectedTab === 'Current' ? (
-//           <><Current data={dataCurrent} loading={loadingHotel} refetch={refetchHotel}/></>
-//         ) : (
-//           <><History data ={dataHistory} loading={loadingHotel} refetch={refetchHotel}/></>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default HotelRequest;
-
 import React, { useEffect, useState } from 'react';
 import { useGet } from '../../../../../Hooks/useGet';
 import StaticLoader from '../../../../../Components/StaticLoader';
@@ -112,30 +54,28 @@ const HotelTable = ({ data = [], loading, refetch, priorityOptions = [], stageOp
     setSearch(val);
     setFiltered(rows.filter(r => Object.values(r).some(v => v && v.toString().toLowerCase().includes(val))));
   };
-
   const handleChangePriority = async (row, id, name, newPriority) => {
     // Only proceed if the newPriority is different from the current priority
     if (newPriority === row.priority) return;
-  
+
     const response = await changeState(
       `https://travelta.online/agent/request/priority/${id}`,
       `${name} Changed Status.`,
       { priority: newPriority } // Pass the new priority value
     );
-  
+
     if (response) {
       // Update the row priority in the state after the successful update
       setRows(prevRows =>
         prevRows.map(cur => cur.id === id ? { ...cur, priority: newPriority } : cur)
       );
-  
+
       // Refetch the data after the priority is updated
       refetch();
     } else {
       console.error("Priority update failed:", response);
     }
-  };  
-
+  };
   const handleStageSelect = (item, next) => {
     const validNextStages = isHistory ? historyProgression[item.stages] : progression[item.stages];
     if (!validNextStages?.includes(next)) return;
@@ -150,7 +90,6 @@ const HotelTable = ({ data = [], loading, refetch, priorityOptions = [], stageOp
       handleSubmit();
     }
   };
-
   const handleOpenDelete = (item) => {
     setOpenDelete(item);
   };
@@ -164,12 +103,11 @@ const HotelTable = ({ data = [], loading, refetch, priorityOptions = [], stageOp
       setRows(prevRows =>
         prevRows.map(cur => cur.id === id ? { ...cur, priority: newPriority } : cur)
       );
-  
+
       // Refetch the data after the priority is updated
       refetch();
-    } 
+    }
   };
-
   const handleSubmit = async e => {
     if (e) e.preventDefault();
     if (!selectedItem) return;
@@ -192,6 +130,19 @@ const HotelTable = ({ data = [], loading, refetch, priorityOptions = [], stageOp
       setSelectedAdmin('');
       refetch();
     }
+  };
+
+  // Pagination Logic
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(filtered.length / rowsPerPage);
+  const paginatedData = filtered.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+
+  const handleNextPage = () => setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
+  const handlePrevPage = () => setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
+  const handleRowsChange = (e) => {
+    setRowsPerPage(Number(e.target.value));
+    setCurrentPage(1); // Reset to first page when rows per page changes
   };
 
   if (loading) return <StaticLoader />;
@@ -218,142 +169,141 @@ const HotelTable = ({ data = [], loading, refetch, priorityOptions = [], stageOp
       <div className="w-full custom-scrollbar overflow-x-auto rounded-lg shadow-md bg-white p-2">
         <table className="w-full sm:min-w-0">
           <thead>
-          <tr className="border-b-2">
-            {["SL", "Client Name", "Client Phone", "Agent", "Revenue", "Check_In", "Check_Out","Hotel Name","Nights No.", "Room Type","Adults", "Children","Priority", "Service", "Stages", "Notes", "Action"].map(h => (
-              <th
-                key={h}
-                className={`text-mainColor text-center font-semibold text-base pb-3 cursor-pointer ${
-                  h === "SL" ? "min-w-[80px]" : "min-w-[120px]"
-                }`}
-              >
-                {h}
-              </th>
-            ))}
-          </tr>
+            <tr className="border-b-2">
+              {["SL", "Client Name", "Client Phone", "Agent", "Revenue", "Check_In", "Check_Out", "Hotel Name", "Nights No.", "Room Type", "Adults", "Children", "Priority", "Service", "Stages", "Notes", "Action"].map(h => (
+                <th
+                  key={h}
+                  className={`text-mainColor text-center font-semibold text-base pb-3 cursor-pointer ${h === "SL" ? "min-w-[80px]" : "min-w-[120px]"
+                    }`}
+                >
+                  {h}
+                </th>
+              ))}
+            </tr>
           </thead>
           <tbody>
-          {Array.isArray(filtered) && filtered.length > 0 ? (
-            filtered.slice(0, rowsToDisplay).map((row, index) => (
-              <tr key={row.id} className="even:bg-gray-100 hover:bg-gray-200 text-base">
-                <td className="text-center py-2">{index + 1}</td>
-                <td className="text-center py-2">{row.to_name}</td>
-                <td className="text-center py-2">{row.to_phone}</td>
-                <td className="text-center py-2">{row.agent}</td>
-                <td className="text-center py-2">{row.revenue} {row.currecy}</td>
-                <td className="text-center py-2">{row.check_in || "-"}</td>
-                <td className="text-center py-2">{row.check_out || "-"}</td>
-                <td className="text-center py-2">{row.hotel_name || "-"}</td>
-                <td className="text-center py-2">{row.no_nights || "-"}</td>
-                <td className="text-center py-2">{row.room_type}</td>
-                <td className="text-center py-2">{row.no_adults}</td>
-                <td className="text-center py-2">{row.no_children}</td>
-                <td className="text-center py-2">
-                  <TextField
-                    select
-                    fullWidth
-                    variant="outlined"
-                    value={row.priority}
-                    onChange={(e) => handleChangePriority(
-                      row,  // Pass the row object here
-                      row.id,
-                      row.agent,
-                      e.target.value  // New priority value
-                    )}
-                    label="Priority"
-                    className="shadow-lg border-gray-300"
-                  >
-                    {priorityOptions.map((pri, index) => (
+            {Array.isArray(filtered) && filtered.length > 0 ? (
+              filtered.slice(0, rowsToDisplay).map((row, index) => (
+                <tr key={row.id} className="even:bg-gray-100 hover:bg-gray-200 text-base">
+                  <td className="text-center py-2">{index + 1}</td>
+                  <td className="text-center py-2">{row.to_name}</td>
+                  <td className="text-center py-2">{row.to_phone}</td>
+                  <td className="text-center py-2">{row.agent}</td>
+                  <td className="text-center py-2">{row.revenue} {row.currecy}</td>
+                  <td className="text-center py-2">{row.check_in || "-"}</td>
+                  <td className="text-center py-2">{row.check_out || "-"}</td>
+                  <td className="text-center py-2">{row.hotel_name || "-"}</td>
+                  <td className="text-center py-2">{row.no_nights || "-"}</td>
+                  <td className="text-center py-2">{row.room_type}</td>
+                  <td className="text-center py-2">{row.no_adults}</td>
+                  <td className="text-center py-2">{row.no_children}</td>
+                  <td className="text-center py-2">
+                    <TextField
+                      select
+                      fullWidth
+                      variant="outlined"
+                      value={row.priority}
+                      onChange={(e) => handleChangePriority(
+                        row,  // Pass the row object here
+                        row.id,
+                        row.agent,
+                        e.target.value  // New priority value
+                      )}
+                      label="Priority"
+                      className="shadow-lg border-gray-300"
+                    >
+                      {priorityOptions.map((pri, index) => (
                         <MenuItem key={index} value={pri}>
                           {pri}
                         </MenuItem>
                       )
-                    )}
-                  </TextField>
-                </td>
-                <td className="text-center py-2">{row.service}</td>
-                <td className="text-center py-2">
-                  <TextField
-                    select
-                    variant="outlined"
-                    className="w-full"
-                    value={row.stages}
-                    onChange={(e) => handleStageSelect(row, e.target.value)}
-                  >
-                    {/* Show current stage as disabled */}
-                    <MenuItem value={row.stages} disabled>
-                      {row.stages}
-                    </MenuItem>
-
-                    {/* Show only the valid next stages */}
-                    {(
-                      (isHistory
-                        ? historyProgression[row.stages]
-                        : progression[row.stages]) || []
-                    ).map((s) => (
-                      <MenuItem key={s} value={s}>
-                        {s}
-                      </MenuItem>
-                    ))}
-
-                  </TextField>
-                </td>
-                <td className="text-center py-2 cursor-pointer text-blue-700 underline" onClick={() => {}}>
-                  {row.notes || 'Add Note'}
-                </td>
-                <td className="text-center py-2 py-2">
-                  <div className="flex items-center justify-center gap-1">
-                  <Link to={`edit_request/${row.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
-                    <button
-                      type="button"
-                      onClick={() => handleOpenDelete(row.id)}
+                      )}
+                    </TextField>
+                  </td>
+                  <td className="text-center py-2">{row.service}</td>
+                  <td className="text-center py-2">
+                    <TextField
+                      select
+                      variant="outlined"
+                      className="w-full"
+                      value={row.stages}
+                      onChange={(e) => handleStageSelect(row, e.target.value)}
                     >
-                      <MdDelete color='#D01025' size="24"/>
-                    </button>
-      
-                    {openDelete === row.id && (
-                      <Dialog
-                        open={true}
-                        onClose={handleCloseDelete}
-                        className="relative z-10"
+                      {/* Show current stage as disabled */}
+                      <MenuItem value={row.stages} disabled>
+                        {row.stages}
+                      </MenuItem>
+
+                      {/* Show only the valid next stages */}
+                      {(
+                        (isHistory
+                          ? historyProgression[row.stages]
+                          : progression[row.stages]) || []
+                      ).map((s) => (
+                        <MenuItem key={s} value={s}>
+                          {s}
+                        </MenuItem>
+                      ))}
+
+                    </TextField>
+                  </td>
+                  <td className="text-center py-2 cursor-pointer text-blue-700 underline" onClick={() => { }}>
+                    {row.notes || 'Add Note'}
+                  </td>
+                  <td className="text-center py-2 py-2">
+                    <div className="flex items-center justify-center gap-1">
+                      <Link to={`edit_request/${row.id}`}  ><FaEdit color='#4CAF50' size="24" /></Link>
+                      <button
+                        type="button"
+                        onClick={() => handleOpenDelete(row.id)}
                       >
-                        <DialogBackdrop className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-                        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-                          <div className="flex min-h-full items-end justify-center p-4 text-center py-2 sm:items-center sm:p-0">
-                            <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                              <div className="flex  flex-col items-center justify-center bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                                <PiWarningCircle color='#0D47A1'
-                                size="60"
-                                />
-                                <div className="flex items-center">
-                                  <div className="mt-2 text-center">
-                                    You will delete row {row?.to_name || "-"}
+                        <MdDelete color='#D01025' size="24" />
+                      </button>
+
+                      {openDelete === row.id && (
+                        <Dialog
+                          open={true}
+                          onClose={handleCloseDelete}
+                          className="relative z-10"
+                        >
+                          <DialogBackdrop className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                          <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+                            <div className="flex min-h-full items-end justify-center p-4 text-center py-2 sm:items-center sm:p-0">
+                              <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                                <div className="flex  flex-col items-center justify-center bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                  <PiWarningCircle color='#0D47A1'
+                                    size="60"
+                                  />
+                                  <div className="flex items-center">
+                                    <div className="mt-2 text-center">
+                                      You will delete row {row?.to_name || "-"}
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                              <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                <button className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto" onClick={() => handleDelete(row.id, row?.to_name)}>
-                                  Delete
-                                </button>
-      
-                                <button
-                                  type="button"
-                                  data-autofocus
-                                  onClick={handleCloseDelete}
-                                  className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-6 py-3 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:mt-0 sm:w-auto"
-                                >
-                                  Cancel
-                                </button>
-                              </div>
-                            </DialogPanel>
+                                <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                  <button className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto" onClick={() => handleDelete(row.id, row?.to_name)}>
+                                    Delete
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    data-autofocus
+                                    onClick={handleCloseDelete}
+                                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-6 py-3 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:mt-0 sm:w-auto"
+                                  >
+                                    Cancel
+                                  </button>
+                                </div>
+                              </DialogPanel>
+                            </div>
                           </div>
-                        </div>
-                      </Dialog>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))
-          ) : (
+                        </Dialog>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
               <tr>
                 <td colSpan="20" className="text-center py-4 text-gray-500 text-base">No data exist.</td>
               </tr>
@@ -361,6 +311,25 @@ const HotelTable = ({ data = [], loading, refetch, priorityOptions = [], stageOp
           </tbody>
         </table>
       </div>
+
+        {/* Pagination Controls */}
+        <div className="flex justify-between items-center mt-4">
+            <button
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+              className={`px-4 py-2 rounded-lg ${currentPage === 1 ? "bg-gray-300" : "bg-mainColor text-white hover:bg-blue-600"} transition-all`}
+            >
+              Previous
+            </button>
+            <span className="text-gray-700">Page {currentPage} of {totalPages}</span>
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className={`px-4 py-2 rounded-lg ${currentPage === totalPages ? "bg-gray-300" : "bg-mainColor text-white hover:bg-blue-600"} transition-all`}
+            >
+              Next
+            </button>
+          </div>
     </div>
   );
 };
@@ -373,7 +342,7 @@ const HotelRequest = () => {
 
   const loading = loadingHotel || loadingList;
   const currentData = (Hotel?.current?.flights && Array.isArray(Hotel.current.flights)) ? Hotel.current.hotels : [];
-  const historyData = (Hotel?.history?.flights && Array.isArray(Hotel.history.flights)) ? Hotel.history.hotels : [];  
+  const historyData = (Hotel?.history?.flights && Array.isArray(Hotel.history.flights)) ? Hotel.history.hotels : [];
   const priority = paymentList?.priority || [];
   const stages = paymentList?.stages || [];
 
@@ -382,7 +351,7 @@ const HotelRequest = () => {
   return (
     <div>
       <div className="flex justify-between items-center gap-4 mb-4">
-        {["Current","History"].map(label => (
+        {["Current", "History"].map(label => (
           <button
             key={label}
             onClick={() => setTab(label)}

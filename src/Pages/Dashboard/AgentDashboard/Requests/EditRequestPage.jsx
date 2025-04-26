@@ -120,6 +120,7 @@ const EditRequestPage = () => {
   const [tourAdultsNumber, setTourAdultsNumber] = useState('');
   const [tourAdults, setTourAdults] = useState([]);
   const [tourChildren, setTourChildren] = useState([]);
+  const [notesTour, setNotesTour] = useState("");
   const [buses, setBuses] = useState([{ transportation: "", seats: "" ,departure :""}]);
   const [hotels, setHotels] = useState([
     {
@@ -386,7 +387,7 @@ const EditRequestPage = () => {
       formData.append("child_price", tourChildPrice);
       formData.append('childreen', tourChildrenNumber);
       formData.append('adults', tourAdultsNumber);
-      // formData.append("notes", notesTour);
+      formData.append("notes", notesTour);
 
       const formattedBuses = JSON.stringify(
         buses.map((bus) => ({
@@ -395,12 +396,12 @@ const EditRequestPage = () => {
           ...(bus.transportation === 'flight' ? { departure: bus.departure } : {}),
         }))
       );
+      formData.append("tour_bus", formattedBuses);
       const adults_data = tourAdults.map((adult) => ({
         title: adult.selectedTitle,
         first_name: adult.firstName,
         last_name: adult.lastName,
       }));
-
       // Prepare children_data
       const children_data = tourChildren.map((child) => ({
         age: child.age,
@@ -409,8 +410,6 @@ const EditRequestPage = () => {
       }));
       formData.append("adult_data", JSON.stringify(adults_data));
       formData.append("child_data", JSON.stringify(children_data));
-
-      formData.append("tour_bus", formattedBuses);
       // Format and append tour_hotels as a JSON string
       const formattedHotels = JSON.stringify(
         hotels.map((hotel) => ({
@@ -423,7 +422,7 @@ const EditRequestPage = () => {
         }))
       );
       formData.append("tour_hotels", formattedHotels);
-      postDataTour(formData,'Tour Request Added successful');
+      postDataTour(formData,'Tour Request Updated successful');
     }
   };
   if (loadingList || loadingRequestData) {
@@ -739,6 +738,8 @@ const EditRequestPage = () => {
             buses={buses}
             setBuses={setBuses}
             today={today}
+            notesTour={notesTour}
+            setNotesTour={setNotesTour}
           />
         )}
         

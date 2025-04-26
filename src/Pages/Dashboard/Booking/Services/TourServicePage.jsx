@@ -24,8 +24,9 @@ const TourServicePage = ({
   setHotels,
   buses,
   setBuses,
-  // Additional props if needed, e.g. today for date calculations
   today,
+  setNotesTour,
+  notesTour
 }) => {
   // Tour Adults Functions
   const handleTourAdultsNumberChange = (e) => {
@@ -210,6 +211,16 @@ const TourServicePage = ({
           onChange={(e) => setTourChildPrice(e.target.value)}
           placeholder="Enter price per child"
           inputProps={{ min: 0 }}
+          sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
+        />
+        <TextField
+          fullWidth
+          label="Notes"
+          type="text"
+          variant="outlined"
+          value={notesTour}
+          onChange={(e) => setNotesTour(e.target.value)}
+          placeholder="Enter Any Notes"
           sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
         />
       </div>
