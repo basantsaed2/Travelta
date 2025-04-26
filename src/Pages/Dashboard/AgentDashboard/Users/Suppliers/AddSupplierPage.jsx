@@ -369,7 +369,7 @@ const AddSupplierPage = ({ update, setUpdate }) => {
                 rows={3}
                 value={serviceDescriptions[service.id] || ''}
                 onChange={(e) => handleDescriptionChange(service.id, e.target.value)}
-                required
+                // required
                 error={!serviceDescriptions[service.id]}
                 helperText={!serviceDescriptions[service.id] ? "Please add a description" : ""}
               />
@@ -390,6 +390,7 @@ const AddSupplierPage = ({ update, setUpdate }) => {
         </Button>
         <Button
           type="submit"
+          onClick={handleSubmitSupplier}
           variant="contained"
           className="bg-mainColor hover:bg-blue-600 text-white"
         >

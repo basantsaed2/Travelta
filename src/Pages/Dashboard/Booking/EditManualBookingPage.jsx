@@ -116,6 +116,7 @@ const EditManualBookingPage = () => {
     const [flightAirline, setFlightAirline] = useState("");
     const [flightTicketNumber, setFlightTicketNumber] = useState("");
     const [flightRefPNR, setFlightRefPNR] = useState("");
+    const [singleFlight, setSingleFlight] = useState({ from: "", to: "" });
 
   // To track the hotel details
     const [hotelName, setHotelName] = useState("");
@@ -205,10 +206,10 @@ const EditManualBookingPage = () => {
             setVisibleSection("to")
             setCategory("B2B");
             setSelectedToSupplier(bookingData.to_supplier);
-          }else if(bookingData.to_customer_id){
+          }else if(bookingData.to_customer_id && bookingData.to_customer) {
             setVisibleSection("to")
             setCategory("B2C");
-            setSelectedToSupplier(bookingData.to_supplier);
+            setSelectedToSupplier(bookingData.to_customer);
           }
           if(bookingData.from_supplier_id && selectedService) {
             setSelectedFromSupplier(bookingData.from_supplier);  
@@ -238,7 +239,6 @@ const EditManualBookingPage = () => {
           } else {
             setSelectedTaxId([]); // Set to an empty array if no taxes are found
           }
-
           if (bookingData.hotel && bookingData.service?.service_name === "Hotel") {
             setDetails((prev) => ({ ...prev, hotel: true }));
             setHotelName(bookingData.hotel.hotel_name || "");
@@ -249,17 +249,36 @@ const EditManualBookingPage = () => {
             setRoomQuantity(bookingData.hotel.room_quantity || "");
             setAdultsHotelNumber(bookingData.hotel.adults || '');
             setChildrenHotelNumber(bookingData.hotel.childreen || '');
+            if(bookingData.adults && bookingData.adults.length > 0) {
+              const adultsData = bookingData.adults.map((adult) => ({
+                title: adult.title,
+                firstName: adult.first_name,
+                lastName: adult.last_name,
+              }));
+              setHotelAdults(adultsData); // Set the hotel adults data
+            }
+            if(bookingData.children && bookingData.children.length > 0) {
+              const childrenData = bookingData.children.map((child) => ({
+                age: child.age,
+                firstName: child.first_name,
+                lastName: child.last_name,
+              }));
+              setHotelChildren(childrenData); // Set the hotel children data
+            }
           }
           else if (bookingData.bus && bookingData.service?.service_name === "Bus") {
             setDetails((prev) => ({ ...prev, bus: true }));
+            setBusName(bookingData.bus.bus || "");
+            setBusNumber(bookingData.bus.bus_number || "");
+            setDriverPhone(bookingData.bus.driver_phone || "");
             setBusFrom(bookingData.bus.from || "");
             setBusTo(bookingData.bus.to || "");
             setDeparture(bookingData.bus.departure || "");
             setArrival(bookingData.bus.arrival || "");
-            setAdultPrice(bookingData.bus.adult_price || "");
-            setChildPrice(bookingData.bus.child_price || "");
-            setBusAdultsNumber(bookingData.bus.adults || '');
-            setBusChildrenNumber(bookingData.bus.childreen || '');
+            setAdultPrice(bookingData.bus.adult_price || 0);
+            setChildPrice(bookingData.bus.child_price || 0);
+            setBusAdultsNumber(bookingData.bus.adults || 0);
+            setBusChildrenNumber(bookingData.bus.childreen || 0);
           }
           else if (bookingData.visa && bookingData.service?.service_name === "Visa") {
             setDetails((prev) => ({ ...prev, visa: true }));
@@ -280,7 +299,39 @@ const EditManualBookingPage = () => {
             setFlightChildPrice(bookingData.flight.child_price || "");
             setFlightAdultsNumber(bookingData.flight.adults || '');
             setFlightChildrenNumber(bookingData.flight.childreen || '');
-          }
+            setFlightInfants(bookingData.flight.infants || '');
+            setFlightClass(bookingData.flight.class || "");
+            setFlightAirline(bookingData.flight.airline || "");
+            setFlightTicketNumber(bookingData.flight.ticket_number || "");
+            setFlightRefPNR(bookingData.flight.ref_pnr || "");
+            if (bookingData.flight.direction === "multi_city") {
+              const parsedFlights = bookingData.flight.from_to 
+                ? JSON.parse(bookingData.flight.from_to) 
+                : [];
+              setMultiCityFlights(parsedFlights);
+            } else {
+              const parsedFlights = bookingData.flight.from_to 
+                ? JSON.parse(bookingData.flight.from_to) 
+                : [];
+              setSingleFlight(parsedFlights[0] || { from: "", to: "" });
+            }
+            if(bookingData.adults && bookingData.adults.length > 0) {
+              const adultsData = bookingData.adults.map((adult) => ({
+                title: adult.title,
+                firstName: adult.first_name,
+                lastName: adult.last_name,
+              }));
+              setFlightAdults(adultsData); // Set the flight adults data
+            }
+            if(bookingData.children && bookingData.children.length > 0) {
+              const childrenData = bookingData.children.map((child) => ({
+                age: child.age,
+                firstName: child.first_name,
+                lastName: child.last_name,
+              }));
+              setFlightChildren(childrenData); // Set the flight children data
+            }
+          }          
           else if (bookingData.tour && bookingData.service?.service_name === "Tour") {
             setDetails((prev) => ({ ...prev, tour: true }));
             setTour(bookingData.tour.tour || "");
@@ -461,6 +512,7 @@ const EditManualBookingPage = () => {
       // Append adults and children data for Hotel
       formData.append("adults_data", JSON.stringify(adults_data));
       formData.append("children_data", JSON.stringify(children_data));
+      postDataHotel(formData, "Booking Hotel Updated Successfully");
     }
     else if (selectedService?.service_name === "Visa") {
       formData.append("country", visaCountry);
@@ -481,6 +533,8 @@ const EditManualBookingPage = () => {
       }));
       formData.append("adults_data", JSON.stringify(adults_data));
       formData.append("children_data", JSON.stringify(children_data));
+
+      postDataVisa(formData, "Booking Visa Updated Successfully");
     }
     // Append Flight fields to FormData 
     else if (selectedService.service_name === 'Flight') {
@@ -513,13 +567,24 @@ const EditManualBookingPage = () => {
       if (selectedFlightDirection === "round_trip" || selectedFlightDirection === "multi_city") {
         formData.append("arrival", flightArrival);
       }
-      const formattedFlights = JSON.stringify(
-        multiCityFlights.map((flight) => ({
-          from: flight.from,
-          to: flight.to,
-        }))
-      );
-      formData.append("from_to", formattedFlights);
+      if (selectedFlightDirection === "multi_city") {
+        const formattedFlights = JSON.stringify(
+          multiCityFlights.map((flight) => ({
+            from: flight.from,
+            to: flight.to,
+          }))
+        );
+        formData.append("from_to", formattedFlights);
+      } else {
+        const formattedFlights = JSON.stringify([
+          {
+            from: singleFlight?.from || "",
+            to: singleFlight?.to || "",
+          }
+        ]);
+        formData.append("from_to", formattedFlights);
+      }
+      postDataFlight(formData, "Booking Flight Updated Successfully");
     }
     // Append Bus fields to FormData
     else if (selectedService.service_name === "Bus") {
@@ -552,6 +617,8 @@ const EditManualBookingPage = () => {
       // Append adults and children data for Bus
       formData.append("adults_data", JSON.stringify(adults_data));
       formData.append("children_data", JSON.stringify(children_data));
+
+      postDataBus(formData, "Booking Bus Updated Successfully");
     }
     // Append Tour fields to FormData
     else if (selectedService.service_name === "Tour") {
@@ -602,9 +669,10 @@ const EditManualBookingPage = () => {
         }))
       );
       formData.append("tour_hotels", formattedHotels);
+      postDataTour(formData, "Booking Tour Updated Successfully");
     }
     // Call the postData function to send the data to the backend
-    postData(formData, "Booking Added Successfully");
+    // postData(formData, "Booking Added Successfully");
   };
   return (
     <form onSubmit={handleSubmit} className="bg-gray-100 flex justify-center items-center">
@@ -1158,6 +1226,8 @@ const EditManualBookingPage = () => {
                   setFlightArrival={setFlightArrival}
                   multiCityFlights={multiCityFlights}
                   setMultiCityFlights={setMultiCityFlights}
+                  singleFlight={singleFlight}
+                  setSingleFlight={setSingleFlight}
                   flightChildrenNumber={flightChildrenNumber}
                   setFlightChildrenNumber={setFlightChildrenNumber}
                   flightAdultsNumber={flightAdultsNumber}

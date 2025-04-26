@@ -1,5 +1,5 @@
 // FlightServicePage.jsx
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { TextField, MenuItem, Autocomplete } from "@mui/material";
 import { MdDelete } from "react-icons/md";
 
@@ -20,6 +20,8 @@ const FlightServicePage = (
     setFlightArrival,
     multiCityFlights,
     setMultiCityFlights,
+    singleFlight,
+    setSingleFlight,
     flightChildrenNumber,
     setFlightChildrenNumber,
     flightAdultsNumber,
@@ -102,7 +104,7 @@ const FlightServicePage = (
   return (
     <div className="border rounded-lg overflow-hidden shadow-lg p-2 md:p-6 bg-gradient-to-r from-blue-50 to-blue-100">
       <h2 className="text-3xl font-bold text-blue-800 mb-6 text-center">
-      Flight Details
+        Flight Details
       </h2>
 
       <div className="p-2 rounded-lg mb-4">
@@ -126,7 +128,7 @@ const FlightServicePage = (
                 placeholder="Search Flight Type..."
                 InputProps={{
                   ...params.InputProps,
-                  sx:{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }
+                  sx: { backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }
                 }}
               />
             )}
@@ -149,13 +151,13 @@ const FlightServicePage = (
                 placeholder="Search Flight Direction..."
                 InputProps={{
                   ...params.InputProps,
-                  sx:{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }
+                  sx: { backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }
                 }}
               />
             )}
           />
 
-          {/* Departure Date & Time */}
+          {/* ====== Departure Date (always) ====== */}
           <TextField
             type="datetime-local"
             label="Departure Date & Time"
@@ -166,40 +168,66 @@ const FlightServicePage = (
             InputLabelProps={{ shrink: true }}
             sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
             inputProps={{
-              // Minimum departure date is today
               min: `${today}T00:00`,
-
-              // Restrict departure to not be after the arrival date (if set)
-              max: flightArrival ?
-                new Date(new Date(flightArrival).getTime() - 86400000).toISOString().slice(0, 16)
-                : undefined,
+              max: flightArrival ? new Date(new Date(flightArrival).getTime() - 86400000).toISOString().slice(0, 16) : undefined,
             }}
           />
 
+          {/* ====== Arrival Date (only for Round Trip & Multi City) ====== */}
+          {(selectedFlightDirection === "round_trip" || selectedFlightDirection === "multi_city") && (
+            <TextField
+              type="datetime-local"
+              label="Arrival Date & Time"
+              fullWidth
+              variant="outlined"
+              value={flightArrival}
+              onChange={(e) => setFlightArrival(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
+              inputProps={{
+                min: flightDeparture ? new Date(new Date(flightDeparture).getTime() + 86400000).toISOString().slice(0, 16) : `${today}T00:00`,
+              }}
+            />
+          )}
 
-          {/* Conditionally render Arrival Date */}
-          {(selectedFlightDirection === "round_trip" ||
-            selectedFlightDirection === "multi_city") && (
-              <TextField
-                type="datetime-local"
-                label="Arrival Date & Time"
-                fullWidth
-                variant="outlined"
-                value={flightArrival}
-                onChange={(e) => setFlightArrival(e.target.value)}
-                InputLabelProps={{ shrink: true }}
-                sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
-                inputProps={{
-                  // Ensure the appointment date is at least one day after the travel date.
-                  min: flightDeparture ?
-                    new Date(new Date(flightDeparture).getTime() + 86400000).toISOString().slice(0, 16)
-                    : `${today}T00:00`,
-                }}
-              />
-            )}
         </div>
 
-        {/* Multi-City Flights */}
+        {/* ====== From and To Fields (for One Way and Round Trip) ====== */}
+        {(selectedFlightDirection === "one_way" || selectedFlightDirection === "round_trip") && (
+            <div className="p-4 bg-gray-100 rounded-xl shadow-lg  flex flex-col gap-4 mb-6">
+              <div className="flex justify-between items-center">
+              <span className="text-lg font-semibold text-blue-700">
+                    Trip Details
+                  </span>
+              </div>
+              <div className="flex flex-col md:flex-row gap-4">
+             <TextField
+                label="From"
+                variant="outlined"
+                fullWidth
+                value={singleFlight?.from || ""}
+                onChange={(e) =>
+                  setSingleFlight((prev) => ({ ...prev, from: e.target.value }))
+                }
+                placeholder="Enter departure city"
+                sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
+              />
+              <TextField
+                label="To"
+                variant="outlined"
+                fullWidth
+                value={singleFlight?.to || ""}
+                onChange={(e) =>
+                  setSingleFlight((prev) => ({ ...prev, to: e.target.value }))
+                }
+                placeholder="Enter arrival city"
+                sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
+              />
+            </div>
+            </div>
+          )}
+
+        {/* ====== Multi City Flights (ONLY if Multi City) ====== */}
         {selectedFlightDirection === "multi_city" && (
           <div className="mb-6 space-y-4">
             {multiCityFlights.map((flight, index) => (
@@ -236,7 +264,7 @@ const FlightServicePage = (
                     }
                     placeholder={`Enter departure city for trip ${index + 1}`}
                     sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
-                    />
+                  />
                   <TextField
                     label={`To (${index + 1})`}
                     variant="outlined"
@@ -247,10 +275,7 @@ const FlightServicePage = (
                     }
                     placeholder={`Enter arrival city for trip ${index + 1}`}
                     sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
-                    />
-                </div>
-                <div className="text-sm text-gray-700 italic">
-                  This trip is part of your multi-city itinerary.
+                  />
                 </div>
               </div>
             ))}
@@ -408,14 +433,14 @@ const FlightServicePage = (
                       className="mb-2"
                       InputProps={{
                         ...params.InputProps,
-                        sx:{backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }
+                        sx: { backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }
                       }}
                     />
                   )}
                 />
                 <TextField
-                label={`First Name for Adult ${index + 1}`}
-                variant="outlined"
+                  label={`First Name for Adult ${index + 1}`}
+                  variant="outlined"
                   fullWidth
                   value={adult.firstName}
                   onChange={(e) =>

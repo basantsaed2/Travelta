@@ -117,7 +117,7 @@ const TourService = ({ data }) => {
 
     // Unique statuses for filter dropdown
     const uniqueStatus = [...new Set(tours.map(tour => tour.status).filter(Boolean))];
-    const headers = ['Code', 'Tour', 'Country', 'Check In', 'Check Out', 'Transportations', 'Hotels', 'Status', 'Payment', 'Total Price', 'Details'];
+    const headers = ['Code', 'Tour', 'Country', 'Check In', 'Check Out', 'Transportations', 'Hotels', 'Status', 'Payment', 'Total Price', 'Details','Action'];
 
     return (
         <div className="w-full pb-5 flex items-start justify-start overflow-x-scroll scrollSection">

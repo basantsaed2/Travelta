@@ -103,6 +103,7 @@ const ManualBooking = () => {
     const [flightAirline, setFlightAirline] = useState("");
     const [flightTicketNumber, setFlightTicketNumber] = useState("");
     const [flightRefPNR, setFlightRefPNR] = useState("");
+    const [singleFlight, setSingleFlight] = useState({ from: "", to: "" });
 
   // To track the hotel details
     const [hotelName, setHotelName] = useState("");
@@ -390,13 +391,24 @@ const ManualBooking = () => {
       if (selectedFlightDirection === "round_trip" || selectedFlightDirection === "multi_city") {
         formData.append("arrival", flightArrival);
       }
-      const formattedFlights = JSON.stringify(
-        multiCityFlights.map((flight) => ({
-          from: flight.from,
-          to: flight.to,
-        }))
-      );
-      formData.append("from_to", formattedFlights);
+      let formattedFlights = "";
+      if (selectedFlightDirection === "multi_city") {
+        formattedFlights = JSON.stringify(
+          multiCityFlights.map((flight) => ({
+            from: flight.from,
+            to: flight.to,
+          }))
+        );
+      } else {
+        // Single city flight
+        formattedFlights = JSON.stringify([
+          {
+            from: singleFlight?.from || "",
+            to: singleFlight?.to || "",
+          },
+        ]);
+      }
+      formData.append("from_to", formattedFlights);      
     }
     // Append Bus fields to FormData
     else if (selectedService.service_name === "Bus") {
@@ -1034,6 +1046,8 @@ const ManualBooking = () => {
                   setFlightArrival={setFlightArrival}
                   multiCityFlights={multiCityFlights}
                   setMultiCityFlights={setMultiCityFlights}
+                  singleFlight={singleFlight}
+                  setSingleFlight={setSingleFlight}
                   flightChildrenNumber={flightChildrenNumber}
                   setFlightChildrenNumber={setFlightChildrenNumber}
                   flightAdultsNumber={flightAdultsNumber}

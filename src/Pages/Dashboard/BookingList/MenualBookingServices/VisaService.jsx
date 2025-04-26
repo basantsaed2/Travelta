@@ -117,7 +117,7 @@ const VisaService = ({ data }) => {
 
   // Unique statuses for filter dropdown
   const uniqueStatus = [...new Set(visas.map(visa => visa.status).filter(Boolean))];
-  const headers = ['Code','Country','Appointment','Travel Date', 'Status', 'Payment', 'Total Price', 'Details'];
+  const headers = ['Code','Country','Appointment','Travel Date', 'Status', 'Payment', 'Total Price', 'Details','Action'];
 
   return (
     <div className="w-full pb-5 flex items-start justify-start overflow-x-scroll scrollSection">

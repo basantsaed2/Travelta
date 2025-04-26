@@ -65,7 +65,7 @@ const Invoice = ({ bookingData }) => {
             <p>Adults: {bookingData?.bus?.no_adults || "N/A"}</p>
             <p>Children: {bookingData?.bus?.no_children || "N/A"}</p>
             <p>Payment Status: {bookingData?.bus?.payment_status || "N/A"}</p>
-            <p>Status: {bookingData?.bus?.status || "N/A"}</p>
+            {/* <p>Status: {bookingData?.bus?.status || "N/A"}</p> */}
           </div>
         </div>
       )}
@@ -117,19 +117,19 @@ const Invoice = ({ bookingData }) => {
             <div className="w-1/2">
               <p className="text-gray-800">Payment Status: <span className="font-medium">{bookingData?.hotel?.payment_status || "N/A"}</span></p>
             </div>
-            <div className="w-1/2">
+            {/* <div className="w-1/2">
               <p className="text-gray-800">Status: <span className="font-medium">{bookingData?.hotel?.status || "N/A"}</span></p>
-            </div>
+            </div> */}
           </div>
 
           {/* Total Price & Special Request */}
           <div className="flex mb-4">
             <div className="w-1/2">
-              <p className="text-gray-800">Total Price: <span className="font-medium">{bookingData?.hotel?.total_price || "N/A"}</span></p>
+              <p className="text-gray-800">Total Price: <span className="font-medium">{bookingData?.hotel?.total_price || "N/A"} {bookingData?.hotel?.currency}</span></p>
             </div>
-            <div className="w-1/2">
+            {/* <div className="w-1/2">
               <p className="text-gray-800">Special Request: <span className="font-medium">{bookingData?.hotel?.special_request || "N/A"}</span></p>
-            </div>
+            </div> */}
           </div>
 
           {/* Supplier Details */}
@@ -167,7 +167,11 @@ const Invoice = ({ bookingData }) => {
           {/* Departure & Arrival */}
           <div className="grid grid-cols-2 gap-4 mb-4">
             <p className="text-gray-800">Departure: <span className="font-medium">{bookingData?.flight?.depature || "N/A"}</span></p>
-            <p className="text-gray-800">Arrival: <span className="font-medium">{bookingData?.flight?.arrival || "N/A"}</span></p>
+            {
+              bookingData?.flight?.arrival && (
+                <p className="text-gray-800">Arrival: <span className="font-medium">{bookingData?.flight?.arrival || "N/A"}</span></p>
+              )
+            }
           </div>
 
           {/* Flight Type & Class */}
@@ -196,13 +200,13 @@ const Invoice = ({ bookingData }) => {
           {/* Payment Status & Status */}
           <div className="grid grid-cols-2 gap-4 mb-4">
             <p className="text-gray-800">Payment Status: <span className="font-medium">{bookingData?.flight?.payment_status || "N/A"}</span></p>
-            <p className="text-gray-800">Status: <span className="font-medium">{bookingData?.flight?.status || "N/A"}</span></p>
+            {/* <p className="text-gray-800">Status: <span className="font-medium">{bookingData?.flight?.status || "N/A"}</span></p> */}
           </div>
 
           {/* Special Request */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <p className="text-gray-800">Special Request: <span className="font-medium">{bookingData?.flight?.special_request || "N/A"}</span></p>
-          </div>
+          </div> */}
 
           {/* Supplier Details */}
           <h2 className="text-xl font-semibold mt-8 mb-4">Supplier Details</h2>
@@ -289,14 +293,14 @@ const Invoice = ({ bookingData }) => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-6 mb-6">
+          {/* <div className="grid grid-cols-2 gap-6 mb-6">
             <div>
               <p className="text-sm text-gray-700">Status: <span className="font-medium">{bookingData?.tour?.status || "N/A"}</span></p>
             </div>
             <div>
               <p className="text-sm text-gray-700">Special Request: <span className="font-medium">{bookingData?.tour?.special_request || "N/A"}</span></p>
             </div>
-          </div>
+          </div> */}
 
           {/* Supplier Details */}
           <h3 className="text-lg font-semibold mt-6 mb-4">Supplier Details</h3>
@@ -329,9 +333,9 @@ const Invoice = ({ bookingData }) => {
             <p>Adults: {bookingData?.visa?.no_adults || "N/A"}</p>
             <p>Children: {bookingData?.visa?.no_children || "N/A"}</p>
             <p>Notes: {bookingData?.visa?.notes || "N/A"}</p>
-            <p>Status: {bookingData?.visa?.status || "N/A"}</p>
+            {/* <p>Status: {bookingData?.visa?.status || "N/A"}</p> */}
             <p>Payment Status: {bookingData?.visa?.payment_status || "N/A"}</p>
-            <p>Special Request: {bookingData?.visa?.special_request || "N/A"}</p>
+            {/* <p>Special Request: {bookingData?.visa?.special_request || "N/A"}</p> */}
           </div>
 
           {/* Supplier Details Section */}
@@ -351,7 +355,7 @@ const Invoice = ({ bookingData }) => {
       {/* Payment Details */}
       <div className="bg-blue-900 text-white p-4 rounded-lg">
         <h3 className="text-lg font-bold">Payment Details</h3>
-        <p>Total Amount: {bookingData?.booking_payment?.amount || "N/A"} $</p>
+        <p>Total Amount: {bookingData?.booking_payment?.amount || "N/A"} {bookingData?.visa?.currency}</p>
       </div>
       
       {/* Footer */}

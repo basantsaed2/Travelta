@@ -1,16 +1,16 @@
 // VisaServicePage.jsx
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { TextField, MenuItem, Autocomplete } from "@mui/material";
 
-const VisaServicePage = ({ countries,today,title,
-    visaCountry, setVisaCountry, 
-    visaTravelDate, setVisaTravelDate, 
-    visaAppointmentDate, setVisaAppointmentDate, 
-    visaAdultsNumber, setVisaAdultsNumber, 
-    visaChildrenNumber, setVisaChildrenNumber, 
-    visaAdults, setVisaAdults, 
-    visaChildren, setVisaChildren, 
-    visaNotes, setVisaNotes 
+const VisaServicePage = ({ countries, today, title,
+    visaCountry, setVisaCountry,
+    visaTravelDate, setVisaTravelDate,
+    visaAppointmentDate, setVisaAppointmentDate,
+    visaAdultsNumber, setVisaAdultsNumber,
+    visaChildrenNumber, setVisaChildrenNumber,
+    visaAdults, setVisaAdults,
+    visaChildren, setVisaChildren,
+    visaNotes, setVisaNotes
 }) => {
 
     // Function to handle number of adults change
@@ -61,7 +61,7 @@ const VisaServicePage = ({ countries,today,title,
         // <div className="p-2 md:p-6 bg-white rounded-xl shadow-lg">
         <div className="border rounded-lg overflow-hidden shadow-lg p-2 md:p-6 bg-gradient-to-r from-blue-50 to-blue-100">
             <h2 className="text-3xl font-bold text-blue-800 mb-6 text-center">
-            Visa Details
+                Visa Details
             </h2>
 
             {/* Basic Visa Details in a responsive grid */}
@@ -89,43 +89,35 @@ const VisaServicePage = ({ countries,today,title,
                     )}
                 />
 
-               {/* Travel Date & Time */}
-                <TextField
-                label="Travel Date & Time"
-                variant="outlined"
-                fullWidth
-                type="datetime-local"
-                InputLabelProps={{ shrink: true }}
-                value={visaTravelDate}
-                onChange={(e) => setVisaTravelDate(e.target.value)}
-                inputProps={{
-                    // Minimum travel date is today
-                    min: `${today}T00:00`,
-
-                    // Restrict travel date to not be after the appointment date (if set)
-                    max: visaAppointmentDate ? 
-                    new Date(new Date(visaAppointmentDate).getTime() - 86400000).toISOString().slice(0, 16) 
-                    : undefined,
-                }}
-                sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
+                  {/* Appointment Date */}
+                  <TextField
+                    label="Appointment Date"
+                    variant="outlined"
+                    fullWidth
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                    value={visaAppointmentDate}
+                    onChange={(e) => setVisaAppointmentDate(e.target.value)}
+                    inputProps={{
+                        min: today, // Appointment can't be before today
+                        max: visaTravelDate || undefined, // Appointment must be <= Travel Date
+                    }}
+                    sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
                 />
 
-                {/* Appointment Date & Time */}
+                {/* Travel Date */}
                 <TextField
-                label="Appointment Date & Time"
-                variant="outlined"
-                fullWidth
-                type="datetime-local"
-                InputLabelProps={{ shrink: true }}
-                value={visaAppointmentDate}
-                onChange={(e) => setVisaAppointmentDate(e.target.value)}
-                inputProps={{
-                    // Appointment date must be after or equal to the travel date
-                    min: visaTravelDate ? 
-                    new Date(new Date(visaTravelDate).getTime() + 86400000).toISOString().slice(0, 16) 
-                    : `${today}T00:00`,
-                }}
-                sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
+                    label="Travel Date"
+                    variant="outlined"
+                    fullWidth
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                    value={visaTravelDate}
+                    onChange={(e) => setVisaTravelDate(e.target.value)}
+                    inputProps={{
+                        min: today, // Travel can't be before today
+                    }}
+                    sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
                 />
 
                 {/* Number of Adults */}
@@ -138,7 +130,7 @@ const VisaServicePage = ({ countries,today,title,
                     onChange={handleVisaAdultsNumberChange}
                     inputProps={{ min: 0 }}
                     sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
-                    />
+                />
 
                 {/* Number of Children */}
                 <TextField
@@ -150,7 +142,7 @@ const VisaServicePage = ({ countries,today,title,
                     onChange={handleVisaChildrenNumberChange}
                     inputProps={{ min: 0 }}
                     sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
-                    />
+                />
 
                 {/* Notes */}
                 <TextField
@@ -161,7 +153,7 @@ const VisaServicePage = ({ countries,today,title,
                     value={visaNotes}
                     onChange={(e) => setVisaNotes(e.target.value)}
                     sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
-                    />
+                />
             </div>
 
             {/* Adults Details Section */}
@@ -196,7 +188,7 @@ const VisaServicePage = ({ countries,today,title,
                                             className="mb-2"
                                             InputProps={{
                                                 ...params.InputProps,
-                                                sx:{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }
+                                                sx: { backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }
                                             }}
                                         />
                                     )}
@@ -211,7 +203,7 @@ const VisaServicePage = ({ countries,today,title,
                                     }
                                     className="mb-2"
                                     sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
-                                    />
+                                />
                                 <TextField
                                     label={`Last Name for Adult ${index + 1}`}
                                     variant="outlined"
@@ -222,7 +214,7 @@ const VisaServicePage = ({ countries,today,title,
                                     }
                                     className="mb-2"
                                     sx={{ backgroundColor: "white", borderRadius: "8px", boxShadow: 1 }}
-                                    />
+                                />
                             </div>
                         ))}
                     </div>
