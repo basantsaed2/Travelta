@@ -336,14 +336,18 @@ const EditRequestPage = () => {
         setFlightAdults(mappedAdults);
         setFlightChildren(mappedChildren);
         if (flight.direction === "multi_city") {
-          const parsedFlights = flight.from_to 
+          const parsedFlights = typeof flight.from_to === 'string' 
             ? JSON.parse(flight.from_to) 
-            : [];
+            : Array.isArray(flight.from_to) 
+              ? flight.from_to 
+              : [];
           setMultiCityFlights(parsedFlights);
         } else {
-          const parsedFlights = flight.from_to 
+          const parsedFlights = typeof flight.from_to === 'string' 
             ? JSON.parse(flight.from_to) 
-            : [];
+            : Array.isArray(flight.from_to) 
+              ? flight.from_to 
+              : [];
           setSingleFlight(parsedFlights[0] || { from: "", to: "" });
         }
         if(request.adults && request.adults.length > 0) {

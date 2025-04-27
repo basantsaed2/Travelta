@@ -532,7 +532,7 @@ const ProfileCustomer = () => {
                           </td>
                           <td className="text-center py-2">
                             <div className="flex items-center justify-center gap-1">
-                              <Link to={`edit/${booking.id}`}>
+                              <Link to={`/dashboard_agent/booking/manual_booking/edit_booking/${booking.id}`}>
                                 <FaEdit color='#4CAF50' size="20" />
                               </Link>
                             </div>

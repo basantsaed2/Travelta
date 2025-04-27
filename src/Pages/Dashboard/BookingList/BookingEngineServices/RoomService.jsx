@@ -267,7 +267,7 @@ const RoomService = ({ data }) => {
                        <td className="text-center py-2">
                           <div className="flex items-center justify-center gap-1">
                             <Link
-                                to={`details/${hotel.id}`} state={{ type: "room", data: hotel }}
+                                to={`details/${hotel.id}`} state={{ type: "roomEngine", data: hotel }}
                               className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
                             >
                               View

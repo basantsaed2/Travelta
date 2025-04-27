@@ -1241,8 +1241,10 @@ const HotelBookingDetailsPage = () => {
         to_customer_id: selectedToSupplier.id 
       }),
       currency_id: selectedRoom.room_details.currency_id, // Assuming USD
-      city_id: selectedRoom.room_details.city_id,
-      country_id: selectedRoom.room_details.country_id,
+      city_id: '',
+      country_id: '',
+      from_supplier_id:selectedToSupplier?.id || null,
+
     };
       
     postData(bookingData);

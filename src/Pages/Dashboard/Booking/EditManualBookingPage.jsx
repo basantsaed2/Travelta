@@ -288,6 +288,23 @@ const EditManualBookingPage = () => {
             setVisaNotes(bookingData.visa.notes || "");
             setVisaAdultsNumber(bookingData.visa.adults || '');
             setVisaChildrenNumber(bookingData.visa.childreen || '');
+            if(bookingData.adults && bookingData.adults.length > 0) {
+              const adultsData = bookingData.adults.map((adult) => ({
+                title: adult.title,
+                firstName: adult.first_name,
+                lastName: adult.last_name,
+              }));
+              setVisaAdults(adultsData); // Set the visa adults data
+            }
+            if(bookingData.children && bookingData.children.length > 0) {
+              const childrenData = bookingData.children.map((child) => ({
+                age: child.age,
+                firstName: child.first_name,
+                lastName: child.last_name,
+              }));
+              setVisaChildren(childrenData); // Set the visa children data
+            }
+            
           }
           else if (bookingData.flight && bookingData.service?.service_name === "Flight") {
             setDetails((prev) => ({ ...prev, flight: true }));
@@ -305,14 +322,18 @@ const EditManualBookingPage = () => {
             setFlightTicketNumber(bookingData.flight.ticket_number || "");
             setFlightRefPNR(bookingData.flight.ref_pnr || "");
             if (bookingData.flight.direction === "multi_city") {
-              const parsedFlights = bookingData.flight.from_to 
+              const parsedFlights = typeof bookingData.flight.from_to === 'string' 
                 ? JSON.parse(bookingData.flight.from_to) 
-                : [];
+                : Array.isArray(bookingData.flight.from_to) 
+                  ? flight.from_to 
+                  : [];
               setMultiCityFlights(parsedFlights);
             } else {
-              const parsedFlights = bookingData.flight.from_to 
+              const parsedFlights = typeof bookingData.flight.from_to === 'string' 
                 ? JSON.parse(bookingData.flight.from_to) 
-                : [];
+                : Array.isArray(bookingData.flight.from_to) 
+                  ? bookingData.flight.from_to 
+                  : [];
               setSingleFlight(parsedFlights[0] || { from: "", to: "" });
             }
             if(bookingData.adults && bookingData.adults.length > 0) {

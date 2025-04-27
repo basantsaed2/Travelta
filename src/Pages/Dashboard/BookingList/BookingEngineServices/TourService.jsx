@@ -270,7 +270,7 @@ const TourService = ({ data }) => {
                        <td className="text-center py-2">
                           <div className="flex items-center justify-center gap-1">
                             <Link
-                                to={`details/${tour.id}`} state={{ type: "tour", data: tour }}
+                                to={`details/${tour.id}`} state={{ type: "tourEngine", data: tour }}
                               className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
                             >
                               View
