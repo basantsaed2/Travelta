@@ -17,7 +17,7 @@ const TourDetails = (tour) => {
                      <div className="flex-1">
                          <div className="flex justify-between items-start">
                              <div>
-                                 <h3 className="text-2xl font-bold text-gray-800">{tour.tour_name}</h3>
+                                 <h3 className="text-2xl font-bold text-gray-800">{tour.tour}</h3>
                                  <p className="text-gray-500">{tour.tour_type} Tour</p>
                              </div>
                              <div className="flex gap-2">
