@@ -13,15 +13,14 @@ import BusServicePage from "./Services/BusServicePage";
 import TourServicePage from "./Services/TourServicePage";
 import { el } from "date-fns/locale";
 const EditManualBookingPage = () => {
-    const {menualBookingId} =useParams();
-    const { refetch: refetchBookingData, loading: loadingBookingData, data: dataBooking } = useGet({ url:`https://travelta.online/agent/booking/booking_item/${menualBookingId}` });
+  const {menualBookingId} =useParams();
+  const { refetch: refetchBookingData, loading: loadingBookingData, data: dataBooking } = useGet({ url:`https://travelta.online/agent/booking/booking_item/${menualBookingId}` });
 
-    const {postData: postDataHotel,loadingPost: loadingPostHotel,response: responseHotel,} = usePost({ url: `https://travelta.online/agent/booking/update_hotel/${menualBookingId}`});
-    const {postData: postDataBus,loadingPost: loadingPostBus,response: responseBus,} = usePost({ url: `https://travelta.online/agent/booking/update_bus/${menualBookingId}`});
-    const {postData: postDataVisa,loadingPost: loadingPostVisa,response: responseVisa,} = usePost({ url: `https://travelta.online/agent/booking/update_visa/${menualBookingId}` });
-    const {postData: postDataFlight,loadingPost: loadingPostFlight,response: responseFlight,} = usePost({ url: `https://travelta.online/agent/booking/update_flight/${menualBookingId}` });
-    const {postData: postDataTour,loadingPost: loadingPostTour,response: responseTour,} = usePost({ url: `https://travelta.online/agent/booking/update_tour/${menualBookingId}` });
-
+  const {postData: postDataHotel,loadingPost: loadingPostHotel,response: responseHotel,} = usePost({ url: `https://travelta.online/agent/booking/update_hotel/${menualBookingId}`});
+  const {postData: postDataBus,loadingPost: loadingPostBus,response: responseBus,} = usePost({ url: `https://travelta.online/agent/booking/update_bus/${menualBookingId}`});
+  const {postData: postDataVisa,loadingPost: loadingPostVisa,response: responseVisa,} = usePost({ url: `https://travelta.online/agent/booking/update_visa/${menualBookingId}` });
+  const {postData: postDataFlight,loadingPost: loadingPostFlight,response: responseFlight,} = usePost({ url: `https://travelta.online/agent/booking/update_flight/${menualBookingId}` });
+  const {postData: postDataTour,loadingPost: loadingPostTour,response: responseTour,} = usePost({ url: `https://travelta.online/agent/booking/update_tour/${menualBookingId}` });
 
   const {refetch: refetchBookingList,loading: loadingBookingList,data: bookingListData,} = useGet({ url: "https://travelta.online/agent/manual_booking/lists" });
   const {refetch: refetchSuppliers,loading: loadingSuppliers,data: suppliersData,} = useGet({url: "https://travelta.online/agent/manual_booking/supplier_customer",});
@@ -245,7 +244,12 @@ const EditManualBookingPage = () => {
             setCheckInDate(bookingData.hotel.check_in || "");
             setCheckOutDate(bookingData.hotel.check_out || "");
             setTotalNights(bookingData.hotel.nights || "");
-            setRoomType(bookingData.hotel.room_type || "");
+            const roomTypes = typeof bookingData.hotel.room_type === 'string' 
+            ? bookingData.hotel.room_type.split(',') 
+            : Array.isArray(bookingData.hotel.room_type) 
+              ? bookingData.hotel.room_type 
+              : [];
+            setRoomTypes(roomTypes);
             setRoomQuantity(bookingData.hotel.room_quantity || "");
             setAdultsHotelNumber(bookingData.hotel.adults || '');
             setChildrenHotelNumber(bookingData.hotel.childreen || '');
@@ -279,6 +283,22 @@ const EditManualBookingPage = () => {
             setChildPrice(bookingData.bus.child_price || 0);
             setBusAdultsNumber(bookingData.bus.adults || 0);
             setBusChildrenNumber(bookingData.bus.childreen || 0);
+            if(bookingData.adults && bookingData.adults.length > 0) {
+              const adultsData = bookingData.adults.map((adult) => ({
+                title: adult.title,
+                firstName: adult.first_name,
+                lastName: adult.last_name,
+              }));
+              setBusAdults(adultsData); // Set the bus adults data
+            }
+            if(bookingData.children && bookingData.children.length > 0) {
+              const childrenData = bookingData.children.map((child) => ({
+                age: child.age,
+                firstName: child.first_name,
+                lastName: child.last_name,
+              }));
+              setBusChildren(childrenData); // Set the bus children data
+            }
           }
           else if (bookingData.visa && bookingData.service?.service_name === "Visa") {
             setDetails((prev) => ({ ...prev, visa: true }));
@@ -472,7 +492,12 @@ const EditManualBookingPage = () => {
     const handleSwitchChange = () => {
       setIsMarkupPercentage((prev) => (prev === 1 ? 0 : 1)); // Toggle between 1 and 0
     };
-
+    useEffect(() => {
+       if ((responseHotel && !loadingPostHotel)  || (responseBus && !loadingPostBus) || (responseVisa && !loadingPostVisa) || (responseFlight && !loadingPostFlight) || (responseTour && !loadingPostTour)) {
+        navigate(-1);
+       }
+     }, [responseHotel, responseBus, responseVisa, responseFlight, responseTour, loadingPostHotel, loadingPostBus, loadingPostVisa, loadingPostFlight, loadingPostTour]);
+   
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Create FormData object to append the form data

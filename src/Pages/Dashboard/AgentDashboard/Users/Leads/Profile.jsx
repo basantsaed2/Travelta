@@ -13,7 +13,7 @@ import {
   FaUserFriends,
   FaCalendarAlt,
   FaCheckCircle,
-  FaEye,FaEdit
+  FaEye, FaEdit
 } from "react-icons/fa";
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
 import { Link } from 'react-router-dom';
@@ -45,10 +45,10 @@ const Profile = ({ id }) => {
       setRequests(LeadProfile.requests || []);
       setFilteredRequests(LeadProfile.requests || []);
     }
-  }, [LeadProfile]);  
+  }, [LeadProfile]);
 
-   // Search handler
-   const handleSearch = (e) => {
+  // Search handler
+  const handleSearch = (e) => {
     setSearchQuery(e.target.value);
     const filtered = requests.filter(
       (req) =>
@@ -58,7 +58,7 @@ const Profile = ({ id }) => {
     );
     setFilteredRequests(filtered);
     setCurrentPage(1); // Reset to first page when search changes
-  };  
+  };
 
   // Clear search handler
   const handleSearchClear = () => {
@@ -68,34 +68,35 @@ const Profile = ({ id }) => {
 
   // Handle View Details Modal
   const handleViewDetails = (req) => {
+    console.log(req);
     setSelectedRequest(req);
     setShowModal(true);
   };
 
-    // Handle rows per page change
-    const handleRowsChange = (e) => {
-      setRowsPerPage(Number(e.target.value)); // Set rows per page based on selection
-      setCurrentPage(1); // Reset to first page when rows per page changes
-    };
-  
-    // Handle previous page
-    const handlePrevPage = () => {
-      if (currentPage > 1) {
-        setCurrentPage(currentPage - 1);
-      }
-    };
-  
-    // Handle next page
-    const handleNextPage = () => {
-      if (currentPage < totalPages) {
-        setCurrentPage(currentPage + 1);
-      }
-    };
-  
-    // Calculate the rows to display based on the current page and rowsPerPage
-    const startIndex = (currentPage - 1) * rowsPerPage;
-    const endIndex = startIndex + rowsPerPage;
-    const currentRows = filteredRequests.slice(startIndex, endIndex);
+  // Handle rows per page change
+  const handleRowsChange = (e) => {
+    setRowsPerPage(Number(e.target.value)); // Set rows per page based on selection
+    setCurrentPage(1); // Reset to first page when rows per page changes
+  };
+
+  // Handle previous page
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  // Handle next page
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  // Calculate the rows to display based on the current page and rowsPerPage
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentRows = filteredRequests.slice(startIndex, endIndex);
 
   if (loadingLeadProfile) return <StaticLoader />;
 
@@ -139,29 +140,29 @@ const Profile = ({ id }) => {
 
       {/* Requests Tab */}
       <div className="bg-white shadow-xl rounded-2xl border border-gray-200 p-6">
-      <h1 className="text-xl font-semibold text-gray-800 mb-2">Requests</h1>
+        <h1 className="text-xl font-semibold text-gray-800 mb-2">Requests</h1>
 
-      <div className="w-full flex-col md:flex-row gap-4 mb-4 flex justify-between items-center">
-        <div className='w-full md:w-1/2'>
-          <input
-            type="text"
-            placeholder="Search by name..."
-            value={searchQuery}
-            onChange={handleSearch}
-            className="w-full border border-gray-300 px-4 py-2 rounded-lg"
-          />
-        </div>
+        <div className="w-full flex-col md:flex-row gap-4 mb-4 flex justify-between items-center">
+          <div className='w-full md:w-1/2'>
+            <input
+              type="text"
+              placeholder="Search by name..."
+              value={searchQuery}
+              onChange={handleSearch}
+              className="w-full border border-gray-300 px-4 py-2 rounded-lg"
+            />
+          </div>
 
-        {/* New Request Button */}
-        <div className="w-full flex justify-end md:w-1/2"> {/* Hidden on smaller screens, visible on large screens */}
-          <Link
-            to="/dashboard_agent/requests/add_request"
-            className="px-6 py-2 bg-mainColor text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
-          >
-            Add New Request
-          </Link>
+          {/* New Request Button */}
+          <div className="w-full flex justify-end md:w-1/2"> {/* Hidden on smaller screens, visible on large screens */}
+            <Link
+              to="/dashboard_agent/requests/add_request"
+              className="px-6 py-2 bg-mainColor text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
+            >
+              Add New Request
+            </Link>
+          </div>
         </div>
-      </div>
 
 
         {/* Rows per Page */}
@@ -186,7 +187,7 @@ const Profile = ({ id }) => {
           <table className="w-full min-w-[600px]">
             <thead className="bg-gray-200 text-gray-700">
               <tr className="border-t-2 border-b-2">
-                {['SL', 'Name', 'Phone', 'Service', 'Stage', 'Agent', 'Priority','Details', 'Action'].map((header, i) => (
+                {['SL', 'Name', 'Phone', 'Service', 'Stage', 'Agent', 'Priority', 'Details', 'Action'].map((header, i) => (
                   <th key={i} className="text-center font-medium text-mainColor bg-mainBgColor py-2 border-b-2">
                     {header}
                   </th>
@@ -216,7 +217,7 @@ const Profile = ({ id }) => {
                     </td>
                     <td className="text-center py-2">
                       <div className="flex items-center justify-center gap-1">
-                      <Link to={`/dashboard_agent/requests/edit_request/${req.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link>
+                        <Link to={`/dashboard_agent/requests/edit_request/${req.id}`}  ><FaEdit color='#4CAF50' size="24" /></Link>
                       </div>
                     </td>
                   </tr>
@@ -246,58 +247,150 @@ const Profile = ({ id }) => {
         </div>
       </div>
 
+    {/* Modal */}
+<Dialog open={showModal} onClose={() => setShowModal(false)} className="relative z-50">
+  <DialogBackdrop className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300" />
+  <div className="fixed inset-0 flex items-center justify-center">
+    <DialogPanel className="w-full max-w-2xl bg-white rounded-xl shadow-2xl transform transition-all duration-300 ease-out scale-95 data-[enter]:scale-100 data-[enter]:opacity-100 max-h-[90vh] overflow-y-auto">
+      <div className="sticky top-0 bg-white p-4 z-10 border-b border-gray-100">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-gray-900">Request Details</h2>
+          <button 
+            onClick={() => setShowModal(false)}
+            className="text-gray-400 hover:text-gray-500 transition-colors"
+            aria-label="Close"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      
+      </div>
 
+      {selectedRequest && (
+        <div className="space-y-6 p-4">
+         
+          {/* Travelers */}
+          {(selectedRequest.adults && selectedRequest.adults.length > 0) && (
+            <div className="border border-gray-100 rounded-lg overflow-hidden">
+              <h3 className="bg-gray-50 px-4 py-3 text-lg font-semibold text-gray-800 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                Adult Travelers ({selectedRequest.adults.length})
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+                {selectedRequest.adults.map((adult) => (
+                  <div key={adult.id} className="border border-gray-100 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                    <p className="font-medium text-gray-800">{adult.title} {adult.first_name} {adult.last_name}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
-     {/* Modal */}
-     <Dialog open={showModal} onClose={() => setShowModal(false)} className="relative z-50">
-        <DialogBackdrop className="fixed inset-0 bg-black/50" />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="w-full max-w-2xl bg-white rounded-2xl p-8 shadow-xl transform transition-all duration-300 scale-95 hover:scale-100 max-h-screen overflow-y-auto">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6">Request Details</h2>
-            {selectedRequest && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                  <p className="text-gray-700"><strong>Name:</strong> {selectedRequest.to_name}</p>
-                  <p className="text-gray-700"><strong>Phone:</strong> {selectedRequest.to_phone}</p>
-                  <p className="text-gray-700"><strong>Service:</strong> {selectedRequest.service}</p>
-                  <p className="text-gray-700"><strong>Stage:</strong> {selectedRequest.stages}</p>
-                  <p className="text-gray-700"><strong>Priority:</strong> {selectedRequest.priority}</p>
-                  <p className="text-gray-700"><strong>Agent:</strong> {selectedRequest.agent}</p>
-                  <p className="text-gray-700"><strong>Expected Revenue:</strong> {selectedRequest.expected_revenue} {selectedRequest.currecy}</p>
+          {(selectedRequest.children && selectedRequest.children.length > 0) && (
+            <div className="border border-gray-100 rounded-lg overflow-hidden">
+              <h3 className="bg-gray-50 px-4 py-3 text-lg font-semibold text-gray-800 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                Child Travelers ({selectedRequest.children.length})
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+                {selectedRequest.children.map((child) => (
+                  <div key={child.id} className="border border-gray-100 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                    <p className="font-medium text-gray-800">{child.first_name} {child.last_name}</p>
+                    <p className="text-sm text-gray-500">{child.age} years old</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Service Specific Sections */}
+          { (selectedRequest.visa && selectedRequest.service === "Visa") && (
+            <div className="border border-gray-100 rounded-lg overflow-hidden">
+              <h3 className="bg-gray-50 px-4 py-3 text-lg font-semibold text-gray-800 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Visa Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+                <div>
+                  <p className="text-sm text-gray-500">Country</p>
+                  <p className="font-medium text-gray-800">{selectedRequest.visa.country}</p>
                 </div>
-
-                {/* Conditionally Render Service Type */}
-                {selectedRequest.visa && (
-                  <div className="mt-4 border-t pt-4 border-gray-200">
-                    <h3 className="font-semibold text-lg text-gray-800">Visa Information</h3>
-                    <div className="space-y-2 mt-3">
-                      <p className="text-gray-600"><strong>Country:</strong> {selectedRequest.visa.country}</p>
-                      <p className="text-gray-600"><strong>Appointment Date:</strong> {selectedRequest.visa.appointment_date}</p>
-                      <p className="text-gray-600"><strong>Travel Date:</strong> {selectedRequest.visa.travel_date}</p>
-                      <p className="text-gray-600"><strong>Notes:</strong> {selectedRequest.visa.notes}</p>
-                      <p className="text-gray-600"><strong>Adults:</strong> {selectedRequest.visa.adults}</p>
-                      <p className="text-gray-600"><strong>Children:</strong> {selectedRequest.visa.childreen}</p>
-                    </div>
+                <div>
+                  <p className="text-sm text-gray-500">Appointment Date</p>
+                  <p className="font-medium text-gray-800">{selectedRequest.visa.appointment_date}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Travel Date</p>
+                  <p className="font-medium text-gray-800">{selectedRequest.visa.travel_date}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Adults/Children</p>
+                  <p className="font-medium text-gray-800">{selectedRequest.visa.adults} adults, {selectedRequest.visa.childreen} children</p>
+                </div>
+                {selectedRequest.visa.notes && (
+                  <div className="md:col-span-2">
+                    <p className="text-sm text-gray-500">Notes</p>
+                    <p className="font-medium text-gray-800 whitespace-pre-line">{selectedRequest.visa.notes}</p>
                   </div>
                 )}
-
-                {/* Additional sections like Tour, Hotel, and Bus can be added below as needed */}
-
               </div>
-            )}
-
-            <div className="mt-6 flex justify-end space-x-4">
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-6 py-2 rounded-lg bg-mainColor text-white hover:bg-blue-700 transition-colors duration-300"
-              >
-                Close
-              </button>
-              {/* You can add a "Save Changes" or "Edit" button here if needed */}
             </div>
-          </DialogPanel>
+          )}
+
+          {(selectedRequest.hotel && selectedRequest.service === "Hotel") && (
+            <div className="border border-gray-100 rounded-lg overflow-hidden">
+              <h3 className="bg-gray-50 px-4 py-3 text-lg font-semibold text-gray-800 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                Hotel Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+                <div>
+                  <p className="text-sm text-gray-500">Hotel Name</p>
+                  <p className="font-medium text-gray-800">{selectedRequest.hotel.hotel_name || 'Not specified'}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Check In/Out</p>
+                  <p className="font-medium text-gray-800">
+                    {selectedRequest.hotel.check_in || '-'} → {selectedRequest.hotel.check_out || '-'}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Nights</p>
+                  <p className="font-medium text-gray-800">{selectedRequest.hotel.nights || 0}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Room Type</p>
+                  <p className="font-medium text-gray-800">{selectedRequest.hotel.room_type || 'Not specified'}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Room Quantity</p>
+                  <p className="font-medium text-gray-800">{selectedRequest.hotel.room_quantity || 0}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Guests</p>
+                  <p className="font-medium text-gray-800">
+                    {selectedRequest.hotel.adults || 0} adults, {selectedRequest.hotel.childreen || 0} children
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-      </Dialog>
+      )}
+
+      </DialogPanel>
+  </div>
+</Dialog>
 
 
     </div>

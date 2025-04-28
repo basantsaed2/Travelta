@@ -16,6 +16,7 @@ import StaticLoader from '../../../../Components/StaticLoader';
 const EditRequestPage = () => {
   const auth = useAuth();
   const { requestId } = useParams();
+  const nevigate = useNavigate();
   const { refetch: refetchRequestData, loading: loadingRequestData, data: dataRequest } = useGet({ url:`https://travelta.online/agent/request/item/${requestId}` });
 
   const {refetch: refetchList,loading: loadingList,data: requestList,} = useGet({ url: "https://travelta.online/agent/request/lists" });
@@ -370,6 +371,14 @@ const EditRequestPage = () => {
   }console.log("dataRequest", dataRequest);
   }, [dataRequest]);
 
+  
+    useEffect(() => {
+      if ((responseHotel && !loadingPostHotel)  || (responseBus && !loadingPostBus) || (responseVisa && !loadingPostVisa) || (responseFlight && !loadingPostFlight) || (responseTour && !loadingPostTour)) {
+       nevigate(-1);
+      }
+    }, [responseHotel, responseBus, responseVisa, responseFlight, responseTour, loadingPostHotel, loadingPostBus, loadingPostVisa, loadingPostFlight, loadingPostTour]);
+  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -708,6 +717,7 @@ const EditRequestPage = () => {
               <TextField
                 label="Expected Revenue"
                 variant="outlined"
+                type="number"
                 fullWidth
                 required
                 value={expectedRevenue}

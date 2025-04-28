@@ -142,6 +142,10 @@ export { default as ListRevenuePage } from "./Dashboard/AgentDashboard/Accountin
 export { default as CategoryRevenuePage } from "./Dashboard/AgentDashboard/Accounting/AccountRevenue/CategoryRevenue/CategoryRevenuePage";
 export { default as AddCategoryRevenuePage } from "./Dashboard/AgentDashboard/Accounting/AccountRevenue/CategoryRevenue/AddCategoryRevenuePage";
 export { default as EditCategoryRevenuePage } from "./Dashboard/AgentDashboard/Accounting/AccountRevenue/CategoryRevenue/EditCategoryRevenuePage";
+//Revenue List
+export { default as RevenueListPage } from "./Dashboard/AgentDashboard/Accounting/AccountRevenue/RevenueList/RevenueListPage";
+export { default as AddRevenueListPage } from "./Dashboard/AgentDashboard/Accounting/AccountRevenue/RevenueList/AddRevenueListPage";
+export { default as EditRevenueListPage } from "./Dashboard/AgentDashboard/Accounting/AccountRevenue/RevenueList/EditRevenueListPage";
 
 //Expenses
 export { default as ListExpensesPage } from "./Dashboard/AgentDashboard/Accounting/AccountExpenses/ListExpensesPage";
@@ -149,6 +153,10 @@ export { default as ListExpensesPage } from "./Dashboard/AgentDashboard/Accounti
 export { default as CategoryExpensesPage } from "./Dashboard/AgentDashboard/Accounting/AccountExpenses/CategoryExpenses/CategoryExpensesPage";
 export { default as AddCategoryExpensesPage } from "./Dashboard/AgentDashboard/Accounting/AccountExpenses/CategoryExpenses/AddCategoryExpensesPage";
 export { default as EditCategoryExpensesPage } from "./Dashboard/AgentDashboard/Accounting/AccountExpenses/CategoryExpenses/EditCategoryExpensesPage";
+//Expenses List
+export { default as ExpensesListPage } from "./Dashboard/AgentDashboard/Accounting/AccountExpenses/ExpensesList/ExpensesListPage";
+export { default as AddExpensesListPage } from "./Dashboard/AgentDashboard/Accounting/AccountExpenses/ExpensesList/AddExpensesListPage";
+export { default as EditExpensesListPage } from "./Dashboard/AgentDashboard/Accounting/AccountExpenses/ExpensesList/EditExpensesListPage";
 
 //O.E
 //Owner && Transaction

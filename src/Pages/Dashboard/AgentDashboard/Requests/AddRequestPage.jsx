@@ -490,6 +490,7 @@ const AddRequestPage = () => {
               <TextField
                 label="Expected Revenue"
                 variant="outlined"
+                type="number"
                 fullWidth
                 required
                 value={expectedRevenue}
