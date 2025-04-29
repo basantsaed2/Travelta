@@ -61,7 +61,7 @@ const EditRevenueListPage = ({ update, setUpdate }) => {
 
     const formData = new FormData();
     formData.append("category_id", selectedCategory.id);
-    formData.append("financial_id", selectedFinancial.id);
+    formData.append("financiale_id", selectedFinancial.id);
     formData.append("currency_id", selectedCurrency.id);
     formData.append("title", title);
     formData.append("date", date);
