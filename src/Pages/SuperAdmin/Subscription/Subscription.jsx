@@ -26,7 +26,9 @@ const Subscription = () => {
       payment_method: "PayPal",
     },
   ]);
-    const { refetch: refetchSubscription, loading: loadingSubscription, data: DataSubscription } = useGet({url: "https://travelta.online/api/super/subscribers"});
+    const { refetch: refetchSubscription, loading: loadingSubscription,
+       data: DataSubscription } =
+        useGet({url: "https://travelta.online/api/super/subscribers"});
       const [dataSubscription, setDataSubscription] = useState([]);
 
   const navigate = useNavigate()
@@ -56,14 +58,14 @@ const Subscription = () => {
 
     <div className="w-full overflow-x-auto">
     {loadingSubscription ? (
-      <div className="w-full h-56 flex justify-center items-center">
+      <div className="flex items-center justify-center w-full h-56">
         <StaticLoader />
       </div>
     ) : 
  (   <div className="p-4 overflow-x-auto">
-     <table className="table-auto border-collapse border border-gray-200 min-w-full text-left">
-     <thead className=' bg-mainColor text-white'>
-        <tr className=" uppercase text-xs">
+     <table className="min-w-full text-left border border-collapse border-gray-200 table-auto">
+     <thead className='text-white bg-mainColor'>
+        <tr className="text-xs uppercase ">
           <th className="px-4 py-3 border-b">Name</th>
           <th className="px-4 py-3 border-b">Email</th>
           <th className="px-4 py-3 border-b">Phone</th>
@@ -81,27 +83,27 @@ const Subscription = () => {
             key={subscription.id}
             className="hover:bg-gray-50"
           >
-            <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.name?subscription.name:"NA"}</td>
-            <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.email}</td>
-            <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.phone}</td>
-            <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.plan}</td>
-            <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.role}</td>
-            <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">${subscription.price}</td>
-            <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.startDate}</td>
-            <td className="border border-gray-200 px-4 py-2 text-sm md:text-base">{subscription.endDate}</td>
-            <td className="border border-gray-200 px-4 py-2">
+            <td className="px-4 py-2 text-sm border border-gray-200 md:text-base">{subscription.name?subscription.name:"NA"}</td>
+            <td className="px-4 py-2 text-sm border border-gray-200 md:text-base">{subscription.email}</td>
+            <td className="px-4 py-2 text-sm border border-gray-200 md:text-base">{subscription.phone}</td>
+            <td className="px-4 py-2 text-sm border border-gray-200 md:text-base">{subscription.plan}</td>
+            <td className="px-4 py-2 text-sm border border-gray-200 md:text-base">{subscription.role}</td>
+            <td className="px-4 py-2 text-sm border border-gray-200 md:text-base">${subscription.price}</td>
+            <td className="px-4 py-2 text-sm border border-gray-200 md:text-base">{subscription.startDate}</td>
+            <td className="px-4 py-2 text-sm border border-gray-200 md:text-base">{subscription.endDate}</td>
+            <td className="px-4 py-2 border border-gray-200">
             <div className="flex flex-wrap gap-2">
    <button
                 onClick={() => handleUpdate(subscription.id)}
                 
-                className="bg-mainColor text-white px-3 py-1 rounded-lg hover:bg-blue-600 text-sm md:text-base w-full md:w-auto"
+                className="w-full px-3 py-1 text-sm text-white rounded-lg bg-mainColor hover:bg-blue-600 md:text-base md:w-auto"
               >
                 Update
               </button>
               <button
                 onClick={() => handleDelete(subscription.id, subscription.name)}
                 
-                className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 text-sm md:text-base w-full md:w-auto"
+                className="w-full px-3 py-1 text-sm text-white bg-red-500 rounded-lg hover:bg-red-600 md:text-base md:w-auto"
               >
                 Delete
               </button>

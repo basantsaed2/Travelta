@@ -160,7 +160,8 @@ const UpdatePlan = () => {
   
       if (response.status === 200) {
         auth.toastSuccess("Plan updated successfully!");
-        
+                navigate(-1)
+
         // Reset the form after submission (optional)
         setName('');
         setDescription('');
@@ -188,16 +189,16 @@ const UpdatePlan = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="px-4 py-8 mx-auto max-w-7xl">
               <div className="flex items-center mb-10">
                 <button
                       onClick={handleBack}
                       className="m-4"
                       
                     >
-                      <FaArrowLeft className="text-mainColor text-2xl" />
+                      <FaArrowLeft className="text-2xl text-mainColor" />
                     </button>
-                    <h2 className="text-center text-mainColor text-3xl ">Edit Plan</h2>
+                    <h2 className="text-3xl text-center text-mainColor ">Edit Plan</h2>
                     
             
                 </div>
@@ -205,7 +206,7 @@ const UpdatePlan = () => {
                 <div className="">
 
 {loadingPlan?  (
-        <div className="w-full h-56 flex justify-center items-center">
+        <div className="flex items-center justify-center w-full h-56">
             <StaticLoader />
         </div>
 ) :(  <form onSubmit={handleSubmit} className="space-y-6">
@@ -371,7 +372,7 @@ const UpdatePlan = () => {
         <div className="flex justify-center">
           <button
             type="submit"
-            className="bg-blue-500 text-white px-6 py-2 rounded"
+            className="px-6 py-2 text-white bg-blue-500 rounded"
           >
             Update Plan
           </button>

@@ -12,6 +12,7 @@ import { FaDatabase } from 'react-icons/fa';
 import { FaBriefcase } from 'react-icons/fa';
 import { FaCog } from 'react-icons/fa';
 import { FaCheckCircle } from "react-icons/fa";
+import { GiMeal } from "react-icons/gi";
 
 import { MdHotel } from 'react-icons/md';
 import { FaMapMarkedAlt } from 'react-icons/fa';
@@ -75,6 +76,17 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
       );
       const [isActiveHotels, setIsActiveHotels] = useState(
         stateLink.isActiveHotels ?? false
+      );
+       /* MealPlan */
+       /* mosedek */
+       const [isOpenMealPlan, setIsOpenMealPlan] = useState(
+        stateLink.isOpenMealPlan ?? false
+      );
+      const [isActiveMealPlanIcon, setIsActiveMealPlanIcon] = useState(
+        stateLink.isActiveMealPlanIcon ?? false
+      );
+      const [isActiveMealPlan, setIsActiveMealPlan] = useState(
+        stateLink.isActiveMealPlan ?? false
       );
     
          /* Admin */
@@ -212,6 +224,10 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
         isActiveHotelsIcon,
         isActiveHotels,
 
+isOpenMealPlan,
+isActiveMealPlanIcon,
+        isActiveMealPlan,
+        
         isOpenAdmin,
         isActiveAdminIcon,
         isActiveAdmin,
@@ -407,10 +423,15 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
       setIsActiveFinancialIcon(false);
      
   
+
+      
       setIsOpenHotels(false);
       setIsActiveHotelsIcon(false);
       setIsActiveHotels(false);
 
+      setIsOpenMealPlan(false)
+      setIsActiveMealPlanIcon(false)
+  setIsActiveMealPlan(false)
   
       setIsOpenAdmin(false);
       setIsActiveAdminIcon(false);
@@ -508,6 +529,23 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
     //     handleClickTourism();
     //   }
     // }, [location]);
+    /* Hotels */
+    const handleClickMealPlan = useCallback(() => {
+      handleStateLinks();
+  
+      setIsOpenMealPlan(true);
+      setIsActiveMealPlanIcon(true);
+      setIsActiveMealPlan(true);
+     
+    }, []);
+    useEffect(() => {
+      const part = pathName.split("/");
+      const result = part.slice(0, 3).join("/");
+      if (result == "/super_admin/meal_plan") {
+        handleClickMealPlan();
+      }
+    }, [location]);
+  
   /* Hotels */
     const handleClickHotels = useCallback(() => {
       handleStateLinks();
@@ -798,7 +836,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
   
     
           return (
-            <div className="space-y-4 w-full">
+            <div className="w-full space-y-4">
               {/* Home */}
               <Link
                 to="/super_admin"
@@ -814,7 +852,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                      isSidebarCollapsed ? "justify-center" : "justify-start"
                    } hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
               >
-                <div className="flex font-semibold text-xl items-center gap-x-2">
+                <div className="flex items-center text-xl font-semibold gap-x-2">
                   <FaHome
                     className={`${
                       isActiveHomeIcon || isActiveHome ? "text-mainColor" : "text-white"
@@ -844,7 +882,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                  ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
                 hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
               >
-                <div className="flex font-semibold text-xl items-center gap-x-2">
+                <div className="flex items-center text-xl font-semibold gap-x-2">
                   <FaUser 
                     className={`${
                       isActiveClientIcon || isActiveClient
@@ -870,7 +908,51 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                   />
                 )} */}
               </Link>
-            
+              
+              {/* mosedek */}
+                {/* mealplan */}
+              <Link
+                to="meal_plan"
+                onMouseMove={() => setIsActiveMealPlanIcon(true)}
+                onMouseOut={() => setIsActiveMealPlanIcon(false)}
+                onClick={()=>{
+                  handleClickMealPlan();
+                                    onLinkClick();
+
+                }}
+                className={`
+                  ${isActiveMealPlan ? "active" : ""}
+                 flex items-center 
+                 ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
+                hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+              >
+                <div className="flex items-center text-xl font-semibold gap-x-2">
+                  <GiMeal 
+                    className={`${
+                      isActiveMealPlanIcon || isActiveMealPlan
+                        ? "text-mainColor"
+                        : "text-white"
+                    }`}
+                  />
+                  {!isSidebarCollapsed && (
+                     <span
+                      className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
+                        isActiveMealPlan ? "text-mainColor" : "text-white"
+                      }`}
+                    >
+                      
+                      Meal Plan
+                    </span>
+                  )}
+                </div>
+                {/* {!isSidebarCollapsed && (
+                  <IoIosArrowForward
+                    className={`${
+                      isActiveClient ? "text-mainColor rotate-90" : "text-white rotate-0"
+                    } text-xl transition-all duration-300 group-hover:text-mainColor`}
+                  />
+                )} */}
+              </Link>
         
               {/* tourism companies*/}
               {/* <Link
@@ -887,7 +969,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                  ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
                 hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
               >
-                <div className="flex font-semibold text-xl items-center gap-x-2">
+                <div className="flex items-center text-xl font-semibold gap-x-2">
                   <FaMapMarkedAlt 
                     className={`${
                       isActiveTourismIcon || isActiveTourism
@@ -930,7 +1012,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                  ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
                 hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
               >
-                <div className="flex font-semibold text-xl items-center gap-x-2">
+                <div className="flex items-center text-xl font-semibold gap-x-2">
                   <MdHotel 
                     className={`${
                       isActiveHotelsIcon || isActiveHotels
@@ -973,7 +1055,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                  ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
                 hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
               >
-                <div className="flex font-semibold text-xl items-center gap-x-2">
+                <div className="flex items-center text-xl font-semibold gap-x-2">
                   <FaUserShield 
                     className={`${
                       isActiveAdminIcon || isActiveAdmin
@@ -1017,7 +1099,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                  ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
                 hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
               >
-                <div className="flex font-semibold text-xl items-center gap-x-2">
+                <div className="flex items-center text-xl font-semibold gap-x-2">
                   <FaUserTie 
                     className={`${
                       isActiveAgentProfileIcon || isActiveAgentProfile
@@ -1061,7 +1143,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                  ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
                 hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
               >
-                <div className="flex font-semibold text-xl items-center gap-x-2">
+                <div className="flex items-center text-xl font-semibold gap-x-2">
                   <FaCalendarCheck 
                     className={`${
                       isActiveBookingIcon || isActiveBooking
@@ -1105,7 +1187,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                  ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
                 hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
               >
-                <div className="flex font-semibold text-xl items-center gap-x-2">
+                <div className="flex items-center text-xl font-semibold gap-x-2">
                   <FaMoneyCheckAlt 
                     className={`${
                       isActivePendingPaymentIcon || isActivePendingPayment
@@ -1138,7 +1220,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                         isOpenPendingPayment && !isSidebarCollapsed ? "h-17" : "h-0 "
                       } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
                     >
-                      <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
+                      <ul className="flex flex-col w-full pl-10 list-disc transition-all duration-700 gap-y-2">
                         <Link
                           to={"pending_payment/manualBooking_Pending"}
                           onClick={() => {
@@ -1194,7 +1276,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                  ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
                 hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
               >
-                <div className="flex font-semibold text-xl items-center gap-x-2">
+                <div className="flex items-center text-xl font-semibold gap-x-2">
                   <FaTasks 
                     className={`${
                       isActivePlansIcon || isActivePlans
@@ -1238,7 +1320,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                  ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
                 hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
               >
-                <div className="flex font-semibold text-xl items-center gap-x-2">
+                <div className="flex items-center text-xl font-semibold gap-x-2">
                   <FaTicketAlt 
                     className={`${
                       isActiveTicketIcon || isActiveTicket
@@ -1282,7 +1364,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                  ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
                 hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
               >
-                <div className="flex font-semibold text-xl items-center gap-x-2">
+                <div className="flex items-center text-xl font-semibold gap-x-2">
                   <FaClipboardList 
                     className={`${
                       isActiveSubscriptionIcon || isActiveSubscription
@@ -1326,7 +1408,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                  ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
                 hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
               >
-                <div className="flex font-semibold text-xl items-center gap-x-2">
+                <div className="flex items-center text-xl font-semibold gap-x-2">
                   <FiSettings 
                     className={`${
                       isActiveSettingsIcon || isActiveSettings
@@ -1370,7 +1452,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                  ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
                 hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
               >
-                <div className="flex font-semibold text-xl items-center gap-x-2">
+                <div className="flex items-center text-xl font-semibold gap-x-2">
                   <FaCheckCircle 
                     className={`${
                       isActiveSignUpIcon || isActiveSignUp
@@ -1411,7 +1493,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                   ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
                  hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
                >
-                 <div className="flex font-semibold text-xl items-center gap-x-2">
+                 <div className="flex items-center text-xl font-semibold gap-x-2">
                    <FaFileArchive  
                      className={`${
                        isActiveFinancialIcon || isActiveFinancial
@@ -1442,7 +1524,7 @@ const MenuSideSuperAdmin = ({ isSidebarCollapsed, onLinkClick }) => {
                    isOpenFinancial && !isSidebarCollapsed ? "h-17" : "h-0 "
                  } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
                >
-                 <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
+                 <ul className="flex flex-col w-full pl-10 list-disc transition-all duration-700 gap-y-2">
                    <Link
                      to={"/super_admin/financial/invoice"}
                      onClick={() => {

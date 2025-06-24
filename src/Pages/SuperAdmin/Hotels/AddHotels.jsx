@@ -529,6 +529,9 @@ console.log("Policies:", policies);
   try {
     // Simulate an API call
     postData(formData, 'Hotel Account Added Success');
+if(response.state===200){
+  navigate(-1)
+}
 
     // Reset all fields
 
@@ -645,19 +648,19 @@ console.log("Policies:", policies);
           className="m-4"
           
         >
-          <FaArrowLeft className="text-mainColor text-2xl" />
+          <FaArrowLeft className="text-2xl text-mainColor" />
         </button>
-        <h2 className="text-center text-mainColor text-3xl ">Add Hotels</h2>
+        <h2 className="text-3xl text-center text-mainColor ">Add Hotels</h2>
         
 
     </div>
-  <form onSubmit={handleSubmit} className="w-full rounded-lg p-6 shadow-md">
-  <div className="flex flex-wrap grid grid-cols-1  gap-6 mb-6">
+  <form onSubmit={handleSubmit} className="w-full p-6 rounded-lg shadow-md">
+  <div className="flex grid flex-wrap grid-cols-1 gap-6 mb-6">
     {/* Left Side */}
     <div className="flex-1 min-w-[300px]">
 
 
-    <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-2">
+    <div className="grid grid-cols-1 gap-2 md:grid-cols-1 lg:grid-cols-3">
   {/* Hotel Name */}
   <div className="mb-6">
   <TextField
@@ -716,23 +719,23 @@ console.log("Policies:", policies);
 
      {/* Hotel Logo */}
      <div className="mb-6">
-        <label className="block text-gray-700 font-semibold mb-2">Hotel Logo</label>
+        <label className="block mb-2 font-semibold text-gray-700">Hotel Logo</label>
         <input
           type="file"
           accept="image/*"
           onChange={handleImageLogoChange}
-          className="w-full px-4 py-3 border bg-transparent border-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-3 bg-transparent border border-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
         />
         {hotelLogo && (
           <div className="mt-4">
-            <img src={hotelLogo} alt="Hotel Logo Preview" className="w-full h-32 object-cover rounded" />
+            <img src={hotelLogo} alt="Hotel Logo Preview" className="object-cover w-full h-32 rounded" />
           </div>
         )}
       </div>
 
 
-      <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-2"> 
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-1 lg:grid-cols-3"> 
     {/* Country Dropdown */}
     <div className="mb-6">
     <TextField
@@ -742,7 +745,7 @@ console.log("Policies:", policies);
       value={countryId}
       onChange={(e) => setCountryId(e.target.value)}
       label="Select Country"
-      className="mb-6 shadow-lg border-gray-300"
+      className="mb-6 border-gray-300 shadow-lg"
     >
       {country.map((country) => (
         <MenuItem key={country.id} value={country.id}>
@@ -761,7 +764,7 @@ console.log("Policies:", policies);
       value={cityId}
       onChange={(e) => setCityId(e.target.value)}
       label="Select City"
-      className="mb-6 shadow-lg border-gray-300"
+      className="mb-6 border-gray-300 shadow-lg"
     >
       {city.map((city) => (
         <MenuItem key={city.id} value={city.id}>
@@ -780,7 +783,7 @@ console.log("Policies:", policies);
       value={zoneId}
       onChange={(e) => setZoneId(e.target.value)}
       label="Select Zone"
-      className="mb-6 shadow-lg border-gray-300"
+      className="mb-6 border-gray-300 shadow-lg"
     >
       {Zone.map((zone) => (
         <MenuItem key={zone.id} value={zone.id}>
@@ -796,7 +799,7 @@ console.log("Policies:", policies);
 
 {/* Image Upload Section */}
 <div className="mb-6">
-  <label className="block text-gray-700 font-semibold mb-2">Upload Hotel Images</label>
+  <label className="block mb-2 font-semibold text-gray-700">Upload Hotel Images</label>
   
   {/* Upload Button */}
   <div className="relative w-full max-w-md">
@@ -806,25 +809,25 @@ console.log("Policies:", policies);
       onChange={handleImageChange}
       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
     />
-    <div className="px-4 py-3 bg-indigo-600 text-white text-center rounded-lg cursor-pointer hover:bg-indigo-700 transition duration-200">
+    <div className="px-4 py-3 text-center text-white transition duration-200 bg-indigo-600 rounded-lg cursor-pointer hover:bg-indigo-700">
       Click to Upload Image
     </div>
   </div>
 
   {/* Display Uploaded Images */}
-  <div className="mt-4 flex flex-wrap gap-4">
+  <div className="flex flex-wrap gap-4 mt-4">
     {images.map((img, index) => (
       <div key={index} className="relative w-24 h-24">
         <img
           src={img.image}
           alt={`Uploaded ${index}`}
-          className="w-full h-full object-cover rounded-lg shadow-md"
+          className="object-cover w-full h-full rounded-lg shadow-md"
         />
         {/* Remove Button */}
         <button
           type="button"
           onClick={() => removeImageselect(index)}
-          className="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-full hover:bg-red-600 transition duration-200"
+          className="absolute top-0 right-0 px-2 py-1 text-xs text-white transition duration-200 bg-red-500 rounded-full hover:bg-red-600"
         >
           ✕
         </button>
@@ -856,10 +859,10 @@ console.log("Policies:", policies);
   />
 </div>
 
-<div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+<div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
   {/* Check-In */}
   <div className="mb-6">
-    <label className="block text-gray-700 font-semibold mb-2">Check-In</label>
+    <label className="block mb-2 font-semibold text-gray-700">Check-In</label>
     <TextField
       fullWidth
       type="time"
@@ -873,7 +876,7 @@ console.log("Policies:", policies);
 
   {/* Check-Out */}
   <div className="mb-6">
-    <label className="block text-gray-700 font-semibold mb-2">Check-Out</label>
+    <label className="block mb-2 font-semibold text-gray-700">Check-Out</label>
     <TextField
       fullWidth
       type="time"
@@ -889,7 +892,7 @@ console.log("Policies:", policies);
   
   </div>
 
-  <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-3">
+  <div className="grid grid-cols-1 gap-3 md:grid-cols-1 lg:grid-cols-2">
   {/* Hotel Video */}
   <div className="mb-6">
   <TextField
@@ -952,23 +955,23 @@ console.log("Policies:", policies);
 
     {/* Right Side */}
     <div className="flex-1 "> 
-      <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-3">{/* Hotel Facilities */}
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-1 lg:grid-cols-3">{/* Hotel Facilities */}
       {isOpen && (
-         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-         <div className="bg-white rounded-lg p-6 w-80 relative">
+         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+         <div className="relative p-6 bg-white rounded-lg w-80">
            <button
              type="button"
              onClick={togglePopup}
-             className="absolute right-0 top-0 m-1 text-red-700 text-3xl"
+             className="absolute top-0 right-0 m-1 text-3xl text-red-700"
            >
              &times;
            </button>
-           <h2 className="text-xl font-bold mb-4">Add Facility</h2>
+           <h2 className="mb-4 text-xl font-bold">Add Facility</h2>
    
            {/* Facility Name Input */}
            <input
              type="text"
-             className="w-full p-2 border border-gray-300 rounded-lg mb-4"
+             className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
              placeholder="Enter Facility Name"
              value={nameFacility}
              onChange={(e) => setNameFacility(e.target.value)}
@@ -978,7 +981,7 @@ console.log("Policies:", policies);
            <input
              type="file"
              accept="image/*"
-             className="w-full p-2 border border-gray-300 rounded-lg mb-4"
+             className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
              onChange={handleFileFacilityChange}
            />
    
@@ -987,7 +990,7 @@ console.log("Policies:", policies);
              <img
                src={logoFacility}
                alt="Facility Logo"
-               className="w-20 h-20 object-cover rounded-lg mx-auto mb-4"
+               className="object-cover w-20 h-20 mx-auto mb-4 rounded-lg"
              />
            )}
    
@@ -995,14 +998,14 @@ console.log("Policies:", policies);
            <button
              type="button"
              onClick={handleAddFacility}
-             className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none w-full"
+             className="w-full px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
            >
             {loadingDataFacility ? "Submit..." :"Submit"}
            </button>
          </div>
        </div>
       )}
-      <div className="mb-6 bg-white p-5">
+      <div className="p-5 mb-6 bg-white">
   <div className="flex items-center justify-between">
     <h2 className="text-xl font-semibold text-gray-700">Hotel Facilities</h2>
     <button
@@ -1040,7 +1043,7 @@ console.log("Policies:", policies);
           {viewAll ? (
         <div className="mb-4">
         <h2 className="text-lg font-medium">All Hotel Facilities</h2>
-        <div className="space-y-2 flex flex-col">
+        <div className="flex flex-col space-y-2">
           {DataFacilities?.map((facility) => (
             <div key={facility?.id} className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
@@ -1049,7 +1052,7 @@ console.log("Policies:", policies);
                   <img
                     src={facility.icon}
                     alt={facility.name}
-                    className="w-8 h-8 object-cover rounded-full"
+                    className="object-cover w-8 h-8 rounded-full"
                   />
                 )}
                 {/* Facility Name with Checkbox */}
@@ -1081,7 +1084,7 @@ console.log("Policies:", policies);
           ) : (
             <div className="mb-4">
               <h2 className="text-lg font-medium">Most Used Hotel Facilities</h2>
-              {/* <div className="space-y-2 flex flex-col">
+              {/* <div className="flex flex-col space-y-2">
               {selectedFacilities.slice(0, 5).map((facility) => (
             <FormControlLabel
               key={facility.id}
@@ -1107,33 +1110,33 @@ console.log("Policies:", policies);
 
       {/* Hotel Theme */}
       {isOpenTheme && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg p-6 w-80 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="relative p-6 bg-white rounded-lg w-80">
             <button
             type="button"
               onClick={togglePopupTheme}
-              className="absolute right-0 top-0 m-1 text-red-700 text-3xl"
+              className="absolute top-0 right-0 m-1 text-3xl text-red-700"
             >
               &times;
             </button>
-            <h2 className="text-xl font-bold mb-4">Add Theme</h2>
+            <h2 className="mb-4 text-xl font-bold">Add Theme</h2>
             <input
               type="text"
-              className="w-full p-2 border border-gray-300 rounded-lg mb-4"
+              className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
               placeholder="Enter Theme name"
               value={nameTheme}
               onChange={(e) => setNameTheme(e.target.value)}
             />
             <button
               onClick={handleAddTheme}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none w-full"
+              className="w-full px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
             >
               Submit
             </button>
           </div>
         </div>
       )}
-      <div className="mb-6 bg-white p-5">
+      <div className="p-5 mb-6 bg-white">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-700">Hotel Theme</h2>
           <button
@@ -1171,7 +1174,7 @@ console.log("Policies:", policies);
           {viewAllThemes ? (
             <div className="mb-4">
               <h3 className="text-lg font-medium">All Themes</h3>
-              <div className="space-y-2 flex flex-col">
+              <div className="flex flex-col space-y-2">
                 {theme.map((theme) => (
                   <div key={theme.id} className="flex items-center justify-between mb-2">
                         <FormControlLabel
@@ -1203,7 +1206,7 @@ console.log("Policies:", policies);
           ) : (
             <div className="mb-4">
               <h3 className="text-lg font-medium">Most Used Themes</h3>
-              <div className="space-y-2 flex flex-col">
+              <div className="flex flex-col space-y-2">
               {selectedTheme.slice(0, 5).map((theme) => (
             <FormControlLabel
               key={theme.id}
@@ -1226,19 +1229,19 @@ console.log("Policies:", policies);
       </div>
 {/* Hotel card */}
       {isOpenCard && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg p-6 w-80 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="relative p-6 bg-white rounded-lg w-80">
             <button
             type="button"
               onClick={togglePopupCard}
-              className="absolute right-0 top-0 m-1 text-red-700 text-3xl"
+              className="absolute top-0 right-0 m-1 text-3xl text-red-700"
             >
               &times;
             </button>
-            <h2 className="text-xl font-bold mb-4">Add Item</h2>
+            <h2 className="mb-4 text-xl font-bold">Add Item</h2>
             <input
               type="text"
-              className="w-full p-2 border border-gray-300 rounded-lg mb-4"
+              className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
               placeholder="Enter Card name"
               value={nameCard}
               onChange={(e) => setNameCard(e.target.value)}
@@ -1249,7 +1252,7 @@ console.log("Policies:", policies);
     <input
              type="file"
              accept="image/*"
-             className="w-full p-2 border border-gray-300 rounded-lg mb-4"
+             className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
              onChange={handleFileCardChange}
            />
    
@@ -1258,20 +1261,20 @@ console.log("Policies:", policies);
              <img
                src={logoCard}
                alt="card Logo"
-               className="w-20 h-20 object-cover rounded-lg mx-auto mb-4"
+               className="object-cover w-20 h-20 mx-auto mb-4 rounded-lg"
              />
            )}
 
             <button
               onClick={handleAddCard}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none w-full"
+              className="w-full px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
             >
               {loadingDataCard? "Submit..." :"Submit"}
             </button>
           </div>
         </div>
       )}
-      <div className="mb-6 bg-white p-5">
+      <div className="p-5 mb-6 bg-white">
   <div className="flex items-center justify-between">
     <h2 className="text-xl font-semibold text-gray-700">Hotel Accepted Cards</h2>
     <button
@@ -1309,7 +1312,7 @@ console.log("Policies:", policies);
           {viewAllCard ? (
   <div className="mb-4">
     <h2 className="text-lg font-medium">All Hotel Accepted Cards</h2>
-    <div className="space-y-2 flex flex-col">
+    <div className="flex flex-col space-y-2">
       {card.map((card) => (
         <div key={card.id} className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
@@ -1319,7 +1322,7 @@ console.log("Policies:", policies);
               <img
                 src={card.logo}
                 alt={card.card_name}
-                className="w-8 h-8 object-cover rounded-md"
+                className="object-cover w-8 h-8 rounded-md"
               />
             )} */}
 
@@ -1351,7 +1354,7 @@ console.log("Policies:", policies);
 ) : (
   <div className="mb-4">
     <h2 className="text-lg font-medium">Most Used Hotel Card</h2>
-    <div className="space-y-2 flex flex-col">
+    <div className="flex flex-col space-y-2">
       {selectedCard.slice(0, 5).map((card) => (
         <div key={card.id} className="flex items-center gap-2">
           {/* Card Logo/Icon */}
@@ -1359,7 +1362,7 @@ console.log("Policies:", policies);
             <img
               src={card.logo}
               alt={card.card_name}
-              className="w-8 h-8 object-cover rounded-md"
+              className="object-cover w-8 h-8 rounded-md"
             />
           )}
 
@@ -1389,7 +1392,7 @@ console.log("Policies:", policies);
 
 
 {/* Hotel Theme */}
-<div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-3">
+<div className="grid grid-cols-1 gap-3 md:grid-cols-1 lg:grid-cols-1">
   <HotelPolicy onPoliciesChange={handlePoliciesUpdate} />
 <Feature selectedFeatures={selectedFeatures} setSelectedFeatures={setSelectedFeatures}/>
 {/* <LocationHotel/> */}
@@ -1406,7 +1409,7 @@ console.log("Policies:", policies);
   </div>
 
   {/* Buttons */}
-  <div className="flex flex-col md:flex-row justify-between gap-4">
+  <div className="flex flex-col justify-between gap-4 md:flex-row">
   <button
   type="submit"
   disabled={isSubmitting}
@@ -1421,7 +1424,7 @@ console.log("Policies:", policies);
     <button
       type="button"
       
-      className="w-full md:w-auto bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+      className="w-full px-6 py-3 font-semibold text-white bg-gray-500 rounded-lg md:w-auto hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
     >
       Cancel
     </button>

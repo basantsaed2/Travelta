@@ -22,7 +22,7 @@ const AddCity = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // 'success' or 'error'
 
-  const auth = useAuth();
+  const auth = useAuth(); 
 
   useEffect(() => {
     refetchCountry();
@@ -82,10 +82,10 @@ const AddCity = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-start justify-start">
-      <div className=" p-8 rounded-2xl  w-full ">
+    <div className="flex items-start justify-start min-h-screen">
+      <div className="w-full p-8 rounded-2xl">
         <div className="flex items-center mb-6 space-x-2">
-          <button onClick={handleBack} className="text-mainColor text-2xl">
+          <button onClick={handleBack} className="text-2xl text-mainColor">
             <FaArrowLeft />
           </button>
           <h2 className="text-3xl font-semibold text-mainColor">Add City</h2>
@@ -127,7 +127,7 @@ const AddCity = () => {
               value={countryId}
               onChange={(e) => setCountryId(e.target.value)}
               label="Select Country"
-              className="shadow-lg border-gray-300 rounded-xl"
+              className="border-gray-300 shadow-lg rounded-xl"
               required
             >
               {loadingCountry ? (
@@ -150,7 +150,7 @@ const AddCity = () => {
               type="submit"
               variant="contained"
               color="primary"
-              className="w-full py-3 rounded-full text-lg font-semibold transition duration-300 ease-in-out"
+              className="w-full py-3 text-lg font-semibold transition duration-300 ease-in-out rounded-full"
               disabled={loadingPost}
             >
               {loadingPost ? <CircularProgress size={24} color="inherit" /> : 'Submit'}

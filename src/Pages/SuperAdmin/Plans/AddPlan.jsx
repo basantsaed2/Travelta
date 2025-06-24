@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TextField, MenuItem, Checkbox, FormControlLabel, Switch } from '@mui/material';
 import { usePost } from '../../../Hooks/usePostJson';
 import { useAuth } from '../../../Context/Auth';
@@ -115,18 +115,24 @@ const AddPlan = () => {
     navigate(-1); // Go back to the previous page
   };
   
-
+useEffect(() => {
+        if (!loadingPost) {
+            if (response) {
+            navigate(-1);
+            }
+        }
+        }, [loadingPost, response, navigate]);
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="px-4 py-8 mx-auto max-w-7xl">
               <div className="flex items-center mb-10">
           <button
                 onClick={handleBack}
                 className="m-4"
                 
               >
-                <FaArrowLeft className="text-mainColor text-2xl" />
+                <FaArrowLeft className="text-2xl text-mainColor" />
               </button>
-              <h2 className="text-center text-mainColor text-3xl ">Add Plan</h2>
+              <h2 className="text-3xl text-center text-mainColor ">Add Plan</h2>
               
       
           </div>
@@ -294,7 +300,7 @@ const AddPlan = () => {
         <div className="flex justify-center">
           <button
             type="submit"
-            className="bg-blue-500 text-white px-6 py-2 rounded"
+            className="px-6 py-2 text-white bg-blue-500 rounded"
           >
             Add Plan
           </button>
