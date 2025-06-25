@@ -17,6 +17,11 @@ import HomeSuperAdmin from "./Pages/SuperAdmin/Home/HomeSuperAdmin";
 import ClientLayout from "./Layouts/SuperAdminLayouts/ClientLayout/ClientLayout";
 import HotelsLayout from "./Layouts/SuperAdminLayouts/HotelsLayout/HotelsLayout";
 import AdminLayout from "./Layouts/SuperAdminLayouts/AdminLayouts/AdminLayout";
+// mosedek
+import MealPlanLayout from './Layouts/SuperAdminLayouts/MealPlanLayout/MealPlanLayout'
+import AddMealPlan from "./Pages/SuperAdmin/MealPlan/AddMealPlan";
+import  UpdateMealPlan  from "./Pages/SuperAdmin/MealPlan/UpdateMealPlan";
+//
 import AgentProfileLayout from "./Layouts/SuperAdminLayouts/AgentProfileLayout/AgentProfileLayout";
 import BookingSuperLayout from "./Layouts/SuperAdminLayouts/BookingLayout/BookingSuperLayout";
 import TourismLayout from "./Layouts/SuperAdminLayouts/TourismLayout/TourismLayout";
@@ -234,6 +239,18 @@ const AppBookingLayOut= () => (
   <Outlet />
   </>
 );
+//
+const AppMealPlanLayOut= () => (
+  <>
+  <Outlet />
+  </>
+);
+const AddMealPlanLayOut= () => (
+  <>
+  <Outlet />
+  </>
+);
+
 
 const AppPendingLayOut= () => (
   <>
@@ -1329,6 +1346,28 @@ export const router = createBrowserRouter([
                   {
                     path: "update/:id",
                     element: <UpdateBooking/>,
+                  },
+
+                ]
+
+              },
+              //
+              {
+                path: 'meal_plan',
+                element: <AppMealPlanLayOut/>,
+// mosedek
+                children:[
+                  {
+                    path: "",
+                    element: <MealPlanLayout/>,
+                  },
+                  {
+                    path: "add",
+                    element: <AddMealPlan/>,
+                  },
+                  {
+                    path: "update/:id",
+                    element: <UpdateMealPlan/>,
                   },
 
                 ]
