@@ -6,7 +6,7 @@ import StaticLoader from "../../../../Components/StaticLoader";
 import { FaFilePdf, FaPrint } from "react-icons/fa";
 import { FaEdit, FaFileExcel, FaUser, FaCalendarAlt, FaMoneyBillWave, FaPhone, FaEnvelope } from "react-icons/fa";
 import { FaArrowRight, FaUserFriends, FaUserSlash, FaChild, FaPlus } from 'react-icons/fa';
-import { FaUniversity,FaCommentAlt ,FaClock ,FaQuestion , FaCreditCard, FaFileInvoice, FaDownload, FaExclamationTriangle, FaCalculator } from 'react-icons/fa';
+import { FaUniversity, FaCommentAlt, FaClock, FaQuestion, FaCreditCard, FaFileInvoice, FaDownload, FaExclamationTriangle, FaCalculator } from 'react-icons/fa';
 import { FaComments, FaCommentSlash, FaHistory, FaTimes } from 'react-icons/fa';
 import { FaTasks, FaCheck, FaTrash, FaExchangeAlt, FaTimesCircle, FaBell, FaFileInvoiceDollar } from 'react-icons/fa';
 import { FaTicketAlt, FaEye, FaPaperclip, FaCheckCircle, FaQuestionCircle, FaExternalLinkAlt, FaHashtag, FaClipboardList, FaBed, FaBuilding, FaFileDownload } from 'react-icons/fa';
@@ -27,11 +27,27 @@ const BookingDetailsPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { type, data: initialData } = location.state;
-  const [bookingData, setBookingData] = useState(() => ({
-    status: 'pending', // Default status
-    ...location.state?.data // Spread existing data if available
-  }));
-  const safeStatus = bookingData?.status || 'pending';
+
+  const [item, setItem] = useState([]);
+  const [activeTab, setActiveTab] = useState("details");
+  const [showStatusConfirm, setShowStatusConfirm] = useState(false);
+  const [showStatusVoucher, setShowStatusVoucher] = useState(false);
+  const [showStatusCancel, setShowStatusCancel] = useState(false);
+  const [newStatus, setNewStatus] = useState("");
+  const [customerName, setCustomerName] = useState('');
+  const [customerPhone, setCustomerPhone] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
+  const [totallyPaid, setTotallyPaid] = useState(false);
+  const [confirmationNum, setConfirmationNum] = useState('');
+  const [cancelationReason, setCancelationReason] = useState("");
+  const [deposits, setDeposits] = useState([{ deposit: "", date: "" }]);
+  const [request, setRequest] = useState("");
+
+  // const []
+
+
+  const [bookingData, setBookingData] = useState({ status: 'pending' });
+  const safeStatus = '';
 
   // Fetch functions
   const { refetch: refetchDetails, loading: loadingDetails, data: bookingDetails } = useGet({
@@ -313,21 +329,6 @@ const BookingDetailsPage = () => {
   const { postData: postRequestEngineTour, loadingPost: loadingRequestEngineTour, response: responseRequestEngineTour } = usePost({ url: `https://travelta.online/agent/booking/engine_tour_special_request/${detailsId}` });
   const { postData: postRequestEngineTourStatus, loadingPost: loadingRequestEngineTourStatus, response: responseRequestEngineTourStatus } = usePost({ url: `https://travelta.online/agent/booking/special_status_tour_engine/${detailsId}` });
 
-
-  const [item, setItem] = useState(initialData || {});
-  const [activeTab, setActiveTab] = useState("details");
-  const [specialRequest, setSpecialRequest] = useState(initialData?.special_request || "");
-  const [showStatusConfirm, setShowStatusConfirm] = useState(false);
-  const [showStatusVoucher, setShowStatusVoucher] = useState(false);
-  const [showStatusCancel, setShowStatusCancel] = useState(false);
-  const [newStatus, setNewStatus] = useState("");
-  const [confirmationNum, setConfirmationNum] = useState("");
-  const [cancelationReason, setCancelationReason] = useState("");
-  const [deposits, setDeposits] = useState([{ deposit: "", date: "" }]);
-  const [request, setRequest] = useState("");
-  // const [task, setTask] = useState("");
-  // const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
-
   const [activeStatusModal, setActiveStatusModal] = useState(null);
 
   const tabs = [
@@ -340,63 +341,65 @@ const BookingDetailsPage = () => {
   ];
 
   // Enhanced Request Management System
- // State for request management
-const [requestText, setRequestText] = useState(item.special_request || '');
-const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
-const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
-const [selectedStatus, setSelectedStatus] = useState('pending');
+  // State for request management
+  const [requestText, setRequestText] = useState('');
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+  const [specialRequest, setSpecialRequest] = useState("");
+  const [specialRequestStatus, setSpecialRequestStatus] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState('pending');
 
-// Get the correct API handlers based on booking type
-const getRequestHandlers = () => {
-  switch(type) {
-    case 'roomEngine':
-      return {
-        postRequest: postRequestEngine,
-        postStatus: postRequestEngineStatus
-      };
-    case 'tourEngine':
-      return {
-        postRequest: postRequestEngineTour,
-        postStatus: postRequestEngineTourStatus
-      };
-    default:
-      return {
-        postRequest: postRequest,
-        postStatus: postRequestStatus
-      };
-  }
-};
+  // Get the correct API handlers based on booking type
+  const getRequestHandlers = () => {
+    switch (type) {
+      case 'roomEngine':
+        return {
+          postRequest: postRequestEngine,
+          postStatus: postRequestEngineStatus
+        };
+      case 'tourEngine':
+        return {
+          postRequest: postRequestEngineTour,
+          postStatus: postRequestEngineTourStatus
+        };
+      default:
+        return {
+          postRequest: postRequest,
+          postStatus: postRequestStatus
+        };
+    }
+  };
 
-// Handle request submission
-const handleSubmitRequest = async () => {
-  const { postRequest } = getRequestHandlers();
-  try {
-    postRequest({ 
-      special_request: requestText,
-    });
-    toast.success("Request submitted successfully!");
-    setIsRequestModalOpen(false);
-  } catch (error) {
-    console.error("Request submission failed:", error);
-    toast.error("Failed to submit request");
-  }
-};
+  // Handle request submission
+  const handleSubmitRequest = async () => {
+    const { postRequest } = getRequestHandlers();
+    try {
+      postRequest({
+        special_request: requestText,
+      });
+      toast.success("Request submitted successfully!");
+      setIsRequestModalOpen(false);
+    } catch (error) {
+      console.error("Request submission failed:", error);
+      toast.error("Failed to submit request");
+    }
+  };
 
-// Handle status change
-const handleUpdateStatus = async (status) => {
-  const { postStatus } = getRequestHandlers();
-  try {
-    await postStatus({ 
-      request_status : status,
-    });
-    // await refetchBookingData();
-    setIsStatusModalOpen(false);
-    toast.success(`Status changed to ${status}`);
-  } catch (error) {
-    console.error("Status change failed:", error);
-    toast.error("Failed to update status");
-  }
-};
+  // Handle status change
+  const handleUpdateStatus = async (status) => {
+    const { postStatus } = getRequestHandlers();
+    try {
+      await postStatus({
+        request_status: status,
+      });
+      // await refetchBookingData();
+      setIsStatusModalOpen(false);
+      toast.success(`Status changed to ${status}`);
+    } catch (error) {
+      console.error("Status change failed:", error);
+      toast.error("Failed to update status");
+    }
+  };
   // useEffect(() => {
   //   if (bookingDetails) {
   //     setItem(prev => ({ ...prev, ...bookingDetails }));
@@ -466,13 +469,11 @@ const handleUpdateStatus = async (status) => {
         await confirmed(requestData, "Status Confirmed Success");
       } else if (newStatus === "vouchered") {
         requestData = {
-          totally_paid: true,
           confirmation_num: confirmationNum,
-          ...(type !== 'roomEngine' && type !== 'tourEngine' && {
-            name: bookingDetails.agent_data?.name,
-            phone: bookingDetails.agent_data?.phone,
-            email: bookingDetails.agent_data?.email
-          })
+          totally_paid: totallyPaid === true ? 1 : 0,
+          name: customerName,
+          phone: customerPhone,
+          email: customerEmail
         };
         await vouchered(requestData, "Status Vouchered Success");
       } else if (newStatus === "canceled") {
@@ -480,26 +481,24 @@ const handleUpdateStatus = async (status) => {
         await canceled(requestData, "Status Canceled Success");
       }
 
-      // Refetch and update state with fresh data
-      let freshData;
-      if (["hotel", "hotels", "visa", "flight", "bus", "tour"].includes(type)) {
-        freshData = await refetchDetails();
-      } else if (type === "roomEngine") {
-        freshData = await refetchEngineDetails();
-      } else if (type === "tourEngine") {
-        freshData = await refetchEngineTourDetails();
-      }
+      // // Refetch and update state with fresh data
+      // let freshData;
+      // if (["hotel", "hotels", "visa", "flight", "bus", "tour"].includes(type)) {
+      //   freshData = await refetchDetails();
+      // } else if (type === "roomEngine") {
+      //   freshData = await refetchEngineDetails();
+      // } else if (type === "tourEngine") {
+      //   freshData = await refetchEngineTourDetails();
+      // }
 
       setBookingData(prev => ({
-        ...prev,
-        status: newStatus
+        ...prev
       })); setActiveStatusModal(null);
     } catch (error) {
       console.error("Status change failed:", error);
       // Revert UI if API call fails
       setBookingData(prev => ({
-        ...prev,
-        status: location.state?.data?.status || 'pending'
+        ...prev
       }));
     }
   };
@@ -526,7 +525,7 @@ const handleUpdateStatus = async (status) => {
     );
 
     const isEngine = type === 'roomEngine' || type === 'tourEngine';
-    const statusText = isEngine ? "Reservation" : "Booking";
+    const statusText = isEngine ? "Booking" : "Booking";
 
     switch (currentStatus) {
       case "pending":
@@ -551,7 +550,7 @@ const handleUpdateStatus = async (status) => {
               <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center">
                 <FaTicketAlt className="text-blue-600 text-xs" />
               </div>,
-              isEngine ? "Issue Voucher" : "Generate Voucher")}
+              isEngine ? "Generate Voucher" : "Generate Voucher")}
             {actionButton("canceled", "red",
               <div className="w-6 h-6 rounded-full bg-rose-100 flex items-center justify-center">
                 <FaTimes className="text-rose-600 text-xs" />
@@ -745,24 +744,67 @@ const handleUpdateStatus = async (status) => {
   //   }
   // };
   const renderDetailsContent = () => {
-    switch (type) {
-      case 'hotel':
-      case 'hotels':
-      case 'roomEngine':
-        return HotelDetails(item);
-      case 'visa':
-        return VisaDetails(item);
-      case 'flight':
-        return FlightDetails(item);
-      case 'bus':
-        return BusDetails(item);
-      case 'tour':
-      case 'tourEngine':
-        return TourDetails(item);
-      default:
-        return <div>No details available for this booking type</div>;
+    if (!item) return null;
+    console.log("Item Details:", item);
+
+    if (item.manuel_booking || item.booking_room_engine || item.booing_tour_engine) {
+      switch (type) {
+        case 'hotel':
+        case 'hotels':
+        case 'roomEngine':
+          return HotelDetails(item.manuel_booking?.hotel || item.booking_room_engine);
+        case 'visa':
+          return VisaDetails(item.manuel_booking.visa);
+        case 'flight':
+          return FlightDetails(item.manuel_booking.fetchTasks);
+        case 'bus':
+          return BusDetails(item.manuel_booking.bus);
+        case 'tour':
+        case 'tourEngine':
+          return TourDetails(item.manuel_booking?.tour || item.booing_tour_engine);
+          default:
+          return <div>No details available</div>;
+      }
     }
   };
+  useEffect(() => {
+    if (item?.manuel_booking || item?.booking_room_engine || item?.booing_tour_engine) {
+      let newStatus = 'pending';
+      switch (type) {
+        case 'hotel':
+        case 'hotels':
+        case 'roomEngine':
+          newStatus = item?.manuel_booking?.hotel?.status ?? item?.booking_room_engine?.status ?? 'pending';
+          setSpecialRequest(item?.manuel_booking?.hotel?.special_request || item?.booking_room_engine?.special_request || '');
+          setSpecialRequestStatus(item?.manuel_booking?.hotel?.request_status || item?.booking_room_engine?.request_status || '');
+          break;
+        case 'visa':
+          newStatus = item?.manuel_booking.visa?.status || 'pending';
+          setSpecialRequest(item?.manuel_booking.visa?.special_request || '');
+          setSpecialRequestStatus(item?.manuel_booking.visa?.request_status || '');
+          break;
+        case 'flight':
+          newStatus = item?.manuel_booking.flight?.status || 'pending';
+          setSpecialRequest(item?.manuel_booking.flight?.special_request || '');
+          setSpecialRequestStatus(item?.manuel_booking.flight?.request_status || '');
+          break;
+        case 'bus':
+          newStatus = item?.manuel_booking.bus?.status || 'pending';
+          setSpecialRequest(item?.manuel_booking.bus?.special_request || '');
+          setSpecialRequestStatus(item?.manuel_booking.bus?.request_status || '');
+          break;
+        case 'tour':
+        case 'tourEngine':
+          newStatus = item?.manuel_booking?.tour?.status ?? item?.booing_tour_engine?.status ?? 'pending';
+          setSpecialRequest(item?.manuel_booking?.tour?.special_request || item?.booing_tour_engine?.special_request || '');
+          setSpecialRequestStatus(item?.manuel_booking?.tour?.request_status || item?.booing_tour_engine?.request_status || '');
+          break;
+        default:
+          newStatus = 'pending';
+      }
+      setBookingData(prev => ({ ...prev, status: newStatus }));
+    }
+  }, [item, type ,specialRequest]);  // Only runs when `item` or `type` changes
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -797,59 +839,88 @@ const handleUpdateStatus = async (status) => {
               Booking Status Management
             </h2>
             <div className="flex items-center space-x-2">
-              <span className={`px-3 py-1 rounded-full text-xs font-medium ${item.status === "pending" ? "bg-amber-100 text-amber-800" :
-                item.status === "confirmed" ? "bg-emerald-100 text-emerald-800" :
-                  item.status === "vouchered" ? "bg-blue-100 text-blue-800" :
+              <span className={`px-3 py-1 rounded-full text-xs font-medium ${bookingData.status === "pending" ? "bg-amber-100 text-amber-800" :
+                bookingData.status === "confirmed" ? "bg-emerald-100 text-emerald-800" :
+                  bookingData.status === "vouchered" ? "bg-blue-100 text-blue-800" :
                     "bg-rose-100 text-rose-800"
                 }`}>
-                {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+                {bookingData.status.charAt(0).toUpperCase() + bookingData.status.slice(1)}
               </span>
             </div>
           </div>
 
           {/* Modern Status Stepper */}
           <div className="relative mb-8">
-            <div className="flex items-center justify-between relative z-10">
-              {['pending', 'confirmed', 'vouchered', 'canceled'].map((step, index) => {
-                const safeStatus = bookingData?.status || 'pending';
-                const isActive = safeStatus === step;
-                const isCompleted = ['pending', 'confirmed', 'vouchered', 'canceled']
-                  .indexOf(safeStatus) >= index;
+            {(() => {
+              const safeStatus = bookingData?.status || 'pending';
+              const statusIndex = ['pending', 'confirmed', 'vouchered', 'canceled'].indexOf(safeStatus);
+              const isCanceled = safeStatus === 'canceled';
 
-                return (
-                  <div key={step} className="flex flex-col items-center">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 border-2 ${isCompleted
-                      ? isActive
-                        ? "border-indigo-500 bg-indigo-500"
-                        : "border-emerald-500 bg-emerald-500"
-                      : "border-gray-300 bg-white"
-                      }`}>
-                      {isCompleted ? (
-                        <FaCheck className={`text-xs ${isActive ? "text-white" : "text-white"}`} />
-                      ) : (
-                        <span className={`text-sm ${isActive ? "text-indigo-600" : "text-gray-400"}`}>
-                          {index + 1}
-                        </span>
-                      )}
-                    </div>
-                    <span className={`text-xs font-medium ${isActive ? "text-indigo-600" :
-                      isCompleted ? "text-emerald-600" : "text-gray-500"
-                      }`}>
-                      {step.charAt(0).toUpperCase() + step.slice(1)}
-                    </span>
+              return (
+                <>
+                  {/* Status Steps */}
+                  <div className="flex items-center justify-between relative z-10">
+                    {['pending', 'confirmed', 'vouchered', 'canceled'].map((step, index) => {
+                      const isActive = safeStatus === step;
+                      const isCompleted = statusIndex >= index && !isCanceled;
+                      const isCanceledStep = isCanceled && step === 'canceled';
+
+                      return (
+                        <div key={step} className="flex flex-col items-center">
+                          {/* Step Circle */}
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 border-2 ${isCanceledStep
+                            ? "border-rose-500 bg-rose-500"
+                            : isCompleted
+                              ? isActive
+                                ? "border-indigo-500 bg-indigo-500"
+                                : "border-emerald-500 bg-emerald-500"
+                              : "border-gray-300 bg-white"
+                            }`}>
+                            {isCanceledStep ? (
+                              <FaTimes className="text-xs text-white" />
+                            ) : isCompleted ? (
+                              <FaCheck className="text-xs text-white" />
+                            ) : (
+                              <span className={`text-sm ${isActive ? "text-indigo-600" : "text-gray-400"}`}>
+                                {index + 1}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Step Label */}
+                          <span className={`text-xs font-medium ${isCanceledStep
+                            ? "text-rose-600"
+                            : isActive
+                              ? "text-indigo-600"
+                              : isCompleted
+                                ? "text-emerald-600"
+                                : "text-gray-500"
+                            }`}>
+                            {step.charAt(0).toUpperCase() + step.slice(1)}
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
-                );
-              })}
-            </div>
-            <div className="absolute top-5 left-10 right-10 h-1 bg-gray-200 z-0">
-              <div
-                className={`h-full transition-all duration-500 ${safeStatus === "pending" ? "bg-emerald-500 w-0" :
-                  safeStatus === "confirmed" ? "bg-emerald-500 w-1/3" :
-                    safeStatus === "vouchered" ? "bg-emerald-500 w-2/3" :
-                      "bg-emerald-500 w-full"
-                  }`}
-              />
-            </div>
+
+                  {/* Progress Bar */}
+                  <div className="absolute top-5 left-10 right-10 h-1 bg-gray-200 z-0">
+                    <div
+                      className={`h-full transition-all duration-500 ${isCanceled
+                        ? "bg-rose-500 w-full"
+                        : safeStatus === "pending"
+                          ? "bg-gray-200 w-0"
+                          : safeStatus === "confirmed"
+                            ? "bg-emerald-500 w-1/3"
+                            : safeStatus === "vouchered"
+                              ? "bg-emerald-500 w-2/3"
+                              : "bg-emerald-500 w-full"
+                        }`}
+                    />
+                  </div>
+                </>
+              );
+            })()}
           </div>
 
           {/* Action Buttons */}
@@ -910,10 +981,11 @@ const handleUpdateStatus = async (status) => {
                 </h3>
               </div>
 
-              <form onSubmit={submitStatusChange} className="p-6">
-                <div className="mb-6">
+              <form onSubmit={submitStatusChange} className="p-6 space-y-4">
+                {/* Confirmation Number */}
+                <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Confirmation Number
+                    Confirmation Number *
                   </label>
                   <div className="relative">
                     <input
@@ -929,11 +1001,71 @@ const handleUpdateStatus = async (status) => {
                     </div>
                   </div>
                   <p className="mt-1 text-xs text-gray-500">
-                    This will be sent to the customer and marked as paid
+                    This will be sent to the customer
                   </p>
                 </div>
 
-                <div className="flex justify-end space-x-4">
+                {/* Customer Information */}
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Customer Name *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter Customer Name"
+                      value={customerName}
+                      onChange={(e) => setCustomerName(e.target.value)}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Phone Number *
+                    </label>
+                    <input
+                      type="tel"
+                      placeholder="Enter Customer Phone"
+                      value={customerPhone}
+                      onChange={(e) => setCustomerPhone(e.target.value)}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="Enter Customer Email"
+                    value={customerEmail}
+                    onChange={(e) => setCustomerEmail(e.target.value)}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
+                    required
+                  />
+                </div>
+
+                {/* Payment Status */}
+                <div className="flex items-center">
+                  <input
+                    id="totally-paid"
+                    type="checkbox"
+                    checked={totallyPaid}
+                    onChange={(e) => setTotallyPaid(e.target.checked)}
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  />
+                  <label htmlFor="totally-paid" className="ml-2 block text-sm text-gray-700">
+                    Mark as fully paid
+                  </label>
+                </div>
+
+                {/* Form Actions */}
+                <div className="flex justify-end space-x-4 pt-4">
                   <button
                     type="button"
                     onClick={() => setActiveStatusModal(null)}
@@ -1480,282 +1612,273 @@ const handleUpdateStatus = async (status) => {
             </div>
           )}
 
-{activeTab === 'requests' && (
-  <div className="space-y-6">
-    {/* Current Requests Section */}
-    <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold flex items-center text-gray-800">
-            <FaComments className="text-blue-500 mr-2 text-lg" />
-            Special Requests
-          </h2>
-          <div className="flex space-x-3">
-            {item.special_request && (
-              <button
-                onClick={() => {
-                  setSelectedStatus(item.request_status || 'pending');
-                  setIsStatusModalOpen(true);
-                }}
-                className="flex items-center px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors shadow-sm"
-              >
-                <FaExchangeAlt className="mr-2 text-sm" />
-                Change Status
-              </button>
-            )}
-            <button
-              onClick={() => {
-                setRequestText(item.special_request || '');
-                setIsRequestModalOpen(true);
-              }}
-              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
-            >
-              <FaPlus className="mr-2 text-sm" />
-              {item.special_request ? 'Update Request' : 'Add Request'}
-            </button>
-          </div>
-        </div>
-
-        {/* Current Request Display */}
-        {item.special_request ? (
-          <div className="space-y-4">
-            <div className={`p-5 rounded-lg border transition-all ${
-              item.request_status === 'approve' 
-                ? 'bg-green-50/80 border-green-200 shadow-green-100 shadow-sm' 
-                : item.request_status === 'reject' 
-                  ? 'bg-red-50/80 border-red-200 shadow-red-100 shadow-sm' 
-                  : item.request_status === 'upon_availability' 
-                    ? 'bg-purple-50/80 border-purple-200 shadow-purple-100 shadow-sm'
-                    : 'bg-blue-50/80 border-blue-200 shadow-blue-100 shadow-sm'
-            }`}>
-              <div className="flex justify-between items-start gap-4">
-                <div className="flex items-start space-x-4 flex-1">
-                  <div className={`p-3 rounded-full flex-shrink-0 shadow-inner ${
-                    item.request_status === 'approve' 
-                      ? 'bg-green-100 text-green-600 shadow-green-200/50' 
-                      : item.request_status === 'reject' 
-                        ? 'bg-red-100 text-red-600 shadow-red-200/50' 
-                        : item.request_status === 'upon_availability' 
-                          ? 'bg-purple-100 text-purple-600 shadow-purple-200/50'
-                          : 'bg-blue-100 text-blue-600 shadow-blue-200/50'
-                  }`}>
-                    <FaCommentAlt className="text-lg" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between items-center flex-wrap gap-2">
-                      <p className="font-medium text-gray-800">Your Request</p>
-                      <span className={`text-xs font-medium px-3 py-1 rounded-full shadow-inner ${
-                        item.request_status === 'approve' 
-                          ? 'bg-green-100 text-green-800 shadow-green-200/30' 
-                          : item.request_status === 'reject' 
-                            ? 'bg-red-100 text-red-800 shadow-red-200/30' 
-                            : item.request_status === 'upon_availability' 
-                              ? 'bg-purple-100 text-purple-800 shadow-purple-200/30'
-                              : 'bg-yellow-100 text-yellow-800 shadow-yellow-200/30'
-                      }`}>
-                        {item.request_status?.replace('_', ' ') || 'pending'}
-                      </span>
+          {activeTab === 'requests' && (
+            <div className="space-y-6">
+              {/* Current Requests Section */}
+              <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                <div className="p-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-xl font-semibold flex items-center text-gray-800">
+                      <FaComments className="text-blue-500 mr-2 text-lg" />
+                      Special Requests
+                    </h2>
+                    <div className="flex space-x-3">
+                      {specialRequest && (
+                        <button
+                          onClick={() => {
+                            setSelectedStatus(specialRequestStatus || 'pending');
+                            setIsStatusModalOpen(true);
+                          }}
+                          className="flex items-center px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors shadow-sm"
+                        >
+                          <FaExchangeAlt className="mr-2 text-sm" />
+                          Change Status
+                        </button>
+                      )}
+                      <button
+                        onClick={() => {
+                          setRequestText(specialRequest || '');
+                          setIsRequestModalOpen(true);
+                        }}
+                        className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+                      >
+                        <FaPlus className="mr-2 text-sm" />
+                        {specialRequest ? 'Update Request' : 'Add Request'}
+                      </button>
                     </div>
-                    <p className="text-gray-700 mt-2 whitespace-pre-line leading-relaxed">
-                      {item.special_request}
-                    </p>
-                    {item.request_notes && (
-                      <div className="mt-3 p-3 bg-white/50 rounded-lg border border-gray-100 text-sm text-gray-600 shadow-inner">
-                        <p className="font-medium text-gray-700 flex items-center">
-                          <FaInfoCircle className="mr-2 text-blue-400" />
-                          Admin Notes
-                        </p>
-                        <p className="mt-1">{item.request_notes}</p>
-                      </div>
-                    )}
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-100">
-            <FaCommentSlash className="mx-auto text-gray-400 text-4xl mb-3" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No Special Requests</h3>
-            <p className="text-gray-500 mb-4 max-w-md mx-auto">
-              You haven't made any special requests yet. Click "Add Request" to create one.
-            </p>
-          </div>
-        )}
-      </div>
-    </div>
 
-    {/* Request History Section */}
-    {item.request_history?.length > 0 && (
-      <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
-        <div className="p-6">
-          <h3 className="text-lg font-semibold mb-4 flex items-center text-gray-800">
-            <FaHistory className="text-gray-500 mr-2" />
-            Request History
-          </h3>
-          <div className="space-y-3">
-            {item.request_history.map((request, index) => (
-              <div 
-                key={index} 
-                className={`p-4 rounded-lg border transition-all ${
-                  request.status === 'approve' 
-                    ? 'bg-green-50/80 border-green-200 shadow-green-100 shadow-sm' 
-                    : request.status === 'reject' 
-                      ? 'bg-red-50/80 border-red-200 shadow-red-100 shadow-sm' 
-                      : request.status === 'upon_availability' 
-                        ? 'bg-purple-50/80 border-purple-200 shadow-purple-100 shadow-sm'
-                        : 'bg-gray-50/80 border-gray-200 shadow-gray-100 shadow-sm'
-                }`}
-              >
-                <div className="flex justify-between items-start gap-3">
-                  <div className="flex items-start space-x-3 flex-1">
-                    <div className={`p-2 rounded-full flex-shrink-0 shadow-inner ${
-                      request.status === 'approve' 
-                        ? 'bg-green-100 text-green-600 shadow-green-200/50' 
-                        : request.status === 'reject' 
-                          ? 'bg-red-100 text-red-600 shadow-red-200/50' 
-                          : request.status === 'upon_availability' 
-                            ? 'bg-purple-100 text-purple-600 shadow-purple-200/50'
-                            : 'bg-gray-100 text-gray-600 shadow-gray-200/50'
-                    }`}>
-                      <FaClock className="text-sm" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between items-center flex-wrap gap-2">
-                        <p className="text-gray-700 whitespace-pre-line leading-relaxed">
-                          {request.message}
-                        </p>
-                        <span className={`text-xs font-medium px-2.5 py-1 rounded-full shadow-inner ${
-                          request.status === 'approve' 
-                            ? 'bg-green-100 text-green-800 shadow-green-200/30' 
-                            : request.status === 'reject' 
-                              ? 'bg-red-100 text-red-800 shadow-red-200/30' 
-                              : request.status === 'upon_availability' 
-                                ? 'bg-purple-100 text-purple-800 shadow-purple-200/30'
-                                : 'bg-gray-100 text-gray-800 shadow-gray-200/30'
+                  {/* Current Request Display */}
+                  {specialRequest ? (
+                    <div className="space-y-4">
+                      <div className={`p-5 rounded-lg border transition-all ${specialRequestStatus === 'approve'
+                        ? 'bg-green-50/80 border-green-200 shadow-green-100 shadow-sm'
+                        : specialRequestStatus === 'reject'
+                          ? 'bg-red-50/80 border-red-200 shadow-red-100 shadow-sm'
+                          : specialRequestStatus === 'upon_availability'
+                            ? 'bg-purple-50/80 border-purple-200 shadow-purple-100 shadow-sm'
+                            : 'bg-blue-50/80 border-blue-200 shadow-blue-100 shadow-sm'
                         }`}>
-                          {request.status?.replace('_', ' ')}
-                        </span>
+                        <div className="flex justify-between items-start gap-4">
+                          <div className="flex items-start space-x-4 flex-1">
+                            <div className={`p-3 rounded-full flex-shrink-0 shadow-inner ${specialRequestStatus === 'approve'
+                              ? 'bg-green-100 text-green-600 shadow-green-200/50'
+                              : specialRequestStatus === 'reject'
+                                ? 'bg-red-100 text-red-600 shadow-red-200/50'
+                                : specialRequestStatus === 'upon_availability'
+                                  ? 'bg-purple-100 text-purple-600 shadow-purple-200/50'
+                                  : 'bg-blue-100 text-blue-600 shadow-blue-200/50'
+                              }`}>
+                              <FaCommentAlt className="text-lg" />
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex justify-between items-center flex-wrap gap-2">
+                                <p className="font-medium text-gray-800">Your Request</p>
+                                <span className={`text-xs font-medium px-3 py-1 rounded-full shadow-inner ${specialRequestStatus === 'approve'
+                                  ? 'bg-green-100 text-green-800 shadow-green-200/30'
+                                  : specialRequestStatus === 'reject'
+                                    ? 'bg-red-100 text-red-800 shadow-red-200/30'
+                                    : specialRequestStatus === 'upon_availability'
+                                      ? 'bg-purple-100 text-purple-800 shadow-purple-200/30'
+                                      : 'bg-yellow-100 text-yellow-800 shadow-yellow-200/30'
+                                  }`}>
+                                  {specialRequestStatus?.replace('_', ' ') || 'pending'}
+                                </span>
+                              </div>
+                              <p className="text-gray-700 mt-2 whitespace-pre-line leading-relaxed">
+                                {specialRequest}
+                              </p>
+                              {item.request_notes && (
+                                <div className="mt-3 p-3 bg-white/50 rounded-lg border border-gray-100 text-sm text-gray-600 shadow-inner">
+                                  <p className="font-medium text-gray-700 flex items-center">
+                                    <FaInfoCircle className="mr-2 text-blue-400" />
+                                    Admin Notes
+                                  </p>
+                                  <p className="mt-1">{item.request_notes}</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <p className="text-xs text-gray-500 mt-2 flex items-center">
-                        <FaCalendarAlt className="mr-1.5 opacity-70" />
-                        {new Date(request.created_at).toLocaleString()}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-100">
+                      <FaCommentSlash className="mx-auto text-gray-400 text-4xl mb-3" />
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">No Special Requests</h3>
+                      <p className="text-gray-500 mb-4 max-w-md mx-auto">
+                        You haven't made any special requests yet. Click "Add Request" to create one.
                       </p>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    )}
 
-    {/* Request Modal */}
-    {isRequestModalOpen && (
-      <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-        <div className="bg-white rounded-xl shadow-xl w-full max-w-md transform transition-all animate-scaleIn">
-          <div className="p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold text-gray-800">
-                {item.special_request ? 'Update Request' : 'New Special Request'}
-              </h3>
-              <button 
-                onClick={() => setIsRequestModalOpen(false)}
-                className="text-gray-400 hover:text-gray-500 transition-colors"
-              >
-                <FaTimes />
-              </button>
-            </div>
-            <div className="space-y-4">
-              <textarea
-                value={requestText}
-                onChange={(e) => setRequestText(e.target.value)}
-                placeholder="Describe your special request in detail..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                rows={6}
-              />
-              <div className="flex justify-end space-x-3 pt-2">
-                <button
-                  onClick={() => setIsRequestModalOpen(false)}
-                  className="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSubmitRequest}
-                  disabled={!requestText.trim()}
-                  className={`px-5 py-2.5 rounded-lg text-white transition-colors ${
-                    !requestText.trim() 
-                      ? 'bg-blue-400 cursor-not-allowed' 
-                      : 'bg-blue-600 hover:bg-blue-700'
-                  }`}
-                >
-                  {item.special_request ? 'Update Request' : 'Submit Request'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )}
-
-    {/* Status Change Modal */}
-    {isStatusModalOpen && (
-      <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-        <div className="bg-white rounded-xl shadow-xl w-full max-w-md transform transition-all animate-scaleIn">
-          <div className="p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold text-gray-800">
-                Update Request Status
-              </h3>
-              <button 
-                onClick={() => setIsStatusModalOpen(false)}
-                className="text-gray-400 hover:text-gray-500 transition-colors"
-              >
-                <FaTimes />
-              </button>
-            </div>
-            <div className="space-y-5">
-              <div className="grid grid-cols-2 gap-3">
-                {['pending', 'approve', 'reject', 'upon_availability'].map((status) => (
-                  <button
-                    key={status}
-                    onClick={() => handleUpdateStatus(status)}
-                    className={`p-4 rounded-xl border transition-all flex flex-col items-center ${
-                      status === 'approve'
-                        ? 'hover:bg-green-50 border-green-200 text-green-700'
-                        : status === 'reject'
-                          ? 'hover:bg-red-50 border-red-200 text-red-700'
-                          : status === 'upon_availability'
-                            ? 'hover:bg-purple-50 border-purple-200 text-purple-700'
-                            : 'hover:bg-yellow-50 border-yellow-200 text-yellow-700'
-                    }`}
-                  >
-                    <div className={`p-3 rounded-full mb-2 ${
-                      status === 'approve' ? 'bg-green-100 text-green-600' :
-                      status === 'reject' ? 'bg-red-100 text-red-600' :
-                      status === 'upon_availability' ? 'bg-purple-100 text-purple-600' :
-                      'bg-yellow-100 text-yellow-600'
-                    }`}>
-                      {status === 'approve' && <FaCheck className="text-lg" />}
-                      {status === 'reject' && <FaTimes className="text-lg" />}
-                      {status === 'upon_availability' && <FaQuestion className="text-lg" />}
-                      {status === 'pending' && <FaClock className="text-lg" />}
+              {/* Request History Section */}
+              {item.request_history?.length > 0 && (
+                <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                  <div className="p-6">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center text-gray-800">
+                      <FaHistory className="text-gray-500 mr-2" />
+                      Request History
+                    </h3>
+                    <div className="space-y-3">
+                      {item.request_history.map((request, index) => (
+                        <div
+                          key={index}
+                          className={`p-4 rounded-lg border transition-all ${request.status === 'approve'
+                            ? 'bg-green-50/80 border-green-200 shadow-green-100 shadow-sm'
+                            : request.status === 'reject'
+                              ? 'bg-red-50/80 border-red-200 shadow-red-100 shadow-sm'
+                              : request.status === 'upon_availability'
+                                ? 'bg-purple-50/80 border-purple-200 shadow-purple-100 shadow-sm'
+                                : 'bg-gray-50/80 border-gray-200 shadow-gray-100 shadow-sm'
+                            }`}
+                        >
+                          <div className="flex justify-between items-start gap-3">
+                            <div className="flex items-start space-x-3 flex-1">
+                              <div className={`p-2 rounded-full flex-shrink-0 shadow-inner ${request.status === 'approve'
+                                ? 'bg-green-100 text-green-600 shadow-green-200/50'
+                                : request.status === 'reject'
+                                  ? 'bg-red-100 text-red-600 shadow-red-200/50'
+                                  : request.status === 'upon_availability'
+                                    ? 'bg-purple-100 text-purple-600 shadow-purple-200/50'
+                                    : 'bg-gray-100 text-gray-600 shadow-gray-200/50'
+                                }`}>
+                                <FaClock className="text-sm" />
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex justify-between items-center flex-wrap gap-2">
+                                  <p className="text-gray-700 whitespace-pre-line leading-relaxed">
+                                    {request.message}
+                                  </p>
+                                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full shadow-inner ${request.status === 'approve'
+                                    ? 'bg-green-100 text-green-800 shadow-green-200/30'
+                                    : request.status === 'reject'
+                                      ? 'bg-red-100 text-red-800 shadow-red-200/30'
+                                      : request.status === 'upon_availability'
+                                        ? 'bg-purple-100 text-purple-800 shadow-purple-200/30'
+                                        : 'bg-gray-100 text-gray-800 shadow-gray-200/30'
+                                    }`}>
+                                    {request.status?.replace('_', ' ')}
+                                  </span>
+                                </div>
+                                <p className="text-xs text-gray-500 mt-2 flex items-center">
+                                  <FaCalendarAlt className="mr-1.5 opacity-70" />
+                                  {new Date(request.created_at).toLocaleString()}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <span className="text-sm font-medium">
-                      {status.replace('_', ' ')}
-                    </span>
-                  </button>
-                ))}
-              </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Request Modal */}
+              {isRequestModalOpen && (
+                <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+                  <div className="bg-white rounded-xl shadow-xl w-full max-w-md transform transition-all animate-scaleIn">
+                    <div className="p-6">
+                      <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-xl font-semibold text-gray-800">
+                          {specialRequest ? 'Update Request' : 'New Special Request'}
+                        </h3>
+                        <button
+                          onClick={() => setIsRequestModalOpen(false)}
+                          className="text-gray-400 hover:text-gray-500 transition-colors"
+                        >
+                          <FaTimes />
+                        </button>
+                      </div>
+                      <div className="space-y-4">
+                        <textarea
+                          value={requestText}
+                          onChange={(e) => setRequestText(e.target.value)}
+                          placeholder="Describe your special request in detail..."
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                          rows={6}
+                        />
+                        <div className="flex justify-end space-x-3 pt-2">
+                          <button
+                            onClick={() => setIsRequestModalOpen(false)}
+                            className="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            onClick={handleSubmitRequest}
+                            disabled={!requestText.trim()}
+                            className={`px-5 py-2.5 rounded-lg text-white transition-colors ${!requestText.trim()
+                              ? 'bg-blue-400 cursor-not-allowed'
+                              : 'bg-blue-600 hover:bg-blue-700'
+                              }`}
+                          >
+                            {specialRequest ? 'Update Request' : 'Submit Request'}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Status Change Modal */}
+              {isStatusModalOpen && (
+                <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+                  <div className="bg-white rounded-xl shadow-xl w-full max-w-md transform transition-all animate-scaleIn">
+                    <div className="p-6">
+                      <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-xl font-semibold text-gray-800">
+                          Update Request Status
+                        </h3>
+                        <button
+                          onClick={() => setIsStatusModalOpen(false)}
+                          className="text-gray-400 hover:text-gray-500 transition-colors"
+                        >
+                          <FaTimes />
+                        </button>
+                      </div>
+                      <div className="space-y-5">
+                        <div className="grid grid-cols-2 gap-3">
+                          {['pending', 'approve', 'reject', 'upon_availability'].map((status) => (
+                            <button
+                              key={status}
+                              onClick={() => handleUpdateStatus(status)}
+                              className={`p-4 rounded-xl border transition-all flex flex-col items-center ${status === 'approve'
+                                ? 'hover:bg-green-50 border-green-200 text-green-700'
+                                : status === 'reject'
+                                  ? 'hover:bg-red-50 border-red-200 text-red-700'
+                                  : status === 'upon_availability'
+                                    ? 'hover:bg-purple-50 border-purple-200 text-purple-700'
+                                    : 'hover:bg-yellow-50 border-yellow-200 text-yellow-700'
+                                }`}
+                            >
+                              <div className={`p-3 rounded-full mb-2 ${status === 'approve' ? 'bg-green-100 text-green-600' :
+                                status === 'reject' ? 'bg-red-100 text-red-600' :
+                                  status === 'upon_availability' ? 'bg-purple-100 text-purple-600' :
+                                    'bg-yellow-100 text-yellow-600'
+                                }`}>
+                                {status === 'approve' && <FaCheck className="text-lg" />}
+                                {status === 'reject' && <FaTimes className="text-lg" />}
+                                {status === 'upon_availability' && <FaQuestion className="text-lg" />}
+                                {status === 'pending' && <FaClock className="text-lg" />}
+                              </div>
+                              <span className="text-sm font-medium">
+                                {status.replace('_', ' ')}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        </div>
-      </div>
-    )}
-  </div>
-)}
+          )}
 
           {activeTab === 'invoice' && (
             <div className="space-y-6">

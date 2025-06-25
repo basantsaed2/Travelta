@@ -185,7 +185,7 @@ const InvoicePage = ({ update }) => {
                       <FiAlertTriangle className="mr-2 text-yellow-500" />
                       Late Fee:
                     </span>
-                    <span className="font-medium text-red-500">{invoiceData.fine} {invoiceData.plan.currancy.currancy_name}</span>
+                    <span className="font-medium text-red-500">{invoiceData.fine} {invoiceData.plan?.currancy?.currancy_name || ""}</span>
                   </div>
                 )}
               </div>
@@ -203,19 +203,19 @@ const InvoicePage = ({ update }) => {
             <div className="space-y-4">
               <div className="flex justify-between items-center py-3 px-4 bg-gray-50 rounded">
                 <span className="text-gray-600">Base Price:</span>
-                <span className="font-medium">{paymentDetails.originalPrice.toFixed(2)} {invoiceData.plan.currancy.currancy_name}</span>
+                <span className="font-medium">{paymentDetails.originalPrice.toFixed(2)} {invoiceData.plan?.currancy?.currancy_name || ""}</span>
               </div>
 
               {isOverdue && (
                 <div className="flex justify-between items-center py-3 px-4 bg-red-50 rounded">
                   <span className="text-gray-600">Late Fee:</span>
-                  <span className="font-medium text-red-500">+{paymentDetails.fineAmount.toFixed(2)} {invoiceData.plan.currancy.currancy_name}</span>
+                  <span className="font-medium text-red-500">+{paymentDetails.fineAmount.toFixed(2)} {invoiceData.plan?.currancy?.currancy_name || ""}</span>
                 </div>
               )}
 
               <div className="flex justify-between items-center py-3 px-4 bg-gray-50 rounded">
                 <span className="text-gray-600">Subtotal:</span>
-                <span className="font-medium">{paymentDetails.subtotal.toFixed(2)} {invoiceData.plan.currancy.currancy_name}</span>
+                <span className="font-medium">{paymentDetails.subtotal.toFixed(2)} {invoiceData.plan?.currancy?.currancy_name || ""}</span>
               </div>
 
               <div className="flex justify-between items-center py-3 px-4 bg-green-50 rounded">
@@ -228,7 +228,7 @@ const InvoicePage = ({ update }) => {
                   Discount ({invoiceData.plan.discount_type}):
                 </span>
                 <span className="font-medium text-green-600">
-                  - {paymentDetails.discountAmount.toFixed(2)} {invoiceData.plan.currancy.currancy_name}
+                  - {paymentDetails.discountAmount.toFixed(2)} {invoiceData.plan?.currancy?.currancy_name || ""}
                   {invoiceData.plan.discount_type === "percentage" && ` (${invoiceData.plan.discount_value}%)`}
                 </span>
               </div>
@@ -237,7 +237,7 @@ const InvoicePage = ({ update }) => {
                 <div className="flex justify-between items-center py-3 px-4 bg-blue-50 rounded">
                   <span className="text-gray-800 font-semibold">Total Amount Due:</span>
                   <span className={`text-xl font-bold ${isOverdue ? 'text-red-600' : 'text-blue-600'}`}>
-                    {paymentDetails.totalDue.toFixed(2)} {invoiceData.plan.currancy.currancy_name}
+                    {paymentDetails.totalDue.toFixed(2)} {invoiceData.plan?.currancy?.currancy_name || ""}
                   </span>
                 </div>
               </div>
@@ -271,7 +271,7 @@ const InvoicePage = ({ update }) => {
                   Your subscription has expired. Immediate payment is required to avoid service interruption.
                 </p>
                 <p className="text-sm text-red-500 mt-1">
-                  A late fee of {invoiceData.fine} {invoiceData.plan.currancy.currancy_name} has been applied to your total amount due.
+                  A late fee of {invoiceData.fine} {invoiceData.plan?.currancy?.currancy_name || ""} has been applied to your total amount due.
                 </p>
               </div>
             </div>
