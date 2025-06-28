@@ -1118,7 +1118,7 @@ const HotelBookingDetailsPage = () => {
 
   useEffect(() => {
     if (suppliersData) {
-      setSuppliers(suppliersData.suppliers);
+      setSuppliers(suppliersData.supplier_booking_engine);
       setCustomers(suppliersData.customers);
     }
   }, [suppliersData]);

@@ -1,9 +1,11 @@
 import React from "react";
 import { FaBars, FaSignOutAlt } from "react-icons/fa";
 import { useAuth } from "../../Context/Auth";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = ({ onToggleSidebar }) => {
   const auth = useAuth();
+  const Navigate = useNavigate();
 
   const handleLogout = () => {
     auth.logout(); // Call logout function from auth context
@@ -20,7 +22,7 @@ const Navbar = ({ onToggleSidebar }) => {
       </button>
       
       <div className="flex items-center space-x-4">
-        <button className="p-2 rounded hover:bg-gray-100">Profile</button>
+        <button onClick={()=>Navigate("profile")} className="p-2 rounded hover:bg-gray-100">Profile</button>
 
         {/* Logout Button */}
         <button

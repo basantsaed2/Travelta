@@ -137,7 +137,7 @@ const HotelDetails = (hotel) => {
             </div>
 
             {/* Special Request */}
-            {hotel.special_request && (
+            {(hotel.special_request && type !== "roomEngine") && (
                 <div className="mt-6 bg-white p-5 rounded-xl shadow-sm border border-gray-200">
                     <h4 className="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
                         <FaStar className="text-blue-500" />
@@ -148,7 +148,7 @@ const HotelDetails = (hotel) => {
             )}
 
             {/* Voucher Link */}
-            {hotel.voucher && (
+            {(hotel.voucher && type !== "roomEngine") && (
                 <div className="mt-6 flex justify-end">
                     <a 
                         href={hotel.voucher} 
