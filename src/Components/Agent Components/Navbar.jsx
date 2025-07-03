@@ -12,7 +12,7 @@ const Navbar = ({ onToggleSidebar }) => {
   };
 
   return (
-    <nav className="bg-white shadow-md px-2 md:px-6 py-2 flex justify-between items-center">
+    <nav className="bg-white shadow-md px-2 md:px-5 py-2 flex justify-between items-center">
       {/* Sidebar Toggle Button */}
       <button className="text-gray-600 text-2xl flex gap-3 items-center" onClick={onToggleSidebar}>
         <FaBars />

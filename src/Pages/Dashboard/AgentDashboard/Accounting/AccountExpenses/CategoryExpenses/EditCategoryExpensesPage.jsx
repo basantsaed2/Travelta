@@ -29,7 +29,6 @@ const EditCategoryExpensesPage = ({ update, setUpdate }) => {
 
     useEffect(() => {
         if (category) {
-            console.log("category",category)
           setName(category.name);
           setSelectedParentCategory(category.parent_category?.id)
         }
@@ -59,7 +58,7 @@ const EditCategoryExpensesPage = ({ update, setUpdate }) => {
     
     return (
         <>
-        {(loadingPost )? (
+        {(loadingPost || loadingCategory )? (
                <div className="w-full h-56 flex justify-center items-center">
                       <StaticLoader />
                </div>

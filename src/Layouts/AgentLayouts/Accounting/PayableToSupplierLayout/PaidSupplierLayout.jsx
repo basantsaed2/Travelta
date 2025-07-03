@@ -4,14 +4,14 @@ import { useNavigate } from 'react-router-dom'
 import TitlePage from '../../../../Components/TitlePage'
 
 const PaidSupplierLayout = () => {
-    const navigate= useNavigate()
+  const navigate = useNavigate()
   return (
     <>
-                    <div className="flex gap-3">
- <TitlePage text={'Paid Supplier'} />
-   
- </div>
-    <PaidToSupplier/></>
+      <div className="flex gap-3">
+        <TitlePage text={'Paid Supplier'} />
+
+      </div>
+      <PaidToSupplier /></>
   )
 }
 

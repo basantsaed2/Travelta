@@ -426,7 +426,7 @@ const BookingEngine = ({ update, setUpdate }) => {
                     {/* Hotel Logo */}
                     <div className="flex-shrink-0 ml-3">
                       <img
-                        src={hotel.hotel_logo || 'https://via.placeholder.com/50'}
+                        src={hotel.hotel_logo || '_'}
                         alt={hotel.hotel_name}
                         className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
                       />
@@ -506,7 +506,7 @@ const BookingEngine = ({ update, setUpdate }) => {
                       <Link
                         to="tour_details"
                         state={{
-                         tour,
+                         tour,noOfPeople
                         }}
                         className="flex items-center gap-1 text-xl text-mainColor underline cursor-pointer"
                       >

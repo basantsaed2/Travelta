@@ -12,9 +12,9 @@ const RequestListLayout = () => {
           <div className='w-3/9'>
           <TitlePage text={'Request List'} />
           </div>
-          <Link to='add_request'>
+          {/* <Link to='add_request'>
               <AddButton Size='text-base' Text='Add New Request' />
-            </Link>
+            </Link> */}
         </div>
         <RequestPage update={update} setUpdate={setUpdate}/>
       </>

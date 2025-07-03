@@ -11,19 +11,12 @@ import { Link } from "react-router-dom";
 
 const CategoryRevenuePage = () => {
   const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
-  const [categories, setCategories] = useState([]);
-  const [selectedParentCategory, setSelectedParentCategory] = useState("");
-  const [openDelete, setOpenDelete] = useState(null);
 
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
   const [categoryName, setCategoryName] = useState("");
   const [parentID, setParentId] = useState("");
   const [newName, setNewName] = useState("");
   const [newId, setNewId] = useState("");
-  const [searchText, setSearchText] = useState("");
-  const { deleteData, loadingDelete, responseDelete } = useDelete();
-
 
   const {
     refetch: refetchCategory,
@@ -32,63 +25,68 @@ const CategoryRevenuePage = () => {
   } = useGet({
     url: `https://travelta.online/agent/accounting/revenue/category`,
   });
-  const {
-    postData: postCategory,
-    loadingPost,
-    response,
-  } = usePost({
-    url: `https://travelta.online/agent/accounting/revenue/category/add`,
-  });
-  const [category, setCategory] = useState([]);
-  const [parent, setParent] = useState([]);
+
+  const { deleteData, loadingDelete, responseDelete } = useDelete();
+  const [openDelete, setOpenDelete] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [searchText, setSearchText] = useState("");
+
+  const [selectedCategory, setSelectedCategory] = useState("");
+
   //Pagination State
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
 
   const auth = useAuth();
+
   useEffect(() => {
     refetchCategory();
   }, [refetchCategory]);
 
   useEffect(() => {
-    if (DataCategory) {
-      setCategory(DataCategory.categories);
-      setParent(DataCategory.parent_categories);
+    if (DataCategory && DataCategory.categories) {
+      setCategories(DataCategory.categories);
     }
   }, [DataCategory]);
 
-  const AddCategory = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("name", categoryName);
-    formData.append("category_id", parentID);
-    postCategory(formData, "data added successful").then(() => {
-      // Close the popup
-      setIsAddPopupOpen(false);
-
-      // Reset the form data
-      setCategoryName("");
-      setParentId("");
-      refetchCategory();
-    });
+  const handleOpenDelete = (item) => {
+    setOpenDelete(item);
   };
-  const filteredCategory = category.filter((category) => {
+  const handleCloseDelete = () => {
+    setOpenDelete(null);
+  };
+
+  const handleDelete = async (id) => {
+    const success = await deleteData(
+      `https://travelta.online/agent/accounting/revenue/category/delete/${id}`,
+      `Category Deleted Successfully.`
+    );
+    if (success) {
+      setCategories(category.filter((item) => item.id !== id));
+    }
+  };
+
+  // Get unique lists
+  const uniqueCategory = [
+    ...new Set(categories.map((category) => category.name).filter(Boolean)),
+  ];
+
+  // Handle input changes
+  const handleSearch = (e) => setSearchText(e.target.value.toLowerCase());
+  const handleFilterCategory = (e) => setSelectedCategory(e.target.value);
+
+  const filteredCategory = categories.filter((category) => {
     const matchesSearch =
-      category?.name?.toLowerCase().includes(searchText) ||
-      category.parent_category?.name?.toLowerCase().includes(searchText);
+      category?.name?.toLowerCase().includes(searchText);
 
     // Directly compare each category with selected filters
     const categoryMatch = selectedCategory
       ? category.name === selectedCategory
       : true;
 
-    const categoryParentMatch = selectedParentCategory
-      ? category.parent_category?.name === selectedParentCategory
-      : true;
-
-    return matchesSearch && categoryMatch && categoryParentMatch;
+    return matchesSearch && categoryMatch;
   });
+
   // Export filtered data to Excel
   const exportToExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(
@@ -99,102 +97,31 @@ const CategoryRevenuePage = () => {
       }))
     );
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Expenses Categories");
-    XLSX.writeFile(workbook, "Expenses Categories.xlsx");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Revenue Categories");
+    XLSX.writeFile(workbook, "Revenue Categories.xlsx");
   };
 
-  // Handle input changes
-  const handleSearch = (e) => setSearchText(e.target.value.toLowerCase());
-  const handleFilterCategory = (e) => setSelectedCategory(e.target.value);
-  const handleFilterParentCategory = (e) =>
-    setSelectedParentCategory(e.target.value);
-  // Get unique lists
-  const uniqueCategory = [
-    ...new Set(categories.map((category) => category.name).filter(Boolean)),
-  ];
-  const uniqueParentCategory = [
-    ...new Set(
-      categories
-        .map((category) => category.parent_category?.name)
-        .filter(Boolean)
-    ),
-  ];
+  // Pagination Logic
+  const totalPages = Math.ceil(filteredCategory.length / rowsPerPage);
+  const paginatedData = filteredCategory.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
 
-  const handleUpdateCategory = async () => {
-    if (!selectedCategory) return;
-
-    const updatedCategory = {
-      name: newName,
-      category_id: newId,
-    };
-
-    try {
-      const response = await fetch(
-        `https://travelta.online/agent/accounting/revenue/category/update/${selectedCategory.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.user?.token || ""}`,
-          },
-          body: JSON.stringify(updatedCategory),
-        }
-      );
-
-      const data = await response.json();
-
-      if (data.success) {
-        setCategory((prevCategories) =>
-          prevCategories.map((cat) =>
-            cat.id === selectedCategory.id
-              ? { ...cat, ...updatedCategory }
-              : cat
-          )
-        );
-        setIsEditPopupOpen(false); // Close the edit popup
-        auth.toastSuccess("Category updated successfully!");
-      } else {
-        auth.toastError("Failed to update category");
-      }
-    } catch (error) {
-      console.error("Error updating category:", error);
-      auth.toastError("Error updating category");
-    }
-  };
-
-  const handleDelete = async (id) => {
-    const success = await deleteData(
-      `https://travelta.online/agent/accounting/revenue/category/delete/${id}`,
-      `Category Deleted Successfully.`
-    );
-    if (success) {
-      setCategory(category.filter((item) => item.id !== id));
-    }
+  const handleNextPage = () =>
+    setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
+  const handlePrevPage = () =>
+    setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
+  const handleRowsChange = (e) => {
+    setRowsPerPage(Number(e.target.value));
+    setCurrentPage(1); // Reset to first page when rows per page changes
   };
 
   if (loadingCategory) {
     return <StaticLoader />;
   }
-    // Pagination Logic
-    const totalPages = Math.ceil(filteredCategory.length / rowsPerPage);
-    const paginatedData = filteredCategory.slice(
-      (currentPage - 1) * rowsPerPage,
-      currentPage * rowsPerPage
-    );
-  
-    const handleNextPage = () =>
-      setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
-    const handlePrevPage = () =>
-      setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
-    const handleRowsChange = (e) => {
-      setRowsPerPage(Number(e.target.value));
-      setCurrentPage(1); // Reset to first page when rows per page changes
-    };
+  const headers = ["Category", "Category Parent", "Action"];
 
-    const headers = ["Category", "Category Parent", "Action"];
-
-
-    
   return (
     <>
       <div className="w-full pb-5 flex items-start justify-start overflow-x-scroll scrollSection">
@@ -225,22 +152,6 @@ const CategoryRevenuePage = () => {
                 >
                   <option value="">Filter by Category</option>
                   {uniqueCategory.map((Category, index) => (
-                    <option key={index} value={Category}>
-                      {Category}
-                    </option>
-                  ))}
-                </select>
-                <FaFilter className="absolute right-3 top-3 text-gray-500 pointer-events-none" />
-              </div>
-
-              <div className="relative w-full md:w-[240px]">
-                <select
-                  onChange={handleFilterParentCategory}
-                  value={selectedParentCategory}
-                  className="appearance-none w-full bg-gray-50 text-gray-700 px-4 py-2 rounded-lg border border-gray-300 outline-none cursor-pointer focus:ring-2 focus:ring-blue-300"
-                >
-                  <option value="">Filter by Parent Category</option>
-                  {uniqueParentCategory.map((Category, index) => (
                     <option key={index} value={Category}>
                       {Category}
                     </option>
@@ -280,248 +191,154 @@ const CategoryRevenuePage = () => {
 
             {/**table */}
 
-                      <div className="w-full sm:min-w-0 block overflow-x-scroll scrollSection border-collapse">
-                        <table className="w-full min-w-[600px]">
-                          <thead className="bg-gray-200 text-gray-700">
-                            <tr className="border-t-2 border-b-2">
-                              <th className="w-[50px] text-mainColor bg-mainBgColor text-center font-medium sm:text-sm lg:text-base xl:text-lg p-2 border-b-2">
-                                SL
-                              </th>
-                              {headers.map((name, index) => (
-                                <th
-                                  key={index}
-                                  className="min-w-[120px] text-mainColor bg-mainBgColor text-center font-medium sm:text-sm lg:text-base xl:text-lg py-3 border-b-2"
+            <div className="w-full sm:min-w-0 block overflow-x-scroll scrollSection border-collapse">
+              <table className="w-full min-w-[600px]">
+                <thead className="bg-gray-200 text-gray-700">
+                  <tr className="border-t-2 border-b-2">
+                    <th className="w-[50px] text-mainColor bg-mainBgColor text-center font-medium sm:text-sm lg:text-base xl:text-lg p-2 border-b-2">
+                      SL
+                    </th>
+                    {headers.map((name, index) => (
+                      <th
+                        key={index}
+                        className="min-w-[120px] text-mainColor bg-mainBgColor text-center font-medium sm:text-sm lg:text-base xl:text-lg py-3 border-b-2"
+                      >
+                        {name}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {paginatedData.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan="4"
+                        className="text-center text-xl text-gray-500 py-4"
+                      >
+                        No Expenses Categories Found
+                      </td>
+                    </tr>
+                  ) : (
+                    paginatedData.map(
+                      (
+                        category,
+                        index // 👈 Use filteredleads
+                      ) => (
+                        <tr
+                          key={index}
+                          className={`border-b ${index % 2 === 0 ? "bg-white" : "bg-gray-100"
+                            } transition hover:bg-gray-100`}
+                        >
+                          <td className="text-center py-2 text-gray-600">
+                            {index + 1}
+                          </td>
+                          <td className="text-center py-2 text-gray-600">
+                            {category?.name || "-"}
+                          </td>
+                          <td className="text-center py-2 text-gray-600">
+                            {category?.parent_category?.name || "-"}
+                          </td>
+                          <td className="text-center py-2">
+                            <div className="flex items-center justify-center gap-1">
+                              <Link
+                                to={`edit/${category.id}`}
+                                state={{ category }}
+                              >
+                                <FaEdit color="#4CAF50" size="24" />
+                              </Link>
+                              <button
+                                type="button"
+                                onClick={() => handleOpenDelete(category.id)}
+                              >
+                                <MdDelete color="#D01025" size="24" />
+                              </button>
+
+                              {openDelete === category.id && (
+                                <Dialog
+                                  open={true}
+                                  onClose={handleCloseDelete}
+                                  className="relative z-10"
                                 >
-                                  {name}
-                                </th>
-                              ))}
-                            </tr>
-                          </thead>
-            
-                          <tbody>
-                            {paginatedData.length === 0 ? (
-                              <tr>
-                                <td
-                                  colSpan="4"
-                                  className="text-center text-xl text-gray-500 py-4"
-                                >
-                                  No Expenses Categories Found
-                                </td>
-                              </tr>
-                            ) : (
-                              paginatedData.map(
-                                (
-                                  category,
-                                  index // 👈 Use filteredleads
-                                ) => (
-                                  <tr
-                                    key={index}
-                                    className={`border-b ${
-                                      index % 2 === 0 ? "bg-white" : "bg-gray-100"
-                                    } transition hover:bg-gray-100`}
-                                  >
-                                    <td className="text-center py-2 text-gray-600">
-                                      {index + 1}
-                                    </td>
-                                    <td className="text-center py-2 text-gray-600">
-                                      {category?.name || "-"}
-                                    </td>
-                                    <td className="text-center py-2 text-gray-600">
-                                      {category?.parent_category?.name || "-"}
-                                    </td>
-                                    <td className="text-center py-2">
-                                      <div className="flex items-center justify-center gap-1">
-                                        <Link
-                                          to={`edit/${category.id}`}
-                                          state={{ category }}
-                                        >
-                                          <FaEdit color="#4CAF50" size="24" />
-                                        </Link>
-                                        <button
-                                          type="button"
-                                          onClick={() => handleOpenDelete(category.id)}
-                                        >
-                                          <MdDelete color="#D01025" size="24" />
-                                        </button>
-            
-                                        {openDelete === category.id && (
-                                          <Dialog
-                                            open={true}
-                                            onClose={handleCloseDelete}
-                                            className="relative z-10"
-                                          >
-                                            <DialogBackdrop className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-                                            <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-                                              <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                                                <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                                                  <div className="flex  flex-col items-center justify-center bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                                                    <PiWarningCircle
-                                                      color="#0D47A1"
-                                                      size="60"
-                                                    />
-                                                    <div className="flex items-center">
-                                                      <div className="mt-2 text-center">
-                                                        You will delete category{" "}
-                                                        {category?.name || "-"}
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                  <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                                    <button
-                                                      className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto"
-                                                      onClick={() =>
-                                                        handleDelete(
-                                                          category.id,
-                                                          category?.name
-                                                        )
-                                                      }
-                                                    >
-                                                      Delete
-                                                    </button>
-            
-                                                    <button
-                                                      type="button"
-                                                      data-autofocus
-                                                      onClick={handleCloseDelete}
-                                                      className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-6 py-3 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:mt-0 sm:w-auto"
-                                                    >
-                                                      Cancel
-                                                    </button>
-                                                  </div>
-                                                </DialogPanel>
-                                              </div>
+                                  <DialogBackdrop className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                                  <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+                                    <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                                      <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                                        <div className="flex  flex-col items-center justify-center bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                          <PiWarningCircle
+                                            color="#0D47A1"
+                                            size="60"
+                                          />
+                                          <div className="flex items-center">
+                                            <div className="mt-2 text-center">
+                                              You will delete category{" "}
+                                              {category?.name || "-"}
                                             </div>
-                                          </Dialog>
-                                        )}
-                                      </div>
-                                    </td>
-                                  </tr>
-                                )
-                              )
-                            )}
-                          </tbody>
-                        </table>
-                      </div>
+                                          </div>
+                                        </div>
+                                        <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                          <button
+                                            className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto"
+                                            onClick={() =>
+                                              handleDelete(
+                                                category.id,
+                                                category?.name
+                                              )
+                                            }
+                                          >
+                                            Delete
+                                          </button>
 
-            {isAddPopupOpen && (
-              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                  <h2 className="text-xl font-semibold mb-4">Add Category</h2>
-                  <TextField
-                    label="Category Name"
-                    fullWidth
-                    value={categoryName}
-                    margin="normal"
-                    onChange={(e) => setCategoryName(e.target.value)}
-                  />
-                  <TextField
-                    select
-                    fullWidth
-                    label="Select Parent Category"
-                    value={parentID}
-                    margin="normal"
-                    onChange={(e) => setParentId(e.target.value)}
-                  >
-                    {parent.map((category) => (
-                      <MenuItem key={category.id} value={category.id}>
-                        {category.name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                                          <button
+                                            type="button"
+                                            data-autofocus
+                                            onClick={handleCloseDelete}
+                                            className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-6 py-3 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:mt-0 sm:w-auto"
+                                          >
+                                            Cancel
+                                          </button>
+                                        </div>
+                                      </DialogPanel>
+                                    </div>
+                                  </div>
+                                </Dialog>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      )
+                    )
+                  )}
+                </tbody>
+              </table>
+            </div>
 
-                  <div className="flex justify-end gap-2">
-                    <button
-                      onClick={() => setIsAddPopupOpen(false)}
-                      className="px-4 py-2 border rounded"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={AddCategory}
-                      className="px-4 py-2 bg-mainColor text-white rounded"
-                    >
-                      Add
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {isEditPopupOpen && selectedCategory && (
-              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                  <h2 className="text-xl font-semibold mb-4">
-                    Update Category
-                  </h2>
-                  <TextField
-                    label="Category Name"
-                    fullWidth
-                    margin="normal"
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)} // Fixed the change event handler
-                  />
-                  <TextField
-                    select
-                    fullWidth
-                    label="Select Parent Category"
-                    value={newId}
-                    margin="normal"
-                    onChange={(e) => setNewId(e.target.value)} // Fixed the change event handler
-                  >
-                    {parent.map((category) => (
-                      <MenuItem key={category.id} value={category.id}>
-                        {category.name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-
-                  <div className="flex justify-end gap-2">
-                    <button
-                      onClick={() => setIsEditPopupOpen(false)}
-                      className="px-4 py-2 border rounded"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleUpdateCategory}
-                      className="px-4 py-2 bg-mainColor text-white rounded"
-                    >
-                      Update
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-
-                      {/* Pagination Controls */}
-          <div className="flex justify-between items-center mt-4">
-            <button
-              onClick={handlePrevPage}
-              disabled={currentPage === 1}
-              className={`px-4 py-2 rounded-lg ${
-                currentPage === 1
+            {/* Pagination Controls */}
+            <div className="flex justify-between items-center mt-4">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 rounded-lg ${currentPage === 1
                   ? "bg-gray-300"
                   : "bg-mainColor text-white hover:bg-blue-600"
-              } transition-all`}
-            >
-              Previous
-            </button>
-            <span className="text-gray-700">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-              className={`px-4 py-2 rounded-lg ${
-                currentPage === totalPages
+                  } transition-all`}
+              >
+                Previous
+              </button>
+              <span className="text-gray-700">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 rounded-lg ${currentPage === totalPages
                   ? "bg-gray-300"
                   : "bg-mainColor text-white hover:bg-blue-600"
-              } transition-all`}
-            >
-              Next
-            </button>
-          </div>
+                  } transition-all`}
+              >
+                Next
+              </button>
+            </div>
           </div>
         )}
       </div>

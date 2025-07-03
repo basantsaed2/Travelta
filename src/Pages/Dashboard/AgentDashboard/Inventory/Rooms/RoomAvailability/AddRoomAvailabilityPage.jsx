@@ -7,6 +7,7 @@ import { FiPercent } from "react-icons/fi";
 import { format } from 'date-fns';
 import { useParams } from 'react-router-dom';
 import StaticLoader from '../../../../../../Components/StaticLoader';
+import { useNavigate } from 'react-router-dom';
 
 const AddRoomAvailabilityPage =({ update, setUpdate })=>{
     const { availableId } = useParams();
@@ -14,6 +15,7 @@ const AddRoomAvailabilityPage =({ update, setUpdate })=>{
     const [roomNumber, setRoomNumber] = useState('');
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
+    const navigate = useNavigate();
 
     const [availabilityList, setAvailabilityList] = useState([
           {
@@ -25,9 +27,8 @@ const AddRoomAvailabilityPage =({ update, setUpdate })=>{
     
     
     useEffect(() => {
-        if (!loadingPost) {
-                handleReset()
-                setUpdate(!update)     
+        if (!loadingPost && response) {
+               navigate(-1); // Navigate back after successful submission 
             }
     }, [response])
 
@@ -143,7 +144,7 @@ const AddRoomAvailabilityPage =({ update, setUpdate })=>{
                                 onClick={addAvailability}
                                 className="add-supplement-btn bg-[#0D47A1] text-white px-4 py-2 rounded-md mt-4"
                             >
-                                Add Availability
+                                Add More Availability
                             </button>
                         </div>
 

@@ -4,7 +4,7 @@ import SidebarAgent from "../../Components/Agent Components/SidebarAgent";
 import { Outlet } from "react-router-dom";
 
 const AgentLayout = () => {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isSidebarVisible, setIsSidebarVisible] = useState(window.innerWidth >= 740);
 
   const handleToggleSidebar = () => {
@@ -38,7 +38,7 @@ const AgentLayout = () => {
         onLinkClick={handleLinkClick} // Pass the link click handler
       />
       </div>
-      <div className={`flex flex-col w-full min-h-screen overflow-hidden ${isSidebarCollapsed ? "lg:ml-20" : "lg:ml-64"} `}>
+      <div className={`flex flex-col w-full min-h-screen overflow-hidden ${isSidebarCollapsed ? "lg:ml-14" : "lg:ml-60"} `}>
         <Navbar onToggleSidebar={handleToggleSidebar} />
         <main className={`flex-1 bg-gray-100 p-2 xl:p-6`}>
           <Outlet />

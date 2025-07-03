@@ -21,20 +21,19 @@ const CategoryExpensesPage = ({ update, setUpdate }) => {
     url: `https://travelta.online/agent/accounting/expenses/category`,
   });
 
-  const [parent, setParent] = useState([]);
   const { deleteData, loadingDelete, responseDelete } = useDelete();
   const [openDelete, setOpenDelete] = useState(null);
-    const [categories, setCategories] = useState([]);
-    const [searchText, setSearchText] = useState(""); 
+  const [categories, setCategories] = useState([]);
+  const [searchText, setSearchText] = useState("");
 
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedParentCategory, setSelectedParentCategory] = useState("");
 
   //Pagination State
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
 
   const auth = useAuth();
+  
   useEffect(() => {
     refetchCategory();
   }, [refetchCategory, update]);
@@ -67,40 +66,21 @@ const CategoryExpensesPage = ({ update, setUpdate }) => {
   const uniqueCategory = [
     ...new Set(categories.map((category) => category.name).filter(Boolean)),
   ];
-  const uniqueParentCategory = [
-    ...new Set(
-      categories
-        .map((category) => category.parent_category?.name)
-        .filter(Boolean)
-    ),
 
-  ];
-
-
-
-
-  
   // Handle input changes
   const handleSearch = (e) => setSearchText(e.target.value.toLowerCase());
   const handleFilterCategory = (e) => setSelectedCategory(e.target.value);
-  const handleFilterParentCategory = (e) =>
-    setSelectedParentCategory(e.target.value);
 
   const filteredCategory = categories.filter((category) => {
     const matchesSearch =
-      category?.name?.toLowerCase().includes(searchText) ||
-      category.parent_category?.name?.toLowerCase().includes(searchText);
+      category?.name?.toLowerCase().includes(searchText);
 
     // Directly compare each category with selected filters
     const categoryMatch = selectedCategory
       ? category.name === selectedCategory
       : true;
 
-    const categoryParentMatch = selectedParentCategory
-      ? category.parent_category?.name === selectedParentCategory
-      : true;
-
-    return matchesSearch && categoryMatch && categoryParentMatch;
+    return matchesSearch && categoryMatch;
   });
 
   // Export filtered data to Excel
@@ -172,22 +152,6 @@ const CategoryExpensesPage = ({ update, setUpdate }) => {
               <FaFilter className="absolute right-3 top-3 text-gray-500 pointer-events-none" />
             </div>
 
-            <div className="relative w-full md:w-[240px]">
-              <select
-                onChange={handleFilterParentCategory}
-                value={selectedParentCategory}
-                className="appearance-none w-full bg-gray-50 text-gray-700 px-4 py-2 rounded-lg border border-gray-300 outline-none cursor-pointer focus:ring-2 focus:ring-blue-300"
-              >
-                <option value="">Filter by Parent Category</option>
-                {uniqueParentCategory.map((Category, index) => (
-                  <option key={index} value={Category}>
-                    {Category}
-                  </option>
-                ))}
-              </select>
-              <FaFilter className="absolute right-3 top-3 text-gray-500 pointer-events-none" />
-            </div>
-
             <button
               onClick={exportToExcel}
               className="flex items-center gap-2 bg-green-500 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-600 transition-all"
@@ -251,9 +215,8 @@ const CategoryExpensesPage = ({ update, setUpdate }) => {
                     ) => (
                       <tr
                         key={index}
-                        className={`border-b ${
-                          index % 2 === 0 ? "bg-white" : "bg-gray-100"
-                        } transition hover:bg-gray-100`}
+                        className={`border-b ${index % 2 === 0 ? "bg-white" : "bg-gray-100"
+                          } transition hover:bg-gray-100`}
                       >
                         <td className="text-center py-2 text-gray-600">
                           {index + 1}
@@ -343,11 +306,10 @@ const CategoryExpensesPage = ({ update, setUpdate }) => {
             <button
               onClick={handlePrevPage}
               disabled={currentPage === 1}
-              className={`px-4 py-2 rounded-lg ${
-                currentPage === 1
+              className={`px-4 py-2 rounded-lg ${currentPage === 1
                   ? "bg-gray-300"
                   : "bg-mainColor text-white hover:bg-blue-600"
-              } transition-all`}
+                } transition-all`}
             >
               Previous
             </button>
@@ -357,11 +319,10 @@ const CategoryExpensesPage = ({ update, setUpdate }) => {
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
-              className={`px-4 py-2 rounded-lg ${
-                currentPage === totalPages
+              className={`px-4 py-2 rounded-lg ${currentPage === totalPages
                   ? "bg-gray-300"
                   : "bg-mainColor text-white hover:bg-blue-600"
-              } transition-all`}
+                } transition-all`}
             >
               Next
             </button>

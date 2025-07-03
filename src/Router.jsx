@@ -541,7 +541,7 @@ export const router = createBrowserRouter([
                 element: <LedgerLayout />
               },
               {
-                path: "payment_recivable",
+                path: "payment_receivable",
                 element: <PaymentRecivableLayout />,
               },
               {

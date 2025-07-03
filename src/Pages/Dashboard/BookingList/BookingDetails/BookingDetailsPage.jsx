@@ -752,7 +752,7 @@ const BookingDetailsPage = () => {
         case 'hotel':
         case 'hotels':
         case 'roomEngine':
-          return HotelDetails(item.manuel_booking?.hotel || item.booking_room_engine , type="roomEngine");
+          return HotelDetails(item.manuel_booking?.hotel || item.booking_room_engine);
         case 'visa':
           return VisaDetails(item.manuel_booking.visa);
         case 'flight':

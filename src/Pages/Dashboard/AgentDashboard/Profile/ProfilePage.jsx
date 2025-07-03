@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useGet } from "../../../../Hooks/useGet";
 import { usePost } from "../../../../Hooks/usePostJson";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FaUserCircle, FaEnvelope, FaPhoneAlt, FaBriefcase, FaEdit, FaSave, FaTimes } from 'react-icons/fa';
+import { FaUserCircle, FaEnvelope, FaPhoneAlt, FaEdit, FaSave, FaTimes, FaCamera } from 'react-icons/fa';
 
 const ProfilePage = () => {
   // --- State Management ---
@@ -13,6 +13,8 @@ const ProfilePage = () => {
     email: '',
     phone: '',
   });
+  const [imageFile, setImageFile] = useState(null); // State for selected image file
+  const [imagePreview, setImagePreview] = useState(null); // State for image preview URL
 
   // --- API Hooks ---
   const { refetch: refetchProfile, loading: loadingProfile, data: profileData, error: profileError } = useGet({
@@ -29,7 +31,7 @@ const ProfilePage = () => {
     refetchProfile();
   }, [refetchProfile]);
 
-  // Populate form data when profileData is fetched or updated
+  // Populate form data and image preview when profileData is fetched or updated
   useEffect(() => {
     if (profileData) {
       setFormData({
@@ -37,6 +39,8 @@ const ProfilePage = () => {
         email: profileData.email || '',
         phone: profileData.phone || '',
       });
+      // Assuming profileData contains an image URL (e.g., profileData.image_url)
+      setImagePreview(profileData.image || null);
     }
   }, [profileData]);
 
@@ -46,6 +50,7 @@ const ProfilePage = () => {
       toast.success("Profile updated successfully!");
       refetchProfile(); // Refresh data after a successful update
       setIsEditing(false); // Exit editing mode
+      setImageFile(null); // Clear selected image after successful update
     }
   }, [postResponse, refetchProfile]);
 
@@ -71,27 +76,40 @@ const ProfilePage = () => {
     }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file)); // Generate preview URL
+    }
+  };
+
   const handleEditClick = () => {
-    // Re-populate form with current data in case of re-entry
     if (profileData) {
       setFormData({
         name: profileData.name || '',
         email: profileData.email || '',
         phone: profileData.phone || '',
       });
+      setImagePreview(profileData.image || null);
     }
+    setImageFile(null); // Reset image file when entering edit mode
     setIsEditing(true);
   };
 
   const handleCancelEdit = () => {
     setIsEditing(false);
-    // Reset form data to the original profile data on cancel
     if (profileData) {
       setFormData({
         name: profileData.name || '',
         email: profileData.email || '',
         phone: profileData.phone || '',
       });
+      setImagePreview(profileData.image || null);
+    }
+    setImageFile(null); // Clear selected image on cancel
+    if (imagePreview) {
+      URL.revokeObjectURL(imagePreview); // Clean up preview URL
     }
   };
 
@@ -101,6 +119,9 @@ const ProfilePage = () => {
     submitData.append('name', formData.name);
     submitData.append('email', formData.email);
     submitData.append('phone', formData.phone);
+    if (imageFile) {
+      submitData.append('image', imageFile); // Append image with key 'image'
+    }
 
     await postData(submitData);
   };
@@ -139,8 +160,12 @@ const ProfilePage = () => {
       <div className="space-y-6 !w-full bg-white p-8 rounded-2xl shadow-lg">
         {/* Profile Header */}
         <div className="flex flex-col mb-8">
-          <div className="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center text-blue-600 mb-4 shadow-inner">
-            <FaUserCircle className="w-24 h-24" />
+          <div className="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center text-blue-600 mb-4 shadow-inner overflow-hidden">
+            {imagePreview ? (
+              <img src={imagePreview} alt="Profile" className="w-full h-full object-cover" />
+            ) : (
+              <FaUserCircle className="w-24 h-24" />
+            )}
           </div>
           <h2 className="text-4xl font-bold text-gray-900">{profileData.name}</h2>
           <p className="text-md text-gray-500 capitalize mt-1">{profileData.role}</p>
@@ -177,6 +202,28 @@ const ProfilePage = () => {
   const renderEditForm = () => (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-2xl bg-white animate-fadeIn p-8 rounded-2xl shadow-lg transition-transform transform hover:scale-[1.02]">
       <h2 className="text-3xl font-bold text-center text-gray-800 mb-4">Edit Profile</h2>
+
+      {/* Image Upload Field */}
+      <div className="flex flex-col items-center mb-6">
+        <div className="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center mb-4 overflow-hidden">
+          {imagePreview ? (
+            <img src={imagePreview} alt="Profile Preview" className="w-full h-full object-cover" />
+          ) : (
+            <FaUserCircle className="w-24 h-24 text-blue-600" />
+          )}
+        </div>
+        <label className="flex items-center gap-2 bg-blue-100 text-blue-700 py-2 px-4 rounded-lg cursor-pointer hover:bg-blue-200 transition-colors">
+          <FaCamera />
+          <span>Choose Profile Image</span>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+          />
+        </label>
+      </div>
+
       <InputField
         label="Name"
         name="name"

@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
-import { FaStar, FaTags, FaBuilding, FaUser, FaPlusCircle, FaShieldAlt, FaHandshake, FaUserTie, FaUserFriends, FaBookmark, FaCalendarAlt, FaTimes, FaReceipt, FaCalendarDay, FaUsers, FaChild, FaMapMarkerAlt, FaPhone, FaEnvelope, FaGlobe } from "react-icons/fa";
-import { IoIosPeople, IoMdTime } from "react-icons/io";
-import { GiMoneyStack } from "react-icons/gi";
+import { FaStar, FaTags, FaBuilding, FaUser, FaPlusCircle, FaShieldAlt, FaHandshake, FaUserTie, FaBookmark, FaCalendarAlt, FaTimes, FaReceipt, FaCalendarDay, FaMapMarkerAlt, FaPhone, FaEnvelope, FaGlobe, FaMap } from "react-icons/fa";
+import { IoMdCloseCircleOutline } from "react-icons/io";
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css';
 import { Dialog, DialogTitle, DialogActions, DialogContent, Button, Chip, Divider, IconButton, TextField, MenuItem, Autocomplete, CircularProgress } from "@mui/material";
-import { IoMdCloseCircleOutline } from "react-icons/io";
 import { usePost } from "../../../Hooks/usePostJson";
 import { useGet } from "../../../Hooks/useGet";
 import { RiHotelLine } from "react-icons/ri";
@@ -16,6 +14,8 @@ import { AddSupplierPage, AddLeadPage } from "../../AllPages";
 const TourBookingDetails = () => {
   const location = useLocation();
   const tour = location.state?.tour;
+  const noOfPeople = location.state?.noOfPeople || 0;
+
   const { refetch: refetchSuppliers, loading: loadingSuppliers, data: suppliersData } = useGet({ url: "https://travelta.online/agent/manual_booking/supplier_customer" });
   const { postData, loading: loadingPost, response } = usePost({ url: "https://travelta.online/agent/agent/bookTour" });
 
@@ -26,18 +26,21 @@ const TourBookingDetails = () => {
   const [customers, setCustomers] = useState([]);
   const [secondMenuData, setSecondMenuData] = useState([]);
   const [selectedToSupplier, setSelectedToSupplier] = useState(null);
-  const [selectedTourDate, setSelectedTourDate] = useState(tour?.availability[0]?.date || "");
-  const [totalAdults, setTotalAdults] = useState(1);
-  const [totalChildren, setTotalChildren] = useState(0);
+  const [selectedTourDate, setSelectedTourDate] = useState(tour?.availability?.[0]?.date || "");
   const [specialRequest, setSpecialRequest] = useState("");
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedExtras, setSelectedExtras] = useState([]);
+  const [selectedPricingTypes, setSelectedPricingTypes] = useState({});
+
+  const firstValidPricingItem = useMemo(() => {
+    return tour?.tour_pricings?.flatMap(pricing => pricing.tour_pricing_items || []).find(item => item.currency?.name) || null;
+  }, [tour?.tour_pricings]);
 
   useEffect(() => {
-    console.log("Tour", tour);
-  }, [tour]);
+    console.log("Location State:", JSON.stringify(location.state, null, 2));
+    console.log("Tour Data:", JSON.stringify(tour, null, 2));
+  }, [tour, location.state]);
 
   useEffect(() => {
     if (suppliersData) {
@@ -56,21 +59,63 @@ const TourBookingDetails = () => {
     }
   }, [category, suppliers, customers]);
 
-  if (!tour) {
-    return (
-      <div className="max-w-4xl mx-auto p-6 text-center">
-        <p>No tour data available.</p>
-      </div>
-    );
-  }
+  const calculateTotalPrice = () => {
+    console.log("Calculating Total Price...");
+    if (!tour || !tour.tour_pricings || !tour.tour_pricings.length || noOfPeople === 0) {
+      console.log("Missing pricing data or no people:", { tour_pricings: tour?.tour_pricings, noOfPeople });
+      return { total: 0, currency: null };
+    }
+
+    // Apply noOfPeople to adult pricing (assuming adult pricing is the only available type)
+    const adultPricing = tour.tour_pricings.find(pricing => pricing.person_type === "adult");
+    if (!adultPricing || !adultPricing.tour_pricing_items || !adultPricing.tour_pricing_items.length) {
+      console.log("No adult pricing items available");
+      return { total: 0, currency: null };
+    }
+
+    const selectedType = selectedPricingTypes[adultPricing.id] || adultPricing.tour_pricing_items[0]?.type;
+    const pricingItem = adultPricing.tour_pricing_items.find(item => item.type === selectedType);
+
+    if (!pricingItem || !pricingItem.price_after_tax || !pricingItem.currency?.name) {
+      console.log("Skipping invalid pricing item for adult:", pricingItem);
+      return { total: 0, currency: null };
+    }
+
+    const basePrice = noOfPeople * pricingItem.price_after_tax;
+    console.log(`Adding ${noOfPeople} people at ${pricingItem.price_after_tax} ${pricingItem.currency.name} (type: ${selectedType}) = ${basePrice}`);
+
+    const currency = pricingItem.currency.name;
+
+    const extrasTotal = tour.tour_extras && tour.tour_extras.length
+      ? selectedExtras.reduce((sum, extraId) => {
+          const extra = tour.tour_extras.find(e => e.id === extraId);
+          const extraPrice = extra?.price || 0;
+          console.log(`Adding extra ${extra?.name}: ${extraPrice}`);
+          return sum + extraPrice;
+        }, 0)
+      : 0;
+
+    const discount = tour.tour_discounts?.[0] && noOfPeople >= tour.tour_discounts[0].from
+      ? tour.tour_discounts[0].type === "percentage"
+        ? (basePrice + extrasTotal) * tour.tour_discounts[0].discount / 100
+        : tour.tour_discounts[0].discount
+      : 0;
+    console.log(`Discount applied: ${discount}`);
+
+    const tax = tour.tax_type === "fixed"
+      ? tour.tax || 0
+      : (basePrice + extrasTotal - discount) * (tour.tax || 0) / 100;
+    console.log(`Tax applied: ${tax}`);
+
+    const total = basePrice + extrasTotal - discount + tax;
+    console.log(`Total Price: ${total} ${currency || 'N/A'}`);
+
+    return { total, currency };
+  };
 
   const handleImageClick = (index) => {
     setSelectedImageIndex(index);
     setIsImageModalOpen(true);
-  };
-
-  const handleViewDetails = () => {
-    setIsDetailsModalOpen(true);
   };
 
   const handleExtraChange = (extraId) => {
@@ -79,37 +124,30 @@ const TourBookingDetails = () => {
     );
   };
 
-  const calculateTotalPrice = () => {
-    const adultPrice = tour.tour_pricing_items.find(item => item.tour_pricing_id === tour.tour_pricings.find(p => p.person_type === "adult")?.id)?.price || 0;
-    const childPrice = tour.tour_pricing_items.find(item => item.tour_pricing_id === tour.tour_pricings.find(p => p.person_type === "child")?.id)?.price || 0;
-    const extrasTotal = selectedExtras.reduce((sum, extraId) => {
-      const extra = tour.tour_extras.find(e => e.id === extraId);
-      return sum + (extra ? extra.price : 0);
-    }, 0);
-    const basePrice = (totalAdults * adultPrice) + (totalChildren * childPrice) + extrasTotal;
-    const discount = tour.tour_discounts[0] && (totalAdults + totalChildren >= tour.tour_discounts[0].from && totalAdults + totalChildren <= tour.tour_discounts[0].to)
-      ? tour.tour_discounts[0].discount
-      : 0;
-    const tax = tour.tax_type === "fixed" ? tour.tax : (basePrice * tour.tax / 100);
-    return basePrice - discount + tax;
+  const handlePricingTypeChange = (pricingId, type) => {
+    setSelectedPricingTypes((prev) => ({
+      ...prev,
+      [pricingId]: type
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!selectedTourDate || !category || (category === "B2C" && !selectedToSupplier)) return;
+    if (!selectedTourDate || !category || (category === "B2C" && !selectedToSupplier) || noOfPeople === 0) return;
 
     const bookingData = {
       tour_id: tour.id,
-      no_of_people: totalAdults + totalChildren,
+      no_of_people: noOfPeople,
       special_request: specialRequest,
-      currency_id: tour.tour_pricing_items[0]?.currency_id,
-      total_price: calculateTotalPrice(),
+      currency_id: firstValidPricingItem?.currency_id || null,
+      total_price: calculateTotalPrice().total,
       ...(category === "B2B" && selectedToSupplier && {
         from_supplier_id: selectedToSupplier.id
       }),
       ...(category === "B2C" && selectedToSupplier && {
         to_customer_id: selectedToSupplier.id
-      }), agents_id: null,
+      }),
+      agents_id: tour.agent_id,
       status: "confirmed"
     };
 
@@ -135,6 +173,14 @@ const TourBookingDetails = () => {
     );
   };
 
+  if (!tour) {
+    return (
+      <div className="max-w-4xl mx-auto p-6 text-center">
+        <p>No tour data available.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto pt-0 py-6">
       {/* Tour Header */}
@@ -150,10 +196,20 @@ const TourBookingDetails = () => {
           <FaStar className="text-yellow-300 mr-1 text-lg" />
           <span className="text-blue-100 font-medium">{tour.tour_type} Tour</span>
           {tour.featured === "yes" && (
-            <span className="ml-2 bg-yellow-400 text-blue-800 px-2 py-1 rounded-full text-sm">Featured</span>
+            <span className="ml-2 bg-yellow-400 text-blue-800 px-2 py-1 rounded-full text-sm">
+              Featured {tour.featured_from} to {tour.featured_to}
+            </span>
           )}
         </div>
         <p className="text-blue-100 text-sm mt-2">Tour ID: {tour.id}</p>
+        {tour.video_link && (
+          <div className="mt-3">
+            <a href={tour.video_link} target="_blank" rel="noopener noreferrer" className="text-blue-200 underline flex items-center">
+              <FaGlobe className="mr-2" /> Watch Tour Video
+            </a>
+          </div>
+        )}
+        <p className="text-blue-100 text-sm mt-2">Duration: {tour.days} Day{tour.days > 1 ? 's' : ''}, {tour.nights} Night{tour.nights > 1 ? 's' : ''}</p>
       </div>
 
       {/* Image Gallery */}
@@ -166,6 +222,7 @@ const TourBookingDetails = () => {
             src={tour.image_link}
             alt="Main tour"
             className="w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
+            onError={(e) => { e.target.src = 'https://via.placeholder.com/400'; }}
           />
           <div className="absolute inset-0 bg-black bg-opacity-10 group-hover:bg-opacity-20 transition-all duration-300"></div>
         </div>
@@ -176,9 +233,10 @@ const TourBookingDetails = () => {
             onClick={() => handleImageClick(index + 1)}
           >
             <img
-              src={image}
+              src={image.image_link}
               alt={`Tour view ${index + 1}`}
               className="w-full h-32 md:h-40 object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
+              onError={(e) => { e.target.src = 'https://via.placeholder.com/150'; }}
             />
             <div className="absolute inset-0 bg-black bg-opacity-10 group-hover:bg-opacity-20 transition-all duration-300"></div>
           </div>
@@ -222,6 +280,7 @@ const TourBookingDetails = () => {
                   src={tour.image_link}
                   alt="Main tour image"
                   className="max-w-full max-h-full object-contain"
+                  onError={(e) => { e.target.src = 'https://via.placeholder.com/400'; }}
                 />
               </div>
             </SplideSlide>
@@ -229,9 +288,10 @@ const TourBookingDetails = () => {
               <SplideSlide key={image.id || index}>
                 <div className="flex items-center justify-center h-[80vh]">
                   <img
-                    src={image}
+                    src={image.image_link}
                     alt={`Tour image ${index}`}
                     className="max-w-full max-h-full object-contain"
+                    onError={(e) => { e.target.src = 'https://via.placeholder.com/400'; }}
                   />
                 </div>
               </SplideSlide>
@@ -289,15 +349,56 @@ const TourBookingDetails = () => {
             </div>
           </div>
 
+          {/* Cancellation Policy */}
+          {tour.cancelation_items && tour.cancelation_items.length > 0 && (
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+              <h2 className="text-2xl font-bold mb-4 text-gray-800 flex items-center">
+                <FaShieldAlt className="mr-2 text-blue-600" />
+                Cancellation Policy
+              </h2>
+              {tour.cancelation_items.map((item) => (
+                <p key={item.id} className="text-gray-600">
+                  {item.days} days before: {item.type === "fixed" ? `${item.amount} ${firstValidPricingItem?.currency?.name || 'N/A'}` : `${item.amount}% refund`}
+                </p>
+              ))}
+            </div>
+          )}
+
+          {/* Pickup Details */}
+          {(tour.pick_up_map || tour.tour_address) && (
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+              <h2 className="text-2xl font-bold mb-4 text-gray-800 flex items-center">
+                <FaMapMarkerAlt className="mr-2 text-blue-600" />
+                Pickup Details
+              </h2>
+              {tour.tour_address && (
+                <p className="text-gray-700 flex items-center">
+                  <FaMapMarkerAlt className="mr-2" /> Address: {tour.tour_address}
+                </p>
+              )}
+              {tour.pick_up_map && (
+                <p className="text-gray-700 flex items-center mt-2">
+                  <FaMap className="mr-2" /> Map: <a href={tour.pick_up_map} target="_blank" rel="noopener noreferrer" className="text-blue-600">View Pickup Location</a>
+                </p>
+              )}
+            </div>
+          )}
+
           {/* Contact Information */}
           <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
             <h2 className="text-2xl font-bold mb-4 text-gray-800 flex items-center">
               <FaPhone className="mr-2 text-blue-600" />
               Contact Information
             </h2>
-            <p className="text-gray-700 flex items-center"><FaEnvelope className="mr-2" /> Email: <a href={`mailto:${tour.tour_email}`} className="text-blue-600">{tour.tour_email}</a></p>
-            <p className="text-gray-700 flex items-center mt-2"><FaPhone className="mr-2" /> Phone: <a href={`tel:${tour.tour_phone}`} className="text-blue-600">{tour.tour_phone}</a></p>
-            <p className="text-gray-700 flex items-center mt-2"><FaGlobe className="mr-2" /> Website: <a href={tour.tour_website} target="_blank" rel="noopener noreferrer" className="text-blue-600">Visit Website</a></p>
+            <p className="text-gray-700 flex items-center">
+              <FaEnvelope className="mr-2" /> Email: <a href={`mailto:${tour.tour_email}`} className="text-blue-600">{tour.tour_email}</a>
+            </p>
+            <p className="text-gray-700 flex items-center mt-2">
+              <FaPhone className="mr-2" /> Phone: <a href={`tel:${tour.tour_phone}`} className="text-blue-600">{tour.tour_phone}</a>
+            </p>
+            <p className="text-gray-700 flex items-center mt-2">
+              <FaGlobe className="mr-2" /> Website: <a href={tour.tour_website} target="_blank" rel="noopener noreferrer" className="text-blue-600">Visit Website</a>
+            </p>
           </div>
         </div>
 
@@ -307,7 +408,7 @@ const TourBookingDetails = () => {
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
             <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 border-b border-gray-200">
               <h3 className="text-xl font-bold text-gray-800 flex items-center">
-                <FaUserFriends className="mr-3 text-blue-600" />
+                <FaUserTie className="mr-3 text-blue-600" />
                 Booking Details
               </h3>
               <p className="text-gray-600 text-sm">
@@ -418,63 +519,87 @@ const TourBookingDetails = () => {
               <p className="text-blue-100 mt-1 text-sm">Review your reservation details</p>
             </div>
             <div className="p-4 space-y-4">
+              {/* Tour Date Section */}
+              {tour?.availability && tour.availability.length > 0 ? (
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-gray-700 flex items-center">
+                    <FaCalendarDay className="mr-2 text-blue-600" />
+                    Tour Date
+                  </h3>
+                  <TextField
+                    select
+                    variant="outlined"
+                    value={selectedTourDate}
+                    onChange={(e) => setSelectedTourDate(e.target.value)}
+                    fullWidth
+                    InputProps={{
+                      sx: { "& fieldset": { borderRadius: "12px" }, "&:hover fieldset": { borderColor: "#1E88E5" }, "&.Mui-focused fieldset": { borderColor: "#1565C0" }, backgroundColor: "white" }
+                    }}
+                  >
+                    {tour.availability.map((avail) => (
+                      <MenuItem key={avail.id} value={avail.date}>
+                        {new Date(avail.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                        (Available: {avail.remaining}/{avail.quantity})
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </div>
+              ) : (
+                <p className="text-red-600 text-sm">No tour dates available</p>
+              )}
+
+              {/* Number of People */}
               <div className="space-y-2">
                 <h3 className="font-semibold text-gray-700 flex items-center">
-                  <FaCalendarDay className="mr-2 text-blue-600" />
-                  Tour Date
-                </h3>
-                <TextField
-                  select
-                  variant="outlined"
-                  value={selectedTourDate}
-                  onChange={(e) => setSelectedTourDate(e.target.value)}
-                  fullWidth
-                  InputProps={{
-                    sx: { "& fieldset": { borderRadius: "12px" }, "&:hover fieldset": { borderColor: "#1E88E5" }, "&.Mui-focused fieldset": { borderColor: "#1565C0" }, backgroundColor: "white" }
-                  }}
-                >
-                  {tour.availability.map((avail) => (
-                    <MenuItem key={avail.id} value={avail.date}>
-                      {new Date(avail.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
-                      (Available: {avail.remaining}/{avail.quantity})
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
-              <div className="space-y-2">
-                <h3 className="font-semibold text-gray-700 flex items-center">
-                  <FaUsers className="mr-2 text-blue-600" />
+                  <FaUserTie className="mr-2 text-blue-600" />
                   Guests
                 </h3>
-                <div className="bg-blue-50 p-2 rounded-lg">
-                  <div className="flex justify-between">
-                    <div>
-                      <p className="text-xs text-gray-500">ADULTS</p>
-                      <select
-                        className="border rounded-lg px-3 py-2 text-sm bg-white shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        value={totalAdults}
-                        onChange={(e) => setTotalAdults(parseInt(e.target.value))}
-                      >
-                        {Array.from({ length: 10 }, (_, i) => (
-                          <option key={i + 1} value={i + 1}>{i + 1}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">CHILDREN</p>
-                      <select
-                        className="border rounded-lg px-3 py-2 text-sm bg-white shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        value={totalChildren}
-                        onChange={(e) => setTotalChildren(parseInt(e.target.value))}
-                      >
-                        {Array.from({ length: 10 }, (_, i) => (
-                          <option key={i} value={i}>{i}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  {noOfPeople > 0 ? (
+                    <p className="text-sm text-gray-700">Total Guests: {noOfPeople}</p>
+                  ) : (
+                    <p className="text-red-600 text-sm">No guests specified</p>
+                  )}
                 </div>
               </div>
+
+              {/* Pricing Type Selection */}
+              {tour?.tour_pricings?.length > 0 && (
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-gray-700 flex items-center">
+                    <FaTags className="mr-2 text-blue-600" />
+                    Pricing Options
+                  </h3>
+                  {tour.tour_pricings
+                    .filter(pricing => pricing.person_type === "adult")
+                    .map((pricing) => (
+                      <div key={pricing.id} className="bg-blue-50 p-3 rounded-lg">
+                        <p className="text-sm font-medium text-gray-700">Pricing</p>
+                        <TextField
+                          select
+                          variant="outlined"
+                          value={selectedPricingTypes[pricing.id] || pricing.tour_pricing_items?.[0]?.type || ''}
+                          onChange={(e) => handlePricingTypeChange(pricing.id, e.target.value)}
+                          fullWidth
+                          InputProps={{
+                            sx: { "& fieldset": { borderRadius: "8px" }, "&:hover fieldset": { borderColor: "#1E88E5" }, "&.Mui-focused fieldset": { borderColor: "#1565C0" }, backgroundColor: "white" }
+                          }}
+                          SelectProps={{
+                            displayEmpty: true,
+                            renderValue: (value) => value ? value.charAt(0).toUpperCase() + value.slice(1) : "Select pricing type"
+                          }}
+                        >
+                          {pricing.tour_pricing_items?.map((item) => (
+                            <MenuItem key={item.id} value={item.type}>
+                              {item.type.charAt(0).toUpperCase() + item.type.slice(1)} (Price: {item.price} {item.currency?.name}, After Tax: {item.price_after_tax} {item.currency?.name})
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      </div>
+                    ))}
+                </div>
+              )}
+
               <div className="space-y-2">
                 <h3 className="font-semibold text-gray-700 flex items-center">
                   <BsInfoCircle className="mr-2 text-blue-600" />
@@ -491,207 +616,194 @@ const TourBookingDetails = () => {
                   }}
                 />
               </div>
-              {tour.tour_extras.length > 0 && (
+              {tour.tour_extras && tour.tour_extras.length > 0 && (
                 <div className="space-y-2">
                   <h3 className="font-semibold text-gray-700 flex items-center">
                     <FaPlusCircle className="mr-2 text-blue-600" />
                     Extras
                   </h3>
-                  <div className="bg-blue-50 p-2 rounded-lg">
+                  <div className="bg-blue-50 p-3 rounded-lg">
                     {tour.tour_extras.map((extra) => (
                       <div key={extra.id} className="flex items-center mb-2">
                         <input
                           type="checkbox"
                           checked={selectedExtras.includes(extra.id)}
                           onChange={() => handleExtraChange(extra.id)}
-                          className="mr-2"
+                          className="mr-2 h-4 w-4 text-blue-600 rounded focus:ring-blue-500"
                         />
-                        <span>{extra.name} ({extra.price} {extra.currency.name})</span>
+                        <span className="text-sm">
+                          {extra.name} ({extra.price} {extra.currency?.name || firstValidPricingItem?.currency?.name || 'N/A'})
+                        </span>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
-              <div className="border-t border-gray-200 pt-4 space-y-2">
-                <h3 className="font-semibold text-gray-700 flex items-center">
-                  <FaReceipt className="mr-2 text-blue-600" />
-                  Price Summary
-                </h3>
-                <div className="space-y-3">
-                  {totalAdults > 0 && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">{totalAdults}x Adult</span>
-                      <span className="font-medium">{(totalAdults * (tour.tour_pricing_items.find(item => item.tour_pricing_id === tour.tour_pricings.find(p => p.person_type === "adult")?.id)?.price || 0)).toFixed(2)} {tour.tour_pricing_items[0]?.currency.name}</span>
-                    </div>
-                  )}
-                  {totalChildren > 0 && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">{totalChildren}x Child</span>
-                      <span className="font-medium">{(totalChildren * (tour.tour_pricing_items.find(item => item.tour_pricing_id === tour.tour_pricings.find(p => p.person_type === "child")?.id)?.price || 0)).toFixed(2)} {tour.tour_pricing_items[0]?.currency.name}</span>
-                    </div>
-                  )}
-                  {selectedExtras.length > 0 && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Extras</span>
-                      <span className="font-medium">{selectedExtras.reduce((sum, extraId) => sum + (tour.tour_extras.find(e => e.id === extraId)?.price || 0), 0).toFixed(2)} {tour.tour_extras[0]?.currency.name}</span>
-                    </div>
-                  )}
-                  {tour.tour_discounts[0] && (totalAdults + totalChildren >= tour.tour_discounts[0].from && totalAdults + totalChildren <= tour.tour_discounts[0].to) && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Discount ({tour.tour_discounts[0].from}-{tour.tour_discounts[0].to} people)</span>
-                      <span className="font-medium text-green-600">-{tour.tour_discounts[0].discount} {tour.tour_pricing_items[0]?.currency.name}</span>
-                    </div>
-                  )}
-                  <div className="flex justify-between text-sm text-gray-500">
-                    <span>Taxes</span>
-                    <span>{tour.tax_type === "fixed" ? tour.tax : (calculateTotalPrice() * tour.tax / 100).toFixed(2)} {tour.tour_pricing_items[0]?.currency.name}</span>
-                  </div>
-                  <Divider />
-                  <div className="flex justify-between text-lg font-bold text-gray-800">
-                    <span>Total Amount</span>
-                    <span>{calculateTotalPrice().toFixed(2)} {tour.tour_pricing_items[0]?.currency.name}</span>
-                  </div>
-                </div>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  size="large"
-                  disabled={!selectedTourDate || !category || (category === "B2C" && !selectedToSupplier)}
-                  startIcon={<FaBookmark />}
-                  onClick={handleSubmit}
-                  sx={{
-                    py: 1.5,
-                    borderRadius: '12px',
-                    fontWeight: 'bold',
-                    fontSize: '1rem',
-                    textTransform: 'none',
-                    background: selectedTourDate && category && (category === "B2B" || selectedToSupplier) ? 'linear-gradient(to right, #3B82F6, #2563EB)' : '#E5E7EB',
-                    color: selectedTourDate && category && (category === "B2B" || selectedToSupplier) ? 'white' : '#9CA3AF',
-                    '&:hover': { background: selectedTourDate && category && (category === "B2B" || selectedToSupplier) ? 'linear-gradient(to right, #2563EB, #1E40AF)' : '#E5E7EB', boxShadow: selectedTourDate && category && (category === "B2B" || selectedToSupplier) ? '0 4px 6px rgba(0, 0, 0, 0.1)' : 'none' },
-                    transition: 'all 0.3s ease'
-                  }}
-                >
-                  Confirm Booking
-                </Button>
-                <div className="text-center text-sm text-gray-500 mt-3">
-                  <p className="flex items-center justify-center">
-                    <FaShieldAlt className="mr-2 text-green-500" />
-                    {tour.cancelation_items[0]?.type === "fixed" ? `Free cancellation up to ${tour.cancelation_items[0].days} days before` : tour.policy}
+
+              {/* Price Breakdown Section */}
+              <h3 className="font-semibold text-gray-700 flex items-center mb-3">
+                <FaReceipt className="mr-2 text-blue-600" />
+                Price Breakdown
+              </h3>
+              <div className="space-y-3 bg-gray-50 p-4 rounded-lg">
+                {tour?.tour_pricings?.length > 0 && noOfPeople > 0 ? (
+                  tour.tour_pricings
+                    .filter(pricing => pricing.person_type === "adult")
+                    .map((pricing) => {
+                      const selectedType = selectedPricingTypes[pricing.id] || pricing.tour_pricing_items[0]?.type;
+                      const pricingItem = pricing.tour_pricing_items.find(item => item.type === selectedType);
+
+                      if (!pricingItem) return null;
+
+                      return (
+                        <div key={pricing.id} className="space-y-2">
+                          <div className="flex justify-between items-center text-sm">
+                            <div>
+                              <span className="text-gray-700 font-medium">
+                                {noOfPeople} Guest{noOfPeople > 1 ? 's' : ''} ({selectedType})
+                              </span>
+                              <p className="text-xs text-gray-500">
+                                ({pricing.min_age}-{pricing.max_age} years)
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <span className="font-semibold text-gray-800">
+                                Price: {(noOfPeople * pricingItem.price).toFixed(2)} {pricingItem.currency?.name || 'N/A'}
+                              </span>
+                              <p className="text-xs text-gray-500">
+                                After Tax: {(noOfPeople * pricingItem.price_after_tax).toFixed(2)} {pricingItem.currency?.name || 'N/A'}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    }).filter(Boolean)
+                ) : (
+                  <p className="text-red-600 text-sm">
+                    {noOfPeople === 0 ? "No guests specified" : "No pricing information available"}
+                    {console.log("Pricing check failed:", {
+                      tour_pricings: tour?.tour_pricings,
+                      tour_pricing_items: tour?.tour_pricings?.flatMap(p => p.tour_pricing_items || []),
+                      noOfPeople
+                    })}
                   </p>
-                </div>
+                )}
+
+                {/* Extras Total */}
+                {selectedExtras.length > 0 && tour.tour_extras && tour.tour_extras.length > 0 && (
+                  <>
+                    <Divider className="my-2" />
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-gray-700 font-medium">Extras Total</span>
+                      <span className="font-semibold text-gray-800">
+                        {selectedExtras.reduce((sum, extraId) => {
+                          const extra = tour.tour_extras.find(e => e.id === extraId);
+                          return sum + (extra?.price || 0);
+                        }, 0).toFixed(2)} {firstValidPricingItem?.currency?.name || tour.tour_extras[0]?.currency?.name || 'N/A'}
+                      </span>
+                    </div>
+                  </>
+                )}
+
+                {/* Group Discount */}
+                {tour.tour_discounts?.[0] && noOfPeople >= tour.tour_discounts[0].from && (
+                  <div className="flex justify-between items-center bg-green-100 p-2 rounded-lg text-sm">
+                    <span className="text-green-800 font-medium">
+                      Group Discount ({tour.tour_discounts[0].from}+ people)
+                    </span>
+                    <span className="font-semibold text-green-800">
+                      -{tour.tour_discounts[0].type === "percentage" ?
+                        `${tour.tour_discounts[0].discount}%` :
+                        `${tour.tour_discounts[0].discount.toFixed(2)} ${firstValidPricingItem?.currency?.name || 'N/A'}`
+                      }
+                    </span>
+                  </div>
+                )}
+
+                {/* Taxes & Fees */}
+                {(tour.tax || tour.tax === 0) && (
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-700 font-medium">Taxes & Fees</span>
+                    <span className="font-semibold text-gray-800">
+                      {tour.tax_type === "fixed" ?
+                        `${tour.tax.toFixed(2)} ${firstValidPricingItem?.currency?.name || 'N/A'}` :
+                        `${tour.tax}%`}
+                    </span>
+                  </div>
+                )}
+
+                {/* Total Amount */}
+                {calculateTotalPrice().total > 0 && (
+                  <div className="flex justify-between items-center pt-3 border-t border-gray-200 mt-2">
+                    <span className="text-lg font-bold text-gray-800">Total Amount</span>
+                    <span className="text-xl font-bold text-blue-600">
+                      {calculateTotalPrice().total.toFixed(2)} {calculateTotalPrice().currency || 'N/A'}
+                    </span>
+                  </div>
+                )}
+
+                {/* Deposit Required */}
+                {tour.deposit > 0 && (
+                  <p className="text-xs text-gray-500 mt-2 text-center bg-blue-50 p-2 rounded-lg">
+                    <span className="font-semibold">Deposit Required:</span>{" "}
+                    {tour.deposit_type === "fixed" ?
+                      `Pay ${tour.deposit.toFixed(2)} ${firstValidPricingItem?.currency?.name || 'N/A'} now, remaining before travel` :
+                      `Pay ${tour.deposit}% of total now, remaining before travel`}
+                  </p>
+                )}
               </div>
+
+              <Button
+                variant="contained"
+                onClick={handleSubmit}
+                fullWidth
+                size="large"
+                startIcon={<FaBookmark />}
+                sx={{
+                  mt: 3,
+                  py: 1.5,
+                  borderRadius: '12px',
+                  fontWeight: '700',
+                  textTransform: 'none',
+                  fontSize: '1.1rem',
+                  background:  'linear-gradient(to right, #2563EB, #1E40AF)',
+                  '&:hover': { background: 'linear-gradient(to right, #2563EB, #1E40AF)', boxShadow: '0 6px 12px rgba(0, 0, 0, 0.2)' },
+                  transition: 'all 0.3s ease'
+                }}
+                disabled={loadingPost || !selectedToSupplier || !selectedTourDate || noOfPeople === 0}
+              >
+                {loadingPost ? <CircularProgress size={24} color="inherit" /> : "Confirm Booking"}
+              </Button>
             </div>
           </div>
-
-          {/* Popup Modal */}
-          {showPopup && (
-            <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
-              <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-                <div className="sticky top-0 bg-white p-4 border-b border-gray-200 flex justify-between items-center">
-                  <h2 className="text-2xl font-bold text-gray-800">
-                    {category === "B2B" ? "Add New Supplier" : "Add New Customer"}
-                  </h2>
-                  <IconButton onClick={() => setShowPopup(false)}>
-                    <IoMdCloseCircleOutline className="text-2xl text-gray-500 hover:text-red-500" />
-                  </IconButton>
-                </div>
-                <div className="p-6">
-                  {category === "B2B" ? <AddSupplierPage update={update} setUpdate={setUpdate} /> : <AddLeadPage update={update} setUpdate={setUpdate} />}
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
-      {/* Tour Details Modal */}
+      {/* Popups (AddSupplierPage, AddLeadPage) */}
       <Dialog
-        open={isDetailsModalOpen}
-        onClose={() => setIsDetailsModalOpen(false)}
+        open={showPopup}
+        onClose={() => setShowPopup(false)}
         maxWidth="md"
         fullWidth
-        PaperProps={{ sx: { borderRadius: '16px', overflow: 'hidden' } }}
+        PaperProps={{
+          sx: { borderRadius: '12px' }
+        }}
       >
-        <DialogTitle className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold flex items-center">
-              <RiHotelLine className="mr-3" />
-              {tour.name} Details
-            </h2>
-            <IconButton onClick={() => setIsDetailsModalOpen(false)} sx={{ color: 'white' }}>
-              <IoMdCloseCircleOutline className="text-2xl" />
-            </IconButton>
-          </div>
+        <DialogTitle className="flex justify-between items-center bg-blue-600 text-white p-4 rounded-t-xl">
+          <span className="text-xl font-semibold">{category === "B2B" ? "Add New Supplier" : "Add New Customer"}</span>
+          <IconButton onClick={() => setShowPopup(false)} sx={{ color: 'white' }}>
+            <FaTimes />
+          </IconButton>
         </DialogTitle>
-        <DialogContent className="p-6">
-          <div className="mb-6">
-            <Splide options={{ type: 'loop', perPage: 1, pagination: false, arrows: true }}>
-              <SplideSlide key="main-image">
-                <img src={tour.image_link} alt="Main tour" className="w-full h-64 object-cover rounded-lg" />
-              </SplideSlide>
-              {tour.tour_images.map((img, index) => (
-                <SplideSlide key={img.id || index}>
-                  <img src={img} alt={`Tour view ${index}`} className="w-full h-64 object-cover rounded-lg" />
-                </SplideSlide>
-              ))}
-            </Splide>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-            <div key="max-guests" className="bg-blue-50 p-3 rounded-lg flex items-center">
-              <IoIosPeople className="text-blue-600 mr-2 text-xl" />
-              <div>
-                <p className="text-xs text-gray-500">Max Guests</p>
-                <p className="font-medium">{tour.tour_pricings[0]?.max_age ? `Adults (up to ${tour.tour_pricings[0].max_age} years)` : "Varies"}</p>
-              </div>
-            </div>
-            <div key="duration" className="bg-blue-50 p-3 rounded-lg flex items-center">
-              <IoMdTime className="text-blue-600 mr-2 text-xl" />
-              <div>
-                <p className="text-xs text-gray-500">Duration</p>
-                <p className="font-medium">{tour.days} days, {tour.nights} nights</p>
-              </div>
-            </div>
-            <div key="price" className="bg-blue-50 p-3 rounded-lg flex items-center">
-              <GiMoneyStack className="text-blue-600 mr-2 text-xl" />
-              <div>
-                <p className="text-xs text-gray-500">Price</p>
-                <p className="font-medium text-blue-600">{tour.tour_pricing_items[0]?.price} {tour.tour_pricing_items[0]?.currency.name} / adult</p>
-              </div>
-            </div>
-          </div>
-          <div className="mb-6">
-            <h3 className="text-xl font-semibold mb-3 text-gray-800">Description</h3>
-            <p className="text-gray-700 leading-relaxed">{tour.description}</p>
-          </div>
-          <div className="mb-6">
-            <h3 className="text-xl font-semibold mb-3 text-gray-800">Itinerary</h3>
-            {renderItinerary(tour.itinerary)}
-          </div>
-          <div className="bg-blue-50 rounded-xl p-4">
-            <h3 className="text-xl font-semibold mb-3 text-gray-800">Policies</h3>
-            <div className="space-y-3">
-              <div key="cancellation-policy">
-                <p className="font-medium text-gray-700">Cancellation Policy</p>
-                <p className="text-gray-600">{tour.cancelation_items[0]?.type === "fixed" ? `Free cancellation up to ${tour.cancelation_items[0].days} days before` : tour.policy}</p>
-              </div>
-              <div key="pickup-location">
-                <p className="font-medium text-gray-700">Pick-up Location</p>
-                <p className="text-gray-600">{tour.tour_address} (<a href={tour.pick_up_map} target="_blank" rel="noopener noreferrer" className="text-blue-600">View Map</a>)</p>
-              </div>
-            </div>
-          </div>
+        <DialogContent dividers className="p-6">
+          {category === "B2B" ? (
+            <AddSupplierPage setUpdate={setUpdate} setShowAddSupplier={setShowPopup} />
+          ) : (
+            <AddLeadPage setUpdate={setUpdate} setShowAddLead={setShowPopup} />
+          )}
         </DialogContent>
-        <DialogActions className="bg-gray-50 p-4 border-t">
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            startIcon={<FaBookmark />}
-            onClick={() => setIsDetailsModalOpen(false)}
-            sx={{ borderRadius: '10px', fontWeight: '600', textTransform: 'none', padding: '8px 20px' }}
-          >
-            Close
-          </Button>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={() => setShowPopup(false)} variant="outlined" sx={{ borderRadius: '8px', textTransform: 'none' }}>Cancel</Button>
         </DialogActions>
       </Dialog>
     </div>

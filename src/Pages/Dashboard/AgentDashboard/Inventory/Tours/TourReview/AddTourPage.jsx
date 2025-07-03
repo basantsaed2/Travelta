@@ -11,11 +11,13 @@ import { FiPercent } from "react-icons/fi";
 import { format } from 'date-fns';
 import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
 import PickUpMap from "../../../../../../Components/PickUpMap"; // Import the map component
+import { useNavigate } from 'react-router-dom';
 
 const AddTourPage = ({ update, setUpdate }) => {
     const { refetch: refetchList, loading: loadingList, data: listData } = useGet({url:'https://travelta.online/agent/tour/lists'});
     const { postData, loadingPost, response } = usePost({url: "https://travelta.online/agent/tour/add",});
     const [activeTab, setActiveTab] = useState('General Details');
+    const navigate = useNavigate();
 
     //General Detalils
     const [countries, setCountries] = useState([])
@@ -205,6 +207,12 @@ const AddTourPage = ({ update, setUpdate }) => {
         quadrupleAdults: "",
       },
     ]);
+
+    useEffect(() => {
+      if (!loadingPost && response) {
+      navigate(-1)
+      }
+    }, [response,loadingPost,navigate]);
   
     // Handler for Person Type input changes
     const handlePersonTypeChange = (index, event) => {

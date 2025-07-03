@@ -1071,7 +1071,7 @@
 // export default HotelBookingDetailsPage;
 
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FaStar, FaTags, FaTrashAlt, FaBuilding, FaUser, FaPlusCircle, FaShieldAlt, FaHandshake, FaUserTie, FaUserFriends, FaBed, FaBookmark, FaCheck, FaCalendarAlt, FaTimes, FaReceipt, FaCalendarDay, FaUsers, FaChild, FaMapMarkerAlt, FaWifi, FaParking, FaSwimmingPool, FaUtensils, FaSnowflake, FaDog, FaSmokingBan, FaRegSnowflake, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { IoIosPeople, IoMdTime } from "react-icons/io";
 import { MdMeetingRoom, MdSquareFoot, MdBathtub, MdBedroomParent, MdAirlineSeatReclineExtra, MdRoomService } from "react-icons/md";
@@ -1089,10 +1089,11 @@ import { BsInfoCircle } from "react-icons/bs";
 import { AddSupplierPage, AddLeadPage } from "../../AllPages";
 const HotelBookingDetailsPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const hotel = location.state?.hotel;
   const { refetch: refetchSuppliers, loading: loadingSuppliers, data: suppliersData, } = useGet({ url: "https://travelta.online/agent/manual_booking/supplier_customer", });
   const { postData, loadingPost, response } = usePost({ url: "https://travelta.online/agent/agent/bookingEngine", });
-  const { checkIn, checkOut, adults, children ,selectedCountry,selectedCity} = location.state || {};
+  const { checkIn, checkOut, adults, children, selectedCountry, selectedCity } = location.state || {};
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -1196,6 +1197,14 @@ const HotelBookingDetailsPage = () => {
     );
   };
 
+  useEffect(() => {
+    if (!loadingPost) {
+      if (response) {
+        navigate(-1); // Navigate back only when the response is successful
+      }
+    }
+  }, [loadingPost, response, navigate]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!selectedRoom) return;
@@ -1203,24 +1212,6 @@ const HotelBookingDetailsPage = () => {
     console.log("Booking data:", selectedRoom);
     const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
 
-    // const bookingData = {
-    //   room_id: selectedRoom.room_id,
-    //   check_in: checkInDate.toISOString().split('T')[0],
-    //   check_out: checkOutDate.toISOString().split('T')[0],
-    //   quantity: selectedRoom.quantity,
-    //   // from_supplier_id: selectedRoom.room_details.supplier_id,
-    //   // to_customer_id: null,
-    //   // country_id: selectedRoom.room_details.country_id,
-    //   // city_id: selectedRoom.room_details.city_id,
-    //   hotel_id: selectedRoom.room_details.hotel_id,
-    //   to_agent_id: selectedRoom.room_details.agent_id, // Replace with actual agent ID if needed
-    //   room_type: selectedRoom.room_type,
-    //   no_of_adults: totalAdults,
-    //   no_of_children: totalChildren,
-    //   no_of_nights: nights,
-      // currency_id: selectedRoom.room_details.currency_id, // Assuming USD
-    //   amount: calculateTotalPrice()
-    // };
     const bookingData = {
       room_id: selectedRoom.room_id,
       check_in: checkInDate.toISOString().split('T')[0],
@@ -1234,20 +1225,18 @@ const HotelBookingDetailsPage = () => {
       no_of_nights: nights,
       amount: calculateTotalPrice(),
       // Conditionally include supplier or customer ID
-      ...(category === "B2B" && selectedToSupplier && { 
-        from_supplier_id: selectedToSupplier.id 
+      ...(category === "B2B" && selectedToSupplier && {
+        from_supplier_id: selectedToSupplier.id
       }),
-      ...(category === "B2C" && selectedToSupplier && { 
-        to_customer_id: selectedToSupplier.id 
+      ...(category === "B2C" && selectedToSupplier && {
+        to_customer_id: selectedToSupplier.id
       }),
       currency_id: selectedRoom.room_details.currency_id, // Assuming USD
-      city_id: '',
-      country_id: '',
-      from_supplier_id:selectedToSupplier?.id || null,
-
+      city_id: selectedRoom.room_details.city_id || '',
+      country_id: selectedRoom.room_details.country_id || '',
     };
-      
-    postData(bookingData);
+
+    postData(bookingData, "Booking successful!");
   };
 
   return (

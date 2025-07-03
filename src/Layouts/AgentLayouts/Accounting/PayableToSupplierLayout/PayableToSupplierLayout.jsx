@@ -4,8 +4,6 @@ import {  useNavigate } from 'react-router-dom'
 import { FaArrowLeft } from 'react-icons/fa'
 import TitlePage from '../../../../Components/TitlePage'
 
-
-
 const PayableToSupplierLayout = () => {
     const navigate = useNavigate()
       const [update, setUpdate] = useState(false)
