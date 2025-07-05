@@ -70,8 +70,8 @@ const EditSupplierPage = ({ update, setUpdate }) => {
           // Initialize descriptions if they exist in the service data
           const initialDescriptions = {};
           supplier.services.forEach(service => {
-            if (service?.description) {
-              initialDescriptions[service.id] = service.description;
+            if (service.pivot?.description) {
+              initialDescriptions[service.id] = service.pivot?.description;
             }
           });
           setServiceDescriptions(initialDescriptions);
