@@ -3,10 +3,21 @@ import React, { useEffect, useState } from 'react'
 import { Outlet } from "react-router-dom";
 import SidebarAdmin from '../../Components/SuperAdminComponents/SidebarAdmin';
 import NavbarSuperAdmin from '../../Components/SuperAdminComponents/NavbarSuperAdmin';
+import { useAuth } from '../../Context/Auth';
+import { useNavigate } from 'react-router-dom';
 
 const SuperAdminLayout = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const [isSidebarVisible, setIsSidebarVisible] = useState(window.innerWidth >= 740);
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user || !user.roles.includes('SuperAdmin')) {
+      navigate('/', { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleToggleSidebar = () => {
     if (window.innerWidth < 740) {

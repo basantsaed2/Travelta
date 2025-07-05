@@ -4,18 +4,25 @@ import { useGet } from "../../../../../../Hooks/useGet";
 import { usePost } from "../../../../../../Hooks/usePostJson";
 import { useDelete } from "../../../../../../Hooks/useDelete";
 import { FaBed, FaDollarSign, FaEdit, FaCopy, FaTrash } from "react-icons/fa";
-import { FaCalendarAlt,FaSearch , FaCalendarCheck, FaUsers, FaUserFriends, FaClock } from 'react-icons/fa';
+import {
+  FaCalendarAlt,
+  FaSearch,
+  FaCalendarCheck,
+  FaUsers,
+  FaUserFriends,
+  FaClock,
+} from "react-icons/fa";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { Switch } from "@headlessui/react";
-import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
+import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { PiWarningCircle } from "react-icons/pi";
-import { Link } from 'react-router-dom';
-import { useChangeState } from '../../../../../../Hooks/useChangeState';
+import { Link } from "react-router-dom";
+import { useChangeState } from "../../../../../../Hooks/useChangeState";
 import { MdPriceChange } from "react-icons/md";
-import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { FaCamera } from "react-icons/fa";
-const RoomPage = ({ refetch, setUpdate }) => {
 
+const RoomPage = ({ refetch, setUpdate }) => {
   const { deleteData, loadingDelete, responseDelete } = useDelete();
   const [openDelete, setOpenDelete] = useState(null);
   const { changeState, loadingChange, responseChange } = useChangeState();
@@ -29,11 +36,12 @@ const RoomPage = ({ refetch, setUpdate }) => {
   const [activeStatusFilter, setActiveStatusFilter] = useState("all");
   const [availabilityFilter, setAvailabilityFilter] = useState("all");
 
+  const { postData: postHotelId, loadingPost: loadingHotelId, response: responseHotelId } = usePost({
+    url: `https://travelta.online/agent/room/hotel_lists`,
+  });
 
-  const { postData: postHotelId, loadingPost: loadingHotelId, response: responseHotelId } = usePost({ url: `https://travelta.online/agent/room/hotel_lists` });
-
-  // const { postData:postCopy, loadingPost:loadCopy, response:resopnseCopy } = usePost({url: `https://travelta.online/agent/room/duplicate_room/${}`,});
-  const { changeState: postDuplicate, loadingChange: loadDuplicate, responseChange: resopnseDuplicate } = useChangeState();
+  const { changeState: postDuplicate, loadingChange: loadDuplicate, responseChange: resopnseDuplicate } =
+    useChangeState();
 
   const { refetch: refetchRoom, loading: loadingRoom, data: dataRoom } = useGet({
     url: "https://travelta.online/agent/room/room_list",
@@ -44,15 +52,15 @@ const RoomPage = ({ refetch, setUpdate }) => {
     if (dataRoom && dataRoom.room) {
       setRooms(dataRoom.room);
       setFilteredRooms(dataRoom.room);
-      
+
       // Extract hotels from rooms
       const uniqueHotels = dataRoom.room.reduce((acc, room) => {
-        if (room.hotel && !acc.some(h => h.id === room.hotel.id)) {
+        if (room.hotel && !acc.some((h) => h.id === room.hotel.id)) {
           acc.push(room.hotel);
         }
         return acc;
       }, []);
-      
+
       setHotels(uniqueHotels);
     }
   }, [dataRoom]);
@@ -60,36 +68,37 @@ const RoomPage = ({ refetch, setUpdate }) => {
   // Filter rooms based on all criteria
   useEffect(() => {
     let result = rooms;
-    
+
     // Filter by search term
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
-      result = result.filter(room => 
-        (room.room_type?.name?.toLowerCase().includes(term)) ||
-        (room.hotel?.hotel_name?.toLowerCase().includes(term)) ||
-        (room.description?.toLowerCase().includes(term))
+      result = result.filter(
+        (room) =>
+          (room.room_type?.name?.toLowerCase().includes(term)) ||
+          (room.hotel?.hotel_name?.toLowerCase().includes(term)) ||
+          (room.description?.toLowerCase().includes(term))
       );
     }
-    
+
     // Filter by hotel
     if (selectedHotel !== "all") {
-      result = result.filter(room => 
-        room.hotel && room.hotel.id.toString() === selectedHotel.toString()
+      result = result.filter(
+        (room) => room.hotel && room.hotel.id.toString() === selectedHotel.toString()
       );
     }
-    
+
     // Filter by status
     if (activeStatusFilter !== "all") {
       const statusValue = activeStatusFilter === "active" ? 1 : 0;
-      result = result.filter(room => room.status === statusValue);
+      result = result.filter((room) => room.status === statusValue);
     }
-    
+
     // Filter by availability
     if (availabilityFilter !== "all") {
       const availabilityValue = availabilityFilter === "available" ? 1 : 0;
-      result = result.filter(room => room.accepted === availabilityValue);
+      result = result.filter((room) => room.accepted === availabilityValue);
     }
-    
+
     setFilteredRooms(result);
   }, [searchTerm, selectedHotel, rooms, activeStatusFilter, availabilityFilter]);
 
@@ -97,7 +106,6 @@ const RoomPage = ({ refetch, setUpdate }) => {
   const [isFreeCancellationOpen, setIsFreeCancellationOpen] = useState(false);
 
   const [status, setStatus] = useState(false); // For managing the switch status
-
 
   const [expandedIndex, setExpandedIndex] = useState(0);
   const [activeTabs, setActiveTabs] = useState(
@@ -115,11 +123,10 @@ const RoomPage = ({ refetch, setUpdate }) => {
     }));
   };
 
-  const roomsWithActiveTabs = rooms.map(room => ({
+  const roomsWithActiveTabs = rooms.map((room) => ({
     ...room,
-    activeTab: activeTabs[room.id] !== undefined ? activeTabs[room.id] : 0
+    activeTab: activeTabs[room.id] !== undefined ? activeTabs[room.id] : 0,
   }));
-
 
   const [isTaxesOpen, setIsTaxesOpen] = useState(false);
 
@@ -150,17 +157,15 @@ const RoomPage = ({ refetch, setUpdate }) => {
     setExpandedIndex(expandedIndex === roomIndex ? null : roomIndex); // Toggle on the clicked roomIndex
   };
 
-
   const truncateText = (text, limit = 100) => {
-    if (!text) return '';
-    return text.length > limit ? text.substring(0, limit) + '...' : text;
+    if (!text) return "";
+    return text.length > limit ? text.substring(0, limit) + "..." : text;
   };
 
-
-  // Change coupon status 
+  // Change coupon status
   const handleChangeStaus = async (id, name, status) => {
     const response = await changeState(
-      ` https://travelta.online/agent/room/status/${id}`,
+      `https://travelta.online/agent/room/status/${id}`,
       `${name} Changed Status.`,
       { status } // Pass status as an object if changeState expects an object
     );
@@ -173,9 +178,10 @@ const RoomPage = ({ refetch, setUpdate }) => {
       );
     }
   };
+
   const handleChangeAcceptedStatus = async (id, name, accepted) => {
     const response = await changeState(
-      ` https://travelta.online/agent/room/accepted/${id}`,
+      `https://travelta.online/agent/room/accepted/${id}`,
       `${name} Changed Accepted.`,
       { accepted } // Pass status as an object if changeState expects an object
     );
@@ -187,9 +193,10 @@ const RoomPage = ({ refetch, setUpdate }) => {
       );
     }
   };
+
   const handleCopy = async (id, name) => {
     const response = await postDuplicate(
-      ` https://travelta.online/agent/room/duplicate_room/${id}`,
+      `https://travelta.online/agent/room/duplicate_room/${id}`,
       `${name} Copied to clipboard!`,
       { status } // Pass status as an object if changeState expects an object
     );
@@ -200,9 +207,9 @@ const RoomPage = ({ refetch, setUpdate }) => {
 
   useEffect(() => {
     if (!loadDuplicate) {
-      setUpdate(!refetch)
+      setUpdate(!refetch);
     }
-  }, [resopnseDuplicate])
+  }, [resopnseDuplicate]);
 
   const handleOpenDelete = (item) => {
     setOpenDelete(item);
@@ -213,19 +220,30 @@ const RoomPage = ({ refetch, setUpdate }) => {
 
   // Delete Customer
   const handleDelete = async (id, name) => {
-    const success = await deleteData(`https://travelta.online/agent/room/delete/${id}`, `${name} Deleted Success.`);
+    const success = await deleteData(
+      `https://travelta.online/agent/room/delete/${id}`,
+      `${name} Deleted Success.`
+    );
 
     if (success) {
-      setRooms(
-        rooms.filter((room) =>
-          room.id !== id
-        )
-      );
+      setRooms(rooms.filter((room) => room.id !== id));
     }
   };
 
   return (
     <div className="">
+      <style jsx>{`
+        .room-container::-webkit-scrollbar {
+          display: none;
+        }
+        .room-container {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+          max-height: 600px;
+          overflow-y: auto;
+          scroll-behavior: smooth;
+        }
+      `}</style>
       <div className="w-full pb-10">
         {loadingRoom ? (
           <div className="w-full h-56 flex justify-center items-center">
@@ -261,7 +279,7 @@ const RoomPage = ({ refetch, setUpdate }) => {
                   onChange={(e) => setSelectedHotel(e.target.value)}
                 >
                   <option value="all">All Hotels</option>
-                  {hotels.map(hotel => (
+                  {hotels.map((hotel) => (
                     <option key={hotel.id} value={hotel.id}>
                       {hotel.hotel_name}
                     </option>
@@ -283,7 +301,7 @@ const RoomPage = ({ refetch, setUpdate }) => {
                 <select
                   className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={availabilityFilter}
-                  onChange={(e) => setActiveStatusFilter(e.target.value)}
+                  onChange={(e) => setAvailabilityFilter(e.target.value)} // Fixed: Use setAvailabilityFilter
                 >
                   <option value="all">All Availability</option>
                   <option value="available">Available Only</option>
@@ -296,11 +314,11 @@ const RoomPage = ({ refetch, setUpdate }) => {
                 Showing {filteredRooms.length} of {rooms.length} rooms
               </div>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 p-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 p-4">
               {filteredRooms.map((room, roomIndex) => (
                 <div
                   key={room.id}
-                  className="bg-white room-container custom-scrollbar overflow-y-auto rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+                  className="bg-white room-container rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
                 >
                   <div className="relative">
                     <img
@@ -311,10 +329,11 @@ const RoomPage = ({ refetch, setUpdate }) => {
 
                     {/* Status Badge */}
                     <div
-                      className={`absolute top-4 left-4 px-4 py-1 rounded-full text-white font-semibold ${room.status === 1 ? 'bg-green-500' : 'bg-red-500'
-                        }`}
+                      className={`absolute top-4 left-4 px-4 py-1 rounded-full text-white font-semibold ${
+                        room.status === 1 ? "bg-green-500" : "bg-red-500"
+                      }`}
                     >
-                      {room.status === 1 ? 'Active' : 'Inactive'}
+                      {room.status === 1 ? "Active" : "Inactive"}
                     </div>
                   </div>
 
@@ -322,14 +341,19 @@ const RoomPage = ({ refetch, setUpdate }) => {
                   <div className="p-4 flex items-center space-x-4 border-b border-gray-200">
                     <FaBed className="text-blue-600 text-2xl" />
                     <div>
-                      {/* <h2 className="text-2xl font-semibold text-gray-800">Room #{room.id}</h2> */}
-                      <h2 className="text-2xl font-semibold text-gray-800">{room.room_type?.name || 'Room'}</h2>
-                      <p className="text-sm text-gray-500">{room.hotel?.hotel_name || 'Hotel N/A'} Hotel</p>
-                      <p className="text-sm text-gray-500">{room.hotel_meal?.meal_name || 'Meal Plan: N/A'}</p>
+                      <h2 className="text-2xl font-semibold text-gray-800">
+                        {room.room_type?.name || "Room"}
+                      </h2>
+                      <p className="text-sm text-gray-500">
+                        {room.hotel?.hotel_name || "Hotel N/A"} Hotel
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {room.hotel_meal?.meal_name || "Meal Plan: N/A"}
+                      </p>
                     </div>
                   </div>
                   <div className="flex justify-between items-center bg-white py-2 px-3 rounded-lg shadow-md">
-                    <span className="text-lg font-semibold text-gray-700">Room Gallary:</span>
+                    <span className="text-lg font-semibold text-gray-700">Room Gallery:</span>
                     <Link
                       to={`gallery/${room.id}`}
                       className="flex items-center gap-3 bg-blue-500 text-white py-2 px-5 rounded-xl shadow-md hover:bg-blue-600 transition-all duration-300 ease-in-out"
@@ -341,13 +365,14 @@ const RoomPage = ({ refetch, setUpdate }) => {
                   {/* Tabs */}
                   <div className="border-t border-gray-200">
                     <div className="mt-5 flex gap-2 justify-center p-1">
-                      {['General Info', 'Pricing', 'Policies', 'Supplements'].map((tab, tabIndex) => (
+                      {["General Info", "Pricing", "Policies", "Supplements"].map((tab, tabIndex) => (
                         <button
                           key={tabIndex}
-                          className={`text-xs font-medium px-3 py-1 rounded-md transition-all duration-200 ${activeTabs[room.id] === tabIndex
-                              ? 'bg-mainColor text-white'
-                              : 'bg-transparent text-mainColor hover:bg-mainColor hover:text-white'
-                            }`}
+                          className={`text-xs font-medium px-3 py-1 rounded-md transition-all duration-200 ${
+                            activeTabs[room.id] === tabIndex
+                              ? "bg-mainColor text-white"
+                              : "bg-transparent text-mainColor hover:bg-mainColor hover:text-white"
+                          }`}
                           onClick={() => handleTabClick(room.id, tabIndex)}
                         >
                           {tab}
@@ -363,15 +388,19 @@ const RoomPage = ({ refetch, setUpdate }) => {
                           {/* Description */}
                           <div className="bg-white p-3 rounded-lg shadow-lg">
                             <h3 className="text-xl font-semibold text-gray-800 mb-4">Description</h3>
-                            <p className={`text-sm text-gray-600 ${expandedIndex === roomIndex ? '' : 'line-clamp-3'}`}>
+                            <p
+                              className={`text-sm text-gray-600 ${
+                                expandedIndex === roomIndex ? "" : "line-clamp-3"
+                              }`}
+                            >
                               {room.description}
                             </p>
-                            {room.description.length > 100 && (
+                            {room.description?.length > 100 && (
                               <button
                                 className="text-blue-600 text-sm mt-2 font-medium hover:underline"
                                 onClick={() => handleToggleDescription(roomIndex)}
                               >
-                                {expandedIndex === roomIndex ? 'Show Less' : 'Read More'}
+                                {expandedIndex === roomIndex ? "Show Less" : "Read More"}
                               </button>
                             )}
                           </div>
@@ -381,48 +410,72 @@ const RoomPage = ({ refetch, setUpdate }) => {
                             <div className="flex items-center space-x-3 bg-white p-2 rounded-lg shadow-sm hover:shadow-md transition-all">
                               <FaCalendarAlt className="text-xl text-blue-500" />
                               <div>
-                                <span className="block text-sm font-medium text-gray-700">Check-in</span>
-                                <span className="text-sm text-gray-500">{room.check_in || 'N/A'}</span>
+                                <span className="block text-sm font-medium text-gray-700">
+                                  Check-in
+                                </span>
+                                <span className="text-sm text-gray-500">
+                                  {room.check_in || "N/A"}
+                                </span>
                               </div>
                             </div>
 
                             <div className="flex items-center space-x-3 bg-white p-2 rounded-lg shadow-sm hover:shadow-md transition-all">
                               <FaCalendarCheck className="text-xl text-green-500" />
                               <div>
-                                <span className="block text-sm font-medium text-gray-700">Check-out</span>
-                                <span className="text-sm text-gray-500">{room.check_out || 'N/A'}</span>
+                                <span className="block text-sm font-medium text-gray-700">
+                                  Check-out
+                                </span>
+                                <span className="text-sm text-gray-500">
+                                  {room.check_out || "N/A"}
+                                </span>
                               </div>
                             </div>
 
                             <div className="flex items-center space-x-3 bg-white p-2 rounded-lg shadow-sm hover:shadow-md transition-all">
                               <FaBed className="text-xl text-yellow-500" />
                               <div>
-                                <span className="block text-sm font-medium text-gray-700">Max Adults</span>
-                                <span className="text-sm text-gray-500">{room.max_adults || 'N/A'}</span>
+                                <span className="block text-sm font-medium text-gray-700">
+                                  Max Adults
+                                </span>
+                                <span className="text-sm text-gray-500">
+                                  {room.max_adults || "N/A"}
+                                </span>
                               </div>
                             </div>
 
                             <div className="flex items-center space-x-3 bg-white p-2 rounded-lg shadow-sm hover:shadow-md transition-all">
                               <FaUsers className="text-xl text-purple-500" />
                               <div>
-                                <span className="block text-sm font-medium text-gray-700">Max Capacity</span>
-                                <span className="text-sm text-gray-500">{room.max_capacity || 'N/A'}</span>
+                                <span className="block text-sm font-medium text-gray-700">
+                                  Max Capacity
+                                </span>
+                                <span className="text-sm text-gray-500">
+                                  {room.max_capacity || "N/A"}
+                                </span>
                               </div>
                             </div>
 
                             <div className="flex items-center space-x-3 bg-white p-2 rounded-lg shadow-sm hover:shadow-md transition-all">
                               <FaUserFriends className="text-xl text-indigo-500" />
                               <div>
-                                <span className="block text-sm font-medium text-gray-700">Max Children</span>
-                                <span className="text-sm text-gray-500">{room.max_children || 'N/A'}</span>
+                                <span className="block text-sm font-medium text-gray-700">
+                                  Max Children
+                                </span>
+                                <span className="text-sm text-gray-500">
+                                  {room.max_children || "N/A"}
+                                </span>
                               </div>
                             </div>
 
                             <div className="flex items-center space-x-3 bg-white p-2 rounded-lg shadow-sm hover:shadow-md transition-all">
                               <FaClock className="text-xl text-red-500" />
                               <div>
-                                <span className="block text-sm font-medium text-gray-700">Min Stay</span>
-                                <span className="text-sm text-gray-500">{room.min_stay || 'N/A'}</span>
+                                <span className="block text-sm font-medium text-gray-700">
+                                  Min Stay
+                                </span>
+                                <span className="text-sm text-gray-500">
+                                  {room.min_stay || "N/A"}
+                                </span>
                               </div>
                             </div>
                           </div>
@@ -467,7 +520,9 @@ const RoomPage = ({ refetch, setUpdate }) => {
                           </div>
 
                           <div className="flex justify-between items-center bg-white py-2 px-3 rounded-lg shadow-md">
-                            <span className="text-lg font-semibold text-gray-700">Room Availability:</span>
+                            <span className="text-lg font-semibold text-gray-700">
+                              Room Availability:
+                            </span>
                             <Link
                               to={`availability/${room.id}`}
                               className="flex items-center gap-3 bg-blue-500 text-white py-2 px-5 rounded-xl shadow-md hover:bg-blue-600 transition-all duration-300 ease-in-out"
@@ -485,19 +540,25 @@ const RoomPage = ({ refetch, setUpdate }) => {
                                 {room.b2b_markup && (
                                   <div className="flex items-center space-x-2">
                                     <span className="text-sm text-gray-500">B2B</span>
-                                    <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs">{room.b2b_markup}%</span>
+                                    <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs">
+                                      {room.b2b_markup}%
+                                    </span>
                                   </div>
                                 )}
                                 {room.b2c_markup && (
                                   <div className="flex items-center space-x-2">
                                     <span className="text-sm text-gray-500">B2C</span>
-                                    <span className="bg-green-500 text-white px-2 py-1 rounded-full text-xs">{room.b2c_markup}%</span>
+                                    <span className="bg-green-500 text-white px-2 py-1 rounded-full text-xs">
+                                      {room.b2c_markup}%
+                                    </span>
                                   </div>
                                 )}
                                 {room.b2e_markup && (
                                   <div className="flex items-center space-x-2">
                                     <span className="text-sm text-gray-500">B2E</span>
-                                    <span className="bg-yellow-500 text-white px-2 py-1 rounded-full text-xs">{room.b2e_markup}%</span>
+                                    <span className="bg-yellow-500 text-white px-2 py-1 rounded-full text-xs">
+                                      {room.b2e_markup}%
+                                    </span>
                                   </div>
                                 )}
                               </div>
@@ -506,7 +567,7 @@ const RoomPage = ({ refetch, setUpdate }) => {
 
                           {/* Taxes Section */}
                           {room.taxes && room.taxes.length > 0 && (
-                            <div >
+                            <div>
                               <div
                                 className="bg-white p-3 rounded-lg shadow-md cursor-pointer flex items-center justify-between"
                                 onClick={toggleTaxes}
@@ -519,8 +580,8 @@ const RoomPage = ({ refetch, setUpdate }) => {
 
                               {isTaxesOpen && (
                                 <div className="bg-white p-4 rounded-lg shadow-md mt-2">
-                                  {room.taxes.map((tax, roomIndex) => (
-                                    <div key={roomIndex}>
+                                  {room.taxes.map((tax, taxIndex) => (
+                                    <div key={taxIndex}>
                                       {/* Tax Name and Amount */}
                                       <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm text-gray-500">{tax.name}:</span>
@@ -531,7 +592,9 @@ const RoomPage = ({ refetch, setUpdate }) => {
                                     </div>
                                   ))}
 
-                                  <span className="text-sm text-gray-500">Tax Type: {room.tax_type}</span>
+                                  <span className="text-sm text-gray-500">
+                                    Tax Type: {room.tax_type}
+                                  </span>
 
                                   {/* Tax Type Handling */}
                                   {room.tax_type === "include_except" && (
@@ -541,8 +604,8 @@ const RoomPage = ({ refetch, setUpdate }) => {
                                         <div className="mb-2">
                                           <span className="text-sm text-gray-500">Except Taxes:</span>
                                           <ul className="list-disc pl-5">
-                                            {room.except_taxes.map((exceptTax, roomIndex) => (
-                                              <li key={roomIndex} className="text-sm text-gray-600">
+                                            {room.except_taxes.map((exceptTax, taxIndex) => (
+                                              <li key={taxIndex} className="text-sm text-gray-600">
                                                 {exceptTax.name} - {exceptTax.amount}
                                               </li>
                                             ))}
@@ -563,21 +626,23 @@ const RoomPage = ({ refetch, setUpdate }) => {
                                 className="bg-white p-3 rounded-lg shadow-md cursor-pointer flex items-center justify-between"
                                 onClick={toggleFreeCancellation}
                               >
-                                <h4 className="text-lg font-semibold text-gray-700">Free Cancellation</h4>
+                                <h4 className="text-lg font-semibold text-gray-700">
+                                  Free Cancellation
+                                </h4>
                                 <span className="text-sm text-gray-500">
                                   {isFreeCancellationOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
                                 </span>
                               </div>
                               {isFreeCancellationOpen && (
                                 <div className="bg-white p-4 rounded-lg shadow-md mt-2">
-                                  {room.free_cancelation.map((policy, roomIndex) => (
-                                    <div key={roomIndex} className="flex justify-between mb-3">
+                                  {room.free_cancelation.map((policy, policyIndex) => (
+                                    <div key={policyIndex} className="flex justify-between mb-3">
                                       <div className="text-sm text-gray-500">Amount:</div>
                                       <div className="text-sm text-gray-600">
                                         {policy.type === "precentage" ? `${policy.amount}%` : policy.amount}
                                       </div>
                                       <div className="text-sm text-gray-500">Before (Days):</div>
-                                      <div className="text-sm text-gray-600">{policy.before || 'N/A'}</div>
+                                      <div className="text-sm text-gray-600">{policy.before || "N/A"}</div>
                                     </div>
                                   ))}
                                 </div>
@@ -588,10 +653,10 @@ const RoomPage = ({ refetch, setUpdate }) => {
                           {/* Non-Refundable Cancellation Policy */}
                           {room.cancelation === "non_refunable" && (
                             <div className="mb-4">
-                              <div
-                                className="bg-white p-3 rounded-lg shadow-md flex items-center justify-between cursor-pointer"
-                              >
-                                <h4 className="text-lg font-semibold text-gray-700">Non-Refundable Policy</h4>
+                              <div className="bg-white p-3 rounded-lg shadow-md flex items-center justify-between cursor-pointer">
+                                <h4 className="text-lg font-semibold text-gray-700">
+                                  Non-Refundable Policy
+                                </h4>
                               </div>
                             </div>
                           )}
@@ -609,10 +674,14 @@ const RoomPage = ({ refetch, setUpdate }) => {
                               </div>
                               {isAgenciesOpen && (
                                 <div className="bg-white p-4 rounded-lg shadow-md mt-2">
-                                  {room.agencies.map((agency, roomIndex) => (
-                                    <div key={roomIndex} className="flex justify-between mb-3">
-                                      <div className="text-sm text-gray-500 font-semibold">Code : {agency.agency_code}</div>
-                                      <div className="text-sm text-gray-600">Amount : {agency.percentage}%</div>
+                                  {room.agencies.map((agency, agencyIndex) => (
+                                    <div key={agencyIndex} className="flex justify-between mb-3">
+                                      <div className="text-sm text-gray-500 font-semibold">
+                                        Code: {agency.agency_code}
+                                      </div>
+                                      <div className="text-sm text-gray-600">
+                                        Amount: {agency.percentage}%
+                                      </div>
                                     </div>
                                   ))}
                                 </div>
@@ -626,11 +695,15 @@ const RoomPage = ({ refetch, setUpdate }) => {
                         <div>
                           {room.policy && (
                             <div className="bg-white p-3 rounded-lg shadow-lg mb-4">
-                              <h3 className="text-xl font-semibold text-gray-800 mb-4">Terms & Conditions</h3>
-                              {room.policy.split('\r\n').map((line, lineIndex) => (
+                              <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                                Terms & Conditions
+                              </h3>
+                              {room.policy.split("\r\n").map((line, lineIndex) => (
                                 <p
                                   key={lineIndex}
-                                  className={`text-sm text-gray-600 ${expandedIndex === roomIndex ? '' : 'line-clamp-3'}`}
+                                  className={`text-sm text-gray-600 ${
+                                    expandedIndex === roomIndex ? "" : "line-clamp-3"
+                                  }`}
                                 >
                                   {line}
                                 </p>
@@ -640,7 +713,7 @@ const RoomPage = ({ refetch, setUpdate }) => {
                                   className="text-blue-600 text-sm mt-2 font-medium hover:underline"
                                   onClick={() => handleTogglePolicy(roomIndex)}
                                 >
-                                  {expandedIndex === roomIndex ? 'Show Less' : 'Read More'}
+                                  {expandedIndex === roomIndex ? "Show Less" : "Read More"}
                                 </button>
                               )}
                             </div>
@@ -648,11 +721,15 @@ const RoomPage = ({ refetch, setUpdate }) => {
 
                           {room.children_policy && (
                             <div className="bg-white p-3 rounded-lg shadow-lg mb-4">
-                              <h3 className="text-xl font-semibold text-gray-800 mb-4">Children Policy</h3>
-                              {room.children_policy.split('\r\n').map((line, lineIndex) => (
+                              <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                                Children Policy
+                              </h3>
+                              {room.children_policy.split("\r\n").map((line, lineIndex) => (
                                 <p
                                   key={lineIndex}
-                                  className={`text-sm text-gray-600 ${expandedIndex === roomIndex ? '' : 'line-clamp-3'}`}
+                                  className={`text-sm text-gray-600 ${
+                                    expandedIndex === roomIndex ? "" : "line-clamp-3"
+                                  }`}
                                 >
                                   {line}
                                 </p>
@@ -662,7 +739,7 @@ const RoomPage = ({ refetch, setUpdate }) => {
                                   className="text-blue-600 text-sm mt-2 font-medium hover:underline"
                                   onClick={() => handleToggleChildrenPolicy(roomIndex)}
                                 >
-                                  {expandedIndex === roomIndex ? 'Show Less' : 'Read More'}
+                                  {expandedIndex === roomIndex ? "Show Less" : "Read More"}
                                 </button>
                               )}
                             </div>
@@ -688,7 +765,9 @@ const RoomPage = ({ refetch, setUpdate }) => {
                                     <tr key={sup.id}>
                                       <td className="px-4 py-2 border">{sup.name}</td>
                                       <td className="px-4 py-2 border">{sup.type}</td>
-                                      <td className="px-4 py-2 border">{sup.price} {sup.currency?.name}</td>
+                                      <td className="px-4 py-2 border">
+                                        {sup.price} {sup.currency?.name}
+                                      </td>
                                     </tr>
                                   ))}
                                 </tbody>
@@ -704,26 +783,33 @@ const RoomPage = ({ refetch, setUpdate }) => {
                     <div className="flex items-center gap-2">
                       Status:
                       <Switch
-                        checked={room.status === 1}  // This will evaluate to true or false
+                        checked={room.status === 1} // This will evaluate to true or false
                         onChange={() => {
                           handleChangeStaus(room.id, room.room_type?.name, room.status === 1 ? 0 : 1);
                         }}
-                        className={`${room.status === 1 ? "bg-green-500" : "bg-gray-300"
-                          } relative inline-flex h-7 w-14 items-center rounded-full transition-colors`}
+                        className={`${
+                          room.status === 1 ? "bg-green-500" : "bg-gray-300"
+                        } relative inline-flex h-7 w-14 items-center rounded-full transition-colors`}
                       >
                         <span
-                          className={`${room.status === 1 ? "translate-x-7" : "translate-x-1"
-                            } inline-block h-5 w-5 transform rounded-full bg-white shadow transition`}
+                          className={`${
+                            room.status === 1 ? "translate-x-7" : "translate-x-1"
+                          } inline-block h-5 w-5 transform rounded-full bg-white shadow transition`}
                         />
                       </Switch>
                     </div>
                     <div className="flex items-center gap-2 p-1">
-                      {/* Accepted:  */}
+                      {/* Accepted: */}
                       <div
-                        className={`${room.accepted === 1 ? "bg-green-500 text-white" : "bg-red-500 text-white"
-                          } cursor-pointer p-2 rounded-full flex items-center gap-2`}
+                        className={`${
+                          room.accepted === 1 ? "bg-green-500 text-white" : "bg-red-500 text-white"
+                        } cursor-pointer p-2 rounded-full flex items-center gap-2`}
                         onClick={() => {
-                          handleChangeAcceptedStatus(room.id, room.room_type?.name, room.accepted === 1 ? 0 : 1);
+                          handleChangeAcceptedStatus(
+                            room.id,
+                            room.room_type?.name,
+                            room.accepted === 1 ? 0 : 1
+                          );
                         }}
                       >
                         {room.accepted === 1 ? (
@@ -743,19 +829,17 @@ const RoomPage = ({ refetch, setUpdate }) => {
 
                   {/* Edit Button */}
                   <div className="p-4 border-t border-gray-300 flex items-center justify-center bg-gray-50">
-
                     {/* Buttons Section */}
                     <div className="flex items-center gap-3">
                       {/* Copy Button */}
                       <button
                         className="flex items-center gap-2 bg-gray-600 text-white py-2 px-4 rounded-lg shadow hover:bg-gray-700 transition"
-                        // onClick={handleCopy}
                         onClick={() => {
                           handleCopy(room.id, room.room_type?.name);
                         }}
                       >
                         <FaCopy />
-                        <span className="text-sm">{isCopied ? 'Copied!' : 'Copy'}</span>
+                        <span className="text-sm">{isCopied ? "Copied!" : "Copy"}</span>
                       </button>
                       {/* Edit Button */}
                       <Link
@@ -765,8 +849,6 @@ const RoomPage = ({ refetch, setUpdate }) => {
                         <FaEdit />
                         <span className="text-sm">Edit</span>
                       </Link>
-                      {/* <Link to={`edit/${supplier.id}`}  ><FaEdit color='#4CAF50' size="24"/></Link> */}
-
                       <button
                         className="flex items-center gap-2 bg-red-600 text-white py-2 px-4 rounded-lg shadow hover:bg-red-700 transition"
                         onClick={() => handleOpenDelete(room.id)}
@@ -775,19 +857,13 @@ const RoomPage = ({ refetch, setUpdate }) => {
                         <span className="text-sm">Delete</span>
                       </button>
                       {openDelete === room.id && (
-                        <Dialog
-                          open={true}
-                          onClose={handleCloseDelete}
-                          className="relative z-10"
-                        >
+                        <Dialog open={true} onClose={handleCloseDelete} className="relative z-10">
                           <DialogBackdrop className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
                           <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
                             <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
                               <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                                <div className="flex  flex-col items-center justify-center bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                                  <PiWarningCircle color='#0D47A1'
-                                    size="60"
-                                  />
+                                <div className="flex flex-col items-center justify-center bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                  <PiWarningCircle color="#0D47A1" size="60" />
                                   <div className="flex items-center">
                                     <div className="mt-2 text-center">
                                       You will delete room {room?.room_type?.name || "-"}
@@ -795,7 +871,10 @@ const RoomPage = ({ refetch, setUpdate }) => {
                                   </div>
                                 </div>
                                 <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                  <button className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto" onClick={() => handleDelete(room.id, room?.room_type?.name)}>
+                                  <button
+                                    className="inline-flex w-full justify-center rounded-md bg-mainColor px-6 py-3 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto"
+                                    onClick={() => handleDelete(room.id, room?.room_type?.name)}
+                                  >
                                     Delete
                                   </button>
 
@@ -815,7 +894,6 @@ const RoomPage = ({ refetch, setUpdate }) => {
                       )}
                     </div>
                   </div>
-
                 </div>
               ))}
             </div>

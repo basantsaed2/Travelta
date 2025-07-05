@@ -70,8 +70,8 @@ const EditSupplierPage = ({ update, setUpdate }) => {
           // Initialize descriptions if they exist in the service data
           const initialDescriptions = {};
           supplier.services.forEach(service => {
-            if (service.pivot?.description) {
-              initialDescriptions[service.id] = service.pivot.description;
+            if (service?.description) {
+              initialDescriptions[service.id] = service.description;
             }
           });
           setServiceDescriptions(initialDescriptions);
@@ -400,9 +400,9 @@ const EditSupplierPage = ({ update, setUpdate }) => {
                 rows={3}
                 value={serviceDescriptions[service.id] || ''}
                 onChange={(e) => handleDescriptionChange(service.id, e.target.value)}
-                required
-                error={!serviceDescriptions[service.id]}
-                helperText={!serviceDescriptions[service.id] ? "Please add a description" : ""}
+                // required
+                // error={!serviceDescriptions[service.id]}
+                // helperText={!serviceDescriptions[service.id] ? "Please add a description" : ""}
               />
             )
           ))}

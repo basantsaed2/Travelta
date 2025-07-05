@@ -2,10 +2,21 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../Components/Agent Components/Navbar";
 import SidebarAgent from "../../Components/Agent Components/SidebarAgent";
 import { Outlet } from "react-router-dom";
+import { useAuth } from '../../Context/Auth';
+import { useNavigate } from 'react-router-dom';
 
 const AgentLayout = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isSidebarVisible, setIsSidebarVisible] = useState(window.innerWidth >= 740);
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user || !user.roles.includes('agent')) {
+      navigate('/', { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleToggleSidebar = () => {
     if (window.innerWidth < 740) {
