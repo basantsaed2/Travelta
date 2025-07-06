@@ -370,8 +370,8 @@ const AddSupplierPage = ({ update, setUpdate }) => {
                 value={serviceDescriptions[service.id] || ''}
                 onChange={(e) => handleDescriptionChange(service.id, e.target.value)}
                 // required
-                error={!serviceDescriptions[service.id]}
-                helperText={!serviceDescriptions[service.id] ? "Please add a description" : ""}
+                // error={!serviceDescriptions[service.id]}
+                // helperText={!serviceDescriptions[service.id] ? "Please add a description" : ""}
               />
             )
           ))}

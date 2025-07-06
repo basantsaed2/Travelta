@@ -244,7 +244,7 @@ const ExpenseListPage = ({ update, setUpdate }) => {
                                             </td>
                                             <td className="text-center py-2">
                                                 <div className="flex items-center justify-center gap-1">
-                                                    <Link to={`edit/${expense.id}`}>
+                                                    <Link to={`edit/${expense.id}`} state={{ expense }}>
                                                         <FaEdit color='#4CAF50' size="24" />
                                                     </Link>
                                                     <button

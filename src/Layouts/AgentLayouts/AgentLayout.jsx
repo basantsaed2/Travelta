@@ -2,10 +2,21 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../Components/Agent Components/Navbar";
 import SidebarAgent from "../../Components/Agent Components/SidebarAgent";
 import { Outlet } from "react-router-dom";
+import { useAuth } from '../../Context/Auth';
+import { useNavigate } from 'react-router-dom';
 
 const AgentLayout = () => {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isSidebarVisible, setIsSidebarVisible] = useState(window.innerWidth >= 740);
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user || !user.roles.includes('agent')) {
+      navigate('/', { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleToggleSidebar = () => {
     if (window.innerWidth < 740) {
@@ -38,7 +49,7 @@ const AgentLayout = () => {
         onLinkClick={handleLinkClick} // Pass the link click handler
       />
       </div>
-      <div className={`flex flex-col w-full min-h-screen overflow-hidden ${isSidebarCollapsed ? "lg:ml-20" : "lg:ml-64"} `}>
+      <div className={`flex flex-col w-full min-h-screen overflow-hidden ${isSidebarCollapsed ? "lg:ml-14" : "lg:ml-60"} `}>
         <Navbar onToggleSidebar={handleToggleSidebar} />
         <main className={`flex-1 bg-gray-100 p-2 xl:p-6`}>
           <Outlet />

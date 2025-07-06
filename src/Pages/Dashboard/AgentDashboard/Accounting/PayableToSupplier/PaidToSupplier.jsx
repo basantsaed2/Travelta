@@ -131,7 +131,7 @@ const PaidToSupplier = ({ update, setUpdate }) => {
   if (loadingPayable) return <StaticLoader />;
 
   return (
-<div className="container max-w-7xl mx-auto p-5 flex flex-col gap-6">
+<div className="w-full flex flex-col gap-6">
 <div className="flex flex-col lg:flex-row flex-wrap items-center gap-4 bg-white p-6 shadow-lg rounded-xl border border-gray-200 ">
         {/* Search Input */}
         <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-lg w-full lg:w-auto border border-gray-300">

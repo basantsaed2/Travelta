@@ -1,22 +1,26 @@
-import React, { useState } from 'react'
+import React,{useState} from "react";
 import TitlePage from '../../../../../Components/TitlePage'
 import {EditExpensesListPage} from '../../../../../Pages/AllPages'
-import { Link } from 'react-router-dom'
-import AddButton from '../../../../../Components/Buttons/AddButton'
+import { useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
 
 const EditExpensesListLayout = () => {
-  const [update, setUpdate] = useState(false)
+      const [update, setUpdate] = useState(false)
+      const navigate = useNavigate()
   return (
     <>
-    <div className='flex justify-between items-center'>
+    <div className="flex gap-3">
+    <button
+            onClick={() => navigate(-1)}
+            className=" top-2 text-mainColor text-2xl cursor-pointer hover:text-blue-500 transition-all"
+        >
+            <FaArrowLeft/>
+        </button>
     <TitlePage text={'Edit Expenses'} />
-    <Link to='add'>
-        <AddButton />
-      </Link>
+    
     </div>
-      <EditExpensesListPage update={update} setUpdate={setUpdate}/>
+    <EditExpensesListPage update={update} setUpdate={setUpdate} />
     </>
-  )
-}
-
+  ) 
+};
 export default EditExpensesListLayout;

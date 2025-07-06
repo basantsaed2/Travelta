@@ -29,6 +29,7 @@ const CheckoutPage = ({ refetch, setUpdate }) => {
 
         const auth = useAuth();
         const location = useLocation();
+        const { plan} = location.state || {};
         const { cartItems } = location.state || {};
         const { totalPrice } = location.state || {};
         const { totalDiscountPrice } = location.state || {};
@@ -78,8 +79,8 @@ const CheckoutPage = ({ refetch, setUpdate }) => {
             return;
         }
         const formData = new FormData();
-        const planIds = cartItems.map(item => item.id);
-        formData.append("plan_id", planIds);       
+        const planIds = cartItems?.map(item => item.id) || plan.id; // Use cartItems if available, otherwise use plan.id
+        formData.append("plan_id", planIds? planIds : plan.id);       
         formData.append("payment_method_id", selectedMethod.id);
         if (thumbnailFile) {formData.append("receipt", thumbnailFile);}
 

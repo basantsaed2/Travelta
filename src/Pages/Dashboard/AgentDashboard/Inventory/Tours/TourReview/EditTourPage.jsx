@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { TextField, MenuItem, Checkbox, InputAdornment, ListItemText, Switch, Button, FormControlLabel, RadioGroup, Radio } from "@mui/material";
+import { TextField, MenuItem, Checkbox, InputAdornment, ListItemText, Switch, Button, FormControlLabel, RadioGroup, Radio, IconButton } from "@mui/material";
 import { useGet } from '../../../../../../Hooks/useGet';
 import { usePost } from '../../../../../../Hooks/usePostJson';
-import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
+import { AiOutlinePlus, AiOutlineMinus, AiOutlineMinusCircle } from 'react-icons/ai';
 import { MdAttachMoney } from "react-icons/md";
 import { FiPercent } from "react-icons/fi";
 import { format } from 'date-fns';
 import { useParams } from 'react-router-dom';
 import PickUpMap from "../../../../../../Components/PickUpMap"; // Import the map component
+import { useNavigate } from 'react-router-dom';
 
 const EditTourPage = ({ update, setUpdate }) => {
   const { tourId } = useParams();
@@ -15,6 +16,7 @@ const EditTourPage = ({ update, setUpdate }) => {
   const { refetch: refetchList, loading: loadingList, data: listData } = useGet({ url: 'https://travelta.online/agent/tour/lists' });
   const { postData, loadingPost, response } = usePost({ url: `https://travelta.online/agent/tour/update/${tourId}` });
   const [activeTab, setActiveTab] = useState('General Details');
+  const navigate = useNavigate();
   // const { refetch: refetchTour, data: dataTour } = useGet({
   //     url: "https://travelta.online/agent/tour",
   // });
@@ -322,81 +324,162 @@ const EditTourPage = ({ update, setUpdate }) => {
     }
   }, [listData]);
 
-  useEffect(() => {
-    if (tourData && tourData.tour) {
-      const tour = tourData.tour;
-      console.log("Tour", tour)
-      if (tour) {
-        setTourDetails({
-          name: tour.name || '',
-          description: tour.description || '',
-          status: tour.status === 1, // Assuming 1 means true (active)
-          videoLink: tour.video_link || '',
-          nights: tour.nights || 1,
-          days: tour.days || 1,
-          selectedTourType: tour.tour_type || '',
-          featured: tour.featured === "yes",
-          featured_from: tour.featured_from || '',
-          featured_to: tour.featured_to || '',
-          deposit: tour.deposit || 0,
-          deposit_type: tour.deposit_type || 'percentage',
-          tax: tour.tax || 0,
-          tax_type: tour.tax_type || 'percentage',
-          tour_email: tour.tour_email || '',
-          tour_phone: tour.tour_phone || '',
-          tour_website: tour.tour_website || '',
-          tour_address: tour.tour_address || '',
-        });
+useEffect(() => {
+  if (tourData && tourData.tour) {
+    const tour = tourData.tour;
+    console.log("Tour", tour)
+    if (tour) {
+      setTourDetails({
+        name: tour.name || '',
+        description: tour.description || '',
+        status: tour.status === 1, // Assuming 1 means true (active)
+        videoLink: tour.video_link || '',
+        nights: tour.nights || 1,
+        days: tour.days || 1,
+        selectedTourType: tour.tour_type || '',
+        featured: tour.featured === "yes",
+        featured_from: tour.featured_from || '',
+        featured_to: tour.featured_to || '',
+        deposit: tour.deposit || 0,
+        deposit_type: tour.deposit_type || 'percentage',
+        tax: tour.tax || 0,
+        tax_type: tour.tax_type || 'percentage',
+        tour_email: tour.tour_email || '',
+        tour_phone: tour.tour_phone || '',
+        tour_website: tour.tour_website || '',
+        tour_address: tour.tour_address || '',
+      });
 
-        setSelectedTours(tour.tour_type_id || '');
-        setSelectedDestinationType(tour.destination_type || '');
-        setQuantity(tour.availability?.[0]?.quantity || 0);
-        setPaymentOption(tour.payments_options || '');
-        setTourArrival(tour.arrival || '');
+      setSelectedTours(tour.tour_type_id || '');
+      setSelectedDestinationType(tour.destination_type || '');
+      setQuantity(tour.availability?.[0]?.quantity || 0);
+      setPaymentOption(tour.payments_options || '');
+      setTourArrival(tour.arrival || '');
 
-        setTourPickUp({
-          pick_up_country: tour.pick_up_country_id,
-          pick_up_city: tour.pick_up_city_id,
-          pick_up_map: tour.pick_up_map || '',
-        });
+      setTourPickUp({
+        pick_up_country: tour.pick_up_country_id,
+        pick_up_city: tour.pick_up_city_id,
+        pick_up_map: tour.pick_up_map || '',
+      });
 
-        setTourDestination(tour.destinations?.map(dest => ({
-          destination_country: dest.country_id || '',
-          destination_city: dest.city_id || '',
-          destination_arrival_map: dest.arrival_map || '',
-        })) || []);
+      setTourDestination(tour.destinations?.map(dest => ({
+        destination_country: dest.country_id || '',
+        destination_city: dest.city_id || '',
+        destination_arrival_map: dest.arrival_map || '',
+      })) || []);
 
-        setTourItinerary(tour.itinerary?.map(itin => ({
-          itinerary_image: itin.image || '',
-          itinerary_day_name: itin.day_name || '',
-          itinerary_day_description: itin.day_description || '',
-          itinerary_content: itin.content || '',
-        })) || []);
+      setTourItinerary(tour.itinerary?.map(itin => ({
+        itinerary_image: itin.image || '',
+        itinerary_day_name: itin.day_name || '',
+        itinerary_day_description: itin.day_description || '',
+        itinerary_content: itin.content || '',
+      })) || []);
 
-        setTourAvailability(tour.availability?.map(avail => ({
-          date: avail.date || '',
-          last_booking: avail.last_booking || '',
-        })) || []);
+      setTourAvailability(tour.availability?.map(avail => ({
+        date: avail.date || '',
+        last_booking: avail.last_booking || '',
+      })) || []);
 
-        setPolicyDetails(prev => ({
-          ...prev,
-          cancellationPolicies: tour.cancelation_items?.map(cancel => ({
-            cancellationType: cancel.type || 'Value', // or 'Percentage'
-            cancellationValue: cancel.amount || 0,
-            cancellationBeforeDays: cancel.days || 0,
-          })) || [],
-        }));
+     setPolicyDetails({
+        childrenPolicy: tour.policy || '',
+        cancellationPolicy: tour.cancelation === 1 ? 'non_refundable' : 'refundable',
+        cancellationPolicies: tour.cancelation_items?.map(item => ({
+          cancellationType: item.type === 'precentage' ? 'Percentage' : 'Value',
+          cancellationValue: item.amount || 0,
+          cancellationBeforeDays: item.days || 0,
+        })) || [],
+      });
 
-        setIncludes(tour.includes?.map(include => ({
-          name: include.name || '',
-        })) || []);
+      setIncludes(tour.includes?.map(include => ({
+        name: include.name || '',
+      })) || []);
 
-        setExcludes(tour.excludes?.map(exclude => ({
-          name: exclude.name || '',
-        })) || []);
+      setExcludes(tour.excludes?.map(exclude => ({
+        name: exclude.name || '',
+      })) || []);
+
+      // Pricing Data
+      setPrice(tour.price || "");
+      setSelectCurrency(tour.currency_id || "");
+      
+      // Extra Prices
+      setIsExtraPriceEnabled(tour.enabled_extra_price === 1);
+      setExtraPrices(tour.tour_extras?.map(extra => ({
+        name: extra.name || '',
+        price: extra.price || '',
+        currency: extra.currency_id || '',
+        type: extra.type || ''
+      })) || [{ name: '', price: '', currency: '', type: '' }]);
+
+      // Discounts
+      setDiscounts(tour.tour_discounts?.map(discount => ({
+        from: discount.from || '',
+        to: discount.to || '',
+        discount: discount.discount || '',
+        type: discount.type === 'precentage' ? 'Percentage' : 'fixed'
+      })) || [{ from: '', to: '', discount: '', type: 'fixed' }]);
+
+      // Person Type Pricing
+      setIsPersonTypeEnabled(tour.enable_person_type === 1);
+      setWithAccommodation(tour.with_accomodation === 1);
+      
+      setPersons(tour.tour_pricings?.map(pricing => ({
+        type: pricing.person_type || '',
+        minAge: pricing.min_age || '',
+        maxAge: pricing.max_age || '',
+        price: pricing.tour_pricing_items?.find(item => !item.type)?.price || '', // base price
+        currency: pricing.tour_pricing_items?.find(item => !item.type)?.currency_id || '',
+        singlePrice: pricing.tour_pricing_items?.find(item => item.type === 'single')?.price || '',
+        doublePrice: pricing.tour_pricing_items?.find(item => item.type === 'double')?.price || '',
+        triplePrice: pricing.tour_pricing_items?.find(item => item.type === 'triple')?.price || '',
+        quadruplePrice: pricing.tour_pricing_items?.find(item => item.type === 'quadruple')?.price || '',
+        singlePriceCurrency: pricing.tour_pricing_items?.find(item => item.type === 'single')?.currency_id || '',
+        doublePriceCurrency: pricing.tour_pricing_items?.find(item => item.type === 'double')?.currency_id || '',
+        triplePriceCurrency: pricing.tour_pricing_items?.find(item => item.type === 'triple')?.currency_id || '',
+        quadruplePriceCurrency: pricing.tour_pricing_items?.find(item => item.type === 'quadruple')?.currency_id || '',
+      })) || [{
+        type: "",
+        minAge: "",
+        maxAge: "",
+        price: "",
+        currency: "",
+        singlePrice: "",
+        doublePrice: "",
+        triplePrice: "",
+        quadruplePrice: "",
+        singlePriceCurrency: "",
+        doublePriceCurrency: "",
+        triplePriceCurrency: "",
+        quadruplePriceCurrency: "",
+      }]);
+      // Hotels
+      setHotels(tour.tour_hotels?.map(hotel => ({
+        id: hotel.id,
+        name: hotel.name || ''
+      })) || [{ id: 1, name: "" }]);
+
+      // Room Capacities (if with accommodation)
+      if (tour.with_accomodation === 1) {
+        setRoomCapacities([{
+          singleChildren: tour.tour_room?.[0]?.children_single || "",
+          singleAdults: tour.tour_room?.[0]?.adult_single || "",
+          doubleChildren: tour.tour_room?.[0]?.children_double || "",
+          doubleAdults: tour.tour_room?.[0]?.adult_double || "",
+          tripleChildren: tour.tour_room?.[0]?.children_triple || "",
+          tripleAdults: tour.tour_room?.[0]?.adult_triple || "",
+          quadrupleChildren: tour.tour_room?.[0]?.children_quadruple || "",
+          quadrupleAdults: tour.tour_room?.[0]?.adult_quadruple || "",
+        }]);
       }
     }
-  }, [tourData, tourId]);
+  }
+}, [tourData, tourId]);
+
+    useEffect(() => {
+      if (!loadingPost && response) {
+      navigate(-1)
+      }
+    }, [response,loadingPost,navigate]);
 
   const handleChangeTourDetails = (e) => {
     setTourDetails({
@@ -630,11 +713,10 @@ const EditTourPage = ({ update, setUpdate }) => {
     formData.append("nights", tourDetails.nights);
     formData.append("tour_type_id", selectedTours);
     formData.append("featured", tourDetails.featured ? "yes" : "no");
-    // {
-    //   tourDetails.featured === "yes" &&(
-    //   formData.append("featured_from", tourDetails.featured_from);
-    //   formData.append("featured_to", tourDetails.featured_to);
-    // )}
+    if (tourDetails.featured) {
+      formData.append("featured_from", tourDetails.featured_from);
+      formData.append("featured_to", tourDetails.featured_to);
+    }
     formData.append("deposit", tourDetails.deposit);
     formData.append("deposit_type", tourDetails.deposit_type === 'Percentage' ? 'precentage' : 'fixed'); // 'percentage' or 'fixed'
     formData.append("tax", tourDetails.tax);

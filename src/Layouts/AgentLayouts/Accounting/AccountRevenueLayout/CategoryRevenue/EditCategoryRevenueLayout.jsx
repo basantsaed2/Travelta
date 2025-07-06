@@ -16,7 +16,7 @@ const EditCategoryRevenueLayout = () => {
         >
             <FaArrowLeft/>
         </button>
-    <TitlePage text={'Add Revenue Category'} />
+    <TitlePage text={'Edit Revenue Category'} />
     
     </div>
     <EditCategoryRevenuePage update={update} setUpdate={setUpdate} />

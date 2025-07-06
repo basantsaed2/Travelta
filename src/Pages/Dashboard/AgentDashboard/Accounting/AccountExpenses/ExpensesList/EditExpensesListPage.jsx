@@ -1,30 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import StaticLoader from '../../../../../../Components/StaticLoader';
 import { useGet } from '../../../../../../Hooks/useGet';
-import { useDelete } from '../../../../../../Hooks/useDelete';
-import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
-import { MdDelete } from "react-icons/md";
-import { PiWarningCircle } from "react-icons/pi";
-import { FaWhatsapp, FaEdit, FaCopy, FaFileExcel, FaSearch, FaGlobe, FaCity, FaFilter } from "react-icons/fa";
-import { Link } from 'react-router-dom';
-import * as XLSX from "xlsx";
 import { useAuth } from '../../../../../../Context/Auth';
-import { CiFilter } from "react-icons/ci";
 import { useNavigate } from 'react-router-dom';
 import { usePost } from '../../../../../../Hooks/usePostJson';
 import { TextField, MenuItem, Button, InputAdornment, IconButton, Autocomplete, CircularProgress } from "@mui/material";
+import { useLocation } from 'react-router-dom';
 
 const EditExpensesListPage = ({ update, setUpdate }) => {
-  const { postData, loadingPost, response } = usePost({ url: 'https://travelta.online/agent/accounting/expenses/add' });
+  const { state } = useLocation();
+  const { expense } = state || {};
+  const { postData, loadingPost, response } = usePost({ url: `https://travelta.online/agent/accounting/expenses/update/${expense?.id}` });
   const { refetch: refetchList, loading: loadingList, data: DataList } = useGet({
     url: `https://travelta.online/agent/accounting/expenses/lists`,
   });
-  
+
   // State for options
   const [categories, setCategories] = useState([]);
   const [currencies, setCurrencies] = useState([]);
   const [financials, setFinancials] = useState([]);
-  
+
   // State for selected values
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -43,12 +37,23 @@ const EditExpensesListPage = ({ update, setUpdate }) => {
 
   useEffect(() => {
     if (DataList) {
-      console.log("DataList", DataList);
       setCategories(DataList.categories || []);
       setCurrencies(DataList.currencies || []);
       setFinancials(DataList.finantiols || []);
     }
   }, [DataList]);
+
+  useEffect(() => {
+    if (expense) {
+      setTitle(expense.title || "");
+      setDescription(expense.description || "");
+      setAmount(expense.amount || "");
+      setDate(expense.date || "");
+      setSelectedCategory(expense.category || null);
+      setSelectedCurrency(expense.currency || null);
+      setSelectedFinancial(expense.financial || null);
+    }
+  }, [expense]);
 
   useEffect(() => {
     if (!loadingPost && response) {
@@ -67,7 +72,7 @@ const EditExpensesListPage = ({ update, setUpdate }) => {
     formData.append("date", date);
     formData.append("amount", amount);
     formData.append("description", description);
-    
+
     postData(formData, 'Expenses Added Successfully');
   };
 
@@ -222,7 +227,7 @@ const EditExpensesListPage = ({ update, setUpdate }) => {
             color="primary"
             disabled={loadingPost}
           >
-            {loadingPost ? <CircularProgress size={24} /> : 'Add Expense'}
+            {loadingPost ? <CircularProgress size={24} /> : 'Edit Expense'}
           </Button>
         </div>
       </form>

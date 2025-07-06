@@ -6,12 +6,14 @@ import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
 import { MdAttachMoney } from "react-icons/md";
 import { FiPercent } from "react-icons/fi";
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 const AddRoomPage = ({ update, setUpdate }) => {
     const { refetch: refetchList, loading: loadingList, data: listData } = useGet({url:'https://travelta.online/agent/room/lists'});
     const { postData:postHotelId, loadingPost:loadingHotelId , response:responseHotelId} = usePost({url:`https://travelta.online/agent/room/hotel_lists`});
     const { postData, loadingPost, response } = usePost({url: "https://travelta.online/agent/room/add",});
     const [activeTab, setActiveTab] = useState('General Details');
+    const navigate = useNavigate();
 
     //General Detalils
     const [roomTypes, setRoomTypes] = useState([])
@@ -105,6 +107,12 @@ const AddRoomPage = ({ update, setUpdate }) => {
         setTaxes(responseHotelId.data?.country_taxes)
       }
     }, [responseHotelId]);
+
+    useEffect(() => {
+      if (!loadingPost && response) {
+        navigate(-1);
+      }
+    }, [loadingPost, response]);
 
     const handleChange = (e) => {
       setRoomDetails({
