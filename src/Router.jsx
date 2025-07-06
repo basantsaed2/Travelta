@@ -13,7 +13,7 @@ import {AddAdminAccountLayout, AddAgentLayout, AddCategoryExpensesLayout, AddCat
 import { BookingDetailsPage, HotelBookingDetailsPage, LandingPage } from "./Pages/AllPages";
 import CheckOutProcessLayout from "./Layouts/AgentLayouts/CheckOutProcess/CheckOutProcessLayout";
 import HomeSuperAdmin from "./Pages/SuperAdmin/Home/HomeSuperAdmin";
-
+import ProfileAdmin from './Pages/SuperAdmin/Profile/Profile'
 import ClientLayout from "./Layouts/SuperAdminLayouts/ClientLayout/ClientLayout";
 import HotelsLayout from "./Layouts/SuperAdminLayouts/HotelsLayout/HotelsLayout";
 import AdminLayout from "./Layouts/SuperAdminLayouts/AdminLayouts/AdminLayout";
@@ -271,6 +271,12 @@ const AppSubscriptionLayOut= () => (
 );
 
 const AppPlanLayOut= () => (
+  <>
+  <Outlet />
+  </>
+);
+
+const AppProfileLayOut= () => (
   <>
   <Outlet />
   </>
@@ -1244,6 +1250,10 @@ export const router = createBrowserRouter([
                 path: '',
                 element: <HomeSuperAdmin/>,
               },
+              // {
+              //   path: 'profile',
+              //   element: <ProfileAdmin/>,
+              // },
 
               {
                 path: 'client',
@@ -1351,11 +1361,10 @@ export const router = createBrowserRouter([
                 ]
 
               },
-              //
+              // mosedek
               {
                 path: 'meal_plan',
                 element: <AppMealPlanLayOut/>,
-// mosedek
                 children:[
                   {
                     path: "",
@@ -1370,6 +1379,19 @@ export const router = createBrowserRouter([
                     element: <UpdateMealPlan/>,
                   },
 
+                ]
+
+              },
+              
+              {
+                path: 'profile',
+                element: <ProfileAdmin/>,
+                children:[
+                  {
+                    path: "",
+                    element: <ProfileAdmin/>,
+                  },
+                
                 ]
 
               },

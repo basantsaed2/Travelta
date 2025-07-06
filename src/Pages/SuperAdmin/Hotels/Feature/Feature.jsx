@@ -95,12 +95,21 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
       return;
     }
 
-    const updatedFeatures = selectedFeatures.map((feature) => ({
-      ...feature,
-      name: newFeature.name || feature.name,
-      description: newFeature.description || feature.description,
-      image: newFeature.image || feature.image,
-    }));
+  const updatedFeatures = selectedFeatures.map((feature) => {
+  const updatedFeature = {
+    ...feature,
+    name: newFeature.name || feature.name,
+    description: newFeature.description || feature.description,
+  };
+
+  // فقط إذا كانت الصورة جديدة بصيغة Base64
+  if (newFeature.image.startsWith("data:image/")) {
+    updatedFeature.image = newFeature.image;
+  }
+
+  return updatedFeature;
+});
+
 
     try {
       for (const feature of updatedFeatures) {
@@ -174,9 +183,9 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
   
   
   return (
-    <div className="p-6 bg-gradient-to-t bg-white shadow-md rounded-lg">
+    <div className="p-6 bg-white rounded-lg shadow-md bg-gradient-to-t">
     {loadingFeature ? (
-      <div className="flex justify-center items-center h-64">
+      <div className="flex items-center justify-center h-64">
         <StaticLoader />
       </div>
     ) : (
@@ -186,7 +195,7 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
   {dataFeature.map((feature, index) => (
     <div
       key={index}
-      className="flex flex-col md:flex-row items-center justify-between bg-white rounded-lg shadow-lg hover:shadow-xl overflow-hidden p-4 md:p-6 border border-gray-300 transform transition-all duration-300"
+      className="flex flex-col items-center justify-between p-4 overflow-hidden transition-all duration-300 transform bg-white border border-gray-300 rounded-lg shadow-lg md:flex-row hover:shadow-xl md:p-6"
     >
       <div className="flex items-center gap-4 mb-4 md:mb-0">
         {/* Feature Checkbox */}
@@ -194,22 +203,22 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
           type="checkbox"
           checked={selectedFeatures.find((f) => f.id === feature.id)}
           onChange={() => handleFeatureSelect(feature)}
-          className="h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500"
+          className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500"
         />
 
         {/* Feature Image */}
         <img
           src={feature.image_url}
           alt={feature.name}
-          className="w-16 h-16 object-cover rounded-full border-4 border-indigo-500 cursor-pointer"
+          className="object-cover w-16 h-16 border-4 border-indigo-500 rounded-full cursor-pointer"
           onClick={() => handleFeatureSelect(feature)}
         />
       </div>
 
       {/* Feature Details */}
-      <div className="flex-1 ml-0 md:ml-4 mb-4 md:mb-0 text-center md:text-left">
-        <h3 className="text-lg font-semibold text-indigo-600 mb-2">{feature.name}</h3>
-        <p className="text-sm text-gray-600 line-clamp-2 hover:line-clamp-none transition-all duration-200">
+      <div className="flex-1 mb-4 ml-0 text-center md:ml-4 md:mb-0 md:text-left">
+        <h3 className="mb-2 text-lg font-semibold text-indigo-600">{feature.name}</h3>
+        <p className="text-sm text-gray-600 transition-all duration-200 line-clamp-2 hover:line-clamp-none">
           {feature.description}
         </p>
       </div>
@@ -227,14 +236,14 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
             setSelectedFeatures([feature]);
             setShowPopup(true);
           }}
-          className="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition"
+          className="px-4 py-2 text-white transition bg-yellow-500 rounded-md hover:bg-yellow-600"
         >
           Update
         </button>
         <button
           type="button"
           onClick={() => handleDelete(feature.id, feature.name)}
-          className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+          className="px-4 py-2 text-white transition bg-red-500 rounded-md hover:bg-red-600"
         >
           Delete
         </button>
@@ -245,13 +254,13 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
 
 
   
-        {error && <p className="text-red-600 text-sm mt-4">{error}</p>}
+        {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
   
         {/* Add Feature Form */}
 <div className=""> 
 <div
         onClick={() => setShowAddFeature(!showAddFeature)}
-        className="cursor-pointer text-xl font-semibold text-indigo-600 mb-4 flex items-center gap-2"
+        className="flex items-center gap-2 mb-4 text-xl font-semibold text-indigo-600 cursor-pointer"
       >
         <span>Add Feature</span>
         <span>{showAddFeature ? "▲" : "▼"}</span>
@@ -259,27 +268,27 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
   
         {showAddFeature &&
          <div className="mt-8">
-          <h2 className="text-2xl font-semibold text-indigo-600 mb-4">Add New Feature</h2>
+          <h2 className="mb-4 text-2xl font-semibold text-indigo-600">Add New Feature</h2>
           <input
             type="text"
             name="name"
             value={newFeature.name}
             onChange={handleFeatureChange}
             placeholder="Feature Name"
-            className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
+            className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
           />
           <textarea
             name="description"
             value={newFeature.description}
             onChange={handleFeatureChange}
             placeholder="Feature Description"
-            className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
+            className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
           />
 
       {/* Upload Input */}
-      <label className="flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-md mb-4 w-full cursor-pointer bg-gray-100 hover:bg-gray-200 transition">
-        <FaCloudUploadAlt className="text-gray-600 text-2xl" />
-        <span className="text-gray-600 text-sm">
+      <label className="flex items-center justify-center w-full gap-3 px-4 py-3 mb-4 transition bg-gray-100 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200">
+        <FaCloudUploadAlt className="text-2xl text-gray-600" />
+        <span className="text-sm text-gray-600">
           {selectedFileName ? selectedFileName : "Upload Icon"}
         </span>
         <input type="file" onChange={handleImageChange} className="hidden" />
@@ -289,7 +298,7 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
             type="button"
             onClick={handleAddFeature}
             disabled={loadingPost}
-            className="px-6 py-3 rounded-md text-white transition-all duration-300 bg-blue-600 hover:bg-blue-700"
+            className="px-6 py-3 text-white transition-all duration-300 bg-blue-600 rounded-md hover:bg-blue-700"
           >
             {loadingPost ? "Adding..." : "Add Feature"}
           </button>
@@ -299,30 +308,30 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
 
         {/* Update Feature Form (Popup) */}
         {showPopup && selectedFeatures.length > 0 && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-    <div className="bg-white p-8 rounded-lg max-w-lg">
-      <h3 className="text-xl font-semibold text-indigo-600 mb-4">Update Selected Features</h3>
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="max-w-lg p-8 bg-white rounded-lg">
+      <h3 className="mb-4 text-xl font-semibold text-indigo-600">Update Selected Features</h3>
       
       {/* Feature Name */}
       <input
         type="text"
         value={newFeature.name}
         onChange={(e) => setNewFeature({ ...newFeature, name: e.target.value })}
-        className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
+        className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
       />
 
       {/* Feature Description */}
       <textarea
         value={newFeature.description}
         onChange={(e) => setNewFeature({ ...newFeature, description: e.target.value })}
-        className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
+        className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
       />
 
 <input
   type="file"
   accept="image/*"
   onChange={(e) => handleImageUpload(e)}
-  className="px-4 py-2 border border-gray-300 rounded-md mb-4 w-full"
+  className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
 />
 
 
@@ -331,7 +340,7 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
         <img
           src={newFeature.image}
           alt="Preview"
-          className="w-full h-40 object-cover rounded-md mb-4"
+          className="object-cover w-full h-40 mb-4 rounded-md"
         />
       )}
 
@@ -341,14 +350,14 @@ const Feature = ({ selectedFeatures, setSelectedFeatures }) => {
           type="button"
           onClick={handleUpdateSubmit}
           disabled={loadingPut}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md"
+          className="px-4 py-2 text-white bg-blue-600 rounded-md"
         >
           {loadingPut ? "Updating..." : "Update Features"}
         </button>
         <button
           type="button"
           onClick={() => setShowPopup(false)}
-          className="px-4 py-2 bg-gray-400 text-white rounded-md"
+          className="px-4 py-2 text-white bg-gray-400 rounded-md"
         >
           Cancel
         </button>

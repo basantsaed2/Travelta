@@ -30,7 +30,7 @@ const SuperAdminLayout = () => {
   };
 
   return (
-    <div className=" relative flex min-h-screen">
+    <div className="relative flex min-h-screen ">
       <SidebarAdmin
         isSidebarCollapsed={isSidebarCollapsed}
         isSidebarVisible={isSidebarVisible}
@@ -39,7 +39,7 @@ const SuperAdminLayout = () => {
       />
       <div className="flex flex-col w-full overflow-hidden">
         <NavbarSuperAdmin onToggleSidebar={handleToggleSidebar} />
-        <main className="flex-1 bg-gray-100 p-6">
+        <main className="flex-1 p-6">
           <Outlet />
         </main>
       </div>

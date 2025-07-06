@@ -190,8 +190,15 @@ const AddHotels = () => {
   };
     
     const { postData, loadingPost, response } = usePost({
-      url: "https://www.travelta.online/api/super/hotel/add ",
+      url: "https://www.travelta.online/api/super/hotel/add",
     });
+      useEffect(() => {
+    if (loadingPost) {
+       resetForm()
+      navigate(-1); // Redirect after posting the data
+    ;
+    }
+  }, [loadingPost, navigate]);
 
     const { postData:postDataFacility, loadingPost:loadingDataFacility, response:responseFacility } = usePost({
       url: "https://www.travelta.online/api/super/Facility/aDd",
@@ -412,9 +419,9 @@ useEffect(() => {
   if (!cityId) {
     auth.toastError ("City is required.");
   }
-  if (!zoneId) {
-    auth.toastError("Zone is required.");
-  }
+  // if (!zoneId) {
+  //   auth.toastError("Zone is required.");
+  // }
   if (!email) {
     auth.toastError ("Email is required.");
   }
@@ -456,9 +463,9 @@ useEffect(() => {
     auth.toastError('Please enter location link');
   }
 
-  if (policies.length===0) {
-    auth.toastError('Please enter policies');
-  }
+  // if (policies.length===0) {
+  //   auth.toastError('Please enter policies');
+  // }
 
    // Set loading state
    setIsSubmitting(true);
@@ -532,14 +539,6 @@ console.log("Policies:", policies);
 if(response.state===200){
   navigate(-1)
 }
-
-    // Reset all fields
-
-    // resetForm();
-
-    // // Navigate back
-
-   
   } catch (error) {
     auth.toastError("Error occurred during submission.");
   } finally {
@@ -806,7 +805,7 @@ if(response.state===200){
     <input
       id="image-upload"
       type="file"
-      onChange={handleImageChange}
+      onChange={handleImageFeatureChange}
       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
     />
     <div className="px-4 py-3 text-center text-white transition duration-200 bg-indigo-600 rounded-lg cursor-pointer hover:bg-indigo-700">

@@ -24,6 +24,9 @@ export default {
         secoundBgColor: "#F5F5F5",
         thirdBgColor: "#9D9D9D",
         fourthColor:'#E7F1F8',
+        fivethColor:'#F1F5FA',
+        borderColor:'#DFDFDF',
+        bghome:"#F6F8FC",
         AddButton: "#ffffff",
       },
       screens: {

@@ -89,91 +89,91 @@ const AddClient = () => {
 
 
     return (
-        <div className=" w-full flex items-center justify-center ">
-          <div className="w-full  p-8 bg-opacity-80 rounded-lg  flex flex-col space-y-6">
+        <div className="flex items-center justify-center w-full ">
+          <div className="flex flex-col w-full p-8 space-y-6 rounded-lg bg-opacity-80">
           <div className="flex items-center">
     <button
           onClick={handleBack}
           className="m-4"
           
         >
-          <FaArrowLeft className="text-mainColor text-2xl" />
+          <FaArrowLeft className="text-2xl text-mainColor" />
         </button>
-        <h2 className="text-center text-mainColor text-3xl ">Add Hotels</h2>
+        <h2 className="text-3xl text-center text-mainColor ">Add Hotels</h2>
         
 
     </div>
     
-            <form onSubmit={handleSubmit} className="space-y-8 p-6  rounded-lg shadow-md w-full mx-auto">
-  <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <form onSubmit={handleSubmit} className="w-full p-6 mx-auto space-y-8 rounded-lg shadow-md">
+  <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
     {/* Name Input */}
     <div>
-      <label htmlFor="name" className="block text-gray-700 font-semibold">Name</label>
+      <label htmlFor="name" className="block font-semibold text-gray-700">Name</label>
       <input
         id="name"
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
+        className="w-full p-3 mt-2 transition duration-200 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
         required
       />
     </div>
 
     {/* Email Input */}
     <div>
-      <label htmlFor="email" className="block text-gray-700 font-semibold">Email</label>
+      <label htmlFor="email" className="block font-semibold text-gray-700">Email</label>
       <input
         id="email"
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
+        className="w-full p-3 mt-2 transition duration-200 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
         required
       />
     </div>
 
     {/* Phone Input */}
     <div>
-      <label htmlFor="phone" className="block text-gray-700 font-semibold">Phone</label>
+      <label htmlFor="phone" className="block font-semibold text-gray-700">Phone</label>
       <input
         id="phone"
         type="text"
         value={phone}
         onChange={(e) => setPhone(e.target.value)}
-        className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
+        className="w-full p-3 mt-2 transition duration-200 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
         required
       />
     </div>
 
     {/* Password Input */}
     <div>
-      <label htmlFor="password" className="block text-gray-700 font-semibold">Password</label>
+      <label htmlFor="password" className="block font-semibold text-gray-700">Password</label>
       <input
         id="password"
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
+        className="w-full p-3 mt-2 transition duration-200 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
         required
       />
     </div>
 
     {/* Emergency Phone Input */}
     <div>
-      <label htmlFor="emergencyPhone" className="block text-gray-700 font-semibold">Emergency Phone</label>
+      <label htmlFor="emergencyPhone" className="block font-semibold text-gray-700">Emergency Phone</label>
       <input
         id="emergencyPhone"
         type="text"
         value={emergencyPhone}
         onChange={(e) => setEmergencyPhone(e.target.value)}
-        className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
+        className="w-full p-3 mt-2 transition duration-200 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
       />
     </div>
   </div>
 
   {/* Image Upload Section */}
   <div>
-    <label htmlFor="images" className="block text-gray-700 font-semibold">Upload Images</label>
+    <label htmlFor="images" className="block font-semibold text-gray-700">Upload Images</label>
     <div className="space-y-4">
       {Array.from({ length: inputCount }).map((_, index) => (
         <div key={index} className="mt-3">
@@ -181,7 +181,7 @@ const AddClient = () => {
             id={`image-${index}`}
             type="file"
             onChange={(e) => handleImageChange(e, index)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
+            className="w-full p-3 transition duration-200 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
       ))}
@@ -189,7 +189,7 @@ const AddClient = () => {
     <button
       type="button"
       onClick={addImageInput}
-      className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200"
+      className="px-4 py-2 mt-4 text-white transition duration-200 bg-blue-500 rounded-lg hover:bg-blue-600"
     >
       Add Another Image
     </button>
@@ -199,7 +199,7 @@ const AddClient = () => {
   <div className="text-center">
     <button
       type="submit"
-      className="w-full py-3 px-4 bg-mainColor text-white font-semibold rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300"
+      className="w-full px-4 py-3 font-semibold text-white transition duration-300 rounded-lg bg-mainColor hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
     >
       Add User
     </button>
