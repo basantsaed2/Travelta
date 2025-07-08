@@ -806,7 +806,7 @@ const EditRoomPage = ({ update, setUpdate }) => {
                     Deselect All
                   </button>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {amenities.map((amenity) => (
                     <div key={amenity.id} className="flex items-center bg-gray-50 p-4 rounded-lg shadow-sm">
                       <input

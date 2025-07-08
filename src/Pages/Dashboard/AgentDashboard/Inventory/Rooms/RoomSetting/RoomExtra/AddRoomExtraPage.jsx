@@ -5,6 +5,7 @@ import { useGet } from '../../../../../../../Hooks/useGet';
 import { IoMdPersonAdd } from "react-icons/io";
 import { IoCloudUpload } from "react-icons/io5";
 import StaticLoader from '../../../../../../../Components/StaticLoader';
+import { useNavigate } from "react-router-dom";
 
 const AddRoomExtraPage = ({ update, setUpdate }) => {
     const { postData, loadingPost, response } = usePost({ url: 'https://travelta.online/agent/room/settings/extra/add' });
@@ -18,6 +19,7 @@ const AddRoomExtraPage = ({ update, setUpdate }) => {
     const [logoFile, setLogoFile] = useState(null);
     const [logoName, setLogoName] = useState("");
     const [status, setStatus] = useState(0);
+    const navigate = useNavigate();
 
     useEffect(() => {
         refetchRoomExtra();
@@ -57,9 +59,8 @@ const AddRoomExtraPage = ({ update, setUpdate }) => {
     };
 
     useEffect(() => {
-        if (!loadingPost) {
-            handleReset();
-            setUpdate(!update);
+        if (!loadingPost && response) {
+            navigate(-1);
         }
     }, [response]);
 

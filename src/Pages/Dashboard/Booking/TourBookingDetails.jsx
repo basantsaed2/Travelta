@@ -10,6 +10,7 @@ import { useGet } from "../../../Hooks/useGet";
 import { RiHotelLine } from "react-icons/ri";
 import { BsInfoCircle } from "react-icons/bs";
 import { AddSupplierPage, AddLeadPage } from "../../AllPages";
+import { useNavigate } from "react-router-dom";
 
 const TourBookingDetails = () => {
   const location = useLocation();
@@ -18,6 +19,7 @@ const TourBookingDetails = () => {
 
   const { refetch: refetchSuppliers, loading: loadingSuppliers, data: suppliersData } = useGet({ url: "https://travelta.online/agent/manual_booking/supplier_customer" });
   const { postData, loading: loadingPost, response } = usePost({ url: "https://travelta.online/agent/agent/bookTour" });
+    const navigate = useNavigate();
 
   const [category, setCategory] = useState("");
   const [showPopup, setShowPopup] = useState(false);
@@ -88,11 +90,11 @@ const TourBookingDetails = () => {
 
     const extrasTotal = tour.tour_extras && tour.tour_extras.length
       ? selectedExtras.reduce((sum, extraId) => {
-          const extra = tour.tour_extras.find(e => e.id === extraId);
-          const extraPrice = extra?.price || 0;
-          console.log(`Adding extra ${extra?.name}: ${extraPrice}`);
-          return sum + extraPrice;
-        }, 0)
+        const extra = tour.tour_extras.find(e => e.id === extraId);
+        const extraPrice = extra?.price || 0;
+        console.log(`Adding extra ${extra?.name}: ${extraPrice}`);
+        return sum + extraPrice;
+      }, 0)
       : 0;
 
     const discount = tour.tour_discounts?.[0] && noOfPeople >= tour.tour_discounts[0].from
@@ -131,6 +133,12 @@ const TourBookingDetails = () => {
     }));
   };
 
+  useEffect(() => {
+    if (!loadingPost && response) {
+      navigate(-1);
+    }
+  }, [response]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!selectedTourDate || !category || (category === "B2C" && !selectedToSupplier) || noOfPeople === 0) return;
@@ -151,7 +159,7 @@ const TourBookingDetails = () => {
       status: "confirmed"
     };
 
-    postData(bookingData);
+    postData(bookingData, "Tour booked successfully");
   };
 
   const renderItinerary = (itinerary) => {
@@ -485,7 +493,7 @@ const TourBookingDetails = () => {
                   />
                 </div>
               )}
-              <Button
+              {/* <Button
                 variant="contained"
                 onClick={() => setShowPopup(true)}
                 fullWidth
@@ -505,7 +513,7 @@ const TourBookingDetails = () => {
                 }}
               >
                 {category === "B2B" ? "Add New Supplier" : "Add New Customer"}
-              </Button>
+              </Button> */}
             </div>
           </div>
 
@@ -766,7 +774,7 @@ const TourBookingDetails = () => {
                   fontWeight: '700',
                   textTransform: 'none',
                   fontSize: '1.1rem',
-                  background:  'linear-gradient(to right, #2563EB, #1E40AF)',
+                  background: 'linear-gradient(to right, #2563EB, #1E40AF)',
                   '&:hover': { background: 'linear-gradient(to right, #2563EB, #1E40AF)', boxShadow: '0 6px 12px rgba(0, 0, 0, 0.2)' },
                   transition: 'all 0.3s ease'
                 }}

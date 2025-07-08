@@ -13,6 +13,7 @@ const EditRoomAmenityPage = ({ update, setUpdate }) => {
     const [name, setName] = useState("");
     const [isChecked, setIsChecked] = useState(true);
     const [status, setStatus] = useState(0);
+    const navigate = useNavigate();
 
     useEffect(() => {
         refetchRoomAmenity();
@@ -42,9 +43,8 @@ const EditRoomAmenityPage = ({ update, setUpdate }) => {
     };
 
     useEffect(() => {
-        if (!loadingPost) {
-            handleReset();
-            setUpdate(!update);
+        if (!loadingPost && response) {
+            navigate(-1);
         }
     }, [response]);
 
@@ -61,7 +61,7 @@ const EditRoomAmenityPage = ({ update, setUpdate }) => {
         formData.append('selected',isChecked === true? 'yes': 'no' );
         formData.append('status', status);
 
-        postData(formData, 'Room Amenity Added Success');
+        postData(formData, 'Room Amenity Updated Success');
     };
     
     return (

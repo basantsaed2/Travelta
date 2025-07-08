@@ -93,7 +93,7 @@ const Login = () => {
         if (response.data.user.status === "pending") {
           console.log('Response:', response.data);
           setModalVisible(true); // Show the modal on successful sign-up
-        } else if (response.data.user.status === "approve") {
+        } else if (response.data.user.status === "approve" || response.data.user.status=== 1) {
           toast.success('Login successful!');
           console.log('Response:', response.data);
           const userData = {

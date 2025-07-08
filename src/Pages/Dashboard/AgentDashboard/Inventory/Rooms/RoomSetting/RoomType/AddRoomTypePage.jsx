@@ -5,12 +5,14 @@ import { useGet } from '../../../../../../../Hooks/useGet';
 import { IoMdPersonAdd } from "react-icons/io";
 import { IoCloudUpload } from "react-icons/io5";
 import StaticLoader from '../../../../../../../Components/StaticLoader';
+import { useNavigate } from "react-router-dom";
 
 const AddRoomTypePage = ({ update, setUpdate }) => {
     const { postData, loadingPost, response } = usePost({ url: 'https://travelta.online/agent/room/settings/types/add' });
 
     const [name, setName] = useState("");
     const [status, setStatus] = useState(0);
+    const navigate = useNavigate();
 
 
     const handleSwitchChange = () => {
@@ -23,9 +25,8 @@ const AddRoomTypePage = ({ update, setUpdate }) => {
     };
 
     useEffect(() => {
-        if (!loadingPost) {
-            handleReset();
-            setUpdate(!update);
+        if (!loadingPost && response) {
+            navigate(-1);
         }
     }, [response]);
 

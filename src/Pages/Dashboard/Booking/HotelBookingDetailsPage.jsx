@@ -1236,7 +1236,7 @@ const HotelBookingDetailsPage = () => {
       country_id: selectedRoom.room_details.country_id || '',
     };
 
-    postData(bookingData, "Booking successful!");
+    postData(bookingData, "Room booked successful!");
   };
 
   return (
@@ -1595,7 +1595,7 @@ const HotelBookingDetailsPage = () => {
               )}
 
               {/* Add Button */}
-              <Button
+              {/* <Button
                 variant="contained"
                 onClick={() => setShowPopup(true)}
                 fullWidth
@@ -1622,7 +1622,7 @@ const HotelBookingDetailsPage = () => {
                 }}
               >
                 {category === "B2B" ? "Add New Supplier" : "Add New Customer"}
-              </Button>
+              </Button> */}
             </div>
           </div>
 
