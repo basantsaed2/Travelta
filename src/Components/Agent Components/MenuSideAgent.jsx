@@ -17,7 +17,7 @@ import { FaArrowTurnDown } from "react-icons/fa6";
 import { FaUserCog } from "react-icons/fa";
 import { set } from "date-fns";
 import { GrTransaction } from "react-icons/gr";
-import { MdOutlinePayment, MdOutlineMoneyOff , MdAttachMoney } from "react-icons/md";  
+import { MdOutlinePayment, MdOutlineMoneyOff, MdAttachMoney } from "react-icons/md";
 
 const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
   const auth = useAuth();
@@ -92,8 +92,8 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
     stateLink.isActivePastBookingList ?? false
   );
 
-   /* Booking Payment*/
-   const [isOpenBookingPayment, setIsOpenBookingPayment] = useState(
+  /* Booking Payment*/
+  const [isOpenBookingPayment, setIsOpenBookingPayment] = useState(
     stateLink.isOpenBookingPayment ?? false
   );
   const [isActiveBookingPaymentIcon, setIsActiveBookingPaymentIcon] = useState(
@@ -104,18 +104,18 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
   );
 
   // Financial
-    const [isOpenFinancial, setIsOpenFinancial] = useState(
-      stateLink.isOpenFinancial ?? false
-    );
-    const [isActiveFinancialIcon, setIsActiveFinancialIcon] = useState(
-      stateLink.isActiveFinancialIcon ?? false
-    );
-    const [isActiveFinancial, setIsActiveFinancial] = useState(
-      stateLink.isActiveFinancial ?? false
-    );
-    const [isActiveInvoice, setIsActiveInvoice] = useState(
-      stateLink.isActiveInvoice ?? false
-    );
+  const [isOpenFinancial, setIsOpenFinancial] = useState(
+    stateLink.isOpenFinancial ?? false
+  );
+  const [isActiveFinancialIcon, setIsActiveFinancialIcon] = useState(
+    stateLink.isActiveFinancialIcon ?? false
+  );
+  const [isActiveFinancial, setIsActiveFinancial] = useState(
+    stateLink.isActiveFinancial ?? false
+  );
+  const [isActiveInvoice, setIsActiveInvoice] = useState(
+    stateLink.isActiveInvoice ?? false
+  );
 
 
   // Operation
@@ -142,13 +142,13 @@ const MenuSideAgent = ({ isSidebarCollapsed, onLinkClick }) => {
   );
 
   const [isActiveRequestList, setIsActiveRequestList] =
-  useState(stateLink.isActiveRequestList ?? false);
-const [isActiveNewRequest, setIsActiveNewRequest] = useState(
-  stateLink.isActiveNewRequest ?? false
-);
-const [isActiveWorkStation, setIsActiveWorkStation] = useState(
-  stateLink.isActiveWorkStation ?? false
-);
+    useState(stateLink.isActiveRequestList ?? false);
+  const [isActiveNewRequest, setIsActiveNewRequest] = useState(
+    stateLink.isActiveNewRequest ?? false
+  );
+  const [isActiveWorkStation, setIsActiveWorkStation] = useState(
+    stateLink.isActiveWorkStation ?? false
+  );
 
   // Inventory
 
@@ -161,50 +161,50 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
   const [isActiveInventory, setIsActiveInventory] = useState(
     stateLink.isActiveInventory ?? false
   );
-              //Inventory Room
-              const [isOpenInventoryRoom, setIsOpenInventoryRoom] = useState(
-                stateLink.isOpenInventoryRoom ?? false
-              );
-              const [isActiveInventoryRoomIcon, setIsActiveInventoryRoomIcon] = useState(
-                stateLink.isActiveInventoryRoomIcon ?? false
-              );
-              const [isActiveInventoryRoom, setIsActiveInventoryRoom] = useState(
-                  stateLink.isActiveInventoryRoom ?? false
-              );
-                      //Inventory Room Setting
-                      const [isOpenInventoryRoomSetting, setIsOpenInventoryRoomSetting] = useState(
-                          stateLink.isOpenInventoryRoomSetting ?? false
-                      );
-                      const [isActiveInventoryRoomSetting, setIsActiveInventoryRoomSetting] = useState(
-                          stateLink.isActiveInventoryRoomSetting ?? false
-                      );
+  //Inventory Room
+  const [isOpenInventoryRoom, setIsOpenInventoryRoom] = useState(
+    stateLink.isOpenInventoryRoom ?? false
+  );
+  const [isActiveInventoryRoomIcon, setIsActiveInventoryRoomIcon] = useState(
+    stateLink.isActiveInventoryRoomIcon ?? false
+  );
+  const [isActiveInventoryRoom, setIsActiveInventoryRoom] = useState(
+    stateLink.isActiveInventoryRoom ?? false
+  );
+  //Inventory Room Setting
+  const [isOpenInventoryRoomSetting, setIsOpenInventoryRoomSetting] = useState(
+    stateLink.isOpenInventoryRoomSetting ?? false
+  );
+  const [isActiveInventoryRoomSetting, setIsActiveInventoryRoomSetting] = useState(
+    stateLink.isActiveInventoryRoomSetting ?? false
+  );
 
-                      //Inventory Room Preview
-                      const [isOpenInventoryRoomPreview, setIsOpenInventoryRoomPreview] = useState(
-                        stateLink.isOpenInventoryRoomPreview ?? false
-                      );
-                      const [isActiveInventoryRoomPreview, setIsActiveInventoryRoomPreview] = useState(
-                          stateLink.isActiveInventoryRoomPreview ?? false
-                      );
+  //Inventory Room Preview
+  const [isOpenInventoryRoomPreview, setIsOpenInventoryRoomPreview] = useState(
+    stateLink.isOpenInventoryRoomPreview ?? false
+  );
+  const [isActiveInventoryRoomPreview, setIsActiveInventoryRoomPreview] = useState(
+    stateLink.isActiveInventoryRoomPreview ?? false
+  );
 
-              //Inventory Tour
-               const [isOpenInventoryTour, setIsOpenInventoryTour] = useState(
-                stateLink.isOpenInventoryTour ?? false
-              );
-              const [isActiveInventoryTourIcon, setIsActiveInventoryTourIcon] = useState(
-                stateLink.isActiveInventoryTourIcon ?? false
-              );
-              const [isActiveInventoryTour, setIsActiveInventoryTour] = useState(
-                  stateLink.isActiveInventoryTour?? false
-              );
+  //Inventory Tour
+  const [isOpenInventoryTour, setIsOpenInventoryTour] = useState(
+    stateLink.isOpenInventoryTour ?? false
+  );
+  const [isActiveInventoryTourIcon, setIsActiveInventoryTourIcon] = useState(
+    stateLink.isActiveInventoryTourIcon ?? false
+  );
+  const [isActiveInventoryTour, setIsActiveInventoryTour] = useState(
+    stateLink.isActiveInventoryTour ?? false
+  );
 
-                     //Inventory Tour Preview
-                     const [isOpenInventoryTourPreview, setIsOpenInventoryTourPreview] = useState(
-                      stateLink.isOpenInventoryTourPreview ?? false
-                    );
-                    const [isActiveInventoryTourPreview, setIsActiveInventoryTourPreview] = useState(
-                        stateLink.isActiveInventoryTourPreview ?? false
-                    );
+  //Inventory Tour Preview
+  const [isOpenInventoryTourPreview, setIsOpenInventoryTourPreview] = useState(
+    stateLink.isOpenInventoryTourPreview ?? false
+  );
+  const [isActiveInventoryTourPreview, setIsActiveInventoryTourPreview] = useState(
+    stateLink.isActiveInventoryTourPreview ?? false
+  );
 
 
   // Accounting
@@ -224,121 +224,121 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
   );
   //Payment Receivable 
   const [isActivePaymentRecivable, setIsActivePaymentRecivable] = useState(
-    stateLink.isActivePaymentRecivable?? false
+    stateLink.isActivePaymentRecivable ?? false
   );
 
-  
-      // is open O.E
-      const [isOpenOwnerTransaction, setIsOpenOwnerTransaction] = useState(
-        stateLink.isOpenOwnerTransaction ?? false
-      );
-      const [isActiveOwnerTransactionIcon, setIsActiveOwnerTransactionIcon] = useState(
-        stateLink.isActiveOwnerTransactionIcon ?? false
-      );
-      const [isActiveOwnerTransaction, setIsActiveOwnerTransaction] = useState(
-          stateLink.isActiveOwnerTransaction?? false
-      );
-            // O.E List 
-            const [isOpenOwner, setIsOpenOwner] = useState(
-                stateLink.isOpenOwner ?? false
-            );
-            const [isActiveOwner, setIsActiveOwner] = useState(
-                stateLink.isActiveOwner ?? false
-            );
 
-            // Transaction Preview
-            const [isOpenTransaction, setIsOpenTransaction] = useState(
-              stateLink.isOpenTransaction ?? false
-            );
-            const [isActiveTransaction, setIsActiveTransaction] = useState(
-                stateLink.isActiveTransaction ?? false
-            );
+  // is open O.E
+  const [isOpenOwnerTransaction, setIsOpenOwnerTransaction] = useState(
+    stateLink.isOpenOwnerTransaction ?? false
+  );
+  const [isActiveOwnerTransactionIcon, setIsActiveOwnerTransactionIcon] = useState(
+    stateLink.isActiveOwnerTransactionIcon ?? false
+  );
+  const [isActiveOwnerTransaction, setIsActiveOwnerTransaction] = useState(
+    stateLink.isActiveOwnerTransaction ?? false
+  );
+  // O.E List 
+  const [isOpenOwner, setIsOpenOwner] = useState(
+    stateLink.isOpenOwner ?? false
+  );
+  const [isActiveOwner, setIsActiveOwner] = useState(
+    stateLink.isActiveOwner ?? false
+  );
 
-    // Payable Supplier
-    const [isOpenPayable, setIsOpenPayable] = useState(
-      stateLink.isOpenPayable ?? false
-    );
-    const [isActivePayableIcon, setIsActivePayableIcon] = useState(
-      stateLink.isActivePayableIcon ?? false
-    );
-    const [isActivePayable, setIsActivePayable] = useState(
-      stateLink.isActivePayable?? false
-    );
-          // isOpenPayableToSupplier
-          const [isOpenPayableToSupplier, setIsOpenPayableToSupplier] = useState(
-              stateLink.isOpenPayableToSupplier ?? false
-          );
-          const [isActivePayableToSupplier, setIsActivePayableToSupplier] = useState(
-              stateLink.isActivePayableToSupplier ?? false
-          );
+  // Transaction Preview
+  const [isOpenTransaction, setIsOpenTransaction] = useState(
+    stateLink.isOpenTransaction ?? false
+  );
+  const [isActiveTransaction, setIsActiveTransaction] = useState(
+    stateLink.isActiveTransaction ?? false
+  );
 
-          // isOpenPaidSupplier Preview
-          const [isOpenPaidSupplier, setIsOpenPaidSupplier] = useState(
-            stateLink.isOpenPaidSupplier ?? false
-          );
-          const [isActivePaidSupplier, setIsActivePaidSupplier] = useState(
-              stateLink.isActivePaidSupplier ?? false
-          );  
-          
-          const [isOpenOverDue, setIsOpenOverDue] = useState(
-            stateLink.isOpenOverDue ?? false
-          );
-          const [isActiveOverDue, setIsActiveOverDue] = useState(
-              stateLink.isActiveOverDue ?? false
-          );
+  // Payable Supplier
+  const [isOpenPayable, setIsOpenPayable] = useState(
+    stateLink.isOpenPayable ?? false
+  );
+  const [isActivePayableIcon, setIsActivePayableIcon] = useState(
+    stateLink.isActivePayableIcon ?? false
+  );
+  const [isActivePayable, setIsActivePayable] = useState(
+    stateLink.isActivePayable ?? false
+  );
+  // isOpenPayableToSupplier
+  const [isOpenPayableToSupplier, setIsOpenPayableToSupplier] = useState(
+    stateLink.isOpenPayableToSupplier ?? false
+  );
+  const [isActivePayableToSupplier, setIsActivePayableToSupplier] = useState(
+    stateLink.isActivePayableToSupplier ?? false
+  );
+
+  // isOpenPaidSupplier Preview
+  const [isOpenPaidSupplier, setIsOpenPaidSupplier] = useState(
+    stateLink.isOpenPaidSupplier ?? false
+  );
+  const [isActivePaidSupplier, setIsActivePaidSupplier] = useState(
+    stateLink.isActivePaidSupplier ?? false
+  );
+
+  const [isOpenOverDue, setIsOpenOverDue] = useState(
+    stateLink.isOpenOverDue ?? false
+  );
+  const [isActiveOverDue, setIsActiveOverDue] = useState(
+    stateLink.isActiveOverDue ?? false
+  );
 
 
-        //Accounting Expenses
-        const [isOpenExpenses, setIsOpenExpenses] = useState(
-          stateLink.isOpenExpenses ?? false
-        );
-        const [isActiveExpensesIcon, setIsActiveExpensesIcon] = useState(
-          stateLink.isActiveExpensesIcon ?? false
-        );
-        const [isActiveExpenses, setIsActiveExpenses] = useState(
-            stateLink.isActiveExpenses?? false
-        );
-              //Accounting Expenses List
-              const [isOpenListExpenses, setIsOpenListExpenses] = useState(
-                  stateLink.isOpenListExpenses ?? false
-              );
-              const [isActiveListExpenses, setIsActiveListExpenses] = useState(
-                  stateLink.isActiveListExpenses ?? false
-              );
-  
-              //Accounting Expenses Category
-              const [isOpenCategoryExpenses, setIsOpenCategoryExpenses] = useState(
-                stateLink.isOpenCategoryExpenses ?? false
-              );
-              const [isActiveCategoryExpenses, setIsActiveCategoryExpenses] = useState(
-                  stateLink.isActiveCategoryExpenses ?? false
-              );
+  //Accounting Expenses
+  const [isOpenExpenses, setIsOpenExpenses] = useState(
+    stateLink.isOpenExpenses ?? false
+  );
+  const [isActiveExpensesIcon, setIsActiveExpensesIcon] = useState(
+    stateLink.isActiveExpensesIcon ?? false
+  );
+  const [isActiveExpenses, setIsActiveExpenses] = useState(
+    stateLink.isActiveExpenses ?? false
+  );
+  //Accounting Expenses List
+  const [isOpenListExpenses, setIsOpenListExpenses] = useState(
+    stateLink.isOpenListExpenses ?? false
+  );
+  const [isActiveListExpenses, setIsActiveListExpenses] = useState(
+    stateLink.isActiveListExpenses ?? false
+  );
 
-        // Accounting Revenue
-        const [isOpenRevenue, setIsOpenRevenue] = useState(
-          stateLink.isOpenRevenue ?? false
-        );
-        const [isActiveRevenueIcon, setIsActiveRevenueIcon] = useState(
-          stateLink.isActiveRevenueIcon ?? false
-        );
-        const [isActiveRevenue, setIsActiveRevenue] = useState(
-            stateLink.isActiveRevenue?? false
-        );
-              //Accounting Revenue List
-              const [isOpenListRevenue, setIsOpenListRevenue] = useState(
-                  stateLink.isOpenListRevenue ?? false
-              );
-              const [isActiveListRevenue, setIsActiveListRevenue] = useState(
-                  stateLink.isActiveListRevenue ?? false
-              );
-  
-              //Accounting Revenue Category
-              const [isOpenCategoryRevenue, setIsOpenCategoryRevenue] = useState(
-                  stateLink.isOpenCategoryRevenue ?? false
-                );
-              const [isActiveCategoryRevenue, setIsActiveCategoryRevenue] = useState(
-                  stateLink.isActiveCategoryRevenue ?? false
-              );
+  //Accounting Expenses Category
+  const [isOpenCategoryExpenses, setIsOpenCategoryExpenses] = useState(
+    stateLink.isOpenCategoryExpenses ?? false
+  );
+  const [isActiveCategoryExpenses, setIsActiveCategoryExpenses] = useState(
+    stateLink.isActiveCategoryExpenses ?? false
+  );
+
+  // Accounting Revenue
+  const [isOpenRevenue, setIsOpenRevenue] = useState(
+    stateLink.isOpenRevenue ?? false
+  );
+  const [isActiveRevenueIcon, setIsActiveRevenueIcon] = useState(
+    stateLink.isActiveRevenueIcon ?? false
+  );
+  const [isActiveRevenue, setIsActiveRevenue] = useState(
+    stateLink.isActiveRevenue ?? false
+  );
+  //Accounting Revenue List
+  const [isOpenListRevenue, setIsOpenListRevenue] = useState(
+    stateLink.isOpenListRevenue ?? false
+  );
+  const [isActiveListRevenue, setIsActiveListRevenue] = useState(
+    stateLink.isActiveListRevenue ?? false
+  );
+
+  //Accounting Revenue Category
+  const [isOpenCategoryRevenue, setIsOpenCategoryRevenue] = useState(
+    stateLink.isOpenCategoryRevenue ?? false
+  );
+  const [isActiveCategoryRevenue, setIsActiveCategoryRevenue] = useState(
+    stateLink.isActiveCategoryRevenue ?? false
+  );
 
   // Settings
   const [isOpenSetting, setIsOpenSetting] = useState(
@@ -408,92 +408,92 @@ const [isActiveWorkStation, setIsActiveWorkStation] = useState(
   );
   //Subscriptions Invoice
   const [isActiveSubscriptionInvoice, setIsActiveSubscriptionInvoice] = useState(
-    stateLink.isActiveSubscriptionInvoice ?? false  
+    stateLink.isActiveSubscriptionInvoice ?? false
   );
 
-// Helper function to save the current active links state 
-const saveActiveLinksState = useCallback(() => {
-  const activeLinks = { 
-    isActiveHome, isActiveHomeIcon,
-    isOpenUsers, isActiveUsersIcon, isActiveUsers, isActiveCustomers, isActiveLeads, isActiveSuppliers,
-    isOpenBooking, isActiveBookingIcon, isActiveBooking, isActiveManualBooking, isActiveBookingEngine,
-    isOpenBookingList, isActiveBookingListIcon, isActiveBookingList, isActiveUpcomingBookingList, 
-    isActiveCurrentBookingList, isActivePastBookingList, isOpenBookingPayment, isActiveBookingPaymentIcon, 
-    isActiveBookingPayment, isOpenFinancial, isActiveFinancialIcon, isActiveFinancial, isActiveInvoice,
-    isOpenOperation, isActiveOperationIcon, isActiveOperation, isActiveRequests, isActiveRequestsIcon,
-    isOpenRequests, isActiveRequestList, isActiveNewRequest, isActiveWorkStation, isActiveInventory,
-    isActiveInventoryIcon, isOpenInventory, isActiveSetting, isActiveSettingIcon, isOpenSetting,
-    isActiveFinancialAccount, isActiveWallet, isActiveAdminAccount, isActivePosition, isOpenHRM,
-    isActiveHRMIcon, isActiveHRM, isActiveHRMDepartment, isActiveHRMEmployee, isActiveHRMAgent,
-    isOpenAccounting, isActiveAccountingIcon, isActiveAccounting, isActiveLedger, isOpenExpenses,
-    isActiveExpensesIcon, isActiveExpenses, isOpenListExpenses, isActiveListExpenses,
-    isOpenCategoryExpenses, isActiveCategoryExpenses, isOpenRevenue, isActiveRevenueIcon,
-    isActiveRevenue, isOpenListRevenue, isActiveListRevenue, isOpenCategoryRevenue, isActiveCategoryRevenue,
-    isOpenOwnerTransaction, isActiveOwnerTransactionIcon, isActiveOwnerTransaction, isOpenOwner, isActiveOwner,
-    isOpenTransaction, isActiveTransaction, isActivePaymentRecivable, isOpenPayable, isActivePayableIcon,
-    isActivePayable, isOpenPayableToSupplier, isActivePayableToSupplier, isOpenPaidSupplier, isActivePaidSupplier,
-    isOpenOverDue, isActiveOverDue, isActiveCurrency, isActiveTax, isActiveGroup, isOpenInventoryRoom,
-    isActiveInventoryRoom, isActiveInventoryRoomIcon, isOpenInventoryTour, isActiveInventoryTour,
-    isActiveInventoryTourIcon, isOpenInventoryRoomSetting, isActiveInventoryRoomSetting,
-    isOpenInventoryRoomPreview, isActiveInventoryRoomPreview, isOpenInventoryTourPreview,
-    isActiveInventoryTourPreview, isOpenSubscriptions, isActiveSubscription, isActiveSubscriptionIcon,
-    isActiveSubscriptionInvoice
-  };
-  auth.sidebar = JSON.stringify(activeLinks);
-}, [
-  isActiveHome, isActiveHomeIcon, isOpenUsers, isActiveUsersIcon, isActiveUsers, isActiveCustomers, 
-  isActiveLeads, isActiveSuppliers, isOpenBooking, isActiveBookingIcon, isActiveBooking, 
-  isActiveManualBooking, isActiveBookingEngine, isOpenBookingList, isActiveBookingListIcon, 
-  isActiveBookingList, isActiveUpcomingBookingList, isActiveCurrentBookingList, isActivePastBookingList,
-  isOpenBookingPayment, isActiveBookingPaymentIcon, isActiveBookingPayment, isOpenFinancial,
-  isActiveFinancialIcon, isActiveFinancial, isActiveInvoice, isOpenOperation, isActiveOperationIcon,
-  isActiveOperation, isActiveRequests, isActiveRequestsIcon, isOpenRequests, isActiveRequestList,
-  isActiveNewRequest, isActiveWorkStation, isActiveInventory, isActiveInventoryIcon, isOpenInventory,
-  isActiveSetting, isActiveSettingIcon, isOpenSetting, isActiveFinancialAccount, isActiveWallet,
-  isActiveAdminAccount, isActivePosition, isOpenHRM, isActiveHRMIcon, isActiveHRM, isActiveHRMDepartment,
-  isActiveHRMEmployee, isActiveHRMAgent, isOpenAccounting, isActiveAccountingIcon, isActiveAccounting,
-  isActiveLedger, isOpenExpenses, isActiveExpensesIcon, isActiveExpenses, isOpenListExpenses,
-  isActiveListExpenses, isOpenCategoryExpenses, isActiveCategoryExpenses, isOpenRevenue,
-  isActiveRevenueIcon, isActiveRevenue, isOpenListRevenue, isActiveListRevenue, isOpenCategoryRevenue,
-  isActiveCategoryRevenue, isOpenOwnerTransaction, isActiveOwnerTransactionIcon, isActiveOwnerTransaction,
-  isOpenOwner, isActiveOwner, isOpenTransaction, isActiveTransaction, isActivePaymentRecivable,
-  isOpenPayable, isActivePayableIcon, isActivePayable, isOpenPayableToSupplier, isActivePayableToSupplier,
-  isOpenPaidSupplier, isActivePaidSupplier, isOpenOverDue, isActiveOverDue, isActiveCurrency,
-  isActiveTax, isActiveGroup, isOpenInventoryRoom, isActiveInventoryRoom, isActiveInventoryRoomIcon,
-  isOpenInventoryTour, isActiveInventoryTour, isActiveInventoryTourIcon, isOpenInventoryRoomSetting,
-  isActiveInventoryRoomSetting, isOpenInventoryRoomPreview, isActiveInventoryRoomPreview,
-  isOpenInventoryTourPreview, isActiveInventoryTourPreview, isOpenSubscriptions, isActiveSubscription,
-  isActiveSubscriptionIcon, isActiveSubscriptionInvoice
-]);
+  // Helper function to save the current active links state 
+  const saveActiveLinksState = useCallback(() => {
+    const activeLinks = {
+      isActiveHome, isActiveHomeIcon,
+      isOpenUsers, isActiveUsersIcon, isActiveUsers, isActiveCustomers, isActiveLeads, isActiveSuppliers,
+      isOpenBooking, isActiveBookingIcon, isActiveBooking, isActiveManualBooking, isActiveBookingEngine,
+      isOpenBookingList, isActiveBookingListIcon, isActiveBookingList, isActiveUpcomingBookingList,
+      isActiveCurrentBookingList, isActivePastBookingList, isOpenBookingPayment, isActiveBookingPaymentIcon,
+      isActiveBookingPayment, isOpenFinancial, isActiveFinancialIcon, isActiveFinancial, isActiveInvoice,
+      isOpenOperation, isActiveOperationIcon, isActiveOperation, isActiveRequests, isActiveRequestsIcon,
+      isOpenRequests, isActiveRequestList, isActiveNewRequest, isActiveWorkStation, isActiveInventory,
+      isActiveInventoryIcon, isOpenInventory, isActiveSetting, isActiveSettingIcon, isOpenSetting,
+      isActiveFinancialAccount, isActiveWallet, isActiveAdminAccount, isActivePosition, isOpenHRM,
+      isActiveHRMIcon, isActiveHRM, isActiveHRMDepartment, isActiveHRMEmployee, isActiveHRMAgent,
+      isOpenAccounting, isActiveAccountingIcon, isActiveAccounting, isActiveLedger, isOpenExpenses,
+      isActiveExpensesIcon, isActiveExpenses, isOpenListExpenses, isActiveListExpenses,
+      isOpenCategoryExpenses, isActiveCategoryExpenses, isOpenRevenue, isActiveRevenueIcon,
+      isActiveRevenue, isOpenListRevenue, isActiveListRevenue, isOpenCategoryRevenue, isActiveCategoryRevenue,
+      isOpenOwnerTransaction, isActiveOwnerTransactionIcon, isActiveOwnerTransaction, isOpenOwner, isActiveOwner,
+      isOpenTransaction, isActiveTransaction, isActivePaymentRecivable, isOpenPayable, isActivePayableIcon,
+      isActivePayable, isOpenPayableToSupplier, isActivePayableToSupplier, isOpenPaidSupplier, isActivePaidSupplier,
+      isOpenOverDue, isActiveOverDue, isActiveCurrency, isActiveTax, isActiveGroup, isOpenInventoryRoom,
+      isActiveInventoryRoom, isActiveInventoryRoomIcon, isOpenInventoryTour, isActiveInventoryTour,
+      isActiveInventoryTourIcon, isOpenInventoryRoomSetting, isActiveInventoryRoomSetting,
+      isOpenInventoryRoomPreview, isActiveInventoryRoomPreview, isOpenInventoryTourPreview,
+      isActiveInventoryTourPreview, isOpenSubscriptions, isActiveSubscription, isActiveSubscriptionIcon,
+      isActiveSubscriptionInvoice
+    };
+    auth.sidebar = JSON.stringify(activeLinks);
+  }, [
+    isActiveHome, isActiveHomeIcon, isOpenUsers, isActiveUsersIcon, isActiveUsers, isActiveCustomers,
+    isActiveLeads, isActiveSuppliers, isOpenBooking, isActiveBookingIcon, isActiveBooking,
+    isActiveManualBooking, isActiveBookingEngine, isOpenBookingList, isActiveBookingListIcon,
+    isActiveBookingList, isActiveUpcomingBookingList, isActiveCurrentBookingList, isActivePastBookingList,
+    isOpenBookingPayment, isActiveBookingPaymentIcon, isActiveBookingPayment, isOpenFinancial,
+    isActiveFinancialIcon, isActiveFinancial, isActiveInvoice, isOpenOperation, isActiveOperationIcon,
+    isActiveOperation, isActiveRequests, isActiveRequestsIcon, isOpenRequests, isActiveRequestList,
+    isActiveNewRequest, isActiveWorkStation, isActiveInventory, isActiveInventoryIcon, isOpenInventory,
+    isActiveSetting, isActiveSettingIcon, isOpenSetting, isActiveFinancialAccount, isActiveWallet,
+    isActiveAdminAccount, isActivePosition, isOpenHRM, isActiveHRMIcon, isActiveHRM, isActiveHRMDepartment,
+    isActiveHRMEmployee, isActiveHRMAgent, isOpenAccounting, isActiveAccountingIcon, isActiveAccounting,
+    isActiveLedger, isOpenExpenses, isActiveExpensesIcon, isActiveExpenses, isOpenListExpenses,
+    isActiveListExpenses, isOpenCategoryExpenses, isActiveCategoryExpenses, isOpenRevenue,
+    isActiveRevenueIcon, isActiveRevenue, isOpenListRevenue, isActiveListRevenue, isOpenCategoryRevenue,
+    isActiveCategoryRevenue, isOpenOwnerTransaction, isActiveOwnerTransactionIcon, isActiveOwnerTransaction,
+    isOpenOwner, isActiveOwner, isOpenTransaction, isActiveTransaction, isActivePaymentRecivable,
+    isOpenPayable, isActivePayableIcon, isActivePayable, isOpenPayableToSupplier, isActivePayableToSupplier,
+    isOpenPaidSupplier, isActivePaidSupplier, isOpenOverDue, isActiveOverDue, isActiveCurrency,
+    isActiveTax, isActiveGroup, isOpenInventoryRoom, isActiveInventoryRoom, isActiveInventoryRoomIcon,
+    isOpenInventoryTour, isActiveInventoryTour, isActiveInventoryTourIcon, isOpenInventoryRoomSetting,
+    isActiveInventoryRoomSetting, isOpenInventoryRoomPreview, isActiveInventoryRoomPreview,
+    isOpenInventoryTourPreview, isActiveInventoryTourPreview, isOpenSubscriptions, isActiveSubscription,
+    isActiveSubscriptionIcon, isActiveSubscriptionInvoice
+  ]);
 
-// Save state to sidebar at auth when any link state changes
-useEffect(() => {
-  saveActiveLinksState();
-}, [
-  isActiveHome, isActiveHomeIcon, isOpenUsers, isActiveUsersIcon, isActiveUsers, isActiveCustomers, 
-  isActiveLeads, isActiveSuppliers, isOpenBooking, isActiveBookingIcon, isActiveBooking, 
-  isActiveManualBooking, isActiveBookingEngine, isOpenBookingList, isActiveBookingListIcon, 
-  isActiveBookingList, isActiveUpcomingBookingList, isActiveCurrentBookingList, isActivePastBookingList,
-  isOpenBookingPayment, isActiveBookingPaymentIcon, isActiveBookingPayment, isOpenFinancial,
-  isActiveFinancialIcon, isActiveFinancial, isActiveInvoice, isOpenOperation, isActiveOperationIcon,
-  isActiveOperation, isActiveRequests, isActiveRequestsIcon, isOpenRequests, isActiveRequestList,
-  isActiveNewRequest, isActiveWorkStation, isActiveInventory, isActiveInventoryIcon, isOpenInventory,
-  isActiveSetting, isActiveSettingIcon, isOpenSetting, isActiveFinancialAccount, isActiveWallet,
-  isActiveAdminAccount, isActivePosition, isOpenHRM, isActiveHRMIcon, isActiveHRM, isActiveHRMDepartment,
-  isActiveHRMEmployee, isActiveHRMAgent, isOpenAccounting, isActiveAccountingIcon, isActiveAccounting,
-  isActiveLedger, isOpenExpenses, isActiveExpensesIcon, isActiveExpenses, isOpenListExpenses,
-  isActiveListExpenses, isOpenCategoryExpenses, isActiveCategoryExpenses, isOpenRevenue,
-  isActiveRevenueIcon, isActiveRevenue, isOpenListRevenue, isActiveListRevenue, isOpenCategoryRevenue,
-  isActiveCategoryRevenue, isOpenOwnerTransaction, isActiveOwnerTransactionIcon, isActiveOwnerTransaction,
-  isOpenOwner, isActiveOwner, isOpenTransaction, isActiveTransaction, isActivePaymentRecivable,
-  isOpenPayable, isActivePayableIcon, isActivePayable, isOpenPayableToSupplier, isActivePayableToSupplier,
-  isOpenPaidSupplier, isActivePaidSupplier, isOpenOverDue, isActiveOverDue, isActiveCurrency,
-  isActiveTax, isActiveGroup, isOpenInventoryRoom, isActiveInventoryRoom, isActiveInventoryRoomIcon,
-  isOpenInventoryTour, isActiveInventoryTour, isActiveInventoryTourIcon, isOpenInventoryRoomSetting,
-  isActiveInventoryRoomSetting, isOpenInventoryRoomPreview, isActiveInventoryRoomPreview,
-  isOpenInventoryTourPreview, isActiveInventoryTourPreview, isOpenSubscriptions, isActiveSubscription,
-  isActiveSubscriptionIcon, isActiveSubscriptionInvoice
-]);
+  // Save state to sidebar at auth when any link state changes
+  useEffect(() => {
+    saveActiveLinksState();
+  }, [
+    isActiveHome, isActiveHomeIcon, isOpenUsers, isActiveUsersIcon, isActiveUsers, isActiveCustomers,
+    isActiveLeads, isActiveSuppliers, isOpenBooking, isActiveBookingIcon, isActiveBooking,
+    isActiveManualBooking, isActiveBookingEngine, isOpenBookingList, isActiveBookingListIcon,
+    isActiveBookingList, isActiveUpcomingBookingList, isActiveCurrentBookingList, isActivePastBookingList,
+    isOpenBookingPayment, isActiveBookingPaymentIcon, isActiveBookingPayment, isOpenFinancial,
+    isActiveFinancialIcon, isActiveFinancial, isActiveInvoice, isOpenOperation, isActiveOperationIcon,
+    isActiveOperation, isActiveRequests, isActiveRequestsIcon, isOpenRequests, isActiveRequestList,
+    isActiveNewRequest, isActiveWorkStation, isActiveInventory, isActiveInventoryIcon, isOpenInventory,
+    isActiveSetting, isActiveSettingIcon, isOpenSetting, isActiveFinancialAccount, isActiveWallet,
+    isActiveAdminAccount, isActivePosition, isOpenHRM, isActiveHRMIcon, isActiveHRM, isActiveHRMDepartment,
+    isActiveHRMEmployee, isActiveHRMAgent, isOpenAccounting, isActiveAccountingIcon, isActiveAccounting,
+    isActiveLedger, isOpenExpenses, isActiveExpensesIcon, isActiveExpenses, isOpenListExpenses,
+    isActiveListExpenses, isOpenCategoryExpenses, isActiveCategoryExpenses, isOpenRevenue,
+    isActiveRevenueIcon, isActiveRevenue, isOpenListRevenue, isActiveListRevenue, isOpenCategoryRevenue,
+    isActiveCategoryRevenue, isOpenOwnerTransaction, isActiveOwnerTransactionIcon, isActiveOwnerTransaction,
+    isOpenOwner, isActiveOwner, isOpenTransaction, isActiveTransaction, isActivePaymentRecivable,
+    isOpenPayable, isActivePayableIcon, isActivePayable, isOpenPayableToSupplier, isActivePayableToSupplier,
+    isOpenPaidSupplier, isActivePaidSupplier, isOpenOverDue, isActiveOverDue, isActiveCurrency,
+    isActiveTax, isActiveGroup, isOpenInventoryRoom, isActiveInventoryRoom, isActiveInventoryRoomIcon,
+    isOpenInventoryTour, isActiveInventoryTour, isActiveInventoryTourIcon, isOpenInventoryRoomSetting,
+    isActiveInventoryRoomSetting, isOpenInventoryRoomPreview, isActiveInventoryRoomPreview,
+    isOpenInventoryTourPreview, isActiveInventoryTourPreview, isOpenSubscriptions, isActiveSubscription,
+    isActiveSubscriptionIcon, isActiveSubscriptionInvoice
+  ]);
 
 
   // Handler functions to manage all state
@@ -555,7 +555,7 @@ useEffect(() => {
 
     setIsOpenOverDue(false)
     setIsActiveOverDue(false)
-    
+
     setIsOpenPaidSupplier(false)
     setIsActivePaidSupplier(false)
 
@@ -597,7 +597,7 @@ useEffect(() => {
     setIsActiveSubscriptionIcon(false);
     setIsActiveSubscriptionInvoice(false);
 
-    
+
     //Setting
     setIsActiveFinancialAccount(false);
     setIsActiveAdminAccount(false);
@@ -649,33 +649,33 @@ useEffect(() => {
   }, [location, isOpenUsers]);
 
   // ✅ Keep Users open when clicking Customers
-    const handleClickCustomers = useCallback(() => {
-      handleStateLinks();
-      setIsOpenUsers(true);
-      setIsActiveUsersIcon(true);
-      setIsActiveUsers(true);
-      setIsActiveCustomers(true);
-    }, []);
-    useEffect(() => {
-      if (pathName.startsWith("/dashboard_agent/users/customers")) {
-        handleClickCustomers();
-      }
-    }, [location, handleClickCustomers]);
-  
-    // ✅ Keep Users open when clicking Leads
-    const handleClickLeads = useCallback(() => {
-      handleStateLinks();
-      setIsOpenUsers(true);
-      setIsActiveUsersIcon(true);
-      setIsActiveUsers(true);
-      setIsActiveLeads(true);
-    }, []);
-    useEffect(() => {
-      if (pathName.startsWith("/dashboard_agent/users/leads")) {
-        handleClickLeads();
-      }
-    }, [location, handleClickLeads]);
-  
+  const handleClickCustomers = useCallback(() => {
+    handleStateLinks();
+    setIsOpenUsers(true);
+    setIsActiveUsersIcon(true);
+    setIsActiveUsers(true);
+    setIsActiveCustomers(true);
+  }, []);
+  useEffect(() => {
+    if (pathName.startsWith("/dashboard_agent/users/customers")) {
+      handleClickCustomers();
+    }
+  }, [location, handleClickCustomers]);
+
+  // ✅ Keep Users open when clicking Leads
+  const handleClickLeads = useCallback(() => {
+    handleStateLinks();
+    setIsOpenUsers(true);
+    setIsActiveUsersIcon(true);
+    setIsActiveUsers(true);
+    setIsActiveLeads(true);
+  }, []);
+  useEffect(() => {
+    if (pathName.startsWith("/dashboard_agent/users/leads")) {
+      handleClickLeads();
+    }
+  }, [location, handleClickLeads]);
+
   // ✅ Keep Users open when clicking Suppliers
   const handleClickSuppliers = useCallback(() => {
     handleStateLinks();
@@ -698,16 +698,16 @@ useEffect(() => {
     setIsActiveBookingIcon(true);
     setIsActiveBooking(true);
     setIsActiveManualBooking(true);
-    
+
   }, []);
   useEffect(() => {
     const pathName = location.pathname;
     const part = pathName.split("/");
     const result = part.slice(0, 4).join("/");
-  
+
     if (
       result === "/dashboard_agent/booking" &&
-      !["/dashboard_agent/booking/manual_booking" , "/dashboard_agent/booking/booking_engine",
+      !["/dashboard_agent/booking/manual_booking", "/dashboard_agent/booking/booking_engine",
       ].some((path) => pathName.startsWith(path))
     ) {
       handleClickBooking();
@@ -734,23 +734,23 @@ useEffect(() => {
     }
   }, [location]);
 
-    /* Manual Booking */
-    const handleClickBookingEngine = useCallback(() => {
-      handleStateLinks();
-  
-      setIsOpenBooking(true);
-      setIsActiveBookingIcon(true);
-      setIsActiveBooking(true);
-      setIsActiveBookingEngine(true);
-      setIsActiveManualBooking(false);
-    }, []);
-    useEffect(() => {
-      const part = pathName.split("/");
-      const result = part.slice(0, 4).join("/");
-      if (result == "/dashboard_agent/booking/booking_engine") {
-        handleClickBookingEngine();
-      }
-    }, [location]);
+  /* Manual Booking */
+  const handleClickBookingEngine = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenBooking(true);
+    setIsActiveBookingIcon(true);
+    setIsActiveBooking(true);
+    setIsActiveBookingEngine(true);
+    setIsActiveManualBooking(false);
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 4).join("/");
+    if (result == "/dashboard_agent/booking/booking_engine") {
+      handleClickBookingEngine();
+    }
+  }, [location]);
 
   /* Booking List */
   const handleClickBookingList = useCallback(() => {
@@ -834,31 +834,31 @@ useEffect(() => {
   }, [location]);
 
 
-    /* Booking payment */
-    const handleClickBookingPayment = useCallback(() => {
-      handleStateLinks();
-  
-      setIsOpenBookingPayment(true);
-      setIsActiveBookingPaymentIcon(true);
-      setIsActiveBookingPayment(true);
-      // setIsActiveCurrentBookingList(true);
-      // setIsActivePastBookingList(true);
+  /* Booking payment */
+  const handleClickBookingPayment = useCallback(() => {
+    handleStateLinks();
 
-    }, []);
-    useEffect(() => {
-      const part = pathName.split("/");
-      const result = part.slice(0, 3).join("/");
-  
-      // Only navigate if on `/dashboard/setting` but not already on any sub-route
-      if (
-        result === "/dashboard_agent/booking_payments"
-      ) {
-        handleClickBookingPayment();
+    setIsOpenBookingPayment(true);
+    setIsActiveBookingPaymentIcon(true);
+    setIsActiveBookingPayment(true);
+    // setIsActiveCurrentBookingList(true);
+    // setIsActivePastBookingList(true);
 
-        // navigate("/dashboard_agent/booking_payments");
-      }
-      console.log("result", result);
-    }, [location]);
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 3).join("/");
+
+    // Only navigate if on `/dashboard/setting` but not already on any sub-route
+    if (
+      result === "/dashboard_agent/booking_payments"
+    ) {
+      handleClickBookingPayment();
+
+      // navigate("/dashboard_agent/booking_payments");
+    }
+    console.log("result", result);
+  }, [location]);
 
   // Function to handle financial section click
   const handleClickFinancial = useCallback(() => {
@@ -942,56 +942,56 @@ useEffect(() => {
     console.log("result", result);
   }, [location]);
 
-    /* RequestList */
-    const handleClickRequestList = useCallback(() => {
-      handleStateLinks();
-  
-      setIsOpenRequests(true);
-      setIsActiveRequestsIcon(true);
-      setIsActiveRequests(true);
-      setIsActiveRequestList(true);
-    }, []);
-    useEffect(() => {
-      const part = pathName.split("/");
-      const result = part.slice(0, 4).join("/");
-      if (result == "/dashboard_agent/requests") {
-        handleClickRequestList();
-      }
-    }, [location]);
-  
-    /* New Request */
-    const handleClickNewRequest = useCallback(() => {
-      handleStateLinks();
-  
-      setIsOpenRequests(true);
-      setIsActiveRequestsIcon(true);
-      setIsActiveRequests(true);
-      setIsActiveNewRequest(true);
-    }, []);
-    useEffect(() => {
-      const part = pathName.split("/");
-      const result = part.slice(0, 4).join("/");
-      if (result == "/dashboard_agent/requests/add_request") {
-        handleClickNewRequest();
-      }
-    }, [location]);
-  
-    /* Work station */
-    const handleClickWorkStation = useCallback(() => {
-      handleStateLinks();
-  
-      setIsOpenRequests(true);
-      setIsActiveRequestsIcon(true);
-      setIsActiveRequests(true);
-      setIsActiveWorkStation(true);
-    }, []);
-    useEffect(() => {
-      const part = pathName.split("/");
-      const result = part.slice(0, 4).join("/");
-      if (result == "/dashboard_agent/requests/work_station") {
-        handleClickWorkStation();
-      }
-    }, [location]);
+  /* RequestList */
+  const handleClickRequestList = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenRequests(true);
+    setIsActiveRequestsIcon(true);
+    setIsActiveRequests(true);
+    setIsActiveRequestList(true);
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 4).join("/");
+    if (result == "/dashboard_agent/requests") {
+      handleClickRequestList();
+    }
+  }, [location]);
+
+  /* New Request */
+  const handleClickNewRequest = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenRequests(true);
+    setIsActiveRequestsIcon(true);
+    setIsActiveRequests(true);
+    setIsActiveNewRequest(true);
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 4).join("/");
+    if (result == "/dashboard_agent/requests/add_request") {
+      handleClickNewRequest();
+    }
+  }, [location]);
+
+  /* Work station */
+  const handleClickWorkStation = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenRequests(true);
+    setIsActiveRequestsIcon(true);
+    setIsActiveRequests(true);
+    setIsActiveWorkStation(true);
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 4).join("/");
+    if (result == "/dashboard_agent/requests/work_station") {
+      handleClickWorkStation();
+    }
+  }, [location]);
 
   // Inventory
   const handleClickInventory = useCallback(() => {
@@ -1002,8 +1002,8 @@ useEffect(() => {
     setIsActiveInventory(true);
   }, []);
 
-   /* Inventory Room */
-   const handleClickInventoryRoom = useCallback(() => {
+  /* Inventory Room */
+  const handleClickInventoryRoom = useCallback(() => {
     handleStateLinks();
 
     setIsOpenInventory(true);
@@ -1073,14 +1073,14 @@ useEffect(() => {
     const result = part.slice(0, 5).join("/");
     if (
       result === "/dashboard_agent/inventory/room/setting_room") {
-        handleClickInventoryRoomSetting();
+      handleClickInventoryRoomSetting();
     }
   }, [location]);
 
   useEffect(() => {
     const part = pathName.split("/");
     const result = part.slice(0, 5).join("/");
-    
+
     if (result === "/dashboard_agent/inventory/tour/list") {
       handleClickInventoryTour();
     }
@@ -1097,13 +1097,13 @@ useEffect(() => {
   };
   useEffect(() => {
     const result = pathName.split("/").slice(0, 3).join("/");
-  
+
     // Prevent overriding navigation if already inside a sub-route
     if (
       result === "/dashboard_agent/accounting" &&
       ![
         "/dashboard_agent/accounting/ledger",
-        "/dashboard_agent/accounting/payment_recivable",
+        "/dashboard_agent/accounting/payment_receivable",
         "/dashboard_agent/accounting/owner_transaction/owner",
         "/dashboard_agent/accounting/owner_transaction/transaction",
         "/dashboard_agent/accounting/payable_to_supplier/payable_supplier",
@@ -1121,7 +1121,7 @@ useEffect(() => {
       navigate("/dashboard_agent/accounting/ledger"); // Ensure the default route is correct
     }
   }, [location]);
-  
+
   //Ledger
   const handleClickLedger = useCallback(() => {
     handleStateLinks();
@@ -1145,7 +1145,7 @@ useEffect(() => {
     setIsActivePaymentRecivable(true);
   }, []);
   useEffect(() => {
-    if (pathName.startsWith("/dashboard_agent/accounting/payment_recivable")) {
+    if (pathName.startsWith("/dashboard_agent/accounting/payment_receivable")) {
       handleClickPaymentRecivable();
     }
   }, [location, handleClickPaymentRecivable]);
@@ -1207,16 +1207,16 @@ useEffect(() => {
 
   // payable TO Supplier
   const handleClickPayableToSupplier = useCallback(() => {
-      handleStateLinks();
-      handleClickPayable();
-  
-      setIsOpenPayableToSupplier((prev) => !prev);
-      setIsActivePayableToSupplier((prev) => !prev);
+    handleStateLinks();
+    handleClickPayable();
+
+    setIsOpenPayableToSupplier((prev) => !prev);
+    setIsActivePayableToSupplier((prev) => !prev);
   }, []);
   useEffect(() => {
-      if (pathName.startsWith("/dashboard_agent/accounting/payable_to_supplier/payable_supplier")) {
-        handleClickPayableToSupplier();
-      }
+    if (pathName.startsWith("/dashboard_agent/accounting/payable_to_supplier/payable_supplier")) {
+      handleClickPayableToSupplier();
+    }
   }, [location, handleClickPayableToSupplier]);
 
   // payable TO Supplier 
@@ -1317,11 +1317,11 @@ useEffect(() => {
 
   //Expenses Category
   const handleClickCategoryExpenses = useCallback(() => {
-      handleStateLinks();
-      handleClickExpenses();
+    handleStateLinks();
+    handleClickExpenses();
 
-      setIsOpenCategoryExpenses((prev) => !prev);
-      setIsActiveCategoryExpenses((prev) => !prev);;
+    setIsOpenCategoryExpenses((prev) => !prev);
+    setIsActiveCategoryExpenses((prev) => !prev);;
   }, []);
   useEffect(() => {
     if (pathName.startsWith("/dashboard_agent/accounting/expenses/category_expenses")) {
@@ -1329,9 +1329,9 @@ useEffect(() => {
     }
   }, [location, handleClickCategoryExpenses]);
 
-   //HRM
-   const handleClickHRM = (e) => {
-    e.preventDefault(); 
+  //HRM
+  const handleClickHRM = (e) => {
+    e.preventDefault();
     setIsOpenHRM((prev) => !prev);
     setIsActiveHRMIcon((prev) => !prev);
     setIsActiveHRM((prev) => !prev);
@@ -1341,7 +1341,7 @@ useEffect(() => {
     if (
       result === "/dashboard_agent/hrm" &&
       ![
-       "/dashboard_agent/hrm/department",
+        "/dashboard_agent/hrm/department",
         "/dashboard_agent/hrm/employee",
         "/dashboard_agent/hrm/agent",
       ].some((path) => pathName.startsWith(path))
@@ -1352,20 +1352,20 @@ useEffect(() => {
       navigate("/dashboard_agent/hrm/department");
     }
   }, [location, isOpenHRM]);
-  
+
   const handleClickHRMDepartment = useCallback(() => {
     handleStateLinks();
     setIsOpenHRM(true);
     setIsActiveHRMIcon(true);
     setIsActiveHRM(true);
     setIsActiveHRMDepartment(true);
-  }, []);  
+  }, []);
   useEffect(() => {
     if (pathName.startsWith("/dashboard_agent/hrm/department")) {
       handleClickHRMDepartment();
     }
   }, [location, handleClickHRMDepartment]);
-  
+
   const handleClickHRMEmployee = useCallback(() => {
     handleStateLinks();
     setIsOpenHRM(true);
@@ -1373,185 +1373,185 @@ useEffect(() => {
     setIsActiveHRM(true);
     setIsActiveHRMEmployee(true);
   }, []);
-  
+
   useEffect(() => {
     if (pathName.startsWith("/dashboard_agent/hrm/employee")) {
       handleClickHRMEmployee();
     }
   }, [location, handleClickHRMEmployee]);
-  
+
   const handleClickHRMAgent = useCallback(() => {
     handleStateLinks();
     setIsOpenHRM(true);
     setIsActiveHRMIcon(true);
     setIsActiveHRM(true);
     setIsActiveHRMAgent(true);
-  }, []); 
+  }, []);
   useEffect(() => {
     if (pathName.startsWith("/dashboard_agent/hrm/agent")) {
       handleClickHRMAgent();
     }
   }, [location, handleClickHRMAgent]);
-  
-// Setting
-const handleClickSetting = (e) => {
-  e.preventDefault();
-  setIsOpenSetting((prev) => !prev);
-  setIsActiveSettingIcon((prev) => !prev);
-  setIsActiveSetting((prev) => !prev);
-};
-useEffect(() => {
-  const result = pathName.split("/").slice(0, 3).join("/");
-  if (
-    result === "/dashboard_agent/setting" &&
-    ![
-      "/dashboard_agent/setting/financial_account",
-      "/dashboard_agent/setting/wallet",
-      "/dashboard_agent/setting/admin_account",
-      "/dashboard_agent/setting/roles",
-      "/dashboard_agent/setting/currency",
-      "/dashboard_agent/setting/tax",
-      "/dashboard_agent/setting/group",
-    ].some((path) => pathName.startsWith(path))
-  ) {
-    if (!isOpenSetting) {
-      setIsOpenSetting(true);
+
+  // Setting
+  const handleClickSetting = (e) => {
+    e.preventDefault();
+    setIsOpenSetting((prev) => !prev);
+    setIsActiveSettingIcon((prev) => !prev);
+    setIsActiveSetting((prev) => !prev);
+  };
+  useEffect(() => {
+    const result = pathName.split("/").slice(0, 3).join("/");
+    if (
+      result === "/dashboard_agent/setting" &&
+      ![
+        "/dashboard_agent/setting/financial_account",
+        "/dashboard_agent/setting/wallet",
+        "/dashboard_agent/setting/admin_account",
+        "/dashboard_agent/setting/roles",
+        "/dashboard_agent/setting/currency",
+        "/dashboard_agent/setting/tax",
+        "/dashboard_agent/setting/group",
+      ].some((path) => pathName.startsWith(path))
+    ) {
+      if (!isOpenSetting) {
+        setIsOpenSetting(true);
+      }
+      navigate("/dashboard_agent/setting/financial_account");
     }
-    navigate("/dashboard_agent/setting/financial_account");
-  }
-}, [location, isOpenSetting]);
+  }, [location, isOpenSetting]);
 
-const handleClickSettingFinancialAccount = useCallback(() => {
-  handleStateLinks();
-  setIsOpenSetting(true);
-  setIsActiveSettingIcon(true);
-  setIsActiveSetting(true);
-  setIsActiveFinancialAccount(true);
-}, []);
+  const handleClickSettingFinancialAccount = useCallback(() => {
+    handleStateLinks();
+    setIsOpenSetting(true);
+    setIsActiveSettingIcon(true);
+    setIsActiveSetting(true);
+    setIsActiveFinancialAccount(true);
+  }, []);
 
-useEffect(() => {
-  if (pathName.startsWith("/dashboard_agent/setting/financial_account")) {
-    handleClickSettingFinancialAccount();
-  }
-}, [location, handleClickSettingFinancialAccount]);
+  useEffect(() => {
+    if (pathName.startsWith("/dashboard_agent/setting/financial_account")) {
+      handleClickSettingFinancialAccount();
+    }
+  }, [location, handleClickSettingFinancialAccount]);
 
-const handleClickSettingAdminAccount = useCallback(() => {
-  handleStateLinks();
-  setIsOpenSetting(true);
-  setIsActiveSettingIcon(true);
-  setIsActiveSetting(true);
-  setIsActiveAdminAccount(true);
-}, []);
-useEffect(() => {
-  if (pathName.startsWith("/dashboard_agent/setting/admin_account")) {
-    handleClickSettingAdminAccount();
-  }
-}, [location, handleClickSettingAdminAccount]);
+  const handleClickSettingAdminAccount = useCallback(() => {
+    handleStateLinks();
+    setIsOpenSetting(true);
+    setIsActiveSettingIcon(true);
+    setIsActiveSetting(true);
+    setIsActiveAdminAccount(true);
+  }, []);
+  useEffect(() => {
+    if (pathName.startsWith("/dashboard_agent/setting/admin_account")) {
+      handleClickSettingAdminAccount();
+    }
+  }, [location, handleClickSettingAdminAccount]);
 
-const handleClickSettingRoles = useCallback(() => {
-  handleStateLinks();
-  setIsOpenSetting(true);
-  setIsActiveSettingIcon(true);
-  setIsActiveSetting(true);
-  setIsActivePosition(true);
-}, []);
-useEffect(() => {
-  if (pathName.startsWith("/dashboard_agent/setting/roles")) {
-    handleClickSettingRoles();
-  }
-}, [location, handleClickSettingRoles]);
+  const handleClickSettingRoles = useCallback(() => {
+    handleStateLinks();
+    setIsOpenSetting(true);
+    setIsActiveSettingIcon(true);
+    setIsActiveSetting(true);
+    setIsActivePosition(true);
+  }, []);
+  useEffect(() => {
+    if (pathName.startsWith("/dashboard_agent/setting/roles")) {
+      handleClickSettingRoles();
+    }
+  }, [location, handleClickSettingRoles]);
 
-const handleClickSettingWallet = useCallback(() => {
-  handleStateLinks();
-  setIsOpenSetting(true);
-  setIsActiveSettingIcon(true);
-  setIsActiveSetting(true);
-  setIsActiveWallet(true);
-}, []);
-useEffect(() => {
-  if (pathName.startsWith("/dashboard_agent/setting/wallet")) {
-    handleClickSettingWallet();
-  }
-}, [location, handleClickSettingWallet]);
+  const handleClickSettingWallet = useCallback(() => {
+    handleStateLinks();
+    setIsOpenSetting(true);
+    setIsActiveSettingIcon(true);
+    setIsActiveSetting(true);
+    setIsActiveWallet(true);
+  }, []);
+  useEffect(() => {
+    if (pathName.startsWith("/dashboard_agent/setting/wallet")) {
+      handleClickSettingWallet();
+    }
+  }, [location, handleClickSettingWallet]);
 
-const handleClickSettingCurrency = useCallback(() => {
-  handleStateLinks();
-  setIsOpenSetting(true);
-  setIsActiveSettingIcon(true);
-  setIsActiveSetting(true);
-  setIsActiveCurrency(true);
-}, []);
-useEffect(() => {
-  if (pathName.startsWith("/dashboard_agent/setting/currency")) {
-    handleClickSettingCurrency();
-  }
-}, [location, handleClickSettingCurrency]);
+  const handleClickSettingCurrency = useCallback(() => {
+    handleStateLinks();
+    setIsOpenSetting(true);
+    setIsActiveSettingIcon(true);
+    setIsActiveSetting(true);
+    setIsActiveCurrency(true);
+  }, []);
+  useEffect(() => {
+    if (pathName.startsWith("/dashboard_agent/setting/currency")) {
+      handleClickSettingCurrency();
+    }
+  }, [location, handleClickSettingCurrency]);
 
-const handleClickSettingTax = useCallback(() => {
-  handleStateLinks();
-  setIsOpenSetting(true);
-  setIsActiveSettingIcon(true);
-  setIsActiveSetting(true);
-  setIsActiveTax(true);
-}, []);
-useEffect(() => {
-  if (pathName.startsWith("/dashboard_agent/setting/tax")) {
-    handleClickSettingTax();
-  }
-}, [location, handleClickSettingTax]);
+  const handleClickSettingTax = useCallback(() => {
+    handleStateLinks();
+    setIsOpenSetting(true);
+    setIsActiveSettingIcon(true);
+    setIsActiveSetting(true);
+    setIsActiveTax(true);
+  }, []);
+  useEffect(() => {
+    if (pathName.startsWith("/dashboard_agent/setting/tax")) {
+      handleClickSettingTax();
+    }
+  }, [location, handleClickSettingTax]);
 
-const handleClickSettingGroup = useCallback(() => {
-  handleStateLinks();
-  setIsOpenSetting(true);
-  setIsActiveSettingIcon(true);
-  setIsActiveSetting(true);
-  setIsActiveGroup(true);
-}, []);
-useEffect(() => {
-  if (pathName.startsWith("/dashboard_agent/setting/group")) {
-    handleClickSettingGroup();
-  }
-}, [location, handleClickSettingGroup]);
-  
+  const handleClickSettingGroup = useCallback(() => {
+    handleStateLinks();
+    setIsOpenSetting(true);
+    setIsActiveSettingIcon(true);
+    setIsActiveSetting(true);
+    setIsActiveGroup(true);
+  }, []);
+  useEffect(() => {
+    if (pathName.startsWith("/dashboard_agent/setting/group")) {
+      handleClickSettingGroup();
+    }
+  }, [location, handleClickSettingGroup]);
+
 
   // Subscription
-     const handleClickSubscription = useCallback(() => {
-      handleStateLinks();
-  
-      setIsOpenSubscriptions(true);
-      setIsActiveSubscriptionIcon(true);
-      setIsActiveSubscription(true);
-      setIsActiveSubscriptionInvoice(true);
-    }, []);
-    useEffect(() => {
-      const part = pathName.split("/");
-      const result = part.slice(0, 3).join("/");
-  
-      if (result === "/dashboard_agent/subscriptions" &&
-        ![
-          "/dashboard_agent/subscriptions/invoice",
-        ]
-      ) {
-        handleClickSubscription();
-        navigate("/dashboard_agent/subscriptions/invoice");
-      }
-    }, [location]);
-  
-    const handleClickSubscriptionInvoice = useCallback(() => {
-      handleStateLinks();
-  
-      setIsOpenSubscriptions(true);
-      setIsActiveSubscriptionIcon(true);
-      setIsActiveSubscription(true);
-      setIsActiveSubscriptionInvoice(true);
-    }, []);
-    useEffect(() => {
-      const part = pathName.split("/");
-      const result = part.slice(0, 4).join("/");
-      if (result == "/dashboard_agent/subscriptions/invoice") {
-        handleClickSubscriptionInvoice();
-      }
-    }, [location]);
+  const handleClickSubscription = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenSubscriptions(true);
+    setIsActiveSubscriptionIcon(true);
+    setIsActiveSubscription(true);
+    setIsActiveSubscriptionInvoice(true);
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 3).join("/");
+
+    if (result === "/dashboard_agent/subscriptions" &&
+      ![
+        "/dashboard_agent/subscriptions/invoice",
+      ]
+    ) {
+      handleClickSubscription();
+      navigate("/dashboard_agent/subscriptions/invoice");
+    }
+  }, [location]);
+
+  const handleClickSubscriptionInvoice = useCallback(() => {
+    handleStateLinks();
+
+    setIsOpenSubscriptions(true);
+    setIsActiveSubscriptionIcon(true);
+    setIsActiveSubscription(true);
+    setIsActiveSubscriptionInvoice(true);
+  }, []);
+  useEffect(() => {
+    const part = pathName.split("/");
+    const result = part.slice(0, 4).join("/");
+    if (result == "/dashboard_agent/subscriptions/invoice") {
+      handleClickSubscriptionInvoice();
+    }
+  }, [location]);
 
   return (
     <div className="space-y-2 w-full h-full">
@@ -1566,21 +1566,18 @@ useEffect(() => {
         }}
         className={`
             ${isActiveHome ? "active" : ""}
-           flex items-center ${
-             isSidebarCollapsed ? "justify-center" : "justify-start"
-           } hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+           flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-start"
+          } hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
       >
         <div className="flex font-semibold text-xl items-center gap-x-2">
           <FaHome
-            className={`${
-              isActiveHomeIcon || isActiveHome ? "text-mainColor" : "text-white"
-            }`}
+            className={`${isActiveHomeIcon || isActiveHome ? "text-mainColor" : "text-white"
+              }`}
           />
           {!isSidebarCollapsed && (
             <span
-              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
-                isActiveHome ? "text-mainColor" : "text-white"
-              }`}
+              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${isActiveHome ? "text-mainColor" : "text-white"
+                }`}
             >
               Home
             </span>
@@ -1602,17 +1599,15 @@ useEffect(() => {
       >
         <div className="flex font-semibold text-xl items-center gap-x-2">
           <FaUsers
-            className={`${
-              isActiveUsersIcon || isActiveUsers
+            className={`${isActiveUsersIcon || isActiveUsers
                 ? "text-mainColor"
                 : "text-white"
-            }`}
+              }`}
           />
           {!isSidebarCollapsed && (
             <span
-              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
-                isActiveUsers ? "text-mainColor" : "text-white"
-              }`}
+              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${isActiveUsers ? "text-mainColor" : "text-white"
+                }`}
             >
               Users
             </span>
@@ -1620,18 +1615,16 @@ useEffect(() => {
         </div>
         {!isSidebarCollapsed && (
           <IoIosArrowForward
-            className={`${
-              isActiveUsers ? "text-mainColor rotate-90" : "text-white rotate-0"
-            } text-xl transition-all duration-300 group-hover:text-mainColor`}
+            className={`${isActiveUsers ? "text-mainColor rotate-90" : "text-white rotate-0"
+              } text-xl transition-all duration-300 group-hover:text-mainColor`}
           />
         )}
       </Link>
       <div
-        className={`${
-          isOpenUsers && !isSidebarCollapsed ? "h-17" : "h-0 "
-        } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+        className={`${isOpenUsers && !isSidebarCollapsed ? "h-17" : "h-0 "
+          } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
       >
-        <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">      
+        <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
           <Link
             to={"users/leads"}
             onClick={() => {
@@ -1640,11 +1633,10 @@ useEffect(() => {
             }}
           >
             <li
-              className={`${
-                isActiveLeads
+              className={`${isActiveLeads
                   ? "rounded-xl bg-white text-mainColor"
                   : "text-white"
-              }
+                }
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
             >
               Leads
@@ -1658,11 +1650,10 @@ useEffect(() => {
             }}
           >
             <li
-              className={`${
-                isActiveCustomers
+              className={`${isActiveCustomers
                   ? "rounded-xl bg-white text-mainColor"
                   : "text-white"
-              }
+                }
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
             >
               Customers
@@ -1676,11 +1667,10 @@ useEffect(() => {
             }}
           >
             <li
-              className={`${
-                isActiveSuppliers
+              className={`${isActiveSuppliers
                   ? "rounded-xl bg-white text-mainColor"
                   : "text-white"
-              }
+                }
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
             >
               Suppliers
@@ -1706,17 +1696,15 @@ useEffect(() => {
       >
         <div className="flex font-semibold text-xl items-center gap-x-2">
           <MdFlightTakeoff
-            className={`${
-              isActiveBookingIcon || isActiveBooking
+            className={`${isActiveBookingIcon || isActiveBooking
                 ? "text-mainColor"
                 : "text-white"
-            }`}
+              }`}
           />
           {!isSidebarCollapsed && (
             <span
-              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
-                isActiveBooking ? "text-mainColor" : "text-white"
-              }`}
+              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${isActiveBooking ? "text-mainColor" : "text-white"
+                }`}
             >
               New Booking
             </span>
@@ -1724,18 +1712,16 @@ useEffect(() => {
         </div>
         {!isSidebarCollapsed && (
           <IoIosArrowForward
-            className={`${
-              isActiveBooking
+            className={`${isActiveBooking
                 ? "text-mainColor rotate-90"
                 : "text-white rotate-0"
-            } text-xl transition-all duration-300 group-hover:text-mainColor`}
+              } text-xl transition-all duration-300 group-hover:text-mainColor`}
           />
         )}
       </Link>
       <div
-        className={`${
-          isOpenBooking && !isSidebarCollapsed ? "h-17" : "h-0 "
-        } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+        className={`${isOpenBooking && !isSidebarCollapsed ? "h-17" : "h-0 "
+          } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
       >
         <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
           <Link
@@ -1743,11 +1729,10 @@ useEffect(() => {
             onClick={handleClickManualBooking}
           >
             <li
-              className={`${
-                isActiveManualBooking
+              className={`${isActiveManualBooking
                   ? "rounded-xl bg-white text-mainColor"
                   : "text-white"
-              }
+                }
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
             >
               Manual Booking
@@ -1758,14 +1743,13 @@ useEffect(() => {
             onClick={handleClickBookingEngine}
           >
             <li
-              className={`${
-                isActiveBookingEngine
+              className={`${isActiveBookingEngine
                   ? "rounded-xl bg-white text-mainColor"
                   : "text-white"
-              }
+                }
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
             >
-                Booking Engine
+              Booking Engine
             </li>
           </Link>
         </ul>
@@ -1787,17 +1771,15 @@ useEffect(() => {
       >
         <div className="flex font-semibold text-xl items-center gap-x-2">
           <RiCheckDoubleLine
-            className={`${
-              isActiveBookingListIcon || isActiveBookingList
+            className={`${isActiveBookingListIcon || isActiveBookingList
                 ? "text-mainColor"
                 : "text-white"
-            }`}
+              }`}
           />
           {!isSidebarCollapsed && (
             <span
-              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
-                isActiveBookingList ? "text-mainColor" : "text-white"
-              }`}
+              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${isActiveBookingList ? "text-mainColor" : "text-white"
+                }`}
             >
               Booking List
             </span>
@@ -1805,18 +1787,16 @@ useEffect(() => {
         </div>
         {!isSidebarCollapsed && (
           <IoIosArrowForward
-            className={`${
-              isActiveBookingList
+            className={`${isActiveBookingList
                 ? "text-mainColor rotate-90"
                 : "text-white rotate-0"
-            } text-xl transition-all duration-300 group-hover:text-mainColor`}
+              } text-xl transition-all duration-300 group-hover:text-mainColor`}
           />
         )}
       </Link>
       <div
-        className={`${
-          isOpenBookingList && !isSidebarCollapsed ? "h-17" : "h-0 "
-        } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+        className={`${isOpenBookingList && !isSidebarCollapsed ? "h-17" : "h-0 "
+          } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
       >
         <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
           <Link
@@ -1827,11 +1807,10 @@ useEffect(() => {
             }}
           >
             <li
-              className={`${
-                isActiveUpcomingBookingList
+              className={`${isActiveUpcomingBookingList
                   ? "rounded-xl bg-white text-mainColor"
                   : "text-white"
-              }
+                }
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
             >
               UpComing
@@ -1845,11 +1824,10 @@ useEffect(() => {
             }}
           >
             <li
-              className={`${
-                isActiveCurrentBookingList
+              className={`${isActiveCurrentBookingList
                   ? "rounded-xl bg-white text-mainColor"
                   : "text-white"
-              }
+                }
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
             >
               Current
@@ -1863,11 +1841,10 @@ useEffect(() => {
             }}
           >
             <li
-              className={`${
-                isActivePastBookingList
+              className={`${isActivePastBookingList
                   ? "rounded-xl bg-white text-mainColor"
                   : "text-white"
-              }
+                }
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
             >
               Past
@@ -1891,17 +1868,15 @@ useEffect(() => {
       >
         <div className="flex font-semibold text-xl items-center gap-x-2">
           <FaCreditCard
-            className={`${
-              isActiveBookingPaymentIcon || isActiveBookingPayment
+            className={`${isActiveBookingPaymentIcon || isActiveBookingPayment
                 ? "text-mainColor"
                 : "text-white"
-            }`}
+              }`}
           />
           {!isSidebarCollapsed && (
             <span
-              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
-                isActiveBookingPayment ? "text-mainColor" : "text-white"
-              }`}
+              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${isActiveBookingPayment ? "text-mainColor" : "text-white"
+                }`}
             >
               Booking Payment
             </span>
@@ -1909,17 +1884,16 @@ useEffect(() => {
         </div>
         {!isSidebarCollapsed && (
           <IoIosArrowForward
-            className={`${
-              isActiveBookingPayment
+            className={`${isActiveBookingPayment
                 ? "text-mainColor rotate-90"
                 : "text-white rotate-0"
-            } text-xl transition-all duration-300 group-hover:text-mainColor`}
+              } text-xl transition-all duration-300 group-hover:text-mainColor`}
           />
         )}
       </Link>
 
-        {/* Financial List */}
-        {/* <Link
+      {/* Financial List */}
+      {/* <Link
         to="financial"
         onMouseMove={() => setIsActiveFinancialIcon(true)}
         onMouseOut={() => setIsActiveFinancialIcon(false)}
@@ -1990,7 +1964,7 @@ useEffect(() => {
       </div> */}
 
 
-       {/* Subscription List */}
+      {/* Subscription List */}
       <Link
         to="subscriptions"
         onMouseMove={() => setIsActiveSubscriptionIcon(true)}
@@ -2006,17 +1980,15 @@ useEffect(() => {
       >
         <div className="flex font-semibold text-xl items-center gap-x-2">
           <FaFileArchive
-            className={`${
-              isActiveSubscriptionIcon || isActiveSubscription
+            className={`${isActiveSubscriptionIcon || isActiveSubscription
                 ? "text-mainColor"
                 : "text-white"
-            }`}
+              }`}
           />
           {!isSidebarCollapsed && (
             <span
-              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${
-                isActiveSubscription ? "text-mainColor" : "text-white"
-              }`}
+              className={`text-base transition-all duration-300 group-hover:text-mainColor font-TextFontRegular ml-2 ${isActiveSubscription ? "text-mainColor" : "text-white"
+                }`}
             >
               Subscription
             </span>
@@ -2024,18 +1996,16 @@ useEffect(() => {
         </div>
         {!isSidebarCollapsed && (
           <IoIosArrowForward
-            className={`${
-              isActiveSubscription
+            className={`${isActiveSubscription
                 ? "text-mainColor rotate-90"
                 : "text-white rotate-0"
-            } text-xl transition-all duration-300 group-hover:text-mainColor`}
+              } text-xl transition-all duration-300 group-hover:text-mainColor`}
           />
         )}
       </Link>
       <div
-        className={`${
-          isOpenSubscriptions && !isSidebarCollapsed ? "h-17" : "h-0 "
-        } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
+        className={`${isOpenSubscriptions && !isSidebarCollapsed ? "h-17" : "h-0 "
+          } overflow-hidden flex items-start justify-end  w-full transition-all duration-700`}
       >
         <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
           <Link
@@ -2046,20 +2016,19 @@ useEffect(() => {
             }}
           >
             <li
-              className={`${
-                isActiveSubscriptionInvoice
+              className={`${isActiveSubscriptionInvoice
                   ? "rounded-xl bg-white text-mainColor"
                   : "text-white"
-              }
+                }
                           text-xl font-TextFontLight rounded-xl px-4 py-1  hover:bg-white transition-all duration-300 hover:text-mainColor`}
             >
               Invoice
             </li>
-          </Link> 
+          </Link>
         </ul>
       </div>
 
-      {/* Operation */}     
+      {/* Operation */}
       {/* <Link
         to="accounting"
         onMouseMove={() => setIsActiveOperationIcon(true)}
@@ -2097,605 +2066,562 @@ useEffect(() => {
           />
         )}
       </Link> */}
-{/* Requests */}
-<Link
-  to="requests"
-  onMouseMove={() => setIsActiveRequestsIcon(true)}
-  onMouseOut={() => setIsActiveRequestsIcon(false)}
-  onClick={handleClickRequests}
-  className={`${
-    isActiveRequests ? "active" : ""
-  } flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-between"} hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
->
-  <div className="flex font-semibold text-lg items-center gap-x-2"> {/* Increased font size here */}
-    <FaCode 
-      className={`${
-        isActiveRequestsIcon || isActiveRequests
-          ? "text-mainColor"
-          : "text-white"
-      } text-xl`} 
-    />
-    {!isSidebarCollapsed && (
-      <span
-        className={`text-[17px] font-semibold transition-all duration-300 group-hover:text-mainColor ml-2 ${isActiveRequests ? "text-mainColor" : "text-white"}`}
+      {/* Requests */}
+      <Link
+        to="requests"
+        onMouseMove={() => setIsActiveRequestsIcon(true)}
+        onMouseOut={() => setIsActiveRequestsIcon(false)}
+        onClick={handleClickRequests}
+        className={`${isActiveRequests ? "active" : ""
+          } flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-between"} hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
       >
-        Requests
-      </span>
-    )}
-  </div>
-  {!isSidebarCollapsed && (
-    <IoIosArrowForward
-      className={`${isActiveRequests ? "text-mainColor rotate-90" : "text-white rotate-0"} text-lg transition-all duration-300 group-hover:text-mainColor`} 
-    />
-  )}
-</Link>
-<div
-  className={`${
-    isOpenRequests && !isSidebarCollapsed ? "h-17" : "h-0 "
-  } overflow-hidden flex items-start justify-end w-full transition-all duration-700`}
->
-  <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
-    <Link
-      to={"requests"}
-      onClick={() => {
-        handleClickRequestList();
-        onLinkClick();
-      }}
-    >
-      <li
-        className={`${
-          isActiveRequestList ? "rounded-xl bg-white text-mainColor" : "text-white"
-        } text-lg font-TextFontRegular rounded-xl px-4 py-1 hover:bg-white transition-all duration-300 hover:text-mainColor`} 
-      >
-        Request List
-      </li>
-    </Link>
-    <Link
-      to={"requests/add_request"}
-      onClick={() => {
-        handleClickNewRequest();
-        onLinkClick();
-      }}
-    >
-      <li
-        className={`${
-          isActiveNewRequest ? "rounded-xl bg-white text-mainColor" : "text-white"
-        } text-lg font-TextFontRegular rounded-xl px-4 py-1 hover:bg-white transition-all duration-300 hover:text-mainColor`}  
-      >
-        New Request
-      </li>
-    </Link>
-    <Link
-      to={"requests/work_station"}
-      onClick={() => {
-        handleClickWorkStation();
-        onLinkClick();
-      }}
-    >
-      <li
-        className={`${
-          isActiveWorkStation ? "rounded-xl bg-white text-mainColor" : "text-white"
-        } text-lg font-TextFontRegular rounded-xl px-4 py-1 hover:bg-white transition-all duration-300 hover:text-mainColor`}  
-      >
-        Work Station
-      </li>
-    </Link>
-  </ul>
-</div>
-
-{/* Inventory */}
-<div
-  onMouseMove={() => setIsActiveInventoryIcon(true)}
-  onMouseOut={() => setIsActiveInventoryIcon(false)}
-  onClick={handleClickInventory}
-  className={`${
-    isActiveInventory ? "active" : ""
-  } flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-between"} hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
->
-  <div className="flex font-semibold text-lg items-center gap-x-2"> {/* Increased font size here */}
-    <FaBriefcase
-      className={`${
-        isActiveInventoryIcon || isActiveInventory ? "text-mainColor" : "text-white"
-      } text-xl`} 
-    />
-    {!isSidebarCollapsed && (
-      <span
-        className={`text-[17px] font-semibold transition-all duration-300 group-hover:text-mainColor ml-2 ${
-          isActiveInventory ? "text-mainColor" : "text-white"
-        }`}
-      >
-        Inventory
-      </span>
-    )}
-  </div>
-  {!isSidebarCollapsed && (
-    <IoIosArrowForward
-      className={`${
-        isActiveInventory ? "text-mainColor rotate-90" : "text-white rotate-0"
-      } text-lg transition-all duration-300 group-hover:text-mainColor`} 
-    />
-  )}
-</div>
-
-<div
-  className={`${
-    isOpenInventory && !isSidebarCollapsed ? "h-17" : "h-0 "
-  } overflow-hidden flex items-start justify-end w-full transition-all duration-700`}
->
-  <ul className="list-disc w-full transition-all duration-700 flex flex-col gap-y-4">
-    <div className="flex flex-col gap-y-1">
-      <li
-        onMouseMove={() => setIsActiveInventoryRoomIcon(true)}
-        onMouseOut={() => setIsActiveInventoryRoomIcon(false)}
-        onClick={handleClickInventoryRoom}
-        className={`${
-          isActiveInventoryRoom ? "active" : ""
-        } flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-between"} hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
-      >
-        <div className="flex font-semibold text-xl items-center gap-x-2"> {/* Increased font size here */}
-          <MdOutlineBedroomChild
-            className={`${
-              isActiveInventoryRoomIcon || isActiveInventoryRoom
+        <div className="flex font-semibold text-lg items-center gap-x-2"> {/* Increased font size here */}
+          <FaCode
+            className={`${isActiveRequestsIcon || isActiveRequests
                 ? "text-mainColor"
                 : "text-white"
-            } text-lg`} 
+              } text-xl`}
           />
           {!isSidebarCollapsed && (
             <span
-              className={`text-lg font-TextFontRegular transition-all duration-300 group-hover:text-mainColor ml-2 ${
-                isActiveInventoryRoom ? "text-mainColor" : "text-white"
-              }`}
+              className={`text-[17px] font-semibold transition-all duration-300 group-hover:text-mainColor ml-2 ${isActiveRequests ? "text-mainColor" : "text-white"}`}
             >
-              Room
+              Requests
             </span>
           )}
         </div>
         {!isSidebarCollapsed && (
           <IoIosArrowForward
-            className={`${
-              isActiveInventoryRoom ? "text-mainColor rotate-90" : "text-white rotate-0"
-            } text-lg transition-all duration-300 group-hover:text-mainColor`} 
+            className={`${isActiveRequests ? "text-mainColor rotate-90" : "text-white rotate-0"} text-lg transition-all duration-300 group-hover:text-mainColor`}
           />
         )}
-      </li>
+      </Link>
       <div
-        className={`${
-          isOpenInventoryRoom && !isSidebarCollapsed ? "h-17" : "h-0 "
-        } overflow-hidden flex items-start justify-end w-full transition-all duration-700`}
+        className={`${isOpenRequests && !isSidebarCollapsed ? "h-17" : "h-0 "
+          } overflow-hidden flex items-start justify-end w-full transition-all duration-700`}
       >
-        <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-4">
+        <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-2">
           <Link
-            to={"inventory/room/list"}
+            to={"requests"}
             onClick={() => {
-              handleClickInventoryRoomPreview();
+              handleClickRequestList();
               onLinkClick();
             }}
           >
             <li
-              className={`${
-                isActiveInventoryRoomPreview
-                  ? "rounded-xl bg-white text-mainColor"
-                  : "text-white"
-              } text-lg font-TextFontRegular rounded-xl px-4 py-1 hover:bg-white transition-all duration-300 hover:text-mainColor`} 
+              className={`${isActiveRequestList ? "rounded-xl bg-white text-mainColor" : "text-white"
+                } text-lg font-TextFontRegular rounded-xl px-4 py-1 hover:bg-white transition-all duration-300 hover:text-mainColor`}
             >
-              Room List
+              Request List
             </li>
           </Link>
           <Link
-            to={"inventory/room/setting_room"}
+            to={"requests/add_request"}
             onClick={() => {
-              handleClickInventoryRoomSetting();
+              handleClickNewRequest();
               onLinkClick();
             }}
           >
             <li
-              className={`${
-                isActiveInventoryRoomSetting
-                  ? "rounded-xl bg-white text-mainColor"
-                  : "text-white"
-              } text-lg font-TextFontRegular rounded-xl px-4 py-1 hover:bg-white transition-all duration-300 hover:text-mainColor`} 
+              className={`${isActiveNewRequest ? "rounded-xl bg-white text-mainColor" : "text-white"
+                } text-lg font-TextFontRegular rounded-xl px-4 py-1 hover:bg-white transition-all duration-300 hover:text-mainColor`}
             >
-              Room Setting
+              New Request
+            </li>
+          </Link>
+          <Link
+            to={"requests/work_station"}
+            onClick={() => {
+              handleClickWorkStation();
+              onLinkClick();
+            }}
+          >
+            <li
+              className={`${isActiveWorkStation ? "rounded-xl bg-white text-mainColor" : "text-white"
+                } text-lg font-TextFontRegular rounded-xl px-4 py-1 hover:bg-white transition-all duration-300 hover:text-mainColor`}
+            >
+              Work Station
             </li>
           </Link>
         </ul>
       </div>
-      <Link
-        to="inventory/tour/list"
+
+      {/* Inventory */}
+      <div
         onMouseMove={() => setIsActiveInventoryIcon(true)}
         onMouseOut={() => setIsActiveInventoryIcon(false)}
-        onClick={() => {
-          handleClickInventoryTour();
-          onLinkClick();
-        }}
-        className={`${
-          isActiveInventoryTour ? "active" : ""
-        } flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-start"} hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+        onClick={handleClickInventory}
+        className={`${isActiveInventory ? "active" : ""
+          } flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-between"} hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
       >
         <div className="flex font-semibold text-lg items-center gap-x-2"> {/* Increased font size here */}
-          <FaMapMarkedAlt
-            className={`${
-              isActiveInventoryTour || isActiveInventory
-                ? "text-mainColor"
-                : "text-white"
-            } text-lg`} 
+          <FaBriefcase
+            className={`${isActiveInventoryIcon || isActiveInventory ? "text-mainColor" : "text-white"
+              } text-xl`}
           />
           {!isSidebarCollapsed && (
             <span
-              className={`text-lg font-TextFontRegular transition-all duration-300 group-hover:text-mainColor ml-2 ${
-                isActiveInventoryTour ? "text-mainColor" : "text-white"
-              }`}
+              className={`text-[17px] font-semibold transition-all duration-300 group-hover:text-mainColor ml-2 ${isActiveInventory ? "text-mainColor" : "text-white"
+                }`}
             >
-              Tour
+              Inventory
             </span>
           )}
         </div>
         {!isSidebarCollapsed && (
           <IoIosArrowForward
-            className={`${
-              isActiveInventoryTour ? "text-mainColor rotate-90" : "text-white rotate-0"
-            } text-lg transition-all duration-300 group-hover:text-mainColor`} 
+            className={`${isActiveInventory ? "text-mainColor rotate-90" : "text-white rotate-0"
+              } text-lg transition-all duration-300 group-hover:text-mainColor`}
+          />
+        )}
+      </div>
+
+      <div
+        className={`${isOpenInventory && !isSidebarCollapsed ? "h-17" : "h-0 "
+          } overflow-hidden flex items-start justify-end w-full transition-all duration-700`}
+      >
+        <ul className="list-disc w-full transition-all duration-700 flex flex-col gap-y-4">
+          <div className="flex flex-col gap-y-1">
+            <li
+              onMouseMove={() => setIsActiveInventoryRoomIcon(true)}
+              onMouseOut={() => setIsActiveInventoryRoomIcon(false)}
+              onClick={handleClickInventoryRoom}
+              className={`${isActiveInventoryRoom ? "active" : ""
+                } flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-between"} hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+            >
+              <div className="flex font-semibold text-xl items-center gap-x-2"> {/* Increased font size here */}
+                <MdOutlineBedroomChild
+                  className={`${isActiveInventoryRoomIcon || isActiveInventoryRoom
+                      ? "text-mainColor"
+                      : "text-white"
+                    } text-lg`}
+                />
+                {!isSidebarCollapsed && (
+                  <span
+                    className={`text-lg font-TextFontRegular transition-all duration-300 group-hover:text-mainColor ml-2 ${isActiveInventoryRoom ? "text-mainColor" : "text-white"
+                      }`}
+                  >
+                    Room
+                  </span>
+                )}
+              </div>
+              {!isSidebarCollapsed && (
+                <IoIosArrowForward
+                  className={`${isActiveInventoryRoom ? "text-mainColor rotate-90" : "text-white rotate-0"
+                    } text-lg transition-all duration-300 group-hover:text-mainColor`}
+                />
+              )}
+            </li>
+            <div
+              className={`${isOpenInventoryRoom && !isSidebarCollapsed ? "h-17" : "h-0 "
+                } overflow-hidden flex items-start justify-end w-full transition-all duration-700`}
+            >
+              <ul className="list-disc w-full pl-10 transition-all duration-700 flex flex-col gap-y-4">
+                <Link
+                  to={"inventory/room/list"}
+                  onClick={() => {
+                    handleClickInventoryRoomPreview();
+                    onLinkClick();
+                  }}
+                >
+                  <li
+                    className={`${isActiveInventoryRoomPreview
+                        ? "rounded-xl bg-white text-mainColor"
+                        : "text-white"
+                      } text-lg font-TextFontRegular rounded-xl px-4 py-1 hover:bg-white transition-all duration-300 hover:text-mainColor`}
+                  >
+                    Room List
+                  </li>
+                </Link>
+                <Link
+                  to={"inventory/room/setting_room"}
+                  onClick={() => {
+                    handleClickInventoryRoomSetting();
+                    onLinkClick();
+                  }}
+                >
+                  <li
+                    className={`${isActiveInventoryRoomSetting
+                        ? "rounded-xl bg-white text-mainColor"
+                        : "text-white"
+                      } text-lg font-TextFontRegular rounded-xl px-4 py-1 hover:bg-white transition-all duration-300 hover:text-mainColor`}
+                  >
+                    Room Setting
+                  </li>
+                </Link>
+              </ul>
+            </div>
+            <Link
+              to="inventory/tour/list"
+              onMouseMove={() => setIsActiveInventoryIcon(true)}
+              onMouseOut={() => setIsActiveInventoryIcon(false)}
+              onClick={() => {
+                handleClickInventoryTour();
+                onLinkClick();
+              }}
+              className={`${isActiveInventoryTour ? "active" : ""
+                } flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-start"} hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+            >
+              <div className="flex font-semibold text-lg items-center gap-x-2"> {/* Increased font size here */}
+                <FaMapMarkedAlt
+                  className={`${isActiveInventoryTour || isActiveInventory
+                      ? "text-mainColor"
+                      : "text-white"
+                    } text-lg`}
+                />
+                {!isSidebarCollapsed && (
+                  <span
+                    className={`text-lg font-TextFontRegular transition-all duration-300 group-hover:text-mainColor ml-2 ${isActiveInventoryTour ? "text-mainColor" : "text-white"
+                      }`}
+                  >
+                    Tour
+                  </span>
+                )}
+              </div>
+              {!isSidebarCollapsed && (
+                <IoIosArrowForward
+                  className={`${isActiveInventoryTour ? "text-mainColor rotate-90" : "text-white rotate-0"
+                    } text-lg transition-all duration-300 group-hover:text-mainColor`}
+                />
+              )}
+            </Link>
+          </div>
+        </ul>
+      </div>
+
+
+      {/* Accounting */}
+      <Link
+        to="accounting/ledger"
+        onMouseMove={() => setIsActiveAccountingIcon(true)}
+        onMouseOut={() => setIsActiveAccountingIcon(false)}
+        onClick={handleClickAccounting}
+        className={`${isActiveAccounting ? "active" : ""
+          } flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-between"} hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
+      >
+        <div className="flex items-center gap-x-2">
+          <FaDatabase
+            className={`${isActiveAccountingIcon || isActiveAccounting
+                ? "text-mainColor"
+                : "text-white"
+              }`}
+          />
+          {!isSidebarCollapsed && (
+            <span
+              className={`text-[17px] font-semibold ml-2 group-hover:text-mainColor ${isActiveAccounting ? "text-mainColor" : "text-white"
+                }`}
+            >
+              Accounting
+            </span>
+          )}
+        </div>
+        {!isSidebarCollapsed && (
+          <IoIosArrowForward
+            className={`${isActiveAccounting ? "text-mainColor rotate-90" : "text-white rotate-0"
+              } text-lg transition-all duration-300 group-hover:text-mainColor`}
           />
         )}
       </Link>
-    </div>
-  </ul>
-</div>
-
-
-    {/* Accounting */}  
-    <Link
-      to="accounting/ledger"
-      onMouseMove={() => setIsActiveAccountingIcon(true)}
-      onMouseOut={() => setIsActiveAccountingIcon(false)}
-      onClick={handleClickAccounting}
-      className={`${
-        isActiveAccounting ? "active" : ""
-      } flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-between"} hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300`}
-    >
-      <div className="flex items-center gap-x-2">
-        <FaDatabase
-          className={`${
-            isActiveAccountingIcon || isActiveAccounting
-              ? "text-mainColor"
-              : "text-white"
+      <div
+        className={`overflow-hidden w-full transition-all duration-700 ${isOpenAccounting && !isSidebarCollapsed ? "max-h-[800px]" : "max-h-0"
           }`}
-        />
-        {!isSidebarCollapsed && (
-          <span
-            className={`text-[17px] font-semibold ml-2 group-hover:text-mainColor ${
-              isActiveAccounting ? "text-mainColor" : "text-white"
-            }`}
-          >
-            Accounting
-          </span>
-        )}
-      </div>
-      {!isSidebarCollapsed && (
-        <IoIosArrowForward
-          className={`${
-            isActiveAccounting ? "text-mainColor rotate-90" : "text-white rotate-0"
-          } text-lg transition-all duration-300 group-hover:text-mainColor`}
-        />
-      )}
-    </Link>
-    <div
-      className={`overflow-hidden w-full transition-all duration-700 ${
-        isOpenAccounting && !isSidebarCollapsed ? "max-h-[800px]" : "max-h-0"
-      }`}
-    >
-      <ul className="list-none w-full pl-5 transition-all duration-700 flex flex-col gap-y-1">
-        {/* Ledger Link */}
-        <Link to={"accounting/ledger"} onClick={() => { handleClickLedger(); onLinkClick(); }}>
+      >
+        <ul className="list-none w-full pl-5 transition-all duration-700 flex flex-col gap-y-1">
+          {/* Ledger Link */}
+          <Link to={"accounting/ledger"} onClick={() => { handleClickLedger(); onLinkClick(); }}>
+            <li
+              className={`text-[16px] font-medium p-2 rounded-lg transition-all duration-300 ${isActiveLedger ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+                }`}
+            >
+              - General Ledger
+            </li>
+          </Link>
+
+          {/* payment_receivable Link */}
+          <Link to={"accounting/payment_receivable"} onClick={() => { handleClickPaymentRecivable(); onLinkClick(); }}>
+            <li
+              className={`text-[16px] font-medium p-2 rounded-lg transition-all duration-300 ${isActivePaymentRecivable ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+                }`}
+            >
+              - Payment Receivable
+            </li>
+          </Link>
+
+          {/* O.E Dropdown (Owner List & Transactions) */}
           <li
-            className={`text-[16px] font-medium p-2 rounded-lg transition-all duration-300 ${
-              isActiveLedger ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-            }`}
+            onMouseEnter={() => setIsActiveOwnerTransaction(true)}
+            onMouseLeave={() => setIsActiveOwnerTransaction(false)}
+            onClick={handleClickOwnerTransaction}
+            className={`flex items-center font-medium text-[16px] justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer ${isActiveOwnerTransaction ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+              }`}
           >
-            - General Ledger
+            <div className="flex items-center gap-2">
+              <GrTransaction className={isActiveOwnerTransaction ? "text-mainColor" : "text-white"} />
+              {!isSidebarCollapsed && <span>O.E</span>}
+            </div>
+            {!isSidebarCollapsed && (
+              <IoIosArrowForward
+                className={`transition-transform duration-300 ${isActiveOwnerTransaction ? "rotate-90 text-mainColor" : "rotate-0 text-white"
+                  }`}
+              />
+            )}
           </li>
-        </Link>
 
-        {/* payment_recivable Link */}
-        <Link to={"accounting/payment_recivable"} onClick={() => { handleClickPaymentRecivable(); onLinkClick(); }}>
+          {/* Owner List & Transactions (Expandable) */}
+          <div
+            className={`overflow-hidden transition-all duration-500 ${isOpenOwnerTransaction ? "max-h-[300px]" : "max-h-0"
+              }`}
+          >
+            <ul className="list-disc pl-6 transition-all duration-500 flex flex-col gap-y-2">
+              {/* Owner List */}
+              <Link to={"accounting/owner_transaction/owner"} onClick={() => { handleClickOwner(); onLinkClick(); }}>
+                <li
+                  className={`text-[16px] font-medium px-4 py-2 rounded-lg transition-all duration-300 ${isActiveOwner ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+                    }`}
+                >
+                  Owners
+                </li>
+              </Link>
+
+              {/* Transactions */}
+              <Link to={"accounting/owner_transaction/transaction"} onClick={() => { handleClickTransaction(); onLinkClick(); }}>
+                <li
+                  className={`text-[16px] font-medium px-4 py-2 rounded-lg transition-all duration-300 ${isActiveTransaction ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+                    }`}
+                >
+                  Transactions
+                </li>
+              </Link>
+            </ul>
+          </div>
+
+          {/* Payable to Supplier Dropdown */}
           <li
-            className={`text-[16px] font-medium p-2 rounded-lg transition-all duration-300 ${
-              isActivePaymentRecivable ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-            }`}
+            onMouseEnter={() => setIsActivePayable(true)}
+            onMouseLeave={() => setIsActivePayable(false)}
+            onClick={handleClickPayable}
+            className={`flex items-center font-medium text-[16px] justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer ${isActivePayable ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+              }`}
           >
-            - Payment Receivable
+            <div className="flex items-center gap-2">
+              <MdOutlinePayment className={isActivePayable ? "text-mainColor" : "text-white"} />
+              {!isSidebarCollapsed && <span>Payable</span>}
+            </div>
+            {!isSidebarCollapsed && (
+              <IoIosArrowForward
+                className={`transition-transform duration-300 ${isActivePayable ? "rotate-90 text-mainColor" : "rotate-0 text-white"
+                  }`}
+              />
+            )}
           </li>
-        </Link>
+          {/* Payable to Supplier Expandable Section */}
+          <div
+            className={`overflow-hidden transition-all duration-500 ${isOpenPayable ? "max-h-[300px]" : "max-h-0"}`}
+          >
+            <ul className="list-disc pl-6 transition-all duration-500 flex flex-col gap-y-2">
+              {/* Payable to Supplier */}
+              <Link to={"accounting/payable_to_supplier/payable_supplier"} onClick={() => { handleClickPayableToSupplier(); onLinkClick(); }}>
+                <li
+                  className={`text-md font-semibold px-2 py-2 rounded-lg transition-all duration-300 ${isActivePayableToSupplier ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+                    }`}
+                >
+                  Payable To Supplier
+                </li>
+              </Link>
 
-        {/* O.E Dropdown (Owner List & Transactions) */}
-        <li
-          onMouseEnter={() => setIsActiveOwnerTransaction(true)}
-          onMouseLeave={() => setIsActiveOwnerTransaction(false)}
-          onClick={handleClickOwnerTransaction}
-          className={`flex items-center font-medium text-[16px] justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer ${
-            isActiveOwnerTransaction ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-          }`}
-        >
-          <div className="flex items-center gap-2">
-            <GrTransaction className={isActiveOwnerTransaction ? "text-mainColor" : "text-white"} />
-            {!isSidebarCollapsed && <span>O.E</span>}
+              {/* Paid Supplier */}
+              <Link to={"accounting/payable_to_supplier/paid_supplier"} onClick={() => { handleClickPaidSupplier(); onLinkClick(); }}>
+                <li
+                  className={`text-md font-semibold px-4 py-2 rounded-lg transition-all duration-300 ${isActivePaidSupplier ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+                    }`}
+                >
+                  Paid Supplier
+                </li>
+              </Link>
+
+              {/* Over Due */}
+              <Link to={"accounting/payable_to_supplier/over_due"} onClick={() => { handleClickOverDue(); onLinkClick(); }}>
+                <li
+                  className={`text-md font-semibold px-4 py-2 rounded-lg transition-all duration-300 ${isActiveOverDue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+                    }`}
+                >
+                  Over Due
+                </li>
+              </Link>
+            </ul>
           </div>
-          {!isSidebarCollapsed && (
-            <IoIosArrowForward
-              className={`transition-transform duration-300 ${
-                isActiveOwnerTransaction ? "rotate-90 text-mainColor" : "rotate-0 text-white"
-              }`}
-            />
-          )}
-        </li>
 
-        {/* Owner List & Transactions (Expandable) */}
-        <div
-          className={`overflow-hidden transition-all duration-500 ${
-            isOpenOwnerTransaction ? "max-h-[300px]" : "max-h-0"
-          }`}
-        >
-          <ul className="list-disc pl-6 transition-all duration-500 flex flex-col gap-y-2">
-            {/* Owner List */}
-            <Link to={"accounting/owner_transaction/owner"} onClick={() => { handleClickOwner(); onLinkClick(); }}>
-              <li
-                className={`text-[16px] font-medium px-4 py-2 rounded-lg transition-all duration-300 ${
-                  isActiveOwner ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-                }`}
-              >
-                Owners
-              </li>
-            </Link>
-
-            {/* Transactions */}
-            <Link to={"accounting/owner_transaction/transaction"} onClick={() => { handleClickTransaction(); onLinkClick(); }}>
-              <li
-                className={`text-[16px] font-medium px-4 py-2 rounded-lg transition-all duration-300 ${
-                  isActiveTransaction ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-                }`}
-              >
-                Transactions
-              </li>
-            </Link>
-          </ul>
-        </div>
-
-        {/* Payable to Supplier Dropdown */}
-        <li
-          onMouseEnter={() => setIsActivePayable(true)}
-          onMouseLeave={() => setIsActivePayable(false)}
-          onClick={handleClickPayable}
-          className={`flex items-center font-medium text-[16px] justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer ${
-            isActivePayable ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-          }`}
-        >
-          <div className="flex items-center gap-2">
-            <MdOutlinePayment className={isActivePayable ? "text-mainColor" : "text-white"} />
-            {!isSidebarCollapsed && <span>Payable</span>}
-          </div>
-          {!isSidebarCollapsed && (
-            <IoIosArrowForward
-              className={`transition-transform duration-300 ${
-                isActivePayable ? "rotate-90 text-mainColor" : "rotate-0 text-white"
-              }`}
-            />
-          )}
-        </li>
-        {/* Payable to Supplier Expandable Section */}
-        <div
-          className={`overflow-hidden transition-all duration-500 ${isOpenPayable ? "max-h-[300px]" : "max-h-0"}`}
-        >
-          <ul className="list-disc pl-6 transition-all duration-500 flex flex-col gap-y-2">
-            {/* Payable to Supplier */}
-            <Link to={"accounting/payable_to_supplier/payable_supplier"} onClick={() => { handleClickPayableToSupplier(); onLinkClick(); }}>
-              <li
-                className={`text-md font-semibold px-2 py-2 rounded-lg transition-all duration-300 ${
-                  isActivePayableToSupplier ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-                }`}
-              >
-                Payable To Supplier
-              </li>
-            </Link>
-
-            {/* Paid Supplier */}
-            <Link to={"accounting/payable_to_supplier/paid_supplier"} onClick={() => { handleClickPaidSupplier(); onLinkClick(); }}>
-              <li
-                className={`text-md font-semibold px-4 py-2 rounded-lg transition-all duration-300 ${
-                  isActivePaidSupplier ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-                }`}
-              >
-                Paid Supplier
-              </li>
-            </Link>
-
-            {/* Over Due */}
-            <Link to={"accounting/payable_to_supplier/over_due"} onClick={() => { handleClickOverDue(); onLinkClick(); }}>
-              <li
-                className={`text-md font-semibold px-4 py-2 rounded-lg transition-all duration-300 ${
-                  isActiveOverDue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-                }`}
-              >
-                Over Due
-              </li>
-            </Link>
-          </ul>
-        </div>
-
-        {/* Revenue Section */}
-        <li
-          onMouseEnter={() => setIsActiveRevenue(true)}
-          onMouseLeave={() => setIsActiveRevenue(false)}
-          onClick={handleClickRevenue}
-          className={`flex items-center font-semibold text-md justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer
+          {/* Revenue Section */}
+          <li
+            onMouseEnter={() => setIsActiveRevenue(true)}
+            onMouseLeave={() => setIsActiveRevenue(false)}
+            onClick={handleClickRevenue}
+            className={`flex items-center font-semibold text-md justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer
             ${isActiveRevenue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}`}
-        >
-          <div className="flex items-center gap-2">
-            <MdAttachMoney className={isActiveRevenue ? "text-mainColor" : "text-white"} />
-            {!isSidebarCollapsed && <span>Revenue</span>}
+          >
+            <div className="flex items-center gap-2">
+              <MdAttachMoney className={isActiveRevenue ? "text-mainColor" : "text-white"} />
+              {!isSidebarCollapsed && <span>Revenue</span>}
+            </div>
+            {!isSidebarCollapsed && (
+              <IoIosArrowForward
+                className={`transition-transform duration-300 ${isActiveRevenue ? "rotate-90 text-mainColor" : "rotate-0 text-white"}`}
+              />
+            )}
+          </li>
+
+          {/* Revenue Dropdown */}
+          <div className={`overflow-hidden transition-all duration-500 ${isOpenRevenue ? "max-h-[300px]" : "max-h-0"}`}>
+            <ul className="list-disc pl-6 transition-all duration-500 flex flex-col gap-y-2">
+              {/* Revenue List */}
+              <Link to={"accounting/revenue/list_revenue"} onClick={() => { handleClickListRevenue(); onLinkClick(); }}>
+                <li className={`text-md font-semibold px-4 py-2 rounded-lg transition-all duration-300 ${isActiveListRevenue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+                  }`}>
+                  Revenue List
+                </li>
+              </Link>
+
+              {/* Revenue Category */}
+              <Link to={"accounting/revenue/category_revenue"} onClick={() => { handleClickCategoryRevenue(); onLinkClick(); }}>
+                <li className={`text-md font-semibold px-4 py-2 rounded-lg transition-all duration-300 ${isActiveCategoryRevenue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+                  }`}>
+                  Revenue Category
+                </li>
+              </Link>
+            </ul>
           </div>
-          {!isSidebarCollapsed && (
-            <IoIosArrowForward
-              className={`transition-transform duration-300 ${isActiveRevenue ? "rotate-90 text-mainColor" : "rotate-0 text-white"}`}
-            />
-          )}
-        </li>
 
-        {/* Revenue Dropdown */}
-        <div className={`overflow-hidden transition-all duration-500 ${isOpenRevenue ? "max-h-[300px]" : "max-h-0"}`}>
-          <ul className="list-disc pl-6 transition-all duration-500 flex flex-col gap-y-2">
-            {/* Revenue List */}
-            <Link to={"accounting/revenue/list_revenue"} onClick={() => { handleClickListRevenue(); onLinkClick(); }}>
-              <li className={`text-md font-semibold px-4 py-2 rounded-lg transition-all duration-300 ${
-                isActiveListRevenue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-              }`}>
-                Revenue List
-              </li>
-            </Link>
-
-            {/* Revenue Category */}
-            <Link to={"accounting/revenue/category_revenue"} onClick={() => { handleClickCategoryRevenue(); onLinkClick(); }}>
-              <li className={`text-md font-semibold px-4 py-2 rounded-lg transition-all duration-300 ${
-                isActiveCategoryRevenue ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-              }`}>
-                Revenue Category
-              </li>
-            </Link>
-          </ul>
-        </div>
-
-        {/* Expenses Section */}
-        <li
-          onMouseEnter={() => setIsActiveExpenses(true)}
-          onMouseLeave={() => setIsActiveExpenses(false)}
-          onClick={handleClickExpenses}
-          className={`flex items-center font-semibold text-md justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer
+          {/* Expenses Section */}
+          <li
+            onMouseEnter={() => setIsActiveExpenses(true)}
+            onMouseLeave={() => setIsActiveExpenses(false)}
+            onClick={handleClickExpenses}
+            className={`flex items-center font-semibold text-md justify-between p-2 rounded-lg transition-all duration-300 cursor-pointer
             ${isActiveExpenses ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}`}
-        >
-          <div className="flex items-center gap-2">
-            <MdOutlineMoneyOff className={isActiveExpenses ? "text-mainColor" : "text-white"} />
-            {!isSidebarCollapsed && <span>Expenses</span>}
+          >
+            <div className="flex items-center gap-2">
+              <MdOutlineMoneyOff className={isActiveExpenses ? "text-mainColor" : "text-white"} />
+              {!isSidebarCollapsed && <span>Expenses</span>}
+            </div>
+            {!isSidebarCollapsed && (
+              <IoIosArrowForward
+                className={`transition-transform duration-300 ${isActiveExpenses ? "rotate-90 text-mainColor" : "rotate-0 text-white"}`}
+              />
+            )}
+          </li>
+
+          {/* Expenses Dropdown */}
+          <div className={`overflow-hidden transition-all duration-500 ${isOpenExpenses ? "max-h-[300px]" : "max-h-0"}`}>
+            <ul className="list-disc pl-6 transition-all duration-500 flex flex-col gap-y-2">
+              {/* Expenses List */}
+              <Link to={"accounting/expenses/list_expenses"} onClick={() => { handleClickListExpenses(); onLinkClick(); }}>
+                <li className={`text-md font-semibold px-4 py-2 rounded-lg transition-all duration-300 ${isActiveListExpenses ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+                  }`}>
+                  Expenses List
+                </li>
+              </Link>
+
+              {/* Expenses Category */}
+              <Link to={"accounting/expenses/category_expenses"} onClick={() => { handleClickCategoryExpenses(); onLinkClick(); }}>
+                <li className={`text-md font-semibold px-4 py-2 rounded-lg transition-all duration-300 ${isActiveCategoryExpenses ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
+                  }`}>
+                  Expenses Category
+                </li>
+              </Link>
+            </ul>
           </div>
-          {!isSidebarCollapsed && (
-            <IoIosArrowForward
-              className={`transition-transform duration-300 ${isActiveExpenses ? "rotate-90 text-mainColor" : "rotate-0 text-white"}`}
-            />
-          )}
-        </li>
+        </ul>
+      </div>
 
-        {/* Expenses Dropdown */}
-        <div className={`overflow-hidden transition-all duration-500 ${isOpenExpenses ? "max-h-[300px]" : "max-h-0"}`}>
-          <ul className="list-disc pl-6 transition-all duration-500 flex flex-col gap-y-2">
-            {/* Expenses List */}
-            <Link to={"accounting/expenses/list_expenses"} onClick={() => { handleClickListExpenses(); onLinkClick(); }}>
-              <li className={`text-md font-semibold px-4 py-2 rounded-lg transition-all duration-300 ${
-                isActiveListExpenses ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-              }`}>
-                Expenses List
-              </li>
-            </Link>
-
-            {/* Expenses Category */}
-            <Link to={"accounting/expenses/category_expenses"} onClick={() => { handleClickCategoryExpenses(); onLinkClick(); }}>
-              <li className={`text-md font-semibold px-4 py-2 rounded-lg transition-all duration-300 ${
-                isActiveCategoryExpenses ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"
-              }`}>
-                Expenses Category
-              </li>
-            </Link>
-          </ul>
-        </div>
-      </ul>
-    </div>
-
-     {/* HRM */}
-    <Link
-      to="hrm/department"
-      onMouseMove={() => setIsActiveHRMIcon(true)}
-      onMouseOut={() => setIsActiveHRMIcon(false)}
-      onClick={handleClickHRM}
-      className={`
+      {/* HRM */}
+      <Link
+        to="hrm/department"
+        onMouseMove={() => setIsActiveHRMIcon(true)}
+        onMouseOut={() => setIsActiveHRMIcon(false)}
+        onClick={handleClickHRM}
+        className={`
         ${isActiveHRM ? "active" : ""}
         flex items-center 
         ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
         hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300
       `}
-    >
-      <div className="flex items-center gap-x-2">
-        <FaUserCog className={`${isActiveHRMIcon || isActiveHRM ? "text-mainColor" : "text-white"} text-xl`} />
+      >
+        <div className="flex items-center gap-x-2">
+          <FaUserCog className={`${isActiveHRMIcon || isActiveHRM ? "text-mainColor" : "text-white"} text-xl`} />
+          {!isSidebarCollapsed && (
+            <span className={`text-[17px] font-semibold ml-2 group-hover:text-mainColor ${isActiveHRM ? "text-mainColor" : "text-white"}`}>
+              HRM
+            </span>
+          )}
+        </div>
         {!isSidebarCollapsed && (
-          <span className={`text-[17px] font-semibold ml-2 group-hover:text-mainColor ${isActiveHRM ? "text-mainColor" : "text-white"}`}>
-            HRM
-          </span>
+          <IoIosArrowForward
+            className={`${isActiveHRM ? "text-mainColor rotate-90" : "text-white rotate-0"} text-lg transition-all duration-300 group-hover:text-mainColor`}
+          />
         )}
+      </Link>
+      <div className={`${isOpenHRM && !isSidebarCollapsed ? "h-15" : "h-0"} overflow-hidden flex items-start justify-end w-full transition-all duration-700`}>
+        <ul className="list-none w-full pl-6 flex flex-col gap-y-2 transition-all duration-700">
+          {[
+            { label: 'Department', to: 'hrm/department', isActive: isActiveHRMDepartment, onClick: handleClickHRMDepartment },
+            { label: 'Agent', to: 'hrm/agent', isActive: isActiveHRMAgent, onClick: handleClickHRMAgent },
+            { label: 'Employee', to: 'hrm/employee', isActive: isActiveHRMEmployee, onClick: handleClickHRMEmployee },
+          ].map(({ label, to, isActive, onClick }) => (
+            <Link to={to} key={label} onClick={() => { onClick(); onLinkClick(); }}>
+              <li className={`text-[16px] font-medium px-4 py-2 rounded-lg transition-all duration-300 ${isActive ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}`}>
+                - {label}
+              </li>
+            </Link>
+          ))}
+        </ul>
       </div>
-      {!isSidebarCollapsed && (
-        <IoIosArrowForward
-          className={`${isActiveHRM ? "text-mainColor rotate-90" : "text-white rotate-0"} text-lg transition-all duration-300 group-hover:text-mainColor`}
-        />
-      )}
-    </Link>
-    <div className={`${isOpenHRM && !isSidebarCollapsed ? "h-15" : "h-0"} overflow-hidden flex items-start justify-end w-full transition-all duration-700`}>
-      <ul className="list-none w-full pl-6 flex flex-col gap-y-2 transition-all duration-700">
-        {[
-          { label: 'Department', to: 'hrm/department', isActive: isActiveHRMDepartment, onClick: handleClickHRMDepartment },
-          { label: 'Agent', to: 'hrm/agent', isActive: isActiveHRMAgent, onClick: handleClickHRMAgent },
-          { label: 'Employee', to: 'hrm/employee', isActive: isActiveHRMEmployee, onClick: handleClickHRMEmployee },
-        ].map(({ label, to, isActive, onClick }) => (
-          <Link to={to} key={label} onClick={() => { onClick(); onLinkClick(); }}>
-            <li className={`text-[16px] font-medium px-4 py-2 rounded-lg transition-all duration-300 ${isActive ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}`}>
-              - {label}
-            </li>
-          </Link>
-        ))}
-      </ul>
-    </div>
 
-    {/* Settings */}
-    <Link
-      to="setting"
-      onMouseMove={() => setIsActiveSettingIcon(true)}
-      onMouseOut={() => setIsActiveSettingIcon(false)}
-      onClick={handleClickSetting}
-      className={`
+      {/* Settings */}
+      <Link
+        to="setting"
+        onMouseMove={() => setIsActiveSettingIcon(true)}
+        onMouseOut={() => setIsActiveSettingIcon(false)}
+        onClick={handleClickSetting}
+        className={`
         ${isActiveSetting ? "active" : ""}
         flex items-center 
         ${isSidebarCollapsed ? "justify-center" : "justify-between"} 
         hover:rounded-xl p-2 hover:bg-white hover:text-mainColor group transition-all duration-300
       `}
-    >
-      <div className="flex items-center gap-x-2">
-        <FaCog className={`${isActiveSettingIcon || isActiveSetting ? "text-mainColor" : "text-white"} text-xl`} />
+      >
+        <div className="flex items-center gap-x-2">
+          <FaCog className={`${isActiveSettingIcon || isActiveSetting ? "text-mainColor" : "text-white"} text-xl`} />
+          {!isSidebarCollapsed && (
+            <span className={`text-[17px] font-semibold ml-2 group-hover:text-mainColor ${isActiveSetting ? "text-mainColor" : "text-white"}`}>
+              Settings
+            </span>
+          )}
+        </div>
         {!isSidebarCollapsed && (
-          <span className={`text-[17px] font-semibold ml-2 group-hover:text-mainColor ${isActiveSetting ? "text-mainColor" : "text-white"}`}>
-            Settings
-          </span>
+          <IoIosArrowForward
+            className={`${isActiveSetting ? "text-mainColor rotate-90" : "text-white rotate-0"} text-lg transition-all duration-300 group-hover:text-mainColor`}
+          />
         )}
+      </Link>
+      <div className={`${isOpenSetting && !isSidebarCollapsed ? "h-15" : "h-0"} overflow-hidden flex items-start justify-end w-full transition-all duration-700`}>
+        <ul className="list-none w-full pl-6 flex flex-col gap-y-2 transition-all duration-700">
+          {[
+            { label: 'Financial Account', to: 'setting/financial_account', isActive: isActiveFinancialAccount, onClick: handleClickSettingFinancialAccount },
+            { label: 'Roles', to: 'setting/roles', isActive: isActivePosition, onClick: handleClickSettingRoles },
+            { label: 'Admin Account', to: 'setting/admin_account', isActive: isActiveAdminAccount, onClick: handleClickSettingAdminAccount },
+            { label: 'Wallet', to: 'setting/wallet', isActive: isActiveWallet, onClick: handleClickSettingWallet },
+            { label: 'Currency', to: 'setting/currency', isActive: isActiveCurrency, onClick: handleClickSettingCurrency },
+            { label: 'Tax', to: 'setting/tax', isActive: isActiveTax, onClick: handleClickSettingTax },
+            { label: 'Group', to: 'setting/group', isActive: isActiveGroup, onClick: handleClickSettingGroup },
+          ].map(({ label, to, isActive, onClick }) => (
+            <Link to={to} key={label} onClick={() => { onClick(); onLinkClick(); }}>
+              <li className={`text-[16px] font-medium px-4 py-2 rounded-lg transition-all duration-300 ${isActive ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}`}>
+                - {label}
+              </li>
+            </Link>
+          ))}
+        </ul>
       </div>
-      {!isSidebarCollapsed && (
-        <IoIosArrowForward
-          className={`${isActiveSetting ? "text-mainColor rotate-90" : "text-white rotate-0"} text-lg transition-all duration-300 group-hover:text-mainColor`}
-        />
-      )}
-    </Link>
-    <div className={`${isOpenSetting && !isSidebarCollapsed ? "h-15" : "h-0"} overflow-hidden flex items-start justify-end w-full transition-all duration-700`}>
-    <ul className="list-none w-full pl-6 flex flex-col gap-y-2 transition-all duration-700">
-      {[
-        { label: 'Financial Account', to: 'setting/financial_account', isActive: isActiveFinancialAccount, onClick: handleClickSettingFinancialAccount },
-        { label: 'Roles', to: 'setting/roles', isActive: isActivePosition, onClick: handleClickSettingRoles },
-        { label: 'Admin Account', to: 'setting/admin_account', isActive: isActiveAdminAccount, onClick: handleClickSettingAdminAccount },
-        { label: 'Wallet', to: 'setting/wallet', isActive: isActiveWallet, onClick: handleClickSettingWallet },
-        { label: 'Currency', to: 'setting/currency', isActive: isActiveCurrency, onClick: handleClickSettingCurrency },
-        { label: 'Tax', to: 'setting/tax', isActive: isActiveTax, onClick: handleClickSettingTax },
-        { label: 'Group', to: 'setting/group', isActive: isActiveGroup, onClick: handleClickSettingGroup },
-      ].map(({ label, to, isActive, onClick }) => (
-        <Link to={to} key={label} onClick={() => { onClick(); onLinkClick(); }}>
-          <li className={`text-[16px] font-medium px-4 py-2 rounded-lg transition-all duration-300 ${isActive ? "bg-white text-mainColor" : "text-white hover:bg-white hover:text-mainColor"}`}>
-            - {label}
-          </li>
-        </Link>
-      ))}
-    </ul>
-    </div>
 
 
     </div>

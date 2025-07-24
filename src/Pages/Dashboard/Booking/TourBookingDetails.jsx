@@ -11,6 +11,7 @@ import { RiHotelLine } from "react-icons/ri";
 import { BsInfoCircle } from "react-icons/bs";
 import { AddSupplierPage, AddLeadPage } from "../../AllPages";
 import { useNavigate } from "react-router-dom";
+import GuestInformationForm from "../../../Components/Agent Components/GuestInformationForm";
 
 const TourBookingDetails = () => {
   const location = useLocation();
@@ -19,9 +20,8 @@ const TourBookingDetails = () => {
 
   const { refetch: refetchSuppliers, loading: loadingSuppliers, data: suppliersData } = useGet({ url: "https://travelta.online/agent/manual_booking/supplier_customer" });
   const { postData, loading: loadingPost, response } = usePost({ url: "https://travelta.online/agent/agent/bookTour" });
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  const [category, setCategory] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [update, setUpdate] = useState(false);
   const [suppliers, setSuppliers] = useState([]);
@@ -34,15 +34,11 @@ const TourBookingDetails = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedExtras, setSelectedExtras] = useState([]);
   const [selectedPricingTypes, setSelectedPricingTypes] = useState({});
+  const [guestInfo, setGuestInfo] = useState(null);
 
   const firstValidPricingItem = useMemo(() => {
     return tour?.tour_pricings?.flatMap(pricing => pricing.tour_pricing_items || []).find(item => item.currency?.name) || null;
   }, [tour?.tour_pricings]);
-
-  useEffect(() => {
-    console.log("Location State:", JSON.stringify(location.state, null, 2));
-    console.log("Tour Data:", JSON.stringify(tour, null, 2));
-  }, [tour, location.state]);
 
   useEffect(() => {
     if (suppliersData) {
@@ -52,14 +48,10 @@ const TourBookingDetails = () => {
   }, [suppliersData]);
 
   useEffect(() => {
-    if (category === "B2B") {
-      setSecondMenuData(suppliers);
-    } else if (category === "B2C") {
+    if (customers) {
       setSecondMenuData(customers);
-    } else {
-      setSecondMenuData([]);
     }
-  }, [category, suppliers, customers]);
+  }, [customers]);
 
   const calculateTotalPrice = () => {
     console.log("Calculating Total Price...");
@@ -141,27 +133,42 @@ const TourBookingDetails = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!selectedTourDate || !category || (category === "B2C" && !selectedToSupplier) || noOfPeople === 0) return;
 
-    const bookingData = {
-      tour_id: tour.id,
-      no_of_people: noOfPeople,
-      special_request: specialRequest,
-      currency_id: firstValidPricingItem?.currency_id || null,
-      total_price: calculateTotalPrice().total,
-      ...(category === "B2B" && selectedToSupplier && {
-        from_supplier_id: selectedToSupplier.id
-      }),
-      ...(category === "B2C" && selectedToSupplier && {
-        to_customer_id: selectedToSupplier.id
-      }),
-      agents_id: tour.agent_id,
-      status: "confirmed"
-    };
+    if (!selectedTourDate || noOfPeople === 0 || !guestInfo || !selectedToSupplier) {
+      alert('Please complete all required fields, including guest information.');
+      return;
+    }
 
-    postData(bookingData, "Tour booked successfully");
+    const formData = new FormData();
+    formData.append('tour_id', tour.id);
+    formData.append('no_of_people', noOfPeople);
+    formData.append('special_request', specialRequest);
+    formData.append('currency_id', firstValidPricingItem?.currency_id || '');
+    formData.append('total_price', calculateTotalPrice().total);
+    formData.append('customer_id', selectedToSupplier.id);
+    formData.append('agents_id', tour.agent_id);
+    formData.append('tour_date', selectedTourDate);
+
+    // Append adults
+    guestInfo.adults.forEach((adult, index) => {
+      formData.append(`adults[${index}][title]`, adult.title);
+      formData.append(`adults[${index}][first_name]`, adult.first_name);
+      formData.append(`adults[${index}][last_name]`, adult.last_name);
+      formData.append(`adults[${index}][phone]`, adult.phone);
+    });
+
+    // Append children (if any)
+    if (guestInfo.children.length > 0) {
+      guestInfo.children.forEach((child, index) => {
+        formData.append(`children[${index}][age]`, child.age);
+        formData.append(`children[${index}][first_name]`, child.first_name);
+        formData.append(`children[${index}][last_name]`, child.last_name);
+      });
+    }
+
+    postData(formData, 'Tour booked successfully');
   };
-
+  
   const renderItinerary = (itinerary) => {
     if (!itinerary || itinerary.length === 0) {
       return <p className="text-gray-500">No itinerary details available</p>;
@@ -420,85 +427,57 @@ const TourBookingDetails = () => {
                 Booking Details
               </h3>
               <p className="text-gray-600 text-sm">
-                {!category ? "Select booking type to continue" : category === "B2B" ? "Choose a supplier from your network" : "Select a customer for this booking"}
+                Select a customer for this booking
               </p>
             </div>
             <div className="p-4 space-y-4">
-              <div>
+              <div className="transition-all duration-300 ease-in-out">
                 <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                  <FaTags className="mr-2 text-blue-500" />
-                  Booking Type
+                  <FaUserTie className="mr-2 text-blue-500" />
+                  Select Customer
                 </label>
-                <TextField
-                  select
-                  variant="outlined"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                <Autocomplete
                   fullWidth
-                  InputProps={{
-                    sx: { "& fieldset": { borderRadius: "12px" }, "&:hover fieldset": { borderColor: "#1E88E5" }, "&.Mui-focused fieldset": { borderColor: "#1565C0" }, backgroundColor: "white" }
-                  }}
-                  SelectProps={{
-                    displayEmpty: true,
-                    renderValue: category !== "" ? undefined : () => <span className="text-gray-400">Choose booking type</span>
-                  }}
-                >
-                  <MenuItem value="" disabled><em>Choose booking type</em></MenuItem>
-                  <MenuItem value="B2B" className="flex items-center"><FaBuilding className="mr-2 text-gray-500" />Business Partner (B2B)</MenuItem>
-                  <MenuItem value="B2C" className="flex items-center"><FaUser className="mr-2 text-gray-500" />Direct Customer (B2C)</MenuItem>
-                </TextField>
+                  options={secondMenuData}
+                  getOptionLabel={(option) => option?.name || ""}
+                  value={selectedToSupplier}
+                  onChange={(e, newValue) => setSelectedToSupplier(newValue)}
+                  isOptionEqualToValue={(option, value) => option.id === value?.id}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      placeholder={`Search customers...`}
+                      InputProps={{
+                        ...params.InputProps,
+                        sx: { "& fieldset": { borderRadius: "12px" }, "&:hover fieldset": { borderColor: "#1E88E5" }, "&.Mui-focused fieldset": { borderColor: "#1565C0" }, backgroundColor: "white" },
+                        endAdornment: (
+                          <>
+                            {loadingSuppliers && <CircularProgress size={20} color="inherit" />}
+                            {params.InputProps.endAdornment}
+                          </>
+                        )
+                      }}
+                    />
+                  )}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option.id} className="flex items-center p-3 hover:bg-blue-50">
+                      <div className="bg-blue-100 p-2 rounded-full mr-3">
+                        <FaUser className="text-blue-600" />
+                      </div>
+                      <div>
+                        <p className="font-medium">{option.name}</p>
+                        <p className="text-xs text-gray-500">{option.email}</p>
+                      </div>
+                    </li>
+                  )}
+                />
               </div>
-              {category && (
-                <div className="transition-all duration-300 ease-in-out">
-                  <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                    {category === "B2B" ? <FaHandshake className="mr-2 text-blue-500" /> : <FaUserTie className="mr-2 text-blue-500" />}
-                    {category === "B2B" ? "Select Supplier" : "Select Customer"}
-                  </label>
-                  <Autocomplete
-                    fullWidth
-                    options={secondMenuData}
-                    getOptionLabel={(option) => option?.name || ""}
-                    value={selectedToSupplier}
-                    onChange={(e, newValue) => setSelectedToSupplier(newValue)}
-                    disabled={!category}
-                    isOptionEqualToValue={(option, value) => option.id === value?.id}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        placeholder={`Search ${category === "B2B" ? "suppliers..." : "customers..."}`}
-                        InputProps={{
-                          ...params.InputProps,
-                          sx: { "& fieldset": { borderRadius: "12px" }, "&:hover fieldset": { borderColor: "#1E88E5" }, "&.Mui-focused fieldset": { borderColor: "#1565C0" }, backgroundColor: "white" },
-                          endAdornment: (
-                            <>
-                              {loadingSuppliers && <CircularProgress size={20} color="inherit" />}
-                              {params.InputProps.endAdornment}
-                            </>
-                          )
-                        }}
-                      />
-                    )}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option.id} className="flex items-center p-3 hover:bg-blue-50">
-                        <div className="bg-blue-100 p-2 rounded-full mr-3">
-                          {category === "B2B" ? <FaBuilding className="text-blue-600" /> : <FaUser className="text-blue-600" />}
-                        </div>
-                        <div>
-                          <p className="font-medium">{option.name}</p>
-                          <p className="text-xs text-gray-500">{option.email}</p>
-                        </div>
-                      </li>
-                    )}
-                  />
-                </div>
-              )}
-              {/* <Button
+              <Button
                 variant="contained"
                 onClick={() => setShowPopup(true)}
                 fullWidth
                 size="large"
-                disabled={!category}
                 startIcon={<FaPlusCircle />}
                 sx={{
                   py: 1,
@@ -506,14 +485,14 @@ const TourBookingDetails = () => {
                   fontWeight: '600',
                   textTransform: 'none',
                   fontSize: '1rem',
-                  background: category ? 'linear-gradient(to right, #3B82F6, #2563EB)' : '#E5E7EB',
-                  color: category ? 'white' : '#9CA3AF',
-                  '&:hover': { background: category ? 'linear-gradient(to right, #2563EB, #1E40AF)' : '#E5E7EB', boxShadow: category ? '0 4px 6px rgba(0, 0, 0, 0.1)' : 'none' },
+                  background: 'linear-gradient(to right, #3B82F6, #2563EB)',
+                  color: 'white',
+                  '&:hover': { background: 'linear-gradient(to right, #2563EB, #1E40AF)', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' },
                   transition: 'all 0.3s ease'
                 }}
               >
-                {category === "B2B" ? "Add New Supplier" : "Add New Customer"}
-              </Button> */}
+                Add New Customer
+              </Button>
             </div>
           </div>
 
@@ -607,6 +586,15 @@ const TourBookingDetails = () => {
                     ))}
                 </div>
               )}
+
+              <GuestInformationForm
+                maxAdults={noOfPeople} // For tours, use noOfPeople as maxAdults
+                maxChildren={0} // Tours typically don't distinguish children separately
+                onGuestInfoSubmit={(data) => {
+                  setGuestInfo(data);
+                }}
+                initialData={guestInfo}
+              />
 
               <div className="space-y-2">
                 <h3 className="font-semibold text-gray-700 flex items-center">
@@ -798,17 +786,13 @@ const TourBookingDetails = () => {
         }}
       >
         <DialogTitle className="flex justify-between items-center bg-blue-600 text-white p-4 rounded-t-xl">
-          <span className="text-xl font-semibold">{category === "B2B" ? "Add New Supplier" : "Add New Customer"}</span>
+          <span className="text-xl font-semibold">Add New Customer</span>
           <IconButton onClick={() => setShowPopup(false)} sx={{ color: 'white' }}>
             <FaTimes />
           </IconButton>
         </DialogTitle>
         <DialogContent dividers className="p-6">
-          {category === "B2B" ? (
-            <AddSupplierPage setUpdate={setUpdate} setShowAddSupplier={setShowPopup} />
-          ) : (
-            <AddLeadPage setUpdate={setUpdate} setShowAddLead={setShowPopup} />
-          )}
+          <AddLeadPage setUpdate={setUpdate} setShowAddLead={setShowPopup} />
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
           <Button onClick={() => setShowPopup(false)} variant="outlined" sx={{ borderRadius: '8px', textTransform: 'none' }}>Cancel</Button>
